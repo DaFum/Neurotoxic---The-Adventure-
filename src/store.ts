@@ -12,6 +12,13 @@ export interface Skills {
   chaos: number;
 }
 
+export interface LoreEntry {
+  id: string;
+  title: string;
+  content: string;
+  discovered: boolean;
+}
+
 interface DialogueOption {
   text: string;
   action?: () => void;
@@ -21,6 +28,7 @@ interface DialogueOption {
   flagToSet?: { flag: string; value: boolean };
   requiredSkill?: { name: keyof Skills; level: number };
   requiredTrait?: Trait;
+  questDependencies?: string[];
 }
 
 interface Dialogue {
@@ -56,6 +64,8 @@ interface GameState {
   increaseBandMood: (amount: number) => void;
   cameraShake: number;
   setCameraShake: (shake: number) => void;
+  loreEntries: LoreEntry[];
+  discoverLore: (id: string) => void;
   resetGame: () => void;
 }
 
@@ -105,7 +115,20 @@ const initialState = {
     posterLoreRead: false,
     proberaumPosterVisionary: false,
     tourbusAmpTechnician: false,
+    frequenzDetektorRead: false,
   },
+  loreEntries: [
+    { id: 'void_1982', title: '1982 Log', content: 'Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback.', discovered: false },
+    { id: 'tankwart_truth', title: 'Die Wahrheit des Lärms', content: 'Lärm ist nicht das Chaos. Lärm ist die Ordnung, die wir noch nicht verstehen. Jedes Feedback ist ein Gebet an die Leere.', discovered: false },
+    { id: 'forbidden_riff', title: 'Das Verbotene Riff', content: 'Dieses Riff... es ist der Schlüssel zum Ende der Zeit. Es wurde vor Äonen von den ersten Maschinen-Göttern in den Stahl geätzt.', discovered: false },
+    { id: 'schaltpult_record', title: 'Schaltpult Record', content: 'Die Station war einst ein Archiv. Jedes Signal, jeder Akkord, konserviert im Vakuum.', discovered: false },
+    { id: 'magnetband_session', title: '1982 Session Tape', content: '[Aufzeichnung] *Verzerrter Bass* ...es reißt auf! Der Riss im Raum, er kommt vom Verstärker! Zieht den Stecker! ... *statisches Rauschen*', discovered: false },
+    { id: 'frequenz_anomaly', title: 'Frequenz Anomalie', content: 'Warnung: Die Resonanz der Void Station gleicht sich der Herzfrequenz eines uralten Wesens an. Die Station lebt.', discovered: false },
+    { id: 'inschrift_warning', title: 'Inschrift Warnung', content: 'Spiele nicht die verbotene Kadenz, es sei denn, du bist bereit, die Stille für immer zu töten. Salzgitter ist der Katalysator.', discovered: false },
+    { id: 'ego_philosophy', title: 'Marius\' Ego-Philosophie', content: 'Die Leere ist langweilig, wenn es niemanden gibt, der dich anbetet. Die wahre Transzendenz braucht ein Publikum.', discovered: false },
+    { id: 'poster_lore', title: 'Proberaum Poster', content: 'Das Poster zeigt eine Tour, die nie stattfand. Oder eine, die noch stattfinden wird. Die Zeit hier ist fließend.', discovered: false },
+    { id: 'cosmic_echo_decoded', title: 'Kosmisches Echo (Decoded)', content: 'Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort — sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge.', discovered: false }
+  ],
   playerPos: [0, 1, 0] as [number, number, number],
   isPaused: false,
   quests: [
@@ -236,6 +259,9 @@ export const useStore = create<GameState>()(
         bandMood: Math.min(100, state.bandMood + amount)
       })),
       setCameraShake: (cameraShake) => set({ cameraShake }),
+      discoverLore: (id) => set((state) => ({
+        loreEntries: state.loreEntries.map(e => e.id === id ? { ...e, discovered: true } : e)
+      })),
       resetGame: () => set(initialState),
     }),
     {
@@ -247,6 +273,7 @@ export const useStore = create<GameState>()(
         playerPos: state.playerPos,
         quests: state.quests,
         bandMood: state.bandMood,
+        loreEntries: state.loreEntries,
       }),
     }
   )
