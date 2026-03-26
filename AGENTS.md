@@ -5,9 +5,9 @@
 
 ## Architecture Constraints
 - `@/` alias resolves to project root, not `src/` — configured in both vite.config.ts and tsconfig.json
-- Adding new scenes requires updating `Game.tsx` (scene orchestration/camera setup), not just creating a file in `src/components/scenes/`
+- Adding new scenes requires three changes: (1) create file in `src/components/scenes/`, (2) add to the `Scene` union type in `src/store.ts`, (3) import and wire up in `src/components/Game.tsx` (scene switch + camera)
 
 ## Gotchas
 - `@tailwindcss/vite` is the Tailwind build plugin — do not replace with the standard `tailwindcss` package or add PostCSS config
-- All physics bodies (`@react-three/rapier`) must live inside scene components — declaring them outside the physics world silently fails
-- The game's dialogue trees, quest triggers, item interactions, and 'BandMood' metrics are comprehensively documented in `dialog_uebersicht.md`. Modifications to `src/components/scenes/*.tsx` or `src/store.ts` should be reflected in this file to maintain synchronization.
+- All physics bodies (`@react-three/rapier`) must live inside scene components — declaring them outside the `<Physics>` provider silently fails
+- `dialog_uebersicht.md` documents all dialogue trees, quest triggers, item interactions, and BandMood metrics. Keep it in sync when modifying `src/components/scenes/*.tsx` or `src/store.ts`
