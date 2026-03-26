@@ -7,34 +7,41 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 1. Proberaum (Die Vorbereitung)
 
 * **Zerrissenes Plakat:**
-    * *Interaktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`).
+    * *Erstinteraktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`).
+    * *Wiederholte Interaktion:* Erneut betrachten (+5 BandMood bei jeder Interaktion).
 * **Das Verbotene Riff (Item):**
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
-    * *Standard:* Bittet darum, das Wasser aufzuwischen.
+    * *Vor dem Aufwischen:* Bittet darum, das Wasser aufzuwischen.
+        * "Ich kümmere mich darum" (kein Mood-Effekt).
+        * "Neues Genre?" (-5 BandMood).
     * *Spezial (Trait: Cynic):* Option, die Tour als "schlechten Witz" zu bezeichnen (+20 BandMood, +5 Chaos).
     * *Item (Industrie-Talisman):* Erkennt den Talisman.
-        * Zweig A: "Für die Band" (+30 BandMood).
-        * Zweig B: "Geheimnis bewahren" (+15 BandMood).
-    * *Item (Verbotenes Riff):* Begeisterung über den Fund (+30 BandMood).
+        * Zweig A: "Für die Band" (+30 BandMood, setzt `matzeDeepTalk`).
+        * Zweig B: "Geheimnis bewahren" (+15 BandMood, setzt `matzeDeepTalk`).
+    * *Item (Verbotenes Riff):* Begeisterung über den Fund (+30 BandMood, setzt `showedRiffToMatze`).
     * *Nach dem Aufwischen:*
         * Zweig A: "Rock on!" (+10 BandMood).
         * Zweig B: Frage nach 1982.
-            * *Unterzweig (Trait: Visionary):* "Muster im Lärm" (+30 BandMood, +5 Chaos).
-            * *Unterzweig (Skill: Technical 5):* Frequenz-Analyse (+20 BandMood, +3 Technical).
-            * *Unterzweig (Skill: Social 3):* Beruhigen (+15 BandMood, +2 Social).
+            * *Unterzweig (Trait: Visionary):* "Muster im Lärm" (+30 BandMood, +5 Chaos, setzt `matzeDeepTalk`).
+            * *Unterzweig (Skill: Technical 5):* Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
+            * *Unterzweig (Skill: Social 3):* Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
+            * *Unterzweig (Standard):* "Interessante Geschichte" (+10 BandMood, setzt `askedAbout1982` — wichtig für Geist-Dialoge im TourBus und Backstage).
         * Zweig C: "Buchhaltung" (-2 BandMood).
 * **Lars (Drummer):**
+    * *Ohne Bier/Mop:* Hinweis auf den Wischmopp-Standort.
     * *Item (Bier):*
-        * Zweig A: Bier geben (+20 BandMood).
+        * Zweig A: Bier geben (+20 BandMood, entfernt Bier).
         * Zweig B: Frage nach Drum-Philosophie.
-            * *Unterzweig (Skill: Chaos 3):* Beat lehren (+20 BandMood, +2 Chaos).
-            * *Unterzweig (Skill: Technical 3):* Schlagkraft-Analyse (+15 BandMood, +2 Technical).
+            * *Unterzweig (Skill: Chaos 3):* Beat lehren (+20 BandMood, +2 Chaos, setzt `larsDrumPhilosophy`).
+            * *Unterzweig (Skill: Technical 3):* Schlagkraft-Analyse (+15 BandMood, +2 Technical, setzt `larsDrumPhilosophy`).
+            * *Unterzweig (Standard):* "Klingt anstrengend" (kein Mood-Effekt).
 * **Marius (Sänger):**
     * *Ohne Bier:* Fordert Bier.
-        * Option A: Wasser trinken (-5 BandMood).
-        * Option B (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social).
-        * Option C (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social).
+        * "Ich beeile mich" (kein Mood-Effekt).
+        * "Trink doch Wasser" (-5 BandMood).
+        * (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social).
+        * (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social).
 * **Wischmopp (Item):**
     * *Interaktion:* Aufheben (Erhalt: Mop).
 * **Autoschlüssel (Item):**
@@ -44,11 +51,12 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Mysteriöse Pfütze:**
     * *Interaktion (Item: Mop):* Aufwischen (+20 BandMood, Quest-Abschluss: `water`).
 * **Sprechender Amp (Existenzielle Krise):**
-    * *Initial:* Erzählt von der 5. Dimension (+2 BandMood).
-    * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical, Quest-Abschluss: `repair_amp`).
+    * *Initial:* Erzählt von der 5. Dimension (+2 BandMood, setzt `talkingAmpHeard`, Quest hinzugefügt: `repair_amp`).
+    * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical, Quest-Abschluss: `repair_amp`, setzt `talkingAmpRepaired`).
+    * *Nach Reparatur:* Bietet Therapie-Sitzung an (setzt `ampTherapyStarted`, Quest hinzugefügt: `amp_therapy`).
     * *Therapie-Sitzung:*
-        * Option (Trait: Diplomat): "Du bist ein Bewusstsein" (+30 BandMood, Quest-Abschluss: `amp_therapy`).
-        * Option (Trait: Brutalist): "Du bist ein Werkzeug" (+10 BandMood, Quest-Abschluss: `amp_therapy`).
+        * Option (Trait: Diplomat): "Du bist ein Bewusstsein" (+30 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
+        * Option (Trait: Brutalist): "Du bist ein Werkzeug" (+10 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
 * **Schrottmetall (Item):**
     * *Interaktion:* Aufheben (Erhalt: Schrottmetall).
 * **Alte Batterie (Item):**
@@ -59,18 +67,22 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Item (Verbotenes Riff):* Maschine absorbiert das Riff.
         * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
 * **Feedback-Monitor:**
-    * *Initial:* Fragt nach dem Quanten-Kabel.
-    * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`).
+    * *Initial:* Fragt nach dem Quanten-Kabel (setzt `feedbackMonitorTalked`, Quest hinzugefügt: `feedback_monitor`).
+    * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`, entfernt Quanten-Kabel).
 
 ---
 
 ## 2. TourBus (Unterwegs)
 
 * **Matze:**
-    * *Ohne Kabel:* Verlangt Klebeband ODER Sabotage (-5 BandMood).
+    * *Ohne Kabel (BandMood < 30):* Klagt über schlechte Laune und kaputtes Kabel (kein Mood-Effekt).
+    * *Ohne Kabel (BandMood >= 30):*
+        * "Ich suche danach" (Quest hinzugefügt: `cable`).
+        * "Vielleicht Schicksal" (Sabotage-Vorwurf, -5 BandMood).
     * *Mit Repariertem Kabel:* "Bühne abreißen" (+10 BandMood, Quest-Abschluss: `cable`).
 * **Marius:**
     * *Item (Marius' Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
+    * *Ohne Ego:* Stimmungsabhängiger Dialog (kein Mood-Effekt).
 * **Defekter Verstärker (Trait: Technician):**
     * *Spezial-Option:* Lötstelle reparieren (+20 BandMood, +10 Technical).
 * **Klebeband (Item):**
@@ -88,15 +100,16 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Rostiges Plektrum (Item):**
     * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum).
 * **Geist eines Roadies:**
-    * *Item (Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`).
-    * *Information (1982/Talisman):*
-        * Zweig A (Trait: Visionary): "Erzähl mir alles" (+30 BandMood, +5 Chaos).
-        * Zweig B (Skill: Technical 7): "Anomalie analysieren" (+25 BandMood, +4 Technical).
-        * Zweig C (Skill: Social 5): "Geist beruhigen" (+20 BandMood, +3 Social).
-        * Standard: "Erzähl mir alles" (+20 BandMood).
-    * *Item (Verbotenes Riff):* (+10 BandMood).
-    * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood) ODER Begraben (+5 BandMood).
-    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood).
+    * *Item (Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, entfernt Geister-Drink).
+    * *Flag `askedAbout1982` gesetzt (aus Proberaum):*
+        * Zweig A (Trait: Visionary): "Erzähl mir alles" (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
+        * Zweig B (Skill: Technical 7): "Anomalie analysieren" (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
+        * Zweig C (Skill: Social 5): "Geist beruhigen" (+20 BandMood, +3 Social, setzt `ghostSecretRevealed`).
+        * Standard: "Erzähl mir alles" (+20 BandMood, setzt `ghostSecretRevealed`).
+        * "Vielleicht später" (kein Mood-Effekt).
+    * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood, setzt `ghostSecretRevealed`) ODER Begraben (+5 BandMood).
+    * *Item (Verbotenes Riff):* "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
+    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe`.
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 
@@ -142,8 +155,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Item (Industrie-Talisman):* "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
     * *Item (Verbotenes Riff):* "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
     * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss: `void`) ODER 432Hz (+10 BandMood, Quest-Abschluss: `void`).
-    * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Auf das Echo ansprechen (+15 BandMood, **Lore:** `cosmic_echo_decoded`).
-    * *Standard-Dialog:* (+5 BandMood).
+    * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Auf das Echo ansprechen (+15 BandMood, **Lore:** `cosmic_echo_decoded`, setzt `tankwartPhilosophy`).
+    * *Standard-Dialog:*
+        * "Nur Treibstoff" (kein Mood-Effekt).
+        * "Ultimatives Riff" (+5 BandMood).
 * **Altes Terminal:**
     * *Interaktion:* Logbuch lesen (+5 BandMood, **Lore:** `void_1982`).
 * **Kosmisches Echo:**
