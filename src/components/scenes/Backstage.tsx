@@ -266,6 +266,7 @@ export function Backstage() {
             });
           } else if (hasItem('Energiedrink')) {
             setDialogue('Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."');
+            removeFromInventory('Energiedrink');
             setFlag('larsEnergized', true);
             increaseBandMood(10);
           } else {
@@ -289,15 +290,6 @@ export function Backstage() {
         />
       )}
 
-      <Interactable
-        position={[-8, 0, 2]}
-        emoji="🥤"
-        name="Energiedrink"
-        onInteract={() => {
-          addToInventory('Energiedrink');
-          setDialogue('Ein "Liquid Thunder" Energiedrink. Enthält genug Taurin, um ein kleines Kraftwerk zu betreiben.');
-        }}
-      />
 
       <Interactable
         position={[8, 0, 2]}
@@ -344,6 +336,19 @@ export function Backstage() {
             setDialogue('Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Manager: "Wirklich? Vor jedem Auftritt?" Marius: "Es hilft gegen das Lampenfieber!"');
             increaseBandMood(5);
           }
+        }}
+      />
+
+      {/* Exit to TourBus */}
+      <Interactable
+        position={[-8, 0, 8]}
+        emoji="🚐"
+        name="Zurück zum Tourbus"
+        onInteract={() => {
+          setDialogue('Nochmal zum Bus gehen? Sicher ist sicher.');
+          setTimeout(() => {
+            if (useStore.getState().scene === 'backstage') setScene('tourbus');
+          }, 1000);
         }}
       />
 
