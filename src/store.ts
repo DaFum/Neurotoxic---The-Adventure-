@@ -349,10 +349,6 @@ export const useStore = create<GameState>()(
                     newFlags.feedbackMonitorBackstageQuestStarted = true;
                     if (newFlags.feedbackMonitorQuestCompleted) {
                       newFlags.feedbackMonitorBackstageQuestCompleted = true;
-                      // Proberaum quest was also completed in the past if they reached backstage, so keep it true.
-                    } else {
-                      // Only Backstage quest was in progress, reset Proberaum completed just in case
-                      newFlags.feedbackMonitorQuestCompleted = true; // Assuming they completed Proberaum to get to Backstage.
                     }
                   }
                   // Remove the unused flag
