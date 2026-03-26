@@ -1,5 +1,15 @@
-### 1. Proberaum (Die Vorbereitung)
+# Neurotoxic – The Adventure: Komplette Dialog- und Interaktionsübersicht
 
+Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Einträge und deren Voraussetzungen (Traits, Skills, Items) aus allen Szenen zusammen.
+
+---
+
+## 1. Proberaum (Die Vorbereitung)
+
+* **Zerrissenes Plakat:**
+    * *Interaktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`).
+* **Das Verbotene Riff (Item):**
+    * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`).
 * **Matze (Gitarrist):**
     * *Standard:* Bittet darum, das Wasser aufzuwischen.
     * *Spezial (Trait: Cynic):* Option, die Tour als "schlechten Witz" zu bezeichnen (+20 BandMood, +5 Chaos).
@@ -35,13 +45,13 @@
 
 ---
 
-### 2. TourBus (Unterwegs)
+## 2. TourBus (Unterwegs)
 
 * **Matze:**
     * *Ohne Kabel:* Verlangt Klebeband.
     * *Mit Repariertem Kabel:* "Bühne abreißen" (+10 BandMood).
 * **Defekter Verstärker (Trait: Technician):**
-    * Spezial-Option: Lötstelle reparieren (+20 BandMood, +10 Technical).
+    * *Spezial-Option:* Lötstelle reparieren (+20 BandMood, +10 Technical).
 * **Geist eines Roadies:**
     * *Item (Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan).
     * *Information (1982/Talisman):*
@@ -51,7 +61,7 @@
 
 ---
 
-### 3. Backstage (Vor dem Gig)
+## 3. Backstage (Vor dem Gig)
 
 * **Sentient Feedback Monitor:**
     * *Item (Verstärker-Schaltplan):*
@@ -64,7 +74,7 @@
         * (Trait: Visionary): "Sehe deine Vision" (+35 BandMood, +3 Chaos).
         * (Info: 1982 vorhanden): "Erinnerung an 1982" (+25 BandMood).
         * "Lego-Trick" (+10 BandMood).
-        * "Equipment verkaufen" (-5 BandMood, zwingt ihn aber auf die Bühne).
+        * "Equipment verkaufen" (-5 BandMood, zwingt ihn aber vor lauter Schreck auf die Bühne).
 * **Lars (Energie-Mangel):**
     * *Item (Turbo-Koffein):*
         * Zweig A: "Auf Ex" (+40 BandMood, Lars "vibriert").
@@ -72,25 +82,55 @@
 
 ---
 
-### 4. Kaminstube (Nebenquest-Ort)
+## 4. VoidStation (Die Realitäts-Grenze)
 
-* **Flüsternder Kamin (Trait: Diplomat):**
-    * Spezial-Option: Sprache deuten (+20 BandMood, Quest: Forgotten Lore).
-* **Wirt:**
-    * *Item (Industrie-Talisman):* Erhält "Altes Plektrum" (wichtig für Matze in Salzgitter).
-    * *BandMood > 80:* Erzählt Details über den Manager-Verschwinden 1982 (+10 BandMood).
+* **Kosmischer Tankwart:**
+    * *Spezial (Trait: Mystic):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere).
+    * *Item (Industrie-Talisman):* "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
+    * *Item (Verbotenes Riff):* "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
+    * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss) ODER 432Hz (+10 BandMood, Quest-Abschluss).
+    * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Auf das Echo ansprechen (+15 BandMood, **Lore:** `cosmic_echo_decoded`).
+* **Altes Terminal:**
+    * *Interaktion:* Logbuch lesen (+5 BandMood, **Lore:** `void_1982`).
+* **Kosmisches Echo:**
+    * *Option (Trait: Visionary):* Nachricht entschlüsseln (+20 BandMood, Quest-Abschluss, **Lore:** `cosmic_echo_decoded`).
+* **Marius' Ego (Item-Fund):**
+    * *Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius Ego" und schaltet **Lore:** `ego_philosophy` frei.*
+    * Option (Trait: Visionary): "Vision leitet uns" (+30 BandMood, +5 Chaos).
+    * Option (Skill: Technical 8): "Resonanzfrequenz instabil" (+20 BandMood, +5 Technical).
+    * Option (Skill: Social 8): "Fans brauchen dich" (+25 BandMood, +5 Social).
+    * Standard: "Komm einfach mit" (+10 BandMood).
+* **Gesplittertes Schaltpult:**
+    * *Interaktion:* "Tiefer graben" (**Lore:** `schaltpult_record`).
+* **Schwebende Magnetbänder:**
+    * *Option (Skill: Technical 5):* Band abspielen (+10 BandMood, +3 Technical, **Lore:** `magnetband_session`).
+* **Frequenz-Detektor:**
+    * *Standard-Interaktion:* Warnung lesen (**Lore:** `frequenz_anomaly`).
+    * *Option (Skill: Technical 6):* Kalibrieren (+15 BandMood, +4 Technical).
+* **Verbotene Inschrift:**
+    * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Vollständig entschlüsseln (+20 BandMood, **Lore:** `inschrift_warning`).
 
 ---
 
-### 5. Salzgitter (Das Finale)
+## 5. Kaminstube (Nebenquest-Ort)
+
+* **Flüsternder Kamin (Trait: Diplomat):**
+    * *Spezial-Option:* Sprache deuten (+20 BandMood, Quest: Forgotten Lore).
+* **Wirt:**
+    * *Item (Industrie-Talisman):* Erhält "Altes Plektrum" (wichtig für Matze in Salzgitter).
+    * *BandMood > 80:* Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
+
+---
+
+## 6. Salzgitter (Das Finale)
 
 * **Matze:**
     * *Item (Verbotenes Riff + Altes Plektrum):* Riff wird gebändigt.
         * Option (Skill: Chaos 10): "Chaos kanalisieren" (+50 BandMood, +5 Chaos).
         * Option (Skill: Technical 10): "Präzision im Chaos" (+40 BandMood, +5 Technical).
-    * *Nur Verbotenes Riff:* Er warnt vor Realitätsrissen.
+    * *Nur Verbotenes Riff (ohne Plektrum):* Er warnt vor Realitätsrissen.
 * **Lars:**
-    * *Wenn "vibriert":*
+    * *Wenn "vibriert" (Koffein im Backstage auf Ex getrunken):*
         * Option (Skill: Technical 10): "Frequenz synchronisieren" (+30 BandMood, +5 Technical).
 * **Marius:**
     * *Trait (Performer):* Spezial-Tipp für die Show geben (+30 BandMood, +5 Social).
