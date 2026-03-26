@@ -141,7 +141,6 @@ export function Backstage() {
                   options: [
                     { text: 'Wie kann ich helfen?', action: () => {
                       setDialogue('Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."');
-                      setFlag('feedbackMonitorBackstageTalked', true);
                       setFlag('feedbackMonitorBackstageQuestStarted', true);
                       useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
                     }}
