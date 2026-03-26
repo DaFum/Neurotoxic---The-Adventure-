@@ -302,10 +302,12 @@ export const useStore = create<GameState>()(
             if (state.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
             if (state.flags.egoContained) migrateEntry('ego_philosophy');
 
-            if (migrated) {
-              state.loreEntries = newEntries;
-            }
-            state.flags.legacyLoreMigrated = true;
+            setTimeout(() => {
+              useStore.setState({
+                loreEntries: migrated ? newEntries : state.loreEntries,
+                flags: { ...state.flags, legacyLoreMigrated: true }
+              });
+            }, 0);
           }
         }
       },

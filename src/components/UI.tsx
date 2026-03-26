@@ -56,6 +56,8 @@ export function UI() {
 
   const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.completed).map(q => q.id)), [quests]);
   const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
+  const loreCodexContainerRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!isPaused) {
@@ -64,10 +66,48 @@ export function UI() {
   }, [isPaused]);
 
   useEffect(() => {
-    if (showLoreCodex && closeLoreBtnRef.current) {
-      closeLoreBtnRef.current.focus();
+    if (showLoreCodex) {
+      previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
+      if (closeLoreBtnRef.current) {
+        closeLoreBtnRef.current.focus();
+      }
+    } else {
+      if (previouslyFocusedElementRef.current) {
+        previouslyFocusedElementRef.current.focus();
+        previouslyFocusedElementRef.current = null;
+      }
     }
   }, [showLoreCodex]);
+
+  const handleLoreCodexKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setShowLoreCodex(false);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      if (!loreCodexContainerRef.current) return;
+      const focusableElements = loreCodexContainerRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (!dialogue) {
@@ -391,6 +431,8 @@ export function UI() {
           <AnimatePresence>
             {showLoreCodex && (
               <motion.div
+                ref={loreCodexContainerRef}
+                onKeyDown={handleLoreCodexKeyDown}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 30 }}
@@ -494,11 +536,7 @@ export function UI() {
 
                               if (option.nextDialogue) {
                                 setDialogue(option.nextDialogue);
-                              } else if (option.action) {
-                                if (option.closeOnSelect !== false) {
-                                  setDialogue(null);
-                                }
-                              } else {
+                              } else if (option.closeOnSelect !== false) {
                                 setDialogue(null);
                               }
                             }
