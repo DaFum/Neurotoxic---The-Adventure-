@@ -562,10 +562,13 @@ Update the dialogue overview with all new trees, quests, and branches.
 ---
 ### Critical Files for Implementation
 - src/store.ts
+- src/components/scenes/Proberaum.tsx
+- src/components/scenes/TourBus.tsx
+- src/components/scenes/Backstage.tsx
+- src/components/scenes/VoidStation.tsx
 - src/components/scenes/Kaminstube.tsx
 - src/components/scenes/Salzgitter.tsx
-- src/components/scenes/Proberaum.tsx
-- src/components/scenes/VoidStation.tsx
+- dialog_uebersicht.md
 
 ---
 
