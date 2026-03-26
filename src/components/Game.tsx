@@ -159,6 +159,7 @@ export function Game() {
                             setTrait(t.id as any);
                           t.skills.forEach(s => useStore.getState().increaseSkill(s.name as any, s.val));
                             audio.startMusic();
+                          setSelectingTrait(false);
                             setScene('proberaum');
                           }}
                           className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left"

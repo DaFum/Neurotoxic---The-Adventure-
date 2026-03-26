@@ -458,7 +458,7 @@ export function UI() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 overflow-y-auto pr-4 custom-scrollbar">
+                <div className="grid grid-cols-2 gap-6 overflow-y-auto pr-4 custom-scrollbar" tabIndex={0}>
                   {loreEntries.map((entry, i) => (
                     <motion.div
                       key={entry.id}

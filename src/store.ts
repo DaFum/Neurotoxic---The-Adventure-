@@ -263,7 +263,7 @@ export const useStore = create<GameState>()(
       discoverLore: (id) => set((state) => {
         const entry = state.loreEntries.find(e => e.id === id);
         if (!entry || entry.discovered) {
-          return {}; // Avoid state update if lore doesn't exist or is already discovered
+          return state; // Avoid state update if lore doesn't exist or is already discovered
         }
         return {
           loreEntries: state.loreEntries.map(e => e.id === id ? { ...e, discovered: true } : e)
@@ -284,30 +284,54 @@ export const useStore = create<GameState>()(
         trait: state.trait,
         skills: state.skills,
       }),
+      merge: (persistedState: any, currentState: GameState) => {
+        const mergedQuests = currentState.quests.map(q => {
+          const persistedQuest = persistedState.quests?.find((pq: any) => pq.id === q.id);
+          return persistedQuest ? { ...q, completed: persistedQuest.completed } : q;
+        });
+
+        const mergedLoreEntries = currentState.loreEntries.map(e => {
+          const persistedEntry = persistedState.loreEntries?.find((pe: any) => pe.id === e.id);
+          return persistedEntry ? { ...e, discovered: persistedEntry.discovered } : e;
+        });
+
+        return {
+          ...currentState,
+          ...persistedState,
+          quests: mergedQuests,
+          loreEntries: mergedLoreEntries,
+          flags: {
+            ...currentState.flags,
+            ...persistedState.flags,
+          }
+        };
+      },
       onRehydrateStorage: () => (state) => {
         if (state) {
           if (!state.flags.legacyLoreMigrated) {
-            const newEntries = [...state.loreEntries];
-            let migrated = false;
-
-            const migrateEntry = (id: string) => {
-              const idx = newEntries.findIndex(e => e.id === id);
-              if (idx !== -1 && !newEntries[idx].discovered) {
-                newEntries[idx] = { ...newEntries[idx], discovered: true };
-                migrated = true;
-              }
-            };
-
-            if (state.flags.posterLoreRead) migrateEntry('poster_lore');
-            if (state.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
-            if (state.flags.egoContained) migrateEntry('ego_philosophy');
-            if (state.flags.tankwartPhilosophy) migrateEntry('tankwart_truth');
-            if (state.flags.cosmic_echo) migrateEntry('cosmic_echo_decoded');
-
             setTimeout(() => {
-              useStore.setState({
-                loreEntries: migrated ? newEntries : state.loreEntries,
-                flags: { ...state.flags, legacyLoreMigrated: true }
+              useStore.setState((currentState) => {
+                const newEntries = [...currentState.loreEntries];
+                let migrated = false;
+
+                const migrateEntry = (id: string) => {
+                  const idx = newEntries.findIndex(e => e.id === id);
+                  if (idx !== -1 && !newEntries[idx].discovered) {
+                    newEntries[idx] = { ...newEntries[idx], discovered: true };
+                    migrated = true;
+                  }
+                };
+
+                if (currentState.flags.posterLoreRead) migrateEntry('poster_lore');
+                if (currentState.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
+                if (currentState.flags.egoContained) migrateEntry('ego_philosophy');
+                if (currentState.flags.tankwartPhilosophy) migrateEntry('tankwart_truth');
+                if (currentState.flags.cosmic_echo) migrateEntry('cosmic_echo_decoded');
+
+                return {
+                  loreEntries: migrated ? newEntries : currentState.loreEntries,
+                  flags: { ...currentState.flags, legacyLoreMigrated: true }
+                };
               });
             }, 0);
           }
