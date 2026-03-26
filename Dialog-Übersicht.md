@@ -7,7 +7,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 1. Proberaum (Die Vorbereitung)
 
 * **Zerrissenes Plakat:**
-    * *Interaktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`).
+    * *Interaktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`). (Hinweis: +5 BandMood bei jeder Interaktion)
 * **Das Verbotene Riff (Item):**
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`).
 * **Matze (Gitarrist):**
@@ -30,7 +30,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Chaos 3):* Beat lehren (+20 BandMood, +2 Chaos).
             * *Unterzweig (Skill: Technical 3):* Schlagkraft-Analyse (+15 BandMood, +2 Technical).
 * **Marius (Sänger):**
-    * *Ohne Bier:* Fordert Bier.
+    * *Ohne Bier:* Fordert Bier. Option "Trink doch Wasser." (-5 BandMood).
         * Option (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social).
         * Option (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social).
 * **Sprechender Amp (Existenzielle Krise):**
@@ -125,13 +125,14 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 6. Salzgitter (Das Finale)
 
 * **Matze:**
-    * *Item (Verbotenes Riff + Altes Plektrum):* Riff wird gebändigt.
+    * *Item (Verbotenes Riff + Altes Plektrum):* Riff wird gebändigt (+20 BandMood).
         * Option (Skill: Chaos 10): "Chaos kanalisieren" (+50 BandMood, +5 Chaos).
         * Option (Skill: Technical 10): "Präzision im Chaos" (+40 BandMood, +5 Technical).
     * *Nur Verbotenes Riff (ohne Plektrum):* Er warnt vor Realitätsrissen.
 * **Lars:**
     * *Wenn "vibriert" (Koffein im Backstage auf Ex getrunken):*
         * Option (Skill: Technical 10): "Frequenz synchronisieren" (+30 BandMood, +5 Technical).
+    * *Wenn Drum-Philosophie gelehrt:* (+5 BandMood).
 * **Marius:**
     * *Trait (Performer):* Spezial-Tipp für die Show geben (+30 BandMood, +5 Social).
     * *Skill (Chaos 10):* "Zorn kanalisieren" (+40 BandMood, +5 Chaos).
