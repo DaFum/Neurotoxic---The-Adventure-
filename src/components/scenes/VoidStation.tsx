@@ -27,6 +27,7 @@ export function VoidStation() {
   const completeQuest = useStore((state) => state.completeQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const hasItem = useStore((state) => state.hasItem);
+  const discoverLore = useStore((state) => state.discoverLore);
 
   return (
     <>
@@ -100,6 +101,7 @@ export function VoidStation() {
               text: 'Tankwart: "Dieser Talisman... er ist ein Fragment der Ur-Maschine. Er vibriert mit der Frequenz der Schöpfung. Willst du die Wahrheit über den Lärm hören?"',
               options: [
                 { text: 'Ja, lehre mich.', action: () => {
+                  discoverLore('tankwart_truth');
                   setDialogue('Tankwart: "Lärm ist nicht das Chaos. Lärm ist die Ordnung, die wir noch nicht verstehen. Jedes Feedback ist ein Gebet an die Leere. In Salzgitter werdet ihr die Antwort finden."');
                   setFlag('tankwartPhilosophy', true);
                   increaseBandMood(20);
@@ -162,7 +164,17 @@ export function VoidStation() {
                 { text: 'Die Antwort auf das ultimative Riff.', action: () => {
                   setDialogue('Tankwart: "Das Riff ist in dir... und in der Pfütze im Proberaum, die seit 1982 niemals getrocknet ist."');
                   increaseBandMood(5);
-                }}
+                }},
+                {
+                  text: 'Das kosmische Echo hat mir etwas gezeigt. [cosmic_echo complete]',
+                  questDependencies: ['cosmic_echo'],
+                  action: () => {
+                    discoverLore('cosmic_echo_decoded');
+                    setDialogue('Tankwart: "Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort — sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge."');
+                    increaseBandMood(15);
+                    setFlag('tankwartPhilosophy', true);
+                  }
+                }
               ]
             });
           }
@@ -175,6 +187,7 @@ export function VoidStation() {
         emoji="📟"
         name="Altes Terminal"
         onInteract={() => {
+          discoverLore('void_1982');
           setDialogue('Ein flackerndes Terminal zeigt Logbucheinträge einer vergessenen Tour von 1982. Log: "Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback."');
           increaseBandMood(5);
         }}
@@ -194,6 +207,7 @@ export function VoidStation() {
                   text: 'Versuche, die Nachricht zu entschlüsseln. [Visionary]', 
                   requiredTrait: 'Visionary',
                   action: () => {
+                    discoverLore('cosmic_echo_decoded');
                     setDialogue('Du erkennst ein Muster in der Verzerrung. Es ist ein Koordinaten-Code für Salzgitter! Du hast das Echo entschlüsselt.');
                     setFlag('cosmic_echo', true);
                     completeQuest('cosmic_echo');
@@ -219,54 +233,59 @@ export function VoidStation() {
             const trait = useStore.getState().trait;
             const skills = useStore.getState().skills;
 
+            const egoActionWrapper = (originalAction: () => void) => () => {
+              discoverLore('ego_philosophy');
+              originalAction();
+            };
+
             setDialogue({
               text: 'Marius\' Ego: "Ich bin das Zentrum des Universums! Ohne mich wäre dieser Gig nur ein Haufen rostiger Nägel. Warum sollte ich zurück in diesen winzigen Körper?"',
               options: [
                 { 
                   text: 'Du bist die Vision, die uns leitet. [Visionary]', 
                   requiredTrait: 'Visionary',
-                  action: () => {
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Endlich jemand, der meine wahre Bedeutung versteht! Die Vision ist zu groß für die Leere. Ich kehre zurück, um die Welt zu erleuchten."');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(30);
                     useStore.getState().increaseSkill('chaos', 5);
-                  }
+                  })
                 },
                 { 
                   text: 'Deine Resonanzfrequenz ist instabil. [Technical 8]', 
                   requiredSkill: { name: 'technical', level: 8 },
-                  action: () => {
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Instabil?! Ich bin die perfekte Schwingung! ... Warte, du hast recht. Die Entropie hier draußen zersetzt meine Brillanz. Schnell, fang mich ein!"');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 5);
-                  }
+                  })
                 },
                 { 
                   text: 'Die Fans brauchen dich. [Social 8]', 
                   requiredSkill: { name: 'social', level: 8 },
-                  action: () => {
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Die Fans... ja. Meine Anbetung ist hier draußen so... abstrakt. Ich brauche den Schweiß und die Tränen der ersten Reihe. Bring mich zurück!"');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(25);
                     useStore.getState().increaseSkill('social', 5);
-                  }
+                  })
                 },
                 { 
                   text: 'Komm einfach mit, du aufgeblasene Kugel.', 
-                  action: () => {
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(10);
-                  }
+                  })
                 }
               ]
             });
@@ -299,6 +318,140 @@ export function VoidStation() {
           } else {
             setDialogue('Das Portal ist instabil. Wir brauchen den Treibstoff!');
           }
+        }}
+      />
+
+      {/* New Ambient Interactables */}
+      <Interactable
+        position={[-3, 1, -8]}
+        emoji="🖥️"
+        name="Gesplittertes Schaltpult"
+        onInteract={() => {
+          setDialogue({
+            text: 'Ein zerstörtes Schaltpult. Die Bildschirme flackern mit Code-Zeilen, die wie Musiknoten aussehen.',
+            options: [
+              {
+                text: 'Tiefer graben.',
+                action: () => {
+                  discoverLore('schaltpult_record');
+                  setDialogue('Du findest einen Eintrag über die Station als kosmisches Musikarchiv. Jeder Akkord ist hier für die Ewigkeit gespeichert.');
+                }
+              },
+              {
+                text: 'Verlassen.',
+                action: () => {
+                  setDialogue('Du lässt das Terminal in Ruhe.');
+                }
+              }
+            ]
+          });
+        }}
+      />
+
+      <Interactable
+        position={[3, 3, -3]}
+        emoji="📼"
+        name="Schwebende Magnetbänder"
+        onInteract={() => {
+          setDialogue({
+            text: 'Mehrere Magnetbänder schweben schwerelos umher. Sie sind mit "1982 SESSION" beschriftet. Ein leises Riff ist zu hören.',
+            options: [
+              flags.magnetbandPlayed
+              ? {
+                  text: 'Ein Band abspielen.',
+                  action: () => {
+                    setDialogue('Du lauschst der Aufnahme erneut. Die Leere hallt weiter nach.');
+                  }
+                }
+              : {
+                  text: 'Ein Band abspielen. [Technical 5]',
+                  requiredSkill: { name: 'technical', level: 5 },
+                  action: () => {
+                    discoverLore('magnetband_session');
+                    setFlag('magnetbandPlayed', true);
+                    setDialogue('Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.');
+                    increaseBandMood(10);
+                    useStore.getState().increaseSkill('technical', 3);
+                  }
+                },
+              {
+                text: 'Bänder schweben lassen.',
+                action: () => setDialogue('Manche Sessions sollten besser ungespielt bleiben.')
+              }
+            ]
+          });
+        }}
+      />
+
+      <Interactable
+        position={[8, 0, -5]}
+        emoji="📡"
+        name="Frequenz-Detektor"
+        onInteract={() => {
+          if (!flags.frequenzDetektorRead) {
+            setFlag('frequenzDetektorRead', true);
+            discoverLore('frequenz_anomaly');
+          }
+          setDialogue({
+            text: 'Ein seltsames Gerät piept rhythmisch. Es warnt vor einer "Resonanz-Anomalie".',
+            options: [
+              flags.frequenzCalibrated
+              ? {
+                  text: 'Gerät kalibrieren.',
+                  action: () => {
+                    setDialogue('Das Gerät ist bereits optimal kalibriert. Die Station atmet im Hintergrund weiter.');
+                  }
+                }
+              : {
+                  text: 'Gerät kalibrieren. [Technical 6]',
+                  requiredSkill: { name: 'technical', level: 6 },
+                  action: () => {
+                    setFlag('frequenzCalibrated', true);
+                    setDialogue('Du justierst die Antennen. Die Anzeige offenbart: Die gesamte Station atmet. Sie ist am Leben.');
+                    increaseBandMood(15);
+                    useStore.getState().increaseSkill('technical', 4);
+                  }
+                },
+              {
+                text: 'In Ruhe lassen.',
+                action: () => setDialogue('Das Piepsen ist nervig, aber ungefährlich.')
+              }
+            ]
+          });
+        }}
+      />
+
+      <Interactable
+        position={[-2, 2, 8]}
+        emoji="⚠️"
+        name="Verbotene Inschrift"
+        onInteract={() => {
+          setDialogue({
+            text: 'Eine blutrote, phosphoreszierende Inschrift schwebt in der Luft. Die Buchstaben winden sich wie Würmer.',
+            options: [
+              flags.inschriftDecoded
+              ? {
+                  text: 'Erneut lesen.',
+                  action: () => {
+                    setDialogue('Du verinnerlichst die Warnung vor der finalen Kadenz in Salzgitter erneut.');
+                  }
+                }
+              : {
+                  text: 'Vollständig entschlüsseln. [cosmic_echo complete]',
+                  questDependencies: ['cosmic_echo'],
+                  action: () => {
+                    discoverLore('inschrift_warning');
+                    setFlag('inschriftDecoded', true);
+                    setDialogue('Die Inschrift warnt vor einer Kadenz, die die Stille für immer töten wird. Salzgitter ist der Katalysator.');
+                    increaseBandMood(20);
+                  }
+                },
+              {
+                text: 'Nur den Anfang lesen.',
+                action: () => setDialogue('Du liest die ersten Worte, aber der Rest ist zu verschlüsselt.')
+              }
+            ]
+          });
         }}
       />
 

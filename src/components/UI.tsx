@@ -28,8 +28,8 @@
  * - No major errors found.
  */
 import { useStore } from '../store';
-import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Circle, Heart, Plus, Package, Zap, Activity } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Circle, Heart, Plus, Package, Zap, Activity, BookOpen } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function UI() {
@@ -49,8 +49,67 @@ export function UI() {
   const setPaused = useStore((state) => state.setPaused);
   const trait = useStore((state) => state.trait);
   const skills = useStore((state) => state.skills);
+  const loreEntries = useStore((state) => state.loreEntries);
   const [displayedText, setDisplayedText] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [showLoreCodex, setShowLoreCodex] = useState(false);
+
+  const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.completed).map(q => q.id)), [quests]);
+  const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
+  const loreCodexContainerRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isPaused) {
+      setShowLoreCodex(false);
+    }
+  }, [isPaused]);
+
+  useEffect(() => {
+    if (showLoreCodex) {
+      previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
+      if (closeLoreBtnRef.current) {
+        closeLoreBtnRef.current.focus();
+      }
+    } else {
+      if (previouslyFocusedElementRef.current) {
+        previouslyFocusedElementRef.current.focus();
+        previouslyFocusedElementRef.current = null;
+      }
+    }
+  }, [showLoreCodex]);
+
+  const handleLoreCodexKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.nativeEvent.stopImmediatePropagation();
+      e.stopPropagation();
+      setShowLoreCodex(false);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      if (!loreCodexContainerRef.current) return;
+      const focusableElements = loreCodexContainerRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (!dialogue) {
@@ -264,7 +323,10 @@ export function UI() {
               <div className="flex flex-col gap-3 w-full">
                 <div className="grid grid-cols-2 gap-2">
                   {inventory.map((item, i) => (
-                    <button 
+                    <motion.button
+                      whileHover={{ scale: 1.06 }}
+                      whileTap={{ scale: 0.94 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
                       key={i} 
                       onClick={() => toggleItemSelection(item)}
                       className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 ${
@@ -274,7 +336,7 @@ export function UI() {
                       }`}
                     >
                       {item}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
                 {selectedItems.length === 2 && (
@@ -348,6 +410,14 @@ export function UI() {
             </button>
 
             <button
+              onClick={() => setShowLoreCodex(true)}
+              className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800"
+            >
+              <BookOpen size={18} />
+              LORE_CODEX ({loreEntries.filter(e => e.discovered).length}/{loreEntries.length})
+            </button>
+
+            <button
               onClick={() => {
                 setScene('menu');
                 setPaused(false);
@@ -358,6 +428,57 @@ export function UI() {
               TERMINATE_PROCESS
             </button>
           </motion.div>
+
+          {/* Lore Codex Overlay */}
+          <AnimatePresence>
+            {showLoreCodex && (
+              <motion.div
+                ref={loreCodexContainerRef}
+                onKeyDown={handleLoreCodexKeyDown}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 30 }}
+                className="absolute inset-0 bg-black/95 z-50 flex flex-col p-8 pointer-events-auto"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="lore-codex-title"
+              >
+                <div className="flex justify-between items-center mb-8 border-b border-toxic/30 pb-4">
+                  <div>
+                    <h2 id="lore-codex-title" className="text-3xl font-display text-toxic tracking-tighter">LORE_CODEX</h2>
+                    <p className="text-zinc-500 font-mono text-xs uppercase">Discovered Data: {loreEntries.filter(e => e.discovered).length} / {loreEntries.length}</p>
+                  </div>
+                  <button
+                    ref={closeLoreBtnRef}
+                    onClick={() => setShowLoreCodex(false)}
+                    aria-label="Close lore codex"
+                    className="p-2 border border-toxic/30 text-toxic hover:bg-toxic hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-toxic"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6 overflow-y-auto pr-4 custom-scrollbar" tabIndex={0}>
+                  {loreEntries.map((entry, i) => (
+                    <motion.div
+                      key={entry.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.04 }}
+                      className={`p-4 border ${entry.discovered ? 'border-toxic/50 bg-toxic/5' : 'border-zinc-800 bg-zinc-900/30'}`}
+                    >
+                      <h3 className={`text-sm font-bold uppercase tracking-widest mb-2 ${entry.discovered ? 'text-toxic' : 'text-zinc-600'}`}>
+                        {entry.discovered ? entry.title : '??? [ ENCRYPTED ]'}
+                      </h3>
+                      <p className={`text-xs font-mono leading-relaxed ${entry.discovered ? 'text-zinc-300 italic' : 'text-zinc-700 blur-[2px] select-none'}`}>
+                        {entry.discovered ? entry.content : 'Datensatz beschädigt oder nicht gefunden. Synchronisation fehlgeschlagen.'}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
@@ -398,9 +519,11 @@ export function UI() {
                     {dialogue.options.map((option, idx) => {
                       const skillReq = option.requiredSkill;
                       const traitReq = option.requiredTrait;
+                      const questDeps = option.questDependencies;
                       const hasSkill = !skillReq || (skills[skillReq.name] >= skillReq.level);
                       const hasTrait = !traitReq || (trait === traitReq);
-                      const isLocked = !hasSkill || !hasTrait;
+                      const hasQuestDeps = !questDeps || questDeps.every(qid => completedQuestIds.has(qid));
+                      const isLocked = !hasSkill || !hasTrait || !hasQuestDeps;
 
                       return (
                         <button
@@ -408,12 +531,19 @@ export function UI() {
                           disabled={isLocked}
                           onClick={() => {
                             if (!isLocked) {
+                              const preActionDialogue = useStore.getState().dialogue;
                               if (option.action) option.action();
                               if (option.flagToSet) setFlag(option.flagToSet.flag, option.flagToSet.value);
                               if (option.questToAdd) addQuest(option.questToAdd.id, option.questToAdd.text);
                               if (option.questToComplete) completeQuest(option.questToComplete);
-                              if (option.nextDialogue) setDialogue(option.nextDialogue);
-                              else setDialogue(null);
+
+                              const postActionDialogue = useStore.getState().dialogue;
+
+                              if (option.nextDialogue) {
+                                setDialogue(option.nextDialogue);
+                              } else if (option.closeOnSelect !== false && preActionDialogue === postActionDialogue) {
+                                setDialogue(null);
+                              }
                             }
                           }}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
@@ -427,10 +557,14 @@ export function UI() {
                             {isLocked && <X size={14} className="text-blood" />}
                           </div>
                           
-                          {(skillReq || traitReq) && (
+                          {(skillReq || traitReq || questDeps) && (
                             <div className={`text-[8px] mt-1 font-mono ${isLocked ? 'text-blood' : 'text-toxic/60 group-hover:text-black/60'}`}>
                               {skillReq && `[ REQ: ${skillReq.name.toUpperCase()} ${skillReq.level} ] `}
-                              {traitReq && `[ REQ: ${traitReq.toUpperCase()} ]`}
+                              {traitReq && `[ REQ: ${traitReq.toUpperCase()} ] `}
+                              {questDeps && questDeps.map(qid => {
+                                const questTitle = quests.find(q => q.id === qid)?.text || qid;
+                                return <span key={qid}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
+                              })}
                             </div>
                           )}
                         </button>

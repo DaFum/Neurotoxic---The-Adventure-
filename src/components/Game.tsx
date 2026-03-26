@@ -17,7 +17,7 @@ import { Canvas } from '@react-three/fiber';
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { motion, AnimatePresence } from 'motion/react';
-import { useStore } from '../store';
+import { useStore, Trait, Skills } from '../store';
 import { Proberaum } from './scenes/Proberaum';
 import { TourBus } from './scenes/TourBus';
 import { Backstage } from './scenes/Backstage';
@@ -37,11 +37,14 @@ export function Game() {
   const setPaused = useStore((state) => state.setPaused);
   const [selectingTrait, setSelectingTrait] = useState(false);
 
-  const traits = [
-    { id: 'Visionary', desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.', skill: { name: 'chaos', val: 5 } },
-    { id: 'Technician', desc: 'Meister der Maschinen. Boni auf technische Reparaturen.', skill: { name: 'technical', val: 5 } },
-    { id: 'Brutalist', desc: 'Liebt die rohe Gewalt. Erhöht Band-Mood durch Aggression.', skill: { name: 'chaos', val: 3, technical: 2 } },
-    { id: 'Diplomat', desc: 'Beruhigt erhitzte Gemüter. Boni auf soziale Interaktionen.', skill: { name: 'social', val: 5 } },
+  const traits: { id: Trait; desc: string; skills: { name: keyof Skills; val: number }[] }[] = [
+    { id: 'Visionary', desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.', skills: [{ name: 'chaos', val: 5 }] },
+    { id: 'Technician', desc: 'Meister der Maschinen. Boni auf technische Reparaturen.', skills: [{ name: 'technical', val: 5 }] },
+    { id: 'Brutalist', desc: 'Liebt die rohe Gewalt. Erhöht Band-Mood durch Aggression.', skills: [{ name: 'chaos', val: 3 }, { name: 'technical', val: 2 }] },
+    { id: 'Diplomat', desc: 'Beruhigt erhitzte Gemüter. Boni auf soziale Interaktionen.', skills: [{ name: 'social', val: 5 }] },
+    { id: 'Mystic', desc: 'Hat einen Draht zum Übernatürlichen. Spürt verborgene Frequenzen.', skills: [{ name: 'chaos', val: 2 }, { name: 'social', val: 3 }] },
+    { id: 'Performer', desc: 'Die Bühne ist sein Zuhause. Boni auf charismatische Handlungen.', skills: [{ name: 'social', val: 5 }] },
+    { id: 'Cynic', desc: 'Glaubt an nichts, hinterfragt alles. Erkennt Illusionen sofort.', skills: [{ name: 'technical', val: 2 }, { name: 'chaos', val: 3 }] },
   ];
 
   useEffect(() => {
@@ -153,10 +156,10 @@ export function Game() {
                         <button
                           key={t.id}
                           onClick={() => {
-                            setTrait(t.id as any);
-                            useStore.getState().increaseSkill(t.skill.name as any, t.skill.val);
-                            if (t.id === 'Brutalist') useStore.getState().increaseSkill('technical', 2);
+                          setTrait(t.id);
+                          t.skills.forEach(s => useStore.getState().increaseSkill(s.name, s.val));
                             audio.startMusic();
+                          setSelectingTrait(false);
                             setScene('proberaum');
                           }}
                           className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left"
