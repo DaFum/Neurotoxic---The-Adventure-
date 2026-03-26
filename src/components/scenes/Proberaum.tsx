@@ -32,6 +32,7 @@ export function Proberaum() {
   const addQuest = useStore((state) => state.addQuest);
   const bandMood = useStore((state) => state.bandMood);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
+  const discoverLore = useStore((state) => state.discoverLore);
 
   return (
     <>
@@ -97,6 +98,7 @@ export function Proberaum() {
           if (!flags.posterLoreRead) {
             setDialogue('Ein altes, zerrissenes Plakat von der "Machine Hell" Tour 1999. Es ist mit schwarzem Edding überkritzelt: "DER RHYTHMUS IST DER KÄFIG. DIE FREQUENZ IST DER SCHLÜSSEL." Manager: "Das war das Jahr, als Lars versuchte, ein Schlagzeug aus alten Ölfässern und einem Presslufthammer zu bauen. Die Nachbarn haben uns damals fast angezeigt, weil die Frequenzen die Fensterscheiben im ganzen Block zum Bersten brachten."');
             setFlag('posterLoreRead', true);
+            discoverLore('poster_lore');
           } else {
             setDialogue('Das Plakat erinnert dich an die chaotischen Anfänge. Der Edding-Spruch scheint sich bei jedem Hinsehen leicht zu verändern.');
           }
@@ -507,6 +509,7 @@ export function Proberaum() {
             setDialogue('Du hast das Verbotene Riff gefunden. Es vibriert in einer Frequenz, die Hunde zum Weinen bringt.');
             addToInventory('Verbotenes Riff');
             setFlag('forbiddenRiffFound', true);
+            discoverLore('forbidden_riff');
             increaseBandMood(15);
           }}
         />

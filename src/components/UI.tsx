@@ -55,6 +55,12 @@ export function UI() {
   const [showLoreCodex, setShowLoreCodex] = useState(false);
 
   useEffect(() => {
+    if (!isPaused) {
+      setShowLoreCodex(false);
+    }
+  }, [isPaused]);
+
+  useEffect(() => {
     if (!dialogue) {
       setDisplayedText('');
       return;

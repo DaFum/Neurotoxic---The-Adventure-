@@ -352,7 +352,6 @@ export function VoidStation() {
         emoji="📼"
         name="Schwebende Magnetbänder"
         onInteract={() => {
-          discoverLore('magnetband_session');
           setDialogue({
             text: 'Mehrere Magnetbänder schweben schwerelos umher. Sie sind mit "1982 SESSION" beschriftet. Ein leises Riff ist zu hören.',
             options: [
@@ -360,6 +359,7 @@ export function VoidStation() {
                 text: 'Ein Band abspielen. [Technical 5]',
                 requiredSkill: { name: 'technical', level: 5 },
                 action: () => {
+                  discoverLore('magnetband_session');
                   setDialogue('Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.');
                   increaseBandMood(10);
                   useStore.getState().increaseSkill('technical', 3);
