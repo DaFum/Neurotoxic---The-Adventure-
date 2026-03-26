@@ -29,6 +29,7 @@ interface DialogueOption {
   requiredSkill?: { name: keyof Skills; level: number };
   requiredTrait?: Trait;
   questDependencies?: string[];
+  closeOnSelect?: boolean;
 }
 
 interface Dialogue {

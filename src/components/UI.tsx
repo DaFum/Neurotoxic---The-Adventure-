@@ -29,7 +29,7 @@
  */
 import { useStore } from '../store';
 import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Circle, Heart, Plus, Package, Zap, Activity, BookOpen } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function UI() {
@@ -55,12 +55,19 @@ export function UI() {
   const [showLoreCodex, setShowLoreCodex] = useState(false);
 
   const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.completed).map(q => q.id)), [quests]);
+  const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isPaused) {
       setShowLoreCodex(false);
     }
   }, [isPaused]);
+
+  useEffect(() => {
+    if (showLoreCodex && closeLoreBtnRef.current) {
+      closeLoreBtnRef.current.focus();
+    }
+  }, [showLoreCodex]);
 
   useEffect(() => {
     if (!dialogue) {
@@ -388,15 +395,20 @@ export function UI() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 30 }}
                 className="absolute inset-0 bg-black/95 z-50 flex flex-col p-8 pointer-events-auto"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="lore-codex-title"
               >
                 <div className="flex justify-between items-center mb-8 border-b border-toxic/30 pb-4">
                   <div>
-                    <h2 className="text-3xl font-display text-toxic tracking-tighter">LORE_CODEX</h2>
+                    <h2 id="lore-codex-title" className="text-3xl font-display text-toxic tracking-tighter">LORE_CODEX</h2>
                     <p className="text-zinc-500 font-mono text-xs uppercase">Discovered Data: {loreEntries.filter(e => e.discovered).length} / {loreEntries.length}</p>
                   </div>
                   <button
+                    ref={closeLoreBtnRef}
                     onClick={() => setShowLoreCodex(false)}
-                    className="p-2 border border-toxic/30 text-toxic hover:bg-toxic hover:text-black transition-colors"
+                    aria-label="Close lore codex"
+                    className="p-2 border border-toxic/30 text-toxic hover:bg-toxic hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-toxic"
                   >
                     <X size={24} />
                   </button>
@@ -479,8 +491,16 @@ export function UI() {
                               if (option.flagToSet) setFlag(option.flagToSet.flag, option.flagToSet.value);
                               if (option.questToAdd) addQuest(option.questToAdd.id, option.questToAdd.text);
                               if (option.questToComplete) completeQuest(option.questToComplete);
-                              if (option.nextDialogue) setDialogue(option.nextDialogue);
-                              else if (!option.action) setDialogue(null);
+
+                              if (option.nextDialogue) {
+                                setDialogue(option.nextDialogue);
+                              } else if (option.action) {
+                                if (option.closeOnSelect !== false) {
+                                  setDialogue(null);
+                                }
+                              } else {
+                                setDialogue(null);
+                              }
                             }
                           }}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
@@ -498,9 +518,10 @@ export function UI() {
                             <div className={`text-[8px] mt-1 font-mono ${isLocked ? 'text-blood' : 'text-toxic/60 group-hover:text-black/60'}`}>
                               {skillReq && `[ REQ: ${skillReq.name.toUpperCase()} ${skillReq.level} ] `}
                               {traitReq && `[ REQ: ${traitReq.toUpperCase()} ] `}
-                              {questDeps && questDeps.map(qid => (
-                                <span key={qid}>[ REQ: QUEST: {qid} ] </span>
-                              ))}
+                              {questDeps && questDeps.map(qid => {
+                                const questTitle = quests.find(q => q.id === qid)?.text || qid;
+                                return <span key={qid}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
+                              })}
                             </div>
                           )}
                         </button>
