@@ -1,0 +1,465 @@
+/**
+ * #1: UPDATES
+ * - Integrated "Talking Amp's Existential Crisis" quest in Proberaum.
+ * - Integrated "Ghostly Roadie's Lost Recipe" quest in TourBus.
+ * - Added Geister-Drink item combination.
+ * - Added Rostiges Plektrum item.
+ * 
+ * #2: NEXT STEPS & IDEAS
+ * - Expand questlines with branching outcomes.
+ * - Refine NPC dialogue and lore.
+ * - Introduce scene-specific quests for remaining scenes.
+ * - Integrate character traits/skills deeper into dialogue.
+ * 
+ * #3: ERRORS & SOLUTIONS
+ * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
+ */
+/**
+ * #1: UPDATES
+ * - Enhanced dialogue system with visual feedback for locked options.
+ * - Options now grey out and disable if requirements are not met.
+ * - Added skill/trait requirement labels to locked options.
+ * 
+ * #2: NEXT STEPS & IDEAS
+ * - Add more complex dialogue branching.
+ * - Implement more visual effects for dialogue.
+ * 
+ * #3: ERRORS & SOLUTIONS
+ * - No major errors found.
+ */
+import { useStore } from '../store';
+import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Circle, Heart, Plus, Package, Zap, Activity } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+
+export function UI() {
+  const dialogue = useStore((state) => state.dialogue);
+  const setDialogue = useStore((state) => state.setDialogue);
+  const inventory = useStore((state) => state.inventory);
+  const combineItems = useStore((state) => state.combineItems);
+  const quests = useStore((state) => state.quests);
+  const addQuest = useStore((state) => state.addQuest);
+  const completeQuest = useStore((state) => state.completeQuest);
+  const setFlag = useStore((state) => state.setFlag);
+  const bandMood = useStore((state) => state.bandMood);
+  const scene = useStore((state) => state.scene);
+  const setScene = useStore((state) => state.setScene);
+  const resetGame = useStore((state) => state.resetGame);
+  const isPaused = useStore((state) => state.isPaused);
+  const setPaused = useStore((state) => state.setPaused);
+  const trait = useStore((state) => state.trait);
+  const skills = useStore((state) => state.skills);
+  const [displayedText, setDisplayedText] = useState('');
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!dialogue) {
+      setDisplayedText('');
+      return;
+    }
+    
+    let i = 0;
+    setDisplayedText('');
+    
+    // Determine speed: urgency 1 (high) = fast, urgency 3 (low) = slow
+    const baseDelay = dialogue.urgency === 1 ? 15 : dialogue.urgency === 3 ? 50 : 30;
+    
+    const interval = setInterval(() => {
+      const char = dialogue.text[i];
+      setDisplayedText((prev) => prev + char);
+      
+      // Play typing sound for non-space characters
+      if (char !== ' ') {
+        import('../audio').then(({ audio }) => audio.playTypewriter());
+      }
+      
+      i++;
+      if (i >= dialogue.text.length) clearInterval(interval);
+    }, baseDelay);
+    
+    return () => clearInterval(interval);
+  }, [dialogue?.text, dialogue?.urgency]);
+
+  if (scene === 'menu') return null;
+
+  const toggleItemSelection = (item: string) => {
+    if (selectedItems.includes(item)) {
+      setSelectedItems(selectedItems.filter(i => i !== item));
+    } else if (selectedItems.length < 2) {
+      setSelectedItems([...selectedItems, item]);
+    }
+  };
+
+  const handleCombine = () => {
+    if (selectedItems.length === 2) {
+      const success = combineItems(selectedItems[0], selectedItems[1]);
+      if (success) {
+        setDialogue(`Erfolg! Du hast ${selectedItems[0]} und ${selectedItems[1]} kombiniert.`);
+        setSelectedItems([]);
+      } else {
+        setDialogue('Diese Gegenstände lassen sich nicht kombinieren.');
+        setSelectedItems([]);
+      }
+    }
+  };
+
+  const glitchIntensity = Math.max(0, (bandMood - 70) / 30) + (scene === 'void_station' ? 0.3 : 0);
+
+  return (
+    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 scanlines ${bandMood > 85 ? 'animate-pulse brightness-125' : ''} ${bandMood > 90 ? 'animate-glitch' : ''}`}>
+      {/* Dynamic Glitch Overlay */}
+      {glitchIntensity > 0 && (
+        <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden select-none">
+          <motion.div
+            animate={{
+              opacity: [0.05, 0.15, 0.05],
+              x: [-2, 2, -2],
+              y: [-1, 1, -1],
+            }}
+            transition={{
+              duration: 0.2,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="absolute inset-0 bg-red-500/5 mix-blend-overlay"
+            style={{
+              filter: `contrast(${100 + glitchIntensity * 50}%) brightness(${100 + glitchIntensity * 20}%)`,
+            }}
+          />
+          {glitchIntensity > 0.4 && (
+            <motion.div
+              animate={{
+                clipPath: [
+                  'inset(10% 0 80% 0)',
+                  'inset(40% 0 40% 0)',
+                  'inset(70% 0 10% 0)',
+                  'inset(0% 0 0% 0)',
+                ],
+                x: [-10, 10, -5, 0],
+              }}
+              transition={{
+                duration: 0.1,
+                repeat: Infinity,
+                repeatDelay: Math.random() * 2
+              }}
+              className="absolute inset-0 bg-cyan-500/5 mix-blend-screen"
+            />
+          )}
+        </div>
+      )}
+
+      {/* Top Bar */}
+      <div className="flex justify-between items-start">
+        <div className="flex flex-col gap-6">
+          <div className="bg-black/90 p-5 brutal-border-toxic pointer-events-auto flex flex-col gap-3 animate-reveal">
+            <div>
+              <h1 className="text-4xl text-toxic leading-none mb-1">
+                NEUROTOXIC
+              </h1>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] font-bold">
+                Industrial Management Interface // v2.6
+              </p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-mono text-toxic/80 bg-toxic/5 px-2 py-1 border border-toxic/20">
+                <span className="animate-pulse">●</span>
+                LOCATION: {
+                  scene === 'proberaum' ? 'PROBERAUM_01' : 
+                  scene === 'tourbus' ? 'VAN_INTERIOR' :
+                  scene === 'backstage' ? 'BACKSTAGE_ZONE' :
+                  scene === 'void_station' ? 'VOID_STATION_440HZ' :
+                  scene === 'kaminstube' ? 'TANGERMÜNDE_STUBE' : 
+                  'SALZGITTER_RIFF'
+                }
+              </div>
+            </div>
+          </div>
+
+          {/* Band Mood Meter */}
+          <div className="bg-black/90 p-4 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:100ms]">
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                <Heart size={12} className={bandMood > 50 ? "text-toxic" : "text-blood"} fill={bandMood > 50 ? "currentColor" : "none"} />
+                Band_Vibe
+              </div>
+              <span className="text-[10px] font-mono text-toxic">{bandMood}%</span>
+            </div>
+            <div className="w-full h-1.5 bg-zinc-900 overflow-hidden flex gap-0.5">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <div 
+                  key={i}
+                  className={`h-full w-full transition-colors duration-500 ${
+                    (i / 20) * 100 < bandMood 
+                      ? (bandMood > 70 ? 'bg-toxic' : bandMood > 40 ? 'bg-yellow-500' : 'bg-blood') 
+                      : 'bg-zinc-800'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* System Status Panel (New) */}
+          <div className="bg-black/90 p-3 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:150ms] border-l-toxic">
+            <div className="text-[8px] font-mono text-zinc-500 uppercase mb-2 flex items-center gap-2">
+              <Activity size={10} />
+              Manager_Profile
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-zinc-500">TRAIT:</span>
+                <span className="text-toxic font-black uppercase tracking-widest">{trait || 'NONE'}</span>
+              </div>
+              <div className="h-px bg-zinc-800 w-full" />
+              <div className="grid grid-cols-1 gap-1">
+                <div className="flex justify-between text-[9px] font-mono">
+                  <span className="text-zinc-500">TECHNICAL:</span>
+                  <span className="text-zinc-200">{skills.technical}</span>
+                </div>
+                <div className="flex justify-between text-[9px] font-mono">
+                  <span className="text-zinc-500">SOCIAL:</span>
+                  <span className="text-zinc-200">{skills.social}</span>
+                </div>
+                <div className="flex justify-between text-[9px] font-mono">
+                  <span className="text-zinc-500">CHAOS:</span>
+                  <span className="text-zinc-200">{skills.chaos}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* System Status Panel (Original) */}
+          <div className="bg-black/90 p-3 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:180ms] border-l-toxic">
+            <div className="text-[8px] font-mono text-zinc-500 uppercase mb-2 flex items-center gap-2">
+              <Activity size={10} />
+              System_Telemetry
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-zinc-500">SONIC_OUTPUT:</span>
+                <span className="text-toxic">{bandMood * 12}db</span>
+              </div>
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-zinc-500">SYNC_RATE:</span>
+                <span className="text-toxic">{(bandMood * 0.98).toFixed(1)}%</span>
+              </div>
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-zinc-500">STRESS_LEVEL:</span>
+                <span className={bandMood > 80 ? "text-blood animate-pulse" : "text-zinc-400"}>
+                  {bandMood > 80 ? 'CRITICAL' : bandMood > 50 ? 'STABLE' : 'LOW'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Inventory & Quests */}
+        <div className="flex flex-col gap-6 items-end">
+          {/* Inventory */}
+          <div className="bg-black/90 p-4 brutal-border pointer-events-auto flex flex-col items-end min-w-[240px] animate-reveal [animation-delay:200ms]">
+            <div className="flex items-center gap-2 mb-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 w-full pb-2">
+              <Backpack size={14} />
+              Cargo_Manifest
+            </div>
+            {inventory.length === 0 ? (
+              <div className="text-[10px] text-zinc-600 font-mono uppercase">No assets detected</div>
+            ) : (
+              <div className="flex flex-col gap-3 w-full">
+                <div className="grid grid-cols-2 gap-2">
+                  {inventory.map((item, i) => (
+                    <button 
+                      key={i} 
+                      onClick={() => toggleItemSelection(item)}
+                      className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 ${
+                        selectedItems.includes(item) 
+                        ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]' 
+                        : 'bg-zinc-900/50 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-500'
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+                {selectedItems.length === 2 && (
+                  <button
+                    onClick={handleCombine}
+                    className="w-full mt-2 bg-toxic hover:bg-toxic/80 text-black font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-transform active:scale-95"
+                  >
+                    <Plus size={14} />
+                    Execute_Merge
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Quest Log */}
+          <div className="bg-black/90 p-4 brutal-border pointer-events-auto flex flex-col items-end min-w-[240px] animate-reveal [animation-delay:300ms]">
+            <div className="flex items-center gap-2 mb-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 w-full pb-2">
+              <CheckCircle2 size={14} />
+              Mission_Objectives
+            </div>
+            <div className="flex flex-col gap-3 w-full">
+              {quests.filter(q => !q.completed || scene === 'salzgitter').map((quest) => (
+                <div key={quest.id} className={`flex items-start gap-3 text-[10px] font-mono leading-tight ${quest.completed ? 'text-toxic/30' : 'text-zinc-300'}`}>
+                  <div className={`mt-0.5 shrink-0 w-2 h-2 border ${quest.completed ? 'bg-toxic border-toxic' : 'border-zinc-600'}`} />
+                  <span className={quest.completed ? 'line-through' : ''}>{quest.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Controls Hint */}
+      <div className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-auto">
+        WASD / Pfeiltasten = Bewegen<br/>
+        Mausklick = Interagieren<br/>
+        ESC = Pause
+      </div>
+
+      {/* Pause Menu */}
+      {isPaused && (
+        <div className="absolute inset-0 bg-obsidian/80 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50 scanlines">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            className="bg-black p-10 brutal-border-toxic flex flex-col gap-6 w-80 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-toxic animate-pulse" />
+            <h2 className="text-4xl font-display text-toxic tracking-tighter text-center mb-6">SYSTEM_PAUSED</h2>
+            
+            <button
+              onClick={() => setPaused(false)}
+              className="group flex items-center justify-center gap-3 bg-toxic hover:bg-white text-black font-black py-4 text-sm uppercase tracking-[0.2em] transition-all brutal-border-toxic hover:translate-x-[-2px] hover:translate-y-[-2px]"
+            >
+              <Play size={18} fill="currentColor" />
+              RESUME_SESSION
+            </button>
+
+            <button
+              onClick={() => {
+                if (confirm('REBOOT_SYSTEM: Are you sure?')) {
+                  resetGame();
+                  setPaused(false);
+                }
+              }}
+              className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800"
+            >
+              <RotateCcw size={18} />
+              REBOOT_GAME
+            </button>
+
+            <button
+              onClick={() => {
+                setScene('menu');
+                setPaused(false);
+              }}
+              className="flex items-center justify-center gap-3 bg-blood/20 hover:bg-blood text-blood hover:text-white font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-blood/30"
+            >
+              <LogOut size={18} />
+              TERMINATE_PROCESS
+            </button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Dialogue Box */}
+      <AnimatePresence>
+        {dialogue && (
+          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              className="bg-black/95 brutal-border-toxic p-8 relative overflow-hidden"
+            >
+              {/* Decorative corner accents */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-toxic" />
+              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-toxic" />
+              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-toxic" />
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-toxic" />
+
+              <div className="flex flex-col gap-4">
+                <div className="flex justify-between items-center border-b border-toxic/20 pb-2">
+                  <span className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</span>
+                  <button 
+                    onClick={() => setDialogue(null)}
+                    className="text-toxic hover:text-white transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <p className="text-xl font-bold leading-tight text-zinc-100 italic">
+                  {displayedText}
+                  <span className="inline-block w-2 h-5 bg-toxic ml-1 animate-pulse" />
+                </p>
+
+                {/* Branching Options */}
+                {displayedText.length >= (dialogue?.text.length || 0) && dialogue?.options && (
+                  <div className="flex flex-col gap-2 mt-4">
+                    {dialogue.options.map((option, idx) => {
+                      const skillReq = option.requiredSkill;
+                      const traitReq = option.requiredTrait;
+                      const hasSkill = !skillReq || (skills[skillReq.name] >= skillReq.level);
+                      const hasTrait = !traitReq || (trait === traitReq);
+                      const isLocked = !hasSkill || !hasTrait;
+
+                      return (
+                        <button
+                          key={idx}
+                          disabled={isLocked}
+                          onClick={() => {
+                            if (!isLocked) {
+                              if (option.action) option.action();
+                              if (option.flagToSet) setFlag(option.flagToSet.flag, option.flagToSet.value);
+                              if (option.questToAdd) addQuest(option.questToAdd.id, option.questToAdd.text);
+                              if (option.questToComplete) completeQuest(option.questToComplete);
+                              if (option.nextDialogue) setDialogue(option.nextDialogue);
+                              else setDialogue(null);
+                            }
+                          }}
+                          className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
+                            isLocked 
+                            ? 'bg-zinc-900/50 border-zinc-800 text-zinc-600 cursor-not-allowed grayscale' 
+                            : 'bg-zinc-900 hover:bg-toxic text-zinc-400 hover:text-black border-zinc-800 hover:border-toxic'
+                          }`}
+                        >
+                          <div className="flex justify-between items-center w-full">
+                            <span>{`> ${option.text}`}</span>
+                            {isLocked && <X size={14} className="text-blood" />}
+                          </div>
+                          
+                          {(skillReq || traitReq) && (
+                            <div className={`text-[8px] mt-1 font-mono ${isLocked ? 'text-blood' : 'text-toxic/60 group-hover:text-black/60'}`}>
+                              {skillReq && `[ REQ: ${skillReq.name.toUpperCase()} ${skillReq.level} ] `}
+                              {traitReq && `[ REQ: ${traitReq.toUpperCase()} ]`}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="flex justify-end mt-4">
+                  {!dialogue?.options && (
+                    <button
+                      onClick={() => {
+                        if (displayedText.length < (dialogue?.text.length || 0)) {
+                          setDisplayedText(dialogue?.text || '');
+                        } else {
+                          setDialogue(null);
+                        }
+                      }}
+                      className="bg-toxic/10 hover:bg-toxic text-toxic hover:text-black px-6 py-2 font-black uppercase tracking-[0.2em] text-[10px] transition-all border border-toxic/30"
+                    >
+                      {displayedText.length < (dialogue?.text.length || 0) ? 'SKIP_DATA' : 'ACKNOWLEDGE'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
