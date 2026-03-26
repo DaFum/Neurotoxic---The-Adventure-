@@ -19,16 +19,14 @@ import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
 
-// Declared outside the component to reuse memory and prevent garbage collection stutters
-const velocity = new THREE.Vector3();
-const shakeOffset = new THREE.Vector3();
-
 interface PlayerProps {
   bounds?: { x: [number, number]; z: [number, number] };
 }
 
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);
+  const velocity = useRef(new THREE.Vector3()).current;
+  const shakeOffset = useRef(new THREE.Vector3()).current;
   const [, get] = useKeyboardControls();
   const setPlayerPos = useStore((state) => state.setPlayerPos);
   const cameraShake = useStore((state) => state.cameraShake);
@@ -84,13 +82,15 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     const pos = bodyRef.current.translation();
     
     // Manual bounds clamping
+    let clampedX = pos.x;
+    let clampedZ = pos.z;
     if (pos.x < bounds.x[0] || pos.x > bounds.x[1] || pos.z < bounds.z[0] || pos.z > bounds.z[1]) {
-      const clampedX = THREE.MathUtils.clamp(pos.x, bounds.x[0], bounds.x[1]);
-      const clampedZ = THREE.MathUtils.clamp(pos.z, bounds.z[0], bounds.z[1]);
+      clampedX = THREE.MathUtils.clamp(pos.x, bounds.x[0], bounds.x[1]);
+      clampedZ = THREE.MathUtils.clamp(pos.z, bounds.z[0], bounds.z[1]);
       bodyRef.current.setTranslation({ x: clampedX, y: pos.y, z: clampedZ }, true);
     }
 
-    setPlayerPos([pos.x, pos.y, pos.z]);
+    setPlayerPos([clampedX, pos.y, clampedZ]);
 
     // Camera follow with shake
     // Override the shakeOffset vector instead of creating a new one
