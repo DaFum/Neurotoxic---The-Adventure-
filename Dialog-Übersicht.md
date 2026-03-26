@@ -7,7 +7,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 1. Proberaum (Die Vorbereitung)
 
 * **Zerrissenes Plakat:**
-    * *Interaktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`).
+    * *Interaktion:* Liest die Geschichte der Tour 1999 (**Lore:** `poster_lore`).
 * **Das Verbotene Riff (Item):**
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`).
 * **Matze (Gitarrist):**
@@ -24,6 +24,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Technical 5):* Frequenz-Analyse (+20 BandMood, +3 Technical).
             * *Unterzweig (Skill: Social 3):* Beruhigen (+15 BandMood, +2 Social).
 * **Lars (Drummer):**
+    * *Ohne Bier:* Fordert Bier (-2 BandMood bei Gespräch ohne Bier).
     * *Item (Bier):*
         * Zweig A: Bier geben (+20 BandMood).
         * Zweig B: Frage nach Drum-Philosophie.
@@ -31,10 +32,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Technical 3):* Schlagkraft-Analyse (+15 BandMood, +2 Technical).
 * **Marius (Sänger):**
     * *Ohne Bier:* Fordert Bier.
+        * Option "Wasser" (-5 BandMood).
         * Option (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social).
         * Option (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social).
 * **Sprechender Amp (Existenzielle Krise):**
-    * *Initial:* Erzählt von der 5. Dimension.
+    * *Initial:* Erzählt von der 5. Dimension (+2 BandMood).
     * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical).
     * *Therapie-Sitzung:*
         * Option (Trait: Diplomat): "Du bist ein Bewusstsein" (+30 BandMood, Quest-Abschluss).
@@ -42,43 +44,63 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **TR-8080 Drum Machine:**
     * *Item (Verbotenes Riff):* Maschine absorbiert das Riff.
         * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
+* **Feedback Monitor:**
+    * *Initial:* Fordert Quanten-Kabel (+5 BandMood).
+    * *Mit Quanten-Kabel:* (+20 BandMood, +5 Technical).
+* **Mysteriöse Pfütze:**
+    * *Mit Wischmopp:* (+20 BandMood).
+* **Autoschlüssel:** (+10 BandMood).
+* **Kühles Bier:** (+15 BandMood).
 
 ---
 
 ## 2. TourBus (Unterwegs)
 
 * **Matze:**
-    * *Ohne Kabel:* Verlangt Klebeband.
+    * *Ohne Kabel/Klebeband:* Verlangt Klebeband.
     * *Mit Repariertem Kabel:* "Bühne abreißen" (+10 BandMood).
-* **Defekter Verstärker (Trait: Technician):**
-    * *Spezial-Option:* Lötstelle reparieren (+20 BandMood, +10 Technical).
+* **Marius:**
+    * *Mit Marius Ego:* (+20 BandMood).
+* **Defekter Verstärker (Kein Trait erforderlich, aber Option löten):**
+    * *Interaktion:* Reparieren mit geübten Handgriffen (+20 BandMood, +5 Technical).
+* **Vergessenes Notizbuch:** (+5 BandMood).
 * **Geist eines Roadies:**
-    * *Item (Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan).
+    * *Initial:* (+5 BandMood).
+    * *Item (Geister-Drink):* Rezept-Quest abgeschlossen (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan).
     * *Information (1982/Talisman):*
         * Zweig A (Trait: Visionary): "Erzähl mir alles" (+30 BandMood, +5 Chaos).
         * Zweig B (Skill: Technical 7): "Anomalie analysieren" (+25 BandMood, +4 Technical).
         * Zweig C (Skill: Social 5): "Geist beruhigen" (+20 BandMood, +3 Social).
+    * *Item (Talisman):* Info (+20 BandMood).
+    * *Item (Verbotenes Riff):* Info (+10 BandMood).
 
 ---
 
 ## 3. Backstage (Vor dem Gig)
 
-* **Sentient Feedback Monitor:**
+* **Feedback-Monitor:**
     * *Item (Verstärker-Schaltplan):*
         * Zweig A (Skill: Technical 5): "Optimierte Frequenzen" (+30 BandMood, +5 Technical).
         * Zweig B (Trait: Visionary): "Transzendente Frequenzen" (+40 BandMood, +5 Chaos).
         * Zweig C: "Standard-Frequenzen" (+15 BandMood).
+    * *Gespräch (Initial):* (+5 BandMood).
 * **Marius (Lampenfieber):**
     * *Optionen zur Beruhigung:*
         * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social).
         * (Trait: Visionary): "Sehe deine Vision" (+35 BandMood, +3 Chaos).
         * (Info: 1982 vorhanden): "Erinnerung an 1982" (+25 BandMood).
         * "Lego-Trick" (+10 BandMood).
-        * "Equipment verkaufen" (-5 BandMood, zwingt ihn aber vor lauter Schreck auf die Bühne).
+        * "Equipment verkaufen" (-5 BandMood).
+    * *Wenn bereits beruhigt:* (+15 BandMood).
 * **Lars (Energie-Mangel):**
     * *Item (Turbo-Koffein):*
         * Zweig A: "Auf Ex" (+40 BandMood, Lars "vibriert").
         * Zweig B: "Nur ein Schluck" (+20 BandMood).
+    * *Item (Energiedrink):* (+10 BandMood).
+* **Ritual-Kreis:**
+    * *Item (Plasma-Zünder):* (+30 BandMood).
+    * *Item (Verbotenes Riff):* (+15 BandMood).
+    * *Standard:* (+5 BandMood).
 
 ---
 
@@ -88,12 +110,12 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Spezial (Trait: Mystic):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere).
     * *Item (Industrie-Talisman):* "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
     * *Item (Verbotenes Riff):* "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
-    * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss) ODER 432Hz (+10 BandMood, Quest-Abschluss).
+    * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood) ODER 432Hz (+10 BandMood).
     * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Auf das Echo ansprechen (+15 BandMood, **Lore:** `cosmic_echo_decoded`).
 * **Altes Terminal:**
     * *Interaktion:* Logbuch lesen (+5 BandMood, **Lore:** `void_1982`).
 * **Kosmisches Echo:**
-    * *Option (Trait: Visionary):* Nachricht entschlüsseln (+20 BandMood, Quest-Abschluss, **Lore:** `cosmic_echo_decoded`).
+    * *Option (Trait: Visionary):* Nachricht entschlüsseln (+20 BandMood, **Lore:** `cosmic_echo_decoded`).
 * **Marius' Ego (Item-Fund):**
     * *Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius Ego" und schaltet **Lore:** `ego_philosophy` frei.*
     * Option (Trait: Visionary): "Vision leitet uns" (+30 BandMood, +5 Chaos).
@@ -105,7 +127,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Schwebende Magnetbänder:**
     * *Option (Skill: Technical 5):* Band abspielen (+10 BandMood, +3 Technical, **Lore:** `magnetband_session`).
 * **Frequenz-Detektor:**
-    * *Standard-Interaktion:* Warnung lesen (**Lore:** `frequenz_anomaly`).
+    * *Standard-Interaktion:* Warnung lesen (+15 BandMood, **Lore:** `frequenz_anomaly`).
     * *Option (Skill: Technical 6):* Kalibrieren (+15 BandMood, +4 Technical).
 * **Verbotene Inschrift:**
     * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Vollständig entschlüsseln (+20 BandMood, **Lore:** `inschrift_warning`).
@@ -117,8 +139,12 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Flüsternder Kamin (Trait: Diplomat):**
     * *Spezial-Option:* Sprache deuten (+20 BandMood, Quest: Forgotten Lore).
 * **Wirt:**
-    * *Item (Industrie-Talisman):* Erhält "Altes Plektrum" (wichtig für Matze in Salzgitter).
-    * *BandMood > 80:* Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
+    * *Item (Industrie-Talisman):* Erhält "Altes Plektrum" (+20 BandMood).
+    * *BandMood > 80 / Info 1982:* Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
+* **Kaputter Amp:**
+    * *Item (Ersatzröhre):* (+30 BandMood).
+* **Kaputter Drum-Computer:** (+10 BandMood).
+* **Crowd:** (+5 BandMood).
 
 ---
 
@@ -128,14 +154,24 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Item (Verbotenes Riff + Altes Plektrum):* Riff wird gebändigt.
         * Option (Skill: Chaos 10): "Chaos kanalisieren" (+50 BandMood, +5 Chaos).
         * Option (Skill: Technical 10): "Präzision im Chaos" (+40 BandMood, +5 Technical).
-    * *Nur Verbotenes Riff (ohne Plektrum):* Er warnt vor Realitätsrissen.
+        * Standard: (+20 BandMood).
+    * *Nur Verbotenes Riff (ohne Plektrum):*
+        * Option (Trait: Visionary): (+40 BandMood, +5 Chaos).
+        * Standard: (+10 BandMood).
 * **Lars:**
     * *Wenn "vibriert" (Koffein im Backstage auf Ex getrunken):*
         * Option (Skill: Technical 10): "Frequenz synchronisieren" (+30 BandMood, +5 Technical).
+        * Standard: (+10 BandMood).
+    * *Immer:* (+5 BandMood).
 * **Marius:**
     * *Trait (Performer):* Spezial-Tipp für die Show geben (+30 BandMood, +5 Social).
-    * *Skill (Chaos 10):* "Zorn kanalisieren" (+40 BandMood, +5 Chaos).
-    * *Skill (Social 10):* "Menge beruhigen" (+30 BandMood, +5 Social).
+    * *Wenn ConfidenceBoost (Backstage):*
+        * Skill (Chaos 10): "Zorn kanalisieren" (+40 BandMood, +5 Chaos).
+        * Skill (Social 10): "Menge beruhigen" (+30 BandMood, +5 Social).
+        * Standard: (+15 BandMood).
+* **Schwebender Bassist:** (+10 BandMood).
 * **Fan:**
     * *Item (Industrie-Talisman):* Als Geschenk übergeben (+40 BandMood).
     * *Item (Signierte Setliste):* Übergeben (+25 BandMood bei Umarmung / +15 bei Abstand).
+    * *Falsche Antwort ("Wer bist du nochmal?"):* (-2 BandMood).
+* **Tour Erfolgreich:** (+50 BandMood).
