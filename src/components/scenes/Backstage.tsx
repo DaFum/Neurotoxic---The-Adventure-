@@ -346,7 +346,9 @@ export function Backstage() {
         name="Zurück zum Tourbus"
         onInteract={() => {
           setDialogue('Nochmal zum Bus gehen? Sicher ist sicher.');
-          setTimeout(() => setScene('tourbus'), 1000);
+          setTimeout(() => {
+            if (useStore.getState().scene === 'backstage') setScene('tourbus');
+          }, 1000);
         }}
       />
 
