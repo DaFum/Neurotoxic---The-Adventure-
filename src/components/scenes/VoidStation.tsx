@@ -233,58 +233,59 @@ export function VoidStation() {
             const trait = useStore.getState().trait;
             const skills = useStore.getState().skills;
 
+            const egoActionWrapper = (originalAction: () => void) => () => {
+              discoverLore('ego_philosophy');
+              originalAction();
+            };
+
             setDialogue({
               text: 'Marius\' Ego: "Ich bin das Zentrum des Universums! Ohne mich wäre dieser Gig nur ein Haufen rostiger Nägel. Warum sollte ich zurück in diesen winzigen Körper?"',
               options: [
                 { 
                   text: 'Du bist die Vision, die uns leitet. [Visionary]', 
                   requiredTrait: 'Visionary',
-                  action: () => {
-                    discoverLore('ego_philosophy');
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Endlich jemand, der meine wahre Bedeutung versteht! Die Vision ist zu groß für die Leere. Ich kehre zurück, um die Welt zu erleuchten."');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(30);
                     useStore.getState().increaseSkill('chaos', 5);
-                  }
+                  })
                 },
                 { 
                   text: 'Deine Resonanzfrequenz ist instabil. [Technical 8]', 
                   requiredSkill: { name: 'technical', level: 8 },
-                  action: () => {
-                    discoverLore('ego_philosophy');
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Instabil?! Ich bin die perfekte Schwingung! ... Warte, du hast recht. Die Entropie hier draußen zersetzt meine Brillanz. Schnell, fang mich ein!"');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 5);
-                  }
+                  })
                 },
                 { 
                   text: 'Die Fans brauchen dich. [Social 8]', 
                   requiredSkill: { name: 'social', level: 8 },
-                  action: () => {
-                    discoverLore('ego_philosophy');
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Die Fans... ja. Meine Anbetung ist hier draußen so... abstrakt. Ich brauche den Schweiß und die Tränen der ersten Reihe. Bring mich zurück!"');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(25);
                     useStore.getState().increaseSkill('social', 5);
-                  }
+                  })
                 },
                 { 
                   text: 'Komm einfach mit, du aufgeblasene Kugel.', 
-                  action: () => {
-                    discoverLore('ego_philosophy');
+                  action: egoActionWrapper(() => {
                     setDialogue('Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."');
                     addToInventory('Marius Ego');
                     setFlag('egoContained', true);
                     completeQuest('ego');
                     increaseBandMood(10);
-                  }
+                  })
                 }
               ]
             });
@@ -355,16 +356,24 @@ export function VoidStation() {
           setDialogue({
             text: 'Mehrere Magnetbänder schweben schwerelos umher. Sie sind mit "1982 SESSION" beschriftet. Ein leises Riff ist zu hören.',
             options: [
-              {
-                text: 'Ein Band abspielen. [Technical 5]',
-                requiredSkill: { name: 'technical', level: 5 },
-                action: () => {
-                  discoverLore('magnetband_session');
-                  setDialogue('Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.');
-                  increaseBandMood(10);
-                  useStore.getState().increaseSkill('technical', 3);
+              flags.magnetbandPlayed
+              ? {
+                  text: 'Ein Band abspielen.',
+                  action: () => {
+                    setDialogue('Du lauschst der Aufnahme erneut. Die Leere hallt weiter nach.');
+                  }
                 }
-              },
+              : {
+                  text: 'Ein Band abspielen. [Technical 5]',
+                  requiredSkill: { name: 'technical', level: 5 },
+                  action: () => {
+                    discoverLore('magnetband_session');
+                    setFlag('magnetbandPlayed', true);
+                    setDialogue('Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.');
+                    increaseBandMood(10);
+                    useStore.getState().increaseSkill('technical', 3);
+                  }
+                },
               {
                 text: 'Bänder schweben lassen.',
                 action: () => setDialogue('Manche Sessions sollten besser ungespielt bleiben.')
@@ -386,15 +395,23 @@ export function VoidStation() {
           setDialogue({
             text: 'Ein seltsames Gerät piept rhythmisch. Es warnt vor einer "Resonanz-Anomalie".',
             options: [
-              {
-                text: 'Gerät kalibrieren. [Technical 6]',
-                requiredSkill: { name: 'technical', level: 6 },
-                action: () => {
-                  setDialogue('Du justierst die Antennen. Die Anzeige offenbart: Die gesamte Station atmet. Sie ist am Leben.');
-                  increaseBandMood(15);
-                  useStore.getState().increaseSkill('technical', 4);
+              flags.frequenzCalibrated
+              ? {
+                  text: 'Gerät kalibrieren.',
+                  action: () => {
+                    setDialogue('Das Gerät ist bereits optimal kalibriert. Die Station atmet im Hintergrund weiter.');
+                  }
                 }
-              },
+              : {
+                  text: 'Gerät kalibrieren. [Technical 6]',
+                  requiredSkill: { name: 'technical', level: 6 },
+                  action: () => {
+                    setFlag('frequenzCalibrated', true);
+                    setDialogue('Du justierst die Antennen. Die Anzeige offenbart: Die gesamte Station atmet. Sie ist am Leben.');
+                    increaseBandMood(15);
+                    useStore.getState().increaseSkill('technical', 4);
+                  }
+                },
               {
                 text: 'In Ruhe lassen.',
                 action: () => setDialogue('Das Piepsen ist nervig, aber ungefährlich.')
@@ -412,15 +429,23 @@ export function VoidStation() {
           setDialogue({
             text: 'Eine blutrote, phosphoreszierende Inschrift schwebt in der Luft. Die Buchstaben winden sich wie Würmer.',
             options: [
-              {
-                text: 'Vollständig entschlüsseln. [cosmic_echo complete]',
-                questDependencies: ['cosmic_echo'],
-                action: () => {
-                  discoverLore('inschrift_warning');
-                  setDialogue('Die Inschrift warnt vor einer Kadenz, die die Stille für immer töten wird. Salzgitter ist der Katalysator.');
-                  increaseBandMood(20);
+              flags.inschriftDecoded
+              ? {
+                  text: 'Erneut lesen.',
+                  action: () => {
+                    setDialogue('Du verinnerlichst die Warnung vor der finalen Kadenz in Salzgitter erneut.');
+                  }
                 }
-              },
+              : {
+                  text: 'Vollständig entschlüsseln. [cosmic_echo complete]',
+                  questDependencies: ['cosmic_echo'],
+                  action: () => {
+                    discoverLore('inschrift_warning');
+                    setFlag('inschriftDecoded', true);
+                    setDialogue('Die Inschrift warnt vor einer Kadenz, die die Stille für immer töten wird. Salzgitter ist der Katalysator.');
+                    increaseBandMood(20);
+                  }
+                },
               {
                 text: 'Nur den Anfang lesen.',
                 action: () => setDialogue('Du liest die ersten Worte, aber der Rest ist zu verschlüsselt.')

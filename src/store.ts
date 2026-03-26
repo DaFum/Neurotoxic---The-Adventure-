@@ -259,9 +259,15 @@ export const useStore = create<GameState>()(
         bandMood: Math.min(100, state.bandMood + amount)
       })),
       setCameraShake: (cameraShake) => set({ cameraShake }),
-      discoverLore: (id) => set((state) => ({
-        loreEntries: state.loreEntries.map(e => e.id === id ? { ...e, discovered: true } : e)
-      })),
+      discoverLore: (id) => set((state) => {
+        const entry = state.loreEntries.find(e => e.id === id);
+        if (!entry || entry.discovered) {
+          return {}; // Avoid state update if lore doesn't exist or is already discovered
+        }
+        return {
+          loreEntries: state.loreEntries.map(e => e.id === id ? { ...e, discovered: true } : e)
+        };
+      }),
       resetGame: () => set(initialState),
     }),
     {
@@ -274,7 +280,34 @@ export const useStore = create<GameState>()(
         quests: state.quests,
         bandMood: state.bandMood,
         loreEntries: state.loreEntries,
+        trait: state.trait,
+        skills: state.skills,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          if (!state.flags.legacyLoreMigrated) {
+            const newEntries = [...state.loreEntries];
+            let migrated = false;
+
+            const migrateEntry = (id: string) => {
+              const idx = newEntries.findIndex(e => e.id === id);
+              if (idx !== -1 && !newEntries[idx].discovered) {
+                newEntries[idx] = { ...newEntries[idx], discovered: true };
+                migrated = true;
+              }
+            };
+
+            if (state.flags.posterLoreRead) migrateEntry('poster_lore');
+            if (state.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
+            if (state.flags.egoContained) migrateEntry('ego_philosophy');
+
+            if (migrated) {
+              state.loreEntries = newEntries;
+            }
+            state.flags.legacyLoreMigrated = true;
+          }
+        }
+      },
     }
   )
 );

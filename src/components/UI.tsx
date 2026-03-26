@@ -29,7 +29,7 @@
  */
 import { useStore } from '../store';
 import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Circle, Heart, Plus, Package, Zap, Activity, BookOpen } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function UI() {
@@ -53,6 +53,8 @@ export function UI() {
   const [displayedText, setDisplayedText] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showLoreCodex, setShowLoreCodex] = useState(false);
+
+  const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.completed).map(q => q.id)), [quests]);
 
   useEffect(() => {
     if (!isPaused) {
@@ -464,9 +466,7 @@ export function UI() {
                       const questDeps = option.questDependencies;
                       const hasSkill = !skillReq || (skills[skillReq.name] >= skillReq.level);
                       const hasTrait = !traitReq || (trait === traitReq);
-                      const hasQuestDeps = !questDeps || questDeps.every(qid =>
-                        quests.find(q => q.id === qid)?.completed
-                      );
+                      const hasQuestDeps = !questDeps || questDeps.every(qid => completedQuestIds.has(qid));
                       const isLocked = !hasSkill || !hasTrait || !hasQuestDeps;
 
                       return (
@@ -480,7 +480,7 @@ export function UI() {
                               if (option.questToAdd) addQuest(option.questToAdd.id, option.questToAdd.text);
                               if (option.questToComplete) completeQuest(option.questToComplete);
                               if (option.nextDialogue) setDialogue(option.nextDialogue);
-                              else setDialogue(null);
+                              else if (!option.action) setDialogue(null);
                             }
                           }}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
