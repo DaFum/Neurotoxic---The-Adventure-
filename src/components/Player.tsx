@@ -19,6 +19,10 @@ import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
 
+// Declared outside the component to reuse memory and prevent garbage collection stutters
+const velocity = new THREE.Vector3();
+const shakeOffset = new THREE.Vector3();
+
 interface PlayerProps {
   bounds?: { x: [number, number]; z: [number, number] };
 }
@@ -46,7 +50,9 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     if (!bodyRef.current) return;
 
     const { forward, backward, left, right } = get();
-    const velocity = new THREE.Vector3();
+
+    // Reset the vector instead of creating a new one
+    velocity.set(0, 0, 0);
 
     if (forward) velocity.z -= 1;
     if (backward) velocity.z += 1;
@@ -87,7 +93,8 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     setPlayerPos([pos.x, pos.y, pos.z]);
 
     // Camera follow with shake
-    const shakeOffset = new THREE.Vector3(
+    // Override the shakeOffset vector instead of creating a new one
+    shakeOffset.set(
       (Math.random() - 0.5) * cameraShake,
       (Math.random() - 0.5) * cameraShake,
       (Math.random() - 0.5) * cameraShake
