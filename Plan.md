@@ -552,5 +552,308 @@ The game should reward skill investment with escalating gates
 
 --
 
+## Part 5: Implementation Sequence
+**Phase 1 -- Store Foundation** (src/store.ts)
+1. Add all new flags to `initialState.flags`
+2. Add new lore entries to `initialState.loreEntries`
+3. Add the `Frequenzfragment + Splitter der Leere` combination to `combineItems`
+4. Ensure the persistence merge handles new flags/lore gracefully (it already does via spread)
+**Phase 2 -- Proberaum Expansion** (src/components/scenes/Proberaum.tsx)
+1. Expand Matze's 1982 dialogue with Mystic/Brutalist branches
+2. Expand Lars post-water dialogue with Performer/Technical branches
+3. Expand Marius post-beer with Diplomat/Cynic branches
+4. Add Maschinen-Seele sub-branches to Amp and TR-8080
+5. Add "Risse in der Wand" interactable
+**Phase 3 -- TourBus Expansion** (src/components/scenes/TourBus.tsx)
+1. Add sabotage discovery branch to Matze
+2. Add Marius mood-dependent breakdown
+3. Add Ghost Roadie bassist chain dialogue
+4. Add "Verstecktes Fach" interactable
+**Phase 4 -- Backstage Expansion** (src/components/scenes/Backstage.tsx)
+1. Add consequence-aware Marius calming options
+2. Expand Lars post-energized dialogue
+3. Add Maschinen-Seele completion to Feedback Monitor
+4. Add "Alte Blaupause" interactable
+5. Expand Ritual-Kreis with frequency chain
+**Phase 5 -- VoidStation Expansion** (src/components/scenes/VoidStation.tsx)
+1. Add frequency assembly dialogue to Tankwart
+2. Add Floating Bassist interactable (only when clues gathered)
+3. Expand Ego capture with flag awareness
+4. Add Diplomat Interface interactable
+**Phase 6 -- Kaminstube Expansion** (src/components/scenes/Kaminstube.tsx)
+1. Major Matze dialogue rewrite with consequence awareness
+2. Lars expanded dialogue tree
+3. Marius pre-show dialogue tree
+4. Wirt "Geheimnis" multi-branch quest
+5. Crowd interaction expansion
+6. Kamin decoding alternatives
+**Phase 7 -- Salzgitter Finale** (src/components/scenes/Salzgitter.tsx)
+1. Multi-outcome finale system replacing simple "Tour Erfolgreich"
+2. Consequence-cascade dialogues for all three band members
+3. Bassist restoration payoff
+4. Fan consequence-aware dialogue
+5. Secret Encore and True Ending paths
+**Phase 8 -- Documentation** (dialog_uebersicht.md)
+Update the dialogue overview with all new trees, quests, and branches.
+---
+## Part 6: Potential Challenges
+1. **Closure staleness**: All new dialogue callbacks must use `useStore.getState()` for flag reads inside closures, not the destructured `flags` from component level, to avoid stale state. The existing code already uses both patterns inconsistently; new code should consistently use `getState()` inside `action` callbacks.
+2. **Conditional Interactable rendering**: When adding interactables that only appear based on flags (e.g., Floating Bassist in VoidStation), wrap them in `{flags.bassist_clue_matze && flags.bassist_clue_ghost && (<Interactable .../>)}`. This follows the existing pattern for conditional items.
+3. **Quest deduplication**: `addQuest` already deduplicates by ID, so calling it from multiple scenes is safe.
+4. **BandMood cap**: `increaseBandMood` already caps at 100. The True Ending's +100 won't break anything.
+5. **Skill inflation**: With all the new skill rewards, players could reach very high levels. The endgame gates (Chaos 15, Social 12) are calibrated to require focused investment, not just doing everything.
+6. **Save compatibility**: New flags default to `false` and new lore defaults to `discovered: false`. The existing persistence merge logic spreads new defaults under persisted state, so old saves will work seamlessly -- new flags will simply be `false` (their correct initial value) and new lore entries will appear as undiscovered.
+---
+### Critical Files for Implementation
+- /home/user/Neurotoxic---The-Adventure-/src/store.ts
+- /home/user/Neurotoxic---The-Adventure-/src/components/scenes/Kaminstube.tsx
+- /home/user/Neurotoxic---The-Adventure-/src/components/scenes/Salzgitter.tsx
+- /home/user/Neurotoxic---The-Adventure-/src/components/scenes/Proberaum.tsx
+- /home/user/Neurotoxic---The-Adventure-/src/components/scenes/VoidStation.tsx
 
+---
+
+---
+
+## less comprehensive version
+
+Context
+The game has basic dialogue trees with some trait/skill gating. This plan adds 3 cross-scene quest chains, trait-exclusive branches for every NPC, escalating skill gates, and flag-based consequence tracking that makes early choices ripple forward. Multi-outcome finale in Salzgitter based on accumulated flags.
+
+Files to Modify
+src/store.ts — New flags, lore entries, item combination
+src/components/scenes/Proberaum.tsx
+src/components/scenes/TourBus.tsx
+src/components/scenes/Backstage.tsx
+src/components/scenes/VoidStation.tsx
+src/components/scenes/Kaminstube.tsx
+src/components/scenes/Salzgitter.tsx
+dialog_uebersicht.md
+Part 1: Store Changes (src/store.ts)
+New Flags
+￼
+// Cross-scene: "Die Frequenz von 1982"
+frequenz1982_proberaum: false,
+frequenz1982_tourbus: false,
+frequenz1982_backstage: false,
+frequenz1982_complete: false,
+
+// Cross-scene: "Der Verlorene Bassist"
+bassist_clue_matze: false,
+bassist_clue_ghost: false,
+bassist_clue_wirt: false,
+bassist_contacted: false,
+bassist_restored: false,
+
+// Cross-scene: "Maschinen-Seele"
+maschinen_seele_amp: false,
+maschinen_seele_tr8080: false,
+maschinen_seele_monitor: false,
+maschinen_seele_complete: false,
+
+// Per-scene consequence flags
+proberaum_brutalist_smash: false,
+proberaum_mystic_ritual: false,
+tourbus_sabotage_discovered: false,
+tourbus_matze_confession: false,
+backstage_performer_speech: false,
+backstage_cynic_sabotage: false,
+void_diplomat_negotiation: false,
+void_bassist_message: false,
+kaminstube_crowd_rallied: false,
+kaminstube_wirt_betrayal: false,
+salzgitter_encore_unlocked: false,
+salzgitter_true_ending: false,
+lars_proberaum_secret: false,
+lars_paced: false,
+marius_tourbus_doubt: false,
+New Lore Entries
+
+```typescript
+{ id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
+{ id: 'bassist_wahrheit', title: 'Die Wahrheit über den Bassisten', content: 'Er wählte die Leere. Nicht aus Verzweiflung, sondern aus Liebe zum reinen Klang. Er ist der Grundton, auf dem alles aufbaut. Ohne ihn wäre NEUROTOXIC nur Lärm.', discovered: false },
+{ id: 'maschinen_bewusstsein', title: 'Das Maschinen-Bewusstsein', content: 'Sie waren nie nur Werkzeuge. Der Amp, die Drum Machine, der Monitor — sie sind Fragmente eines einzigen Bewusstseins, das 1982 in die Schaltkreise eingespeist wurde.', discovered: false },
+{ id: 'wirt_vergangenheit', title: 'Der Wirt und 1982', content: 'Er war dabei. Er war der Tontechniker beim Gig in der Gießerei. Er hat den Bassist in die Leere geschickt — nicht aus Bosheit, sondern weil der Sound es verlangte.', discovered: false },
+```
+
+### New Item Combination
+
+Frequenzfragment + Splitter der Leere → Resonanz-Kristall
+
+New Quests (dynamic via addQuest)
+Quest ID	Text	Start → Complete
+frequenz_1982	Sammle die Frequenzfragmente von 1982	Proberaum → VoidStation
+verlorener_bassist	Finde Hinweise zum verschwundenen Bassisten	Proberaum → Salzgitter
+maschinen_seele	Entdecke die Verbindung zwischen den Maschinen	Proberaum → Backstage
+tourbus_saboteur	Finde heraus, wer das Kabel sabotiert hat	TourBus → TourBus
+crowd_warmup	Heize der Crowd in der Kaminstube ein	Kaminstube → Kaminstube
+wirt_geheimnis	Entdecke das Geheimnis des Wirts	Kaminstube → Kaminstube
+secret_encore	Schalte die geheime Zugabe in Salzgitter frei	Salzgitter → Salzgitter
+Part 2: Per-Scene Changes
+PROBERAUM
+Matze — 1982 Frequency branch (after waterCleaned, inside 1982 dialogue):
+
+[Mystic] "Ich spüre eine Frequenz in den Wänden..." → +20 Mood, +3 chaos, sets frequenz1982_proberaum, bassist_clue_matze, adds Frequenzfragment, starts quest frequenz_1982
+[Brutalist] "Lass mich die Wand einschlagen." → +10 Mood, +3 chaos, sets frequenz1982_proberaum, proberaum_brutalist_smash, adds Frequenzfragment
+Lars — Expanded post-water (when waterCleaned, no larsDrumPhilosophy):
+
+[Performer] "Zeig mir deinen besten Fill." → +15 Mood, +3 social, sets lars_proberaum_secret
+[Technical 3] "Deine Hi-Hat klingt verstimmt." → +10 Mood, +3 technical
+Marius — Post-beer expansion (after gotBeer, bandMood > 50):
+
+[Diplomat] "Wie geht es dir wirklich?" → +15 Mood, +3 social, sets marius_tourbus_doubt
+[Cynic] "Dein Ego ist groß genug für zwei Dimensionen." → +5 Mood, +2 chaos
+Sprechender Amp — Maschinen-Seele (after talkingAmpHeard, before repair):
+
+[Mystic] "Ich höre eine andere Stimme in dir." → +10 Mood, +2 chaos, sets maschinen_seele_amp, starts quest maschinen_seele
+TR-8080 — Maschinen-Seele (after drumMachineQuestStarted):
+
+[Technical 5] "Deine Seriennummer... du bist nicht von der Stange." → +10 Mood, +3 technical, sets maschinen_seele_tr8080
+New Interactable: "Risse in der Wand" at [10, 2, -7], emoji 🔍 (only after waterCleaned):
+
+[Visionary] Sees frequency burned into walls → sets frequenz1982_proberaum, adds Frequenzfragment, +15 Mood
+[Technical 8] Measures resonance at 432.1982 Hz → same outcome
+Default: "Risse bilden ein Muster, das an Schallwellen erinnert."
+TOURBUS
+Matze — Sabotage Discovery (before cable repair):
+
+[Technical 5] "Das Kabel wurde durchtrennt, nicht gebrochen." → starts quest tourbus_saboteur, sets tourbus_sabotage_discovered
+If tourbus_sabotage_discovered + marius_tourbus_doubt:
+[Social 5] Matze confesses → +10 Mood, +3 social, sets tourbus_matze_confession, completes tourbus_saboteur
+[Brutalist] Threat → -5 Mood
+Marius — Expanded dialogue:
+
+[Performer] "Dein Charisma funktioniert auch ohne Ego." → +15 Mood, +3 social
+If bandMood < 30: Breakdown requiring [Social 7] or [Diplomat]
+Ghost Roadie — Bassist chain (when bassist_clue_matze):
+
+"Matze hat mir vom Bassisten erzählt." → +15 Mood, +3 social, sets bassist_clue_ghost
+[Mystic] "Ich spüre seine Präsenz." → +20 Mood, gives Bassist-Saite item
+New Interactable: "Verstecktes Fach" at [-4, 0.5, -4], emoji 📦 (only when tourbus_sabotage_discovered):
+
+Evidence note + Frequenzfragment if frequenz_1982 active, sets frequenz1982_tourbus
+BACKSTAGE
+Marius — Consequence-aware calming:
+
+If tourbus_matze_confession: "Matze hat gestanden. Er braucht dich." → +25 Mood, auto-calms
+[Performer] "Die Bühne ist dein Wohnzimmer." → +20 Mood, +5 social, sets backstage_performer_speech
+[Cynic] "Die Fans sind sowieso betrunken." → +5 Mood, +2 chaos, sets backstage_cynic_sabotage
+Lars — Post-energized:
+
+[Chaos 5] "Was passiert wenn du NOCH schneller trommelst?" → +20 Mood, +3 chaos, sets larsVibrating
+[Diplomat] "Spare deine Energie für Salzgitter." → +15 Mood, sets lars_paced
+Feedback Monitor — Maschinen-Seele chain (when maschinen_seele_amp + maschinen_seele_tr8080):
+
+"Ihr seid verbunden." → +25 Mood, +5 technical, sets maschinen_seele_monitor, discovers maschinen_bewusstsein lore
+If all 3 machine flags: completes quest maschinen_seele, sets maschinen_seele_complete, +30 Mood
+New Interactable: "Alte Blaupause" at [10, 0, 5], emoji 📐:
+
+[Technical 7] Pentagramm wiring → +15 Mood, +4 technical, sets frequenz1982_backstage
+[Visionary] Resonance amplifier geometry → +15 Mood, +4 chaos, sets frequenz1982_backstage
+Ritual-Kreis expansion (when frequenz1982_proberaum + frequenz1982_tourbus):
+
+[Mystic] "Die Frequenzfragmente... der Kreis ist der Schlüssel." → +20 Mood, sets frequenz1982_backstage
+VOIDSTATION
+Tankwart — Frequenz 1982 completion (when all 3 frequenz flags set):
+
+Assembles frequency → +30 Mood, sets frequenz1982_complete, discovers frequenz_1982_decoded, completes quest
+If has Frequenzfragment + Splitter der Leere: combine into Resonanz-Kristall
+New Interactable: Floating Bassist at [10, 5, 5], emoji 🎸 (only when bassist_clue_matze + bassist_clue_ghost):
+
+[Social 8] "Die Band braucht dich." → +20 Mood, +5 social, sets bassist_contacted, adds Bassist-Resonanz
+[Visionary] "Du bist der Grundton." → same outcome, +5 chaos
+[Technical 10] "41.2 Hz. Ich kann dich zurückholen." → same, +5 technical
+Default: partial success → sets void_bassist_message, +10 Mood
+Ego — Flag-aware (when marius_tourbus_doubt):
+
+"Marius zweifelt an sich." → unique capture tone, +25 Mood
+New Interactable: "Diplomatische Schnittstelle" at [-10, 2, 5], emoji 🕊️:
+
+[Diplomat] Negotiate with the void → +20 Mood, +5 social, sets void_diplomat_negotiation
+KAMINSTUBE (biggest expansion — thinnest current scene)
+Matze — Consequence-aware:
+
+If tourbus_matze_confession: Grateful dialogue → +20 Mood
+[Diplomat] "Die Band muss es erfahren." → +10 Mood, +3 social
+If frequenz1982_complete: Hears frequency in the amp
+Lars — Expanded:
+
+[Chaos 5] Forge rhythms → +20 Mood, +3 chaos, sets kaminstube_crowd_rallied
+[Technical 5] Acoustics analysis → +15 Mood, +3 technical
+If larsVibrating: ALL CAPS vibration dialogue
+Marius — Pre-show:
+
+[Performer] "Die Kaminstube ist intim. Nutze das." → +15 Mood, +3 social
+If backstage_cynic_sabotage: Dark humor acceptance
+Wirt — Major "Geheimnis" quest (when bassist_clue_matze + bassist_clue_ghost):
+
+[Social 8] Truth → +15 Mood, sets bassist_clue_wirt, discovers wirt_vergangenheit
+[Brutalist] Intimidation → same info, -10 Mood, sets kaminstube_wirt_betrayal
+[Diplomat] Best outcome → +25 Mood, +5 social, free Ersatzröhre
+[Cynic] (if backstage_cynic_sabotage): Hidden basement lore → +10 Mood
+Crowd — Expanded:
+
+If backstage_performer_speech + [Social 5]: Wild crowd → +25 Mood, sets kaminstube_crowd_rallied
+[Chaos 7] Beer toss chaos → +15 Mood, +3 chaos
+[Diplomat] Respectful speech → +10 Mood, +3 social
+Kamin — More trait paths:
+
+[Mystic] Flames speak → +20 Mood, +3 chaos
+[Technical 7] Frequency decode → +15 Mood, +3 technical
+If frequenz1982_complete: Auto-decoded
+SALZGITTER (Multi-outcome finale)
+Matze — Consequence cascade:
+
+If tourbus_matze_confession + frequenz1982_complete: +30 Mood, sets salzgitter_encore_unlocked
+If maschinen_seele_complete: Machine singing dialogue, +20 Mood
+Lars — Vibration payoff:
+
+If larsVibrating + larsDrumPhilosophy: [Chaos 15] Ultimate moment → +40 Mood, +5 chaos, sets salzgitter_encore_unlocked
+If lars_paced: Surgical precision → +25 Mood
+Marius — True Performance:
+
+If egoContained + mariusConfidenceBoost + bassist_contacted: [Social 12] "Sing für den Bassisten." → +50 Mood, sets salzgitter_true_ending
+[Performer] if backstage_performer_speech: → +30 Mood, +5 social
+Bassist — Payoff (when bassist_contacted):
+
+If has Resonanz-Kristall: → sets bassist_restored, discovers bassist_wahrheit, +30 Mood
+Fan — Consequence-aware:
+
+If backstage_performer_speech: recognition → +15 Mood
+If kaminstube_crowd_rallied: legend status → +10 Mood
+Tour Erfolgreich — Multi-outcome:
+
+Standard: +30 Mood
+Good (bandMood > 70 + mariusConfidenceBoost): +50 Mood
+Great (above + frequenz1982_complete): +70 Mood
+Secret Encore (salzgitter_encore_unlocked): Band plays Forbidden Riff, +50 Mood
+True Ending (salzgitter_true_ending + bassist_restored + maschinen_seele_complete): All lore discovered, +100 Mood
+Cross-Scene Quest Chains
+Chain 1: "Die Frequenz von 1982"
+Proberaum → TourBus → Backstage → VoidStation
+Traits: Mystic (ritual), Visionary (patterns), Technical (analysis), Brutalist (force)
+
+Chain 2: "Der Verlorene Bassist"
+Proberaum/TourBus (clues) → Kaminstube (Wirt) → VoidStation (contact) → Salzgitter (restore)
+Traits: Social/Diplomat (interrogation), Visionary/Mystic (perception)
+
+Chain 3: "Maschinen-Seele"
+Proberaum (Amp + TR-8080) → Backstage (Monitor) → complete
+Traits: Technical (circuitry), Mystic (machine voices)
+
+Implementation Order
+store.ts — flags, lore, item combination
+Proberaum.tsx — Matze/Lars/Marius/Amp/TR-8080 expansion + new interactable
+TourBus.tsx — Sabotage/Marius/Ghost expansion + new interactable
+Backstage.tsx — Marius/Lars/Monitor expansion + new interactable + ritual
+VoidStation.tsx — Tankwart/Bassist/Ego/Diplomat expansion
+Kaminstube.tsx — Major expansion: all NPCs + Wirt quest + Crowd + Kamin
+Salzgitter.tsx — Multi-outcome finale + consequence cascades
+dialog_uebersicht.md — Document everything
+Verification
+npm run lint after each file
+Verify useStore.getState() used inside all action callbacks
+Verify conditional interactables use flag checks
+Test quest dependency chains reference valid IDs
+Check new lore entries appear in Lore Codex
 
