@@ -17,7 +17,7 @@
 - Simple: `setDialogue('Text string')` — auto-wrapped into `{ text: '...' }`
 - With options: `setDialogue({ text: '...', options: [...] })` — never pass string if you need options
 - Skill names are lowercase: `'technical'`, `'social'`, `'chaos'`
-- Trait names are Title Case: `'Visionary'`, `'Technician'`, `'Cynic'`, etc.
+- Trait names are Title Case: `'Visionary'`, `'Technician'`, `'Brutalist'`, `'Diplomat'`, `'Mystic'`, `'Performer'`, `'Cynic'`
 - `requiredSkill` must be an object `{ name: 'skill', level: N }` — passing a string silently fails
 - `questDependencies` hides the option unless those quests are completed — ensure referenced quests exist
 
