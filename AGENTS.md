@@ -9,5 +9,4 @@
 
 ## Gotchas
 - `@tailwindcss/vite` is the Tailwind build plugin — do not replace with the standard `tailwindcss` package or add PostCSS config
-- Do not hardcode API keys — `GEMINI_API_KEY` is injected via Vite's `define` in vite.config.ts, not via `process.env` at runtime
 - All physics bodies (`@react-three/rapier`) must live inside scene components — declaring them outside the physics world silently fails
