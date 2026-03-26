@@ -10,3 +10,4 @@
 ## Gotchas
 - `@tailwindcss/vite` is the Tailwind build plugin — do not replace with the standard `tailwindcss` package or add PostCSS config
 - All physics bodies (`@react-three/rapier`) must live inside scene components — declaring them outside the physics world silently fails
+- The game's dialogue trees, quest triggers, item interactions, and 'BandMood' metrics are comprehensively documented in `dialog_uebersicht.md`. Modifications to `src/components/scenes/*.tsx` or `src/store.ts` should be reflected in this file to maintain synchronization.
