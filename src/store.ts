@@ -117,6 +117,7 @@ const initialState = {
     proberaumPosterVisionary: false,
     tourbusAmpTechnician: false,
     frequenzDetektorRead: false,
+    legacyLoreMigrated: false,
   },
   loreEntries: [
     { id: 'void_1982', title: '1982 Log', content: 'Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback.', discovered: false },
@@ -290,6 +291,12 @@ export const useStore = create<GameState>()(
           return persistedQuest ? { ...q, completed: persistedQuest.completed } : q;
         });
 
+        const dynamicQuests = (persistedState.quests || []).filter((pq: any) =>
+          !currentState.quests.find((q: any) => q.id === pq.id)
+        );
+
+        const allQuests = [...mergedQuests, ...dynamicQuests];
+
         const mergedLoreEntries = currentState.loreEntries.map(e => {
           const persistedEntry = persistedState.loreEntries?.find((pe: any) => pe.id === e.id);
           return persistedEntry ? { ...e, discovered: persistedEntry.discovered } : e;
@@ -298,7 +305,7 @@ export const useStore = create<GameState>()(
         return {
           ...currentState,
           ...persistedState,
-          quests: mergedQuests,
+          quests: allQuests,
           loreEntries: mergedLoreEntries,
           flags: {
             ...currentState.flags,

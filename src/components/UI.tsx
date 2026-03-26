@@ -531,14 +531,17 @@ export function UI() {
                           disabled={isLocked}
                           onClick={() => {
                             if (!isLocked) {
+                              const preActionDialogue = useStore.getState().dialogue;
                               if (option.action) option.action();
                               if (option.flagToSet) setFlag(option.flagToSet.flag, option.flagToSet.value);
                               if (option.questToAdd) addQuest(option.questToAdd.id, option.questToAdd.text);
                               if (option.questToComplete) completeQuest(option.questToComplete);
 
+                              const postActionDialogue = useStore.getState().dialogue;
+
                               if (option.nextDialogue) {
                                 setDialogue(option.nextDialogue);
-                              } else if (option.closeOnSelect !== false) {
+                              } else if (option.closeOnSelect !== false && preActionDialogue === postActionDialogue) {
                                 setDialogue(null);
                               }
                             }

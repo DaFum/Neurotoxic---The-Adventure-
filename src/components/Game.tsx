@@ -17,7 +17,7 @@ import { Canvas } from '@react-three/fiber';
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { motion, AnimatePresence } from 'motion/react';
-import { useStore } from '../store';
+import { useStore, Trait, Skills } from '../store';
 import { Proberaum } from './scenes/Proberaum';
 import { TourBus } from './scenes/TourBus';
 import { Backstage } from './scenes/Backstage';
@@ -37,7 +37,7 @@ export function Game() {
   const setPaused = useStore((state) => state.setPaused);
   const [selectingTrait, setSelectingTrait] = useState(false);
 
-  const traits = [
+  const traits: { id: Trait; desc: string; skills: { name: keyof Skills; val: number }[] }[] = [
     { id: 'Visionary', desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.', skills: [{ name: 'chaos', val: 5 }] },
     { id: 'Technician', desc: 'Meister der Maschinen. Boni auf technische Reparaturen.', skills: [{ name: 'technical', val: 5 }] },
     { id: 'Brutalist', desc: 'Liebt die rohe Gewalt. Erhöht Band-Mood durch Aggression.', skills: [{ name: 'chaos', val: 3 }, { name: 'technical', val: 2 }] },
@@ -156,8 +156,8 @@ export function Game() {
                         <button
                           key={t.id}
                           onClick={() => {
-                            setTrait(t.id as any);
-                          t.skills.forEach(s => useStore.getState().increaseSkill(s.name as any, s.val));
+                          setTrait(t.id);
+                          t.skills.forEach(s => useStore.getState().increaseSkill(s.name, s.val));
                             audio.startMusic();
                           setSelectingTrait(false);
                             setScene('proberaum');
