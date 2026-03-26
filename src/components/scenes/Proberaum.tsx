@@ -613,7 +613,7 @@ export function Proberaum() {
         <Interactable
           position={[-6, 0.5, 5]}
           emoji="🎚️"
-          name="Feedback Monitor"
+          name="Feedback-Monitor"
           onInteract={() => {
             setDialogue({
               text: 'Monitor: "Manager... ich bin überlastet. Meine Schaltkreise sind mit dem Rauschen der Ewigkeit gefüllt. Kannst du mir helfen, mich zu entladen?"',
@@ -636,7 +636,7 @@ export function Proberaum() {
         <Interactable
           position={[-6, 0.5, 5]}
           emoji="🎚️"
-          name="Feedback Monitor"
+          name="Feedback-Monitor"
           onInteract={() => {
             if (hasItem('Quanten-Kabel')) {
               setDialogue({

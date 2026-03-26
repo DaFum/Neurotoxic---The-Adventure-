@@ -58,7 +58,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **TR-8080 Drum Machine:**
     * *Item (Verbotenes Riff):* Maschine absorbiert das Riff.
         * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
-* **Feedback Monitor:**
+* **Feedback-Monitor:**
     * *Initial:* Fragt nach dem Quanten-Kabel.
     * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`).
 
@@ -67,10 +67,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 2. TourBus (Unterwegs)
 
 * **Matze:**
-    * *Ohne Kabel:* Verlangt Klebeband.
-    * *Mit Repariertem Kabel:* "Bühne abreißen" (+10 BandMood, Quest-Abschluss: `fix_cable`) ODER Sabotage (-5 BandMood).
+    * *Ohne Kabel:* Verlangt Klebeband ODER Sabotage (-5 BandMood).
+    * *Mit Repariertem Kabel:* "Bühne abreißen" (+10 BandMood, Quest-Abschluss: `cable`).
 * **Marius:**
-    * *Item (Marius Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
+    * *Item (Marius' Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
 * **Defekter Verstärker (Trait: Technician):**
     * *Spezial-Option:* Lötstelle reparieren (+20 BandMood, +10 Technical).
 * **Klebeband (Item):**
@@ -106,9 +106,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Feedback-Monitor:**
     * *Item (Verstärker-Schaltplan):*
-        * Zweig A (Skill: Technical 5): "Optimierte Frequenzen" (+30 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`).
-        * Zweig B (Trait: Visionary): "Transzendente Frequenzen" (+40 BandMood, +5 Chaos, Quest-Abschluss: `feedback_monitor`).
-        * Zweig C: "Standard-Frequenzen" (+15 BandMood, Quest-Abschluss: `feedback_monitor`).
+        * Zweig A (Skill: Technical 5): "Optimierte Frequenzen" (+30 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor_backstage`).
+        * Zweig B (Trait: Visionary): "Transzendente Frequenzen" (+40 BandMood, +5 Chaos, Quest-Abschluss: `feedback_monitor_backstage`).
+        * Zweig C: "Standard-Frequenzen" (+15 BandMood, Quest-Abschluss: `feedback_monitor_backstage`).
     * *Initial:* Erhalt Quest (+5 BandMood).
 * **Marius (Lampenfieber):**
     * *Optionen zur Beruhigung:*
@@ -149,7 +149,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Kosmisches Echo:**
     * *Option (Trait: Visionary):* Nachricht entschlüsseln (+20 BandMood, Quest-Abschluss: `cosmic_echo`, **Lore:** `cosmic_echo_decoded`).
 * **Marius' Ego (Item):**
-    * *Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius Ego" und schaltet **Lore:** `ego_philosophy` frei. Quest-Abschluss: `ego`.*
+    * *Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius' Ego" und schaltet **Lore:** `ego_philosophy` frei. Quest-Abschluss: `ego`.*
     * Option (Trait: Visionary): "Vision leitet uns" (+30 BandMood, +5 Chaos).
     * Option (Skill: Technical 8): "Resonanzfrequenz instabil" (+20 BandMood, +5 Technical).
     * Option (Skill: Social 8): "Fans brauchen dich" (+25 BandMood, +5 Social).
@@ -191,20 +191,21 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Matze:**
     * *Item (Verbotenes Riff + Altes Plektrum):* Riff wird gebändigt.
-        * Option (Skill: Chaos 10): "Chaos kanalisieren" (+50 BandMood, +5 Chaos).
-        * Option (Skill: Technical 10): "Präzision im Chaos" (+40 BandMood, +5 Technical).
+        * Option (Skill: Chaos 10): "Chaos kanalisieren" (+70 BandMood, +5 Chaos).
+        * Option (Skill: Technical 10): "Präzision im Chaos" (+60 BandMood, +5 Technical).
         * Standard: (+20 BandMood).
-    * *Deep Talk (Trait: Visionary):* (+40 BandMood, +5 Chaos).
+    * *Nur Verbotenes Riff (ohne Plektrum):* Er warnt vor Realitätsrissen.
+    * *Deep Talk (Trait: Visionary):* (+50 BandMood, +5 Chaos).
     * *Deep Talk (Standard):* (+10 BandMood).
 * **Lars:**
     * *Wenn "vibriert" (Koffein im Backstage auf Ex getrunken):*
-        * Option (Skill: Technical 10): "Frequenz synchronisieren" (+30 BandMood, +5 Technical).
+        * Option (Skill: Technical 10): "Frequenz synchronisieren" (+40 BandMood, +5 Technical).
         * Standard: (+10 BandMood).
     * *Philosophie:* (+5 BandMood).
 * **Marius:**
     * *Trait (Performer):* Spezial-Tipp für die Show geben (+30 BandMood, +5 Social).
-    * *Confidence Boost (Skill: Chaos 10):* "Zorn kanalisieren" (+40 BandMood, +5 Chaos).
-    * *Confidence Boost (Skill: Social 10):* "Menge beruhigen" (+30 BandMood, +5 Social).
+    * *Confidence Boost (Skill: Chaos 10):* "Zorn kanalisieren" (+55 BandMood, +5 Chaos).
+    * *Confidence Boost (Skill: Social 10):* "Menge beruhigen" (+45 BandMood, +5 Social).
     * *Confidence Boost (Standard):* (+15 BandMood).
 * **Schwebender Bassist:**
     * *Interaktion:* Betrachten (+10 BandMood).

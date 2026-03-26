@@ -105,8 +105,10 @@ const initialState = {
     drumMachineQuestCompleted: false,
     egoTalked: false,
     feedbackMonitorTalked: false,
-    feedbackMonitorQuestStarted: false,
     feedbackMonitorQuestCompleted: false,
+    feedbackMonitorBackstageTalked: false,
+    feedbackMonitorBackstageQuestStarted: false,
+    feedbackMonitorBackstageQuestCompleted: false,
     ghostRecipeQuestStarted: false,
     ghostRecipeQuestCompleted: false,
     ampTherapyStarted: false,
@@ -315,29 +317,49 @@ export const useStore = create<GameState>()(
       },
       onRehydrateStorage: () => (state) => {
         if (state) {
-          if (!state.flags.legacyLoreMigrated) {
+          if (!state.flags.legacyLoreMigrated || state.flags.feedbackMonitorQuestStarted !== undefined) {
             setTimeout(() => {
               useStore.setState((currentState) => {
                 const newEntries = [...currentState.loreEntries];
-                let migrated = false;
+                let migratedLore = false;
 
                 const migrateEntry = (id: string) => {
                   const idx = newEntries.findIndex(e => e.id === id);
                   if (idx !== -1 && !newEntries[idx].discovered) {
                     newEntries[idx] = { ...newEntries[idx], discovered: true };
-                    migrated = true;
+                    migratedLore = true;
                   }
                 };
 
-                if (currentState.flags.posterLoreRead) migrateEntry('poster_lore');
-                if (currentState.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
-                if (currentState.flags.egoContained) migrateEntry('ego_philosophy');
-                if (currentState.flags.tankwartPhilosophy) migrateEntry('tankwart_truth');
-                if (currentState.flags.cosmic_echo) migrateEntry('cosmic_echo_decoded');
+                if (!currentState.flags.legacyLoreMigrated) {
+                  if (currentState.flags.posterLoreRead) migrateEntry('poster_lore');
+                  if (currentState.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
+                  if (currentState.flags.egoContained) migrateEntry('ego_philosophy');
+                  if (currentState.flags.tankwartPhilosophy) migrateEntry('tankwart_truth');
+                  if (currentState.flags.cosmic_echo) migrateEntry('cosmic_echo_decoded');
+                }
+
+                const newFlags = { ...currentState.flags };
+
+                // Migrate feedback monitor flags
+                if (newFlags.feedbackMonitorQuestStarted !== undefined) {
+                  if (newFlags.feedbackMonitorQuestStarted) {
+                    // Backstage quest was started.
+                    newFlags.feedbackMonitorBackstageTalked = true;
+                    newFlags.feedbackMonitorBackstageQuestStarted = true;
+                    if (newFlags.feedbackMonitorQuestCompleted) {
+                      newFlags.feedbackMonitorBackstageQuestCompleted = true;
+                    }
+                  }
+                  // Remove the unused flag
+                  delete newFlags.feedbackMonitorQuestStarted;
+                }
+
+                newFlags.legacyLoreMigrated = true;
 
                 return {
-                  loreEntries: migrated ? newEntries : currentState.loreEntries,
-                  flags: { ...currentState.flags, legacyLoreMigrated: true }
+                  loreEntries: migratedLore ? newEntries : currentState.loreEntries,
+                  flags: newFlags
                 };
               });
             }, 0);

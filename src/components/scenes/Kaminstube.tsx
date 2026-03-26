@@ -279,9 +279,7 @@ export function Kaminstube() {
         emoji="🎹"
         name="Kaputter Drum-Computer"
         onInteract={() => {
-          setDialogue('Ein alter TR-808, der aussieht, als wäre er in einem Hochofen geschmolzen.');
-          setDialogue('Er gibt nur noch ein rhythmisches Klacken von sich, das seltsam beruhigend wirkt.');
-          setDialogue('Lars: "Das ist das Herzstück der ersten NEUROTOXIC-Platte. Er ist gestorben, als wir versuchten, ihn an ein Atomkraftwerk anzuschließen."');
+          setDialogue('Ein alter TR-808, der aussieht, als wäre er in einem Hochofen geschmolzen. Er gibt nur noch ein rhythmisches Klacken von sich, das seltsam beruhigend wirkt. Lars: "Das ist das Herzstück der ersten NEUROTOXIC-Platte. Er ist gestorben, als wir versuchten, ihn an ein Atomkraftwerk anzuschließen."');
           increaseBandMood(10);
         }}
       />

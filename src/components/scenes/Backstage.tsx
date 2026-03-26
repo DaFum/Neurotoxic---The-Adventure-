@@ -85,35 +85,35 @@ export function Backstage() {
         onInteract={() => {
           const hasSchaltplan = hasItem('Verstärker-Schaltplan');
           
-          if (flags.feedbackMonitorQuestCompleted) {
+          if (flags.feedbackMonitorBackstageQuestCompleted) {
             setDialogue('Monitor: "BZZZT. Die Frequenzen sind perfekt. Danke, Manager."');
             return;
           }
 
-          if (flags.feedbackMonitorQuestStarted && hasSchaltplan) {
+          if (flags.feedbackMonitorBackstageQuestStarted && hasSchaltplan) {
             setDialogue({
               text: 'Monitor: "Du hast den Schaltplan! Kannst du meine Frequenzen optimieren?"',
               options: [
                 { text: 'Optimierte Frequenzen. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
                     setDialogue('Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."');
-                    setFlag('feedbackMonitorQuestCompleted', true);
-                    completeQuest('feedback_monitor');
+                    setFlag('feedbackMonitorBackstageQuestCompleted', true);
+                    completeQuest('feedback_monitor_backstage');
                     increaseBandMood(30);
                     useStore.getState().increaseSkill('technical', 5);
                     removeFromInventory('Verstärker-Schaltplan');
                 }},
                 { text: 'Transzendente Frequenzen. [Visionary]', requiredTrait: 'Visionary', action: () => {
                     setDialogue('Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."');
-                    setFlag('feedbackMonitorQuestCompleted', true);
-                    completeQuest('feedback_monitor');
+                    setFlag('feedbackMonitorBackstageQuestCompleted', true);
+                    completeQuest('feedback_monitor_backstage');
                     increaseBandMood(40);
                     useStore.getState().increaseSkill('chaos', 5);
                     removeFromInventory('Verstärker-Schaltplan');
                 }},
                 { text: 'Standard-Frequenzen.', action: () => {
                     setDialogue('Monitor: "BZZZT. Okay, das reicht für einen Standard-Gig."');
-                    setFlag('feedbackMonitorQuestCompleted', true);
-                    completeQuest('feedback_monitor');
+                    setFlag('feedbackMonitorBackstageQuestCompleted', true);
+                    completeQuest('feedback_monitor_backstage');
                     increaseBandMood(15);
                     removeFromInventory('Verstärker-Schaltplan');
                 }}
@@ -122,7 +122,7 @@ export function Backstage() {
             return;
           }
 
-          if (flags.feedbackMonitorTalked) {
+          if (flags.feedbackMonitorBackstageTalked) {
             setDialogue({
               text: 'Monitor: "BZZZT. Ich habe schon tausend Sänger kommen und gehen sehen. Marius? Der klingt wie eine rostige Kreissäge in einem Mixer. BZZZT. Aber er hat... Seele. Eine sehr, sehr verzerrte Seele. Hast du den Schaltplan gefunden?"',
               options: [
@@ -141,13 +141,12 @@ export function Backstage() {
                   options: [
                     { text: 'Wie kann ich helfen?', action: () => {
                       setDialogue('Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."');
-                      setFlag('feedbackMonitorTalked', true);
-                      setFlag('feedbackMonitorQuestStarted', true);
-                      useStore.getState().addQuest('feedback_monitor', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
+                      setFlag('feedbackMonitorBackstageQuestStarted', true);
+                      useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
                     }}
                   ]
                 });
-                setFlag('feedbackMonitorTalked', true);
+                setFlag('feedbackMonitorBackstageTalked', true);
                 increaseBandMood(5);
               }},
               { text: 'Schalte dich ab.', action: () => {

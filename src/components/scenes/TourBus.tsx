@@ -75,7 +75,7 @@ export function TourBus() {
               options: [
                 { text: 'Lass uns die Bühne abreißen!', action: () => {
                     increaseBandMood(10);
-                    completeQuest('fix_cable');
+                    completeQuest('cable');
                 }}
               ]
             });
@@ -87,7 +87,7 @@ export function TourBus() {
               options: [
                 { text: 'Ich suche danach.', action: () => {
                     setDialogue('Matze: "Beeil dich, ohne Kabel kein Metal."');
-                    addQuest('fix_cable', 'Repariere Matzes Kabel mit Klebeband und defektem Kabel');
+                    addQuest('cable', 'Repariere Matzes Kabel mit Klebeband und defektem Kabel');
                 }},
                 { text: 'Vielleicht ist es Schicksal.', action: () => {
                   setDialogue('Matze: "Schicksal? Das ist Sabotage! Such das Tape!"');
