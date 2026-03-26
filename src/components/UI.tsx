@@ -81,6 +81,8 @@ export function UI() {
 
   const handleLoreCodexKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
+      e.nativeEvent.stopImmediatePropagation();
+      e.stopPropagation();
       setShowLoreCodex(false);
       return;
     }

@@ -301,6 +301,8 @@ export const useStore = create<GameState>()(
             if (state.flags.posterLoreRead) migrateEntry('poster_lore');
             if (state.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
             if (state.flags.egoContained) migrateEntry('ego_philosophy');
+            if (state.flags.tankwartPhilosophy) migrateEntry('tankwart_truth');
+            if (state.flags.cosmic_echo) migrateEntry('cosmic_echo_decoded');
 
             setTimeout(() => {
               useStore.setState({

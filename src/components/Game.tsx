@@ -38,13 +38,13 @@ export function Game() {
   const [selectingTrait, setSelectingTrait] = useState(false);
 
   const traits = [
-    { id: 'Visionary', desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.', skill: { name: 'chaos', val: 5 } },
-    { id: 'Technician', desc: 'Meister der Maschinen. Boni auf technische Reparaturen.', skill: { name: 'technical', val: 5 } },
-    { id: 'Brutalist', desc: 'Liebt die rohe Gewalt. Erhöht Band-Mood durch Aggression.', skill: { name: 'chaos', val: 3, technical: 2 } },
-    { id: 'Diplomat', desc: 'Beruhigt erhitzte Gemüter. Boni auf soziale Interaktionen.', skill: { name: 'social', val: 5 } },
-    { id: 'Mystic', desc: 'Hat einen Draht zum Übernatürlichen. Spürt verborgene Frequenzen.', skill: { name: 'chaos', val: 2, social: 3 } },
-    { id: 'Performer', desc: 'Die Bühne ist sein Zuhause. Boni auf charismatische Handlungen.', skill: { name: 'social', val: 5 } },
-    { id: 'Cynic', desc: 'Glaubt an nichts, hinterfragt alles. Erkennt Illusionen sofort.', skill: { name: 'technical', val: 2, chaos: 3 } },
+    { id: 'Visionary', desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.', skills: [{ name: 'chaos', val: 5 }] },
+    { id: 'Technician', desc: 'Meister der Maschinen. Boni auf technische Reparaturen.', skills: [{ name: 'technical', val: 5 }] },
+    { id: 'Brutalist', desc: 'Liebt die rohe Gewalt. Erhöht Band-Mood durch Aggression.', skills: [{ name: 'chaos', val: 3 }, { name: 'technical', val: 2 }] },
+    { id: 'Diplomat', desc: 'Beruhigt erhitzte Gemüter. Boni auf soziale Interaktionen.', skills: [{ name: 'social', val: 5 }] },
+    { id: 'Mystic', desc: 'Hat einen Draht zum Übernatürlichen. Spürt verborgene Frequenzen.', skills: [{ name: 'chaos', val: 2 }, { name: 'social', val: 3 }] },
+    { id: 'Performer', desc: 'Die Bühne ist sein Zuhause. Boni auf charismatische Handlungen.', skills: [{ name: 'social', val: 5 }] },
+    { id: 'Cynic', desc: 'Glaubt an nichts, hinterfragt alles. Erkennt Illusionen sofort.', skills: [{ name: 'technical', val: 2 }, { name: 'chaos', val: 3 }] },
   ];
 
   useEffect(() => {
@@ -157,8 +157,7 @@ export function Game() {
                           key={t.id}
                           onClick={() => {
                             setTrait(t.id as any);
-                            useStore.getState().increaseSkill(t.skill.name as any, t.skill.val);
-                            if (t.id === 'Brutalist') useStore.getState().increaseSkill('technical', 2);
+                          t.skills.forEach(s => useStore.getState().increaseSkill(s.name as any, s.val));
                             audio.startMusic();
                             setScene('proberaum');
                           }}
