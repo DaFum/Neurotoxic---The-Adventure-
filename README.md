@@ -1,20 +1,40 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# NEUROTOXIC: Grind The Void
 
-# Run and deploy your AI Studio app
+Ein 2.5D-Adventure über die Band **NEUROTOXIC** und ihre Abenteuer — von der Probe bis in die Leere des Alls.
 
-This contains everything you need to run your app locally.
+## Spielen
 
-View your app in AI Studio: https://ai.studio/apps/a184b744-cc22-4737-8477-ea5d8cc45c9b
+Das Spiel läuft im Browser. Erkunde Szenen, rede mit NPCs, sammle Items und löse Quests, um die Band zusammenzuhalten.
 
-## Run Locally
+**Szenen:** Proberaum · Tourbus · Backstage · Void Station · Kaminstube · Salzgitter
 
-**Prerequisites:**  Node.js
+## Lokal starten
 
+Voraussetzung: [Node.js](https://nodejs.org/) (v18+)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm install
+npm run dev
+```
+
+Der Dev-Server startet auf `http://localhost:3000`.
+
+## Build
+
+```bash
+npm run build    # Erstellt einen Production-Build in dist/
+npm run preview  # Vorschau des Builds
+```
+
+## Tech-Stack
+
+- **React 19** + **TypeScript** — UI & Logik
+- **Three.js** (react-three-fiber / drei) — 3D-Rendering
+- **Rapier** (react-three-rapier) — Physik
+- **Zustand** — State Management (persistiert im LocalStorage)
+- **Tailwind CSS 4** — Styling
+- **Vite** — Bundler & Dev-Server
+
+## Lizenz
+
+Apache-2.0
