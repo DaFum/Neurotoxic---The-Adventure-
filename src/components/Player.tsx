@@ -100,10 +100,10 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
       (Math.random() - 0.5) * cameraShake
     );
 
-    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, pos.x + shakeOffset.x, 0.1);
-    state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, pos.z + 10 + shakeOffset.z, 0.1);
+    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, clampedX + shakeOffset.x, 0.1);
+    state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, clampedZ + 10 + shakeOffset.z, 0.1);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, 5 + shakeOffset.y, 0.1);
-    state.camera.lookAt(pos.x, 0, pos.z);
+    state.camera.lookAt(clampedX, 0, clampedZ);
 
     // Decay camera shake
     if (cameraShake > 0) {
