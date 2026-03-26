@@ -266,6 +266,7 @@ export function Backstage() {
             });
           } else if (hasItem('Energiedrink')) {
             setDialogue('Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."');
+            removeFromInventory('Energiedrink');
             setFlag('larsEnergized', true);
             increaseBandMood(10);
           } else {
@@ -345,7 +346,7 @@ export function Backstage() {
         name="Zurück zum Tourbus"
         onInteract={() => {
           setDialogue('Nochmal zum Bus gehen? Sicher ist sicher.');
-          setScene('tourbus');
+          setTimeout(() => setScene('tourbus'), 1000);
         }}
       />
 

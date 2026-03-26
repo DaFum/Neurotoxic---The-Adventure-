@@ -191,7 +191,7 @@ export function TourBus() {
         }}
       />
 
-      {!hasItem('Energiedrink') && !hasItem('Turbo-Koffein') && !hasItem('Geister-Drink') && !flags.ghostRecipeQuestCompleted && (
+      {!hasItem('Energiedrink') && !hasItem('Turbo-Koffein') && !hasItem('Geister-Drink') && !flags.ghostRecipeQuestCompleted && !flags.larsEnergized && (
         <Interactable
           position={[-1, 0.5, -3]}
           emoji="🥤"
