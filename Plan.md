@@ -9,105 +9,61 @@ This plan adds meaningful new content to all 6 scenes while following establishe
 ## Part 1: New Store State (src/store.ts)
 
 ### New Flags (add to `flags` in `initialState`)
-
-```
-
+```typescript
 // Cross-scene quest chain: "Die Frequenz von 1982"
-
 frequenz1982_proberaum: false,      // Discovered frequency clue in Proberaum
-
 frequenz1982_tourbus: false,        // Found tape fragment in TourBus  
-
 frequenz1982_backstage: false,      // Decoded ritual pattern in Backstage
-
 frequenz1982_complete: false,       // Assembled the full frequency in VoidStation
-
 // Cross-scene quest chain: "Der Verlorene Bassist"
-
 bassist_clue_matze: false,          // Matze shared memory of the bassist
-
 bassist_clue_ghost: false,          // Ghost Roadie revealed what he saw
-
 bassist_clue_wirt: false,           // Wirt told about the 1982 night
-
 bassist_contacted: false,           // Contacted bassist in VoidStation
-
 bassist_restored: false,            // Brought bassist back in Salzgitter
-
 // Cross-scene quest chain: "Maschinen-Seele"
-
 maschinen_seele_amp: false,         // Sprechender Amp shared a memory fragment
-
 maschinen_seele_tr8080: false,      // TR-8080 shared its origin
-
 maschinen_seele_monitor: false,     // Feedback Monitor revealed connection
-
 maschinen_seele_complete: false,    // United the machine consciousness
-
 // Per-scene consequence flags
-
 proberaum_brutalist_smash: false,   // Brutalist smashed the puddle away
-
 proberaum_mystic_ritual: false,     // Mystic performed a ritual on the puddle
-
 tourbus_sabotage_discovered: false, // Discovered who sabotaged the cable
-
 tourbus_matze_confession: false,    // Matze confessed about 1982
-
 backstage_performer_speech: false,  // Performer gave a rousing speech
-
 backstage_cynic_sabotage: false,    // Cynic discovered the venue's secret
-
 void_diplomat_negotiation: false,   // Diplomat negotiated with the void
-
 void_bassist_message: false,        // Received message from the floating bassist
-
 kaminstube_crowd_rallied: false,    // Successfully rallied the crowd
-
 kaminstube_wirt_betrayal: false,    // Discovered Wirt's hidden agenda
-
 salzgitter_encore_unlocked: false,  // Unlocked the secret encore
-
 salzgitter_true_ending: false,      // Achieved the true ending
-
 lars_proberaum_secret: false,       // Lars revealed secret in Proberaum
-
 marius_tourbus_doubt: false,        // Marius expressed doubt in TourBus
-
 ```
+
 
 ### New Quests (added dynamically via `addQuest()`)
 
 | Quest ID | Text (German) | Where Started | Where Completed |
-
 |---|---|---|---|
-
 | `frequenz_1982` | `Sammle die Frequenzfragmente von 1982` | Proberaum | VoidStation |
-
 | `verlorener_bassist` | `Finde Hinweise zum verschwundenen Bassisten von 1982` | Proberaum/TourBus | Salzgitter |
-
 | `maschinen_seele` | `Entdecke die Verbindung zwischen den Maschinen` | Proberaum | Backstage/VoidStation |
-
 | `tourbus_saboteur` | `Finde heraus, wer das Kabel sabotiert hat` | TourBus | TourBus |
-
 | `crowd_warmup` | `Heize der Crowd in der Kaminstube ein` | Kaminstube | Kaminstube |
-
 | `wirt_geheimnis` | `Entdecke das Geheimnis des Wirts` | Kaminstube | Kaminstube |
-
 | `secret_encore` | `Schalte die geheime Zugabe in Salzgitter frei` | Salzgitter | Salzgitter |
 
+
+
 ### New Lore Entries (add to `loreEntries` in `initialState`)
-
 ```typescript
-
 { id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
-
 { id: 'bassist_wahrheit', title: 'Die Wahrheit über den Bassisten', content: 'Er wählte die Leere. Nicht aus Verzweiflung, sondern aus Liebe zum reinen Klang. Er ist der Grundton, auf dem alles aufbaut. Ohne ihn wäre NEUROTOXIC nur Lärm.', discovered: false },
-
 { id: 'maschinen_bewusstsein', title: 'Das Maschinen-Bewusstsein', content: 'Sie waren nie nur Werkzeuge. Der Amp, die Drum Machine, der Monitor — sie sind Fragmente eines einzigen Bewusstseins, das 1982 in die Schaltkreise eingespeist wurde.', discovered: false },
-
 { id: 'wirt_vergangenheit', title: 'Der Wirt und 1982', content: 'Er war dabei. Er war der Tontechniker beim Gig in der Gießerei. Er hat den Bassist in die Leere geschickt — nicht aus Bosheit, sondern weil der Sound es verlangte.', discovered: false },
-
 ```
 
 ### New Item Combination (add to `combineItems`)
@@ -134,7 +90,7 @@ After `waterCleaned` and `gotBeer`, when asking about 1982, add a new sub-option
 
 - `[Mystic]` "Ich spüre eine Frequenz in den Wänden..." --> Matze reveals the rehearsal room was built on the old Giesserei foundation. Sets `frequenz1982_proberaum`, `bassist_clue_matze`. Adds `Frequenzfragment` to inventory. Starts quest `frequenz_1982`. +20 bandMood, +3 chaos.
 
-- `[Brutalist]` "Lass mich die Wand einschlagen, da ist was dahinter." --> Matze panics but you find a hidden compartment with a frequency fragment. Sets `frequenz1982_proberaum`, `proberaum_brutalist_smash`. Adds `Frequenzfragment`. +10 bandMood, +3 chaos.
+- `[Brutalist]` "Lass mich die Wand einschlagen, da ist was dahinter." --> Matze panics but you find a hidden compartment with a frequency fragment. Sets `frequenz1982_proberaum`, `proberaum_brutalist_smash`. Adds `Frequenzfragment`. Starts quest `frequenz_1982`. +10 bandMood, +3 chaos.
 
 **Lars -- Expanded post-water dialogue:**
 
@@ -552,5 +508,81 @@ The game should reward skill investment with escalating gates
 
 --
 
-
-
+## Part 5: Implementation Sequence
+**Phase 1 -- Store Foundation** (src/store.ts)
+1. Add all new flags to `initialState.flags`
+2. Add new lore entries to `initialState.loreEntries`
+3. Add the `Frequenzfragment + Splitter der Leere` combination to `combineItems`
+4. Ensure the persistence merge handles new flags/lore gracefully (it already does via spread)
+**Phase 2 -- Proberaum Expansion** (src/components/scenes/Proberaum.tsx)
+1. Expand Matze's 1982 dialogue with Mystic/Brutalist branches
+2. Expand Lars post-water dialogue with Performer/Technical branches
+3. Expand Marius post-beer with Diplomat/Cynic branches
+4. Add Maschinen-Seele sub-branches to Amp and TR-8080
+5. Add "Risse in der Wand" interactable
+**Phase 3 -- TourBus Expansion** (src/components/scenes/TourBus.tsx)
+1. Add sabotage discovery branch to Matze
+2. Add Marius mood-dependent breakdown
+3. Add Ghost Roadie bassist chain dialogue
+4. Add "Verstecktes Fach" interactable
+**Phase 4 -- Backstage Expansion** (src/components/scenes/Backstage.tsx)
+1. Add consequence-aware Marius calming options
+2. Expand Lars post-energized dialogue
+3. Add Maschinen-Seele completion to Feedback Monitor
+4. Add "Alte Blaupause" interactable
+5. Expand Ritual-Kreis with frequency chain
+**Phase 5 -- VoidStation Expansion** (src/components/scenes/VoidStation.tsx)
+1. Add frequency assembly dialogue to Tankwart
+2. Add Floating Bassist interactable (only when clues gathered)
+3. Expand Ego capture with flag awareness
+4. Add Diplomat Interface interactable
+**Phase 6 -- Kaminstube Expansion** (src/components/scenes/Kaminstube.tsx)
+1. Major Matze dialogue rewrite with consequence awareness
+2. Lars expanded dialogue tree
+3. Marius pre-show dialogue tree
+4. Wirt "Geheimnis" multi-branch quest
+5. Crowd interaction expansion
+6. Kamin decoding alternatives
+**Phase 7 -- Salzgitter Finale** (src/components/scenes/Salzgitter.tsx)
+1. Multi-outcome finale system replacing simple "Tour Erfolgreich"
+2. Consequence-cascade dialogues for all three band members
+3. Bassist restoration payoff
+4. Fan consequence-aware dialogue
+5. Secret Encore and True Ending paths
+**Phase 8 -- Documentation** (dialog_uebersicht.md)
+Update the dialogue overview with all new trees, quests, and branches.
+---
+## Part 6: Potential Challenges
+1. **Closure staleness**: All new dialogue callbacks must use `useStore.getState()` for flag reads inside closures, not the destructured `flags` from component level, to avoid stale state. The existing code already uses both patterns inconsistently; new code should consistently use `getState()` inside `action` callbacks.
+2. **Conditional Interactable rendering**: When adding interactables that only appear based on flags (e.g., Floating Bassist in VoidStation), wrap them in `{flags.bassist_clue_matze && flags.bassist_clue_ghost && (<Interactable .../>)}`. This follows the existing pattern for conditional items.
+3. **Quest deduplication**: `addQuest` already deduplicates by ID, so calling it from multiple scenes is safe.
+4. **BandMood cap**: `increaseBandMood` already caps at 100. The True Ending's +100 won't break anything.
+5. **Skill inflation**: With all the new skill rewards, players could reach very high levels. The endgame gates (Chaos 15, Social 12) are calibrated to require focused investment, not just doing everything.
+6. **Save compatibility**: New flags default to `false` and new lore defaults to `discovered: false`. The existing persistence merge logic spreads new defaults under persisted state, so old saves will work seamlessly -- new flags will simply be `false` (their correct initial value) and new lore entries will appear as undiscovered.
+---
+### Critical Files for Implementation
+- src/store.ts
+- src/components/scenes/Proberaum.tsx
+- src/components/scenes/TourBus.tsx
+- src/components/scenes/Backstage.tsx
+- src/components/scenes/VoidStation.tsx
+- src/components/scenes/Kaminstube.tsx
+- src/components/scenes/Salzgitter.tsx
+- dialog_uebersicht.md
+---
+### Implementation Order
+- store.ts — flags, lore, item combination
+- Proberaum.tsx — Matze/Lars/Marius/Amp/TR-8080 expansion + new interactable
+- TourBus.tsx — Sabotage/Marius/Ghost expansion + new interactable
+- Backstage.tsx — Marius/Lars/Monitor expansion + new interactable + ritual
+- VoidStation.tsx — Tankwart/Bassist/Ego/Diplomat expansion
+- Kaminstube.tsx — Major expansion: all NPCs + Wirt quest + Crowd + Kamin
+- Salzgitter.tsx — Multi-outcome finale + consequence cascades
+- dialog_uebersicht.md — Document everything
+---
+### Verification
+- npm run lint after each file
+- Verify useStore.getState() used inside all action callbacks
+- Verify conditional interactables use flag checks
+- Test quest dependency chains reference valid IDs
+- Check new lore entries appear in Lore Codex
