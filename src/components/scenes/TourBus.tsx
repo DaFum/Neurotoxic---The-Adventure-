@@ -191,6 +191,18 @@ export function TourBus() {
         }}
       />
 
+      {!hasItem('Energiedrink') && !hasItem('Turbo-Koffein') && !hasItem('Geister-Drink') && !flags.ghostRecipeQuestCompleted && (
+        <Interactable
+          position={[-1, 0.5, -3]}
+          emoji="🥤"
+          name="Energiedrink"
+          onInteract={() => {
+            addToInventory('Energiedrink');
+            setDialogue('Ein "Liquid Thunder" Energiedrink. Enthält genug Taurin, um ein kleines Kraftwerk zu betreiben.');
+          }}
+        />
+      )}
+
       {!hasItem('Bier') && (
         <Interactable
           position={[2, 0.5, 3]}
