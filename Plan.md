@@ -569,11 +569,20 @@ Update the dialogue overview with all new trees, quests, and branches.
 - src/components/scenes/Kaminstube.tsx
 - src/components/scenes/Salzgitter.tsx
 - dialog_uebersicht.md
-
 ---
-
+### Implementation Order
+- store.ts — flags, lore, item combination
+- Proberaum.tsx — Matze/Lars/Marius/Amp/TR-8080 expansion + new interactable
+- TourBus.tsx — Sabotage/Marius/Ghost expansion + new interactable
+- Backstage.tsx — Marius/Lars/Monitor expansion + new interactable + ritual
+- VoidStation.tsx — Tankwart/Bassist/Ego/Diplomat expansion
+- Kaminstube.tsx — Major expansion: all NPCs + Wirt quest + Crowd + Kamin
+- Salzgitter.tsx — Multi-outcome finale + consequence cascades
+- dialog_uebersicht.md — Document everything
 ---
-
-## less comprehensive version
-
-*Note: This section previously contained a less comprehensive version of the plan which has been removed to avoid duplication. Please refer to the detailed canonical plan above (e.g., "Part 1: Store Changes" and the specific scene headers).*
+### Verification
+- npm run lint after each file
+- Verify useStore.getState() used inside all action callbacks
+- Verify conditional interactables use flag checks
+- Test quest dependency chains reference valid IDs
+- Check new lore entries appear in Lore Codex
