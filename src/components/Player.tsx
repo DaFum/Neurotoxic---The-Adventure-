@@ -25,6 +25,8 @@ interface PlayerProps {
 
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);
+  const velocity = useRef(new THREE.Vector3()).current;
+  const shakeOffset = useRef(new THREE.Vector3()).current;
   const [, get] = useKeyboardControls();
   const setPlayerPos = useStore((state) => state.setPlayerPos);
   const cameraShake = useStore((state) => state.cameraShake);
@@ -46,7 +48,9 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     if (!bodyRef.current) return;
 
     const { forward, backward, left, right } = get();
-    const velocity = new THREE.Vector3();
+
+    // Reset the vector instead of creating a new one
+    velocity.set(0, 0, 0);
 
     if (forward) velocity.z -= 1;
     if (backward) velocity.z += 1;
@@ -78,25 +82,28 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     const pos = bodyRef.current.translation();
     
     // Manual bounds clamping
+    let clampedX = pos.x;
+    let clampedZ = pos.z;
     if (pos.x < bounds.x[0] || pos.x > bounds.x[1] || pos.z < bounds.z[0] || pos.z > bounds.z[1]) {
-      const clampedX = THREE.MathUtils.clamp(pos.x, bounds.x[0], bounds.x[1]);
-      const clampedZ = THREE.MathUtils.clamp(pos.z, bounds.z[0], bounds.z[1]);
+      clampedX = THREE.MathUtils.clamp(pos.x, bounds.x[0], bounds.x[1]);
+      clampedZ = THREE.MathUtils.clamp(pos.z, bounds.z[0], bounds.z[1]);
       bodyRef.current.setTranslation({ x: clampedX, y: pos.y, z: clampedZ }, true);
     }
 
-    setPlayerPos([pos.x, pos.y, pos.z]);
+    setPlayerPos([clampedX, pos.y, clampedZ]);
 
     // Camera follow with shake
-    const shakeOffset = new THREE.Vector3(
+    // Override the shakeOffset vector instead of creating a new one
+    shakeOffset.set(
       (Math.random() - 0.5) * cameraShake,
       (Math.random() - 0.5) * cameraShake,
       (Math.random() - 0.5) * cameraShake
     );
 
-    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, pos.x + shakeOffset.x, 0.1);
-    state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, pos.z + 10 + shakeOffset.z, 0.1);
+    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, clampedX + shakeOffset.x, 0.1);
+    state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, clampedZ + 10 + shakeOffset.z, 0.1);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, 5 + shakeOffset.y, 0.1);
-    state.camera.lookAt(pos.x, 0, pos.z);
+    state.camera.lookAt(clampedX, 0, clampedZ);
 
     // Decay camera shake
     if (cameraShake > 0) {
