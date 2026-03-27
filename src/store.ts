@@ -137,6 +137,7 @@ const initialState = {
     proberaum_mystic_ritual: false,
     tourbus_sabotage_discovered: false,
     tourbus_matze_confession: false,
+    backstage_blueprint_found: false,
     backstage_performer_speech: false,
     backstage_cynic_sabotage: false,
     void_diplomat_negotiation: false,
