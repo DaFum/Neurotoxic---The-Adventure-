@@ -1,0 +1,3 @@
+## 2024-05-15 - [ARIA Labels and Focus States]
+**Learning:** Some custom icon-only buttons (`X` to close dialogue) are missing `aria-label`s, which makes them inaccessible to screen readers. In addition, interactive lists like the inventory use elements that act as toggle buttons but lack `aria-pressed` states and `focus-visible` styling for keyboard navigation.
+**Action:** Always verify that buttons with only icons include descriptive `aria-label`s. Ensure elements functioning as toggles have `aria-pressed` and `focus-visible` styles to help users navigate correctly using keyboards.
