@@ -20,6 +20,7 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Stars, Float, Text, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
+import { useEffect, useRef } from 'react';
 
 export function Backstage() {
   const addToInventory = useStore((state) => state.addToInventory);
@@ -33,6 +34,16 @@ export function Backstage() {
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const skills = useStore((state) => state.skills);
   const trait = useStore((state) => state.trait);
+  const exitTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -254,7 +265,7 @@ export function Backstage() {
         emoji="📺"
         name="Feedback-Monitor"
         onInteract={() => {
-          const hasSchaltplan = hasItem('Verstärker-Schaltplan');
+          const hasSchaltplan = useStore.getState().hasItem('Verstärker-Schaltplan');
           
           if (flags.feedbackMonitorBackstageQuestCompleted) {
             setDialogue('Monitor: "BZZZT. Die Frequenzen sind perfekt. Danke, Manager."');
@@ -516,8 +527,12 @@ export function Backstage() {
         name="Zurück zum Tourbus"
         onInteract={() => {
           setDialogue('Nochmal zum Bus gehen? Sicher ist sicher.');
-          setTimeout(() => {
+          if (exitTimeoutRef.current !== null) {
+            window.clearTimeout(exitTimeoutRef.current);
+          }
+          exitTimeoutRef.current = window.setTimeout(() => {
             if (useStore.getState().scene === 'backstage') setScene('tourbus');
+            exitTimeoutRef.current = null;
           }, 1000);
         }}
       />

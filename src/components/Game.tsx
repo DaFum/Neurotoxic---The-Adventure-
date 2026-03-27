@@ -28,14 +28,19 @@ import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
 import { audio } from '../audio';
 
+const STORAGE_KEY = 'neurotoxic-game-storage';
+
 export function Game() {
   const scene = useStore((state) => state.scene);
   const trait = useStore((state) => state.trait);
   const setTrait = useStore((state) => state.setTrait);
   const setScene = useStore((state) => state.setScene);
+  const resetGame = useStore((state) => state.resetGame);
   const isPaused = useStore((state) => state.isPaused);
   const setPaused = useStore((state) => state.setPaused);
   const [selectingTrait, setSelectingTrait] = useState(false);
+  const [hasSavedGame, setHasSavedGame] = useState(false);
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
 
   const traits: { id: Trait; desc: string; skills: { name: keyof Skills; val: number }[] }[] = [
     { id: 'Visionary', desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.', skills: [{ name: 'chaos', val: 5 }] },
@@ -54,6 +59,38 @@ export function Game() {
       audio.stopAmbient();
     }
   }, [scene]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        setHasSavedGame(false);
+        return;
+      }
+      const parsed = JSON.parse(raw) as { state?: any } | null;
+      const saved = parsed?.state;
+      if (!saved) {
+        setHasSavedGame(false);
+        return;
+      }
+
+      const hasTrait = saved.trait !== null && saved.trait !== undefined;
+      const hasInventory = Array.isArray(saved.inventory) && saved.inventory.length > 0;
+      const hasCompletedQuest = Array.isArray(saved.quests) && saved.quests.some((q: any) => q?.completed);
+      const hasLoreProgress = Array.isArray(saved.loreEntries) && saved.loreEntries.some((e: any) => e?.discovered);
+      const hasMoodOrSkillProgress =
+        saved.bandMood !== undefined && typeof saved.bandMood === 'number' && (
+          saved.bandMood !== 20 ||
+          saved.skills?.technical > 0 ||
+          saved.skills?.social > 0 ||
+          saved.skills?.chaos > 0
+        );
+
+      setHasSavedGame(Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress));
+    } catch {
+      setHasSavedGame(false);
+    }
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -127,6 +164,10 @@ export function Game() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1, type: "spring" }}
                 onClick={() => {
+                  if (hasSavedGame) {
+                    setShowSavePrompt(true);
+                    return;
+                  }
                   setSelectingTrait(true);
                 }}
                 className="group relative px-12 py-6 bg-toxic hover:bg-white text-black font-black text-2xl uppercase tracking-[0.3em] transition-all brutal-border-toxic hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[8px_8px_0px_#adff2f]"
@@ -136,6 +177,71 @@ export function Game() {
             </div>
 
             <AnimatePresence>
+              {showSavePrompt && (
+                <motion.div
+                  initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                  animate={{ opacity: 1, backdropFilter: 'blur(8px)' }}
+                  exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                  className="absolute inset-0 z-50 bg-black/80 flex items-center justify-center p-6"
+                >
+                  <motion.div
+                    initial={{ scale: 0.9, y: 20 }}
+                    animate={{ scale: 1, y: 0 }}
+                    className="max-w-2xl w-full bg-zinc-950 p-8 brutal-border-toxic"
+                  >
+                    <h3 className="text-3xl text-toxic font-black uppercase tracking-widest mb-5 border-b border-toxic/20 pb-4">
+                      Save_Detected
+                    </h3>
+                    <p className="text-xs font-mono text-zinc-300 leading-relaxed uppercase tracking-wider mb-6">
+                      Existing local save data found. Continue previous run or start a new game?
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        onClick={() => {
+                          setShowSavePrompt(false);
+                          if (trait) {
+                            audio.startMusic();
+                            setScene('proberaum');
+                          } else {
+                            setSelectingTrait(true);
+                          }
+                        }}
+                        className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left"
+                      >
+                        <span className="text-2xl font-black text-zinc-100 group-hover:text-black uppercase mb-2">
+                          Continue
+                        </span>
+                        <p className="text-xs font-mono text-zinc-500 group-hover:text-black/70 leading-relaxed">
+                          Resume with your persisted trait, inventory and quest progress.
+                        </p>
+                      </button>
+                      <button
+                        onClick={() => {
+                          localStorage.removeItem(STORAGE_KEY);
+                          resetGame();
+                          setHasSavedGame(false);
+                          setShowSavePrompt(false);
+                          setSelectingTrait(true);
+                        }}
+                        className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-red-500 border border-zinc-800 hover:border-red-500 transition-all text-left"
+                      >
+                        <span className="text-2xl font-black text-zinc-100 group-hover:text-black uppercase mb-2">
+                          New Game
+                        </span>
+                        <p className="text-xs font-mono text-zinc-500 group-hover:text-black/70 leading-relaxed">
+                          Clear local save and reselect your trait from scratch.
+                        </p>
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setShowSavePrompt(false)}
+                      className="mt-6 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest"
+                    >
+                      [ Cancel ]
+                    </button>
+                  </motion.div>
+                </motion.div>
+              )}
               {selectingTrait && (
                 <motion.div 
                   initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}

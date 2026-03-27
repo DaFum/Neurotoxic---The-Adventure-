@@ -167,10 +167,11 @@ export function VoidStation() {
         name="Kosmischer Tankwart"
         scale={2}
         onInteract={() => {
-          const bandMood = useStore.getState().bandMood;
-          const hasForbiddenRiff = hasItem('Verbotenes Riff');
-          const hasTalisman = hasItem('Industrie-Talisman');
-          const trait = useStore.getState().trait;
+          const currentState = useStore.getState();
+          const bandMood = currentState.bandMood;
+          const hasForbiddenRiff = currentState.hasItem('Verbotenes Riff');
+          const hasTalisman = currentState.hasItem('Industrie-Talisman');
+          const trait = currentState.trait;
 
           if (flags.tankwartPhilosophy) {
             setDialogue('Tankwart: "Die Zeit ist nur ein Loop in einem kaputten Tape-Deck. Spielt weiter."');

@@ -17,6 +17,7 @@
  */
 import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
+import { Player } from '../Player';
 import { Sparkles, Float, Text } from '@react-three/drei';
 
 export function TourBus() {
@@ -414,9 +415,10 @@ export function TourBus() {
         emoji="👻"
         name="Geist eines Roadies"
         onInteract={() => {
-          const hasForbiddenRiff = hasItem('Verbotenes Riff');
-          const hasTalisman = hasItem('Industrie-Talisman');
-          const hasGeisterDrink = hasItem('Geister-Drink');
+          const currentState = useStore.getState();
+          const hasForbiddenRiff = currentState.hasItem('Verbotenes Riff');
+          const hasTalisman = currentState.hasItem('Industrie-Talisman');
+          const hasGeisterDrink = currentState.hasItem('Geister-Drink');
           
           if (hasGeisterDrink && !flags.ghostRecipeQuestCompleted) {
             setDialogue({
@@ -586,6 +588,8 @@ export function TourBus() {
           NEUROTOXIC TOUR 2026
         </Text>
       </Float>
+
+      <Player bounds={{ x: [-5.2, 5.2], z: [-4.6, 4.6] }} />
     </>
   );
 }

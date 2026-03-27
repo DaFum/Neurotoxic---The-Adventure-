@@ -313,8 +313,9 @@ export function Kaminstube() {
         emoji="🧔"
         name="Wirt"
         onInteract={() => {
-          const bandMood = useStore.getState().bandMood;
-          const hasTalisman = hasItem('Industrie-Talisman');
+          const currentState = useStore.getState();
+          const bandMood = currentState.bandMood;
+          const hasTalisman = currentState.hasItem('Industrie-Talisman');
           
           if (flags.wirtSecretItem) {
             setDialogue('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');

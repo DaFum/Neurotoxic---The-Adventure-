@@ -10,7 +10,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -31,6 +31,9 @@ interface InteractableProps {
 export function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);
+  const labelSpriteRef = useRef<THREE.Sprite>(null);
+  const emojiTextureRef = useRef<THREE.CanvasTexture | null>(null);
+  const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
@@ -52,13 +55,13 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     };
   }, [name, isBandMember]);
 
-  const emojiTexture = useMemo(() => {
+  useEffect(() => {
     const size = 256;
     const canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
+    if (!ctx) return;
 
     ctx.clearRect(0, 0, size, size);
     const gradient = ctx.createRadialGradient(size / 2, size / 2, 20, size / 2, size / 2, 120);
@@ -77,15 +80,37 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
-    return texture;
+    emojiTextureRef.current = texture;
+
+    if (spriteRef.current) {
+      const material = spriteRef.current.material;
+      if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
+        material.map = texture;
+        material.needsUpdate = true;
+      }
+    }
+
+    return () => {
+      if (spriteRef.current) {
+        const material = spriteRef.current.material;
+        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
+          material.map = null;
+          material.needsUpdate = true;
+        }
+      }
+      if (emojiTextureRef.current === texture) {
+        emojiTextureRef.current = null;
+      }
+      texture.dispose();
+    };
   }, [emoji]);
 
-  const labelTexture = useMemo(() => {
+  useEffect(() => {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 128;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
+    if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'rgba(0,0,0,0.78)';
@@ -107,8 +132,39 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
-    return texture;
+    labelTextureRef.current = texture;
+
+    if (labelSpriteRef.current) {
+      const material = labelSpriteRef.current.material;
+      if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
+        material.map = texture;
+        material.needsUpdate = true;
+      }
+    }
+
+    return () => {
+      if (labelSpriteRef.current) {
+        const material = labelSpriteRef.current.material;
+        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
+          material.map = null;
+          material.needsUpdate = true;
+        }
+      }
+      if (labelTextureRef.current === texture) {
+        labelTextureRef.current = null;
+      }
+      texture.dispose();
+    };
   }, [name, inRange]);
+
+  useEffect(() => {
+    return () => {
+      emojiTextureRef.current?.dispose();
+      emojiTextureRef.current = null;
+      labelTextureRef.current?.dispose();
+      labelTextureRef.current = null;
+    };
+  }, []);
 
   useFrame((state, delta) => {
     if (isPaused) return;
@@ -217,11 +273,11 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
             handleDomInteract(e);
           }}
         >
-          <spriteMaterial map={emojiTexture ?? undefined} transparent depthWrite={false} depthTest={false} />
+          <spriteMaterial map={emojiTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
         </sprite>
-        {hovered && labelTexture && (
-          <sprite position={[0, 1.35 * scale, 0]} scale={[2.8 * scale, 0.7 * scale, 1]} renderOrder={31}>
-            <spriteMaterial map={labelTexture} transparent depthWrite={false} depthTest={false} />
+        {hovered && (
+          <sprite ref={labelSpriteRef} position={[0, 1.35 * scale, 0]} scale={[2.8 * scale, 0.7 * scale, 1]} renderOrder={31}>
+            <spriteMaterial map={labelTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
           </sprite>
         )}
       </group>

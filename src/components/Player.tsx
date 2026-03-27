@@ -11,7 +11,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useKeyboardControls, Sparkles } from '@react-three/drei';
 import { RigidBody, RapierRigidBody, CuboidCollider } from '@react-three/rapier';
@@ -39,14 +39,17 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
   const speed = 5;
   const spriteRef = useRef<THREE.Sprite>(null);
+  const labelSpriteRef = useRef<THREE.Sprite>(null);
   const ringRef = useRef<THREE.Mesh>(null);
+  const playerTextureRef = useRef<THREE.CanvasTexture | null>(null);
+  const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
 
-  const playerTexture = useMemo(() => {
+  useEffect(() => {
     const canvas = document.createElement('canvas');
     canvas.width = 256;
     canvas.height = 256;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
+    if (!ctx) return;
 
     ctx.clearRect(0, 0, 256, 256);
     const glow = ctx.createRadialGradient(128, 128, 15, 128, 128, 115);
@@ -65,15 +68,37 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
-    return texture;
+    playerTextureRef.current = texture;
+
+    if (spriteRef.current) {
+      const material = spriteRef.current.material;
+      if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
+        material.map = texture;
+        material.needsUpdate = true;
+      }
+    }
+
+    return () => {
+      if (spriteRef.current) {
+        const material = spriteRef.current.material;
+        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
+          material.map = null;
+          material.needsUpdate = true;
+        }
+      }
+      if (playerTextureRef.current === texture) {
+        playerTextureRef.current = null;
+      }
+      texture.dispose();
+    };
   }, []);
 
-  const labelTexture = useMemo(() => {
+  useEffect(() => {
     const canvas = document.createElement('canvas');
     canvas.width = 420;
     canvas.height = 80;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
+    if (!ctx) return;
 
     ctx.clearRect(0, 0, 420, 80);
     ctx.fillStyle = 'rgba(5,5,5,0.82)';
@@ -91,7 +116,38 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
-    return texture;
+    labelTextureRef.current = texture;
+
+    if (labelSpriteRef.current) {
+      const material = labelSpriteRef.current.material;
+      if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
+        material.map = texture;
+        material.needsUpdate = true;
+      }
+    }
+
+    return () => {
+      if (labelSpriteRef.current) {
+        const material = labelSpriteRef.current.material;
+        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
+          material.map = null;
+          material.needsUpdate = true;
+        }
+      }
+      if (labelTextureRef.current === texture) {
+        labelTextureRef.current = null;
+      }
+      texture.dispose();
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      playerTextureRef.current?.dispose();
+      playerTextureRef.current = null;
+      labelTextureRef.current?.dispose();
+      labelTextureRef.current = null;
+    };
   }, []);
 
   useEffect(() => {
@@ -236,13 +292,11 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
         </mesh>
 
         <sprite ref={spriteRef} scale={[2.3, 2.3, 1]} renderOrder={20}>
-          <spriteMaterial map={playerTexture ?? undefined} transparent depthWrite={false} depthTest={false} />
+          <spriteMaterial map={playerTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
         </sprite>
-        {labelTexture && (
-          <sprite position={[0, -1.2, 0]} scale={[2.1, 0.4, 1]} renderOrder={19}>
-            <spriteMaterial map={labelTexture} transparent depthWrite={false} depthTest={false} />
-          </sprite>
-        )}
+        <sprite ref={labelSpriteRef} position={[0, -1.2, 0]} scale={[2.1, 0.4, 1]} renderOrder={19}>
+          <spriteMaterial map={labelTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
+        </sprite>
       </group>
     </RigidBody>
   );

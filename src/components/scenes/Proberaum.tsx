@@ -289,9 +289,10 @@ export function Proberaum() {
         isBandMember={true}
         idleType="headbang"
         onInteract={() => {
-          const hasForbiddenRiff = hasItem('Verbotenes Riff');
-          const hasTalisman = hasItem('Industrie-Talisman');
-          const trait = useStore.getState().trait;
+          const currentState = useStore.getState();
+          const hasForbiddenRiff = currentState.hasItem('Verbotenes Riff');
+          const hasTalisman = currentState.hasItem('Industrie-Talisman');
+          const trait = currentState.trait;
           
           if (flags.matzeDeepTalk) {
             setDialogue('Matze: "Ich denke immer noch über das nach, was du gesagt hast. Der Lärm... er ist die einzige Wahrheit. Wir sind bereit für Salzgitter."');
