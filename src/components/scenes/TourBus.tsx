@@ -17,7 +17,10 @@
  */
 import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
+import { Player } from '../Player';
 import { Sparkles, Float, Text } from '@react-three/drei';
+import { useRef, useEffect } from 'react';
+import { RigidBody } from '@react-three/rapier';
 
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
@@ -31,31 +34,213 @@ export function TourBus() {
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
+  const exitTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
-    <group>
+    <>
+      <color attach="background" args={['#4a3524']} />
+      <fog attach="fog" args={['#5a4530', 16, 60]} />
+
       {/* Bus Interior Walls */}
       <mesh position={[0, 2, -5]}>
         <boxGeometry args={[12, 5, 0.5]} />
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#232a33" emissive="#111820" emissiveIntensity={0.22} metalness={0.35} roughness={0.72} />
       </mesh>
       <mesh position={[-6, 2, 0]} rotation={[0, Math.PI / 2, 0]}>
         <boxGeometry args={[10, 5, 0.5]} />
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
       </mesh>
       <mesh position={[6, 2, 0]} rotation={[0, Math.PI / 2, 0]}>
         <boxGeometry args={[10, 5, 0.5]} />
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
       </mesh>
-      <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[12, 10]} />
-        <meshStandardMaterial color="#0a0a0a" />
+      <RigidBody type="fixed" position={[0, -0.1, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[12, 10]} />
+          <meshStandardMaterial color="#1a1d24" emissive="#0b0f16" emissiveIntensity={0.25} metalness={0.28} roughness={0.82} />
+        </mesh>
+      </RigidBody>
+      <mesh position={[0, 4.3, 0]}>
+        <boxGeometry args={[12, 0.3, 10]} />
+        <meshStandardMaterial color="#2f3741" emissive="#151b22" emissiveIntensity={0.18} metalness={0.42} roughness={0.62} />
       </mesh>
 
+      {/* Window strips */}
+      {[-3.8, -1.2, 1.2, 3.8].map((z) => (
+        <mesh key={`win-left-${z}`} position={[-5.74, 2.45, z]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[1.65, 1.1]} />
+          <meshStandardMaterial color="#7fb7ff" emissive="#2d5f9d" emissiveIntensity={0.28} metalness={0.2} roughness={0.35} transparent opacity={0.72} />
+        </mesh>
+      ))}
+      {[-3.8, -1.2, 1.2, 3.8].map((z) => (
+        <mesh key={`win-right-${z}`} position={[5.74, 2.45, z]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[1.65, 1.1]} />
+          <meshStandardMaterial color="#7fb7ff" emissive="#2d5f9d" emissiveIntensity={0.28} metalness={0.2} roughness={0.35} transparent opacity={0.72} />
+        </mesh>
+      ))}
+
       {/* Lighting */}
-      <ambientLight intensity={0.2} />
-      <pointLight position={[0, 4, 0]} intensity={10} color="#ffaa00" />
-      <spotLight position={[0, 4, 2]} angle={0.5} penumbra={1} intensity={20} color="#ffffff" />
+      <ambientLight intensity={0.95} />
+      <hemisphereLight args={['#fff1d9', '#574431', 0.7]} />
+      <pointLight position={[0, 4, 0]} intensity={9.2} color="#ffaa00" />
+      <spotLight position={[0, 4, 2]} angle={0.5} penumbra={1} intensity={17} color="#ffffff" />
+      <pointLight position={[-4, 2.8, -1]} intensity={3.4} color="#ff5a3d" />
+      <pointLight position={[4, 2.8, -1]} intensity={3.1} color="#2ac8ff" />
+      <pointLight position={[0, 2.6, 2.2]} intensity={2.8} color="#f7f5ef" />
+      <pointLight position={[0, 3.1, -2.4]} intensity={2.4} color="#ff66d2" />
+
+      {/* Ceiling rail lights */}
+      {[-4.5, -1.5, 1.5, 4.5].map((x) => (
+        <mesh key={`bus-rail-${x}`} position={[x, 4.35, -0.3]}>
+          <boxGeometry args={[1.6, 0.06, 0.06]} />
+          <meshStandardMaterial color="#ffd166" emissive="#ffd166" emissiveIntensity={1.5} />
+        </mesh>
+      ))}
+
+      {/* Floor runner and side rails */}
+      <mesh position={[0, -0.03, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[2.2, 8.4]} />
+        <meshStandardMaterial color="#2e1b18" emissive="#1a0d0b" emissiveIntensity={0.22} roughness={0.92} />
+      </mesh>
+      <mesh position={[-1.16, -0.015, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.08, 8.4]} />
+        <meshStandardMaterial color="#ff7b4a" emissive="#ff7b4a" emissiveIntensity={0.6} />
+      </mesh>
+      <mesh position={[1.16, -0.015, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.08, 8.4]} />
+        <meshStandardMaterial color="#57d3ff" emissive="#57d3ff" emissiveIntensity={0.55} />
+      </mesh>
+
+      {/* Seat blocks */}
+      {[
+        [-4, 0.5, 2.8],
+        [-1.2, 0.5, 2.8],
+        [1.6, 0.5, 2.8],
+        [4.4, 0.5, 2.8],
+      ].map((pos, idx) => (
+        <mesh key={`seat-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <boxGeometry args={[2, 1, 1.8]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#d36a3e' : '#3b8cc7'} emissive={idx % 2 === 0 ? '#7c2f1b' : '#1f4f78'} emissiveIntensity={0.4} metalness={0.15} roughness={0.76} />
+        </mesh>
+      ))}
+      {[
+        [-4, 1.18, 2.12],
+        [-1.2, 1.18, 2.12],
+        [1.6, 1.18, 2.12],
+        [4.4, 1.18, 2.12],
+      ].map((pos, idx) => (
+        <mesh key={`seat-back-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <boxGeometry args={[1.95, 1.1, 0.32]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#c65b34' : '#3380b5'} emissive={idx % 2 === 0 ? '#702914' : '#1b4465'} emissiveIntensity={0.38} metalness={0.18} roughness={0.7} />
+        </mesh>
+      ))}
+      {[
+        [-4, 1.75, 2.06],
+        [-1.2, 1.75, 2.06],
+        [1.6, 1.75, 2.06],
+        [4.4, 1.75, 2.06],
+      ].map((pos, idx) => (
+        <mesh key={`seat-headrest-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <boxGeometry args={[1.2, 0.38, 0.26]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#f69b6f' : '#77baf1'} emissive={idx % 2 === 0 ? '#7d3a22' : '#2f6294'} emissiveIntensity={0.35} metalness={0.12} roughness={0.65} />
+        </mesh>
+      ))}
+      {[[-4.78, -0.06, 2.2], [-3.22, -0.06, 2.2], [-4.78, -0.06, 3.38], [-3.22, -0.06, 3.38],
+        [-1.98, -0.06, 2.2], [-0.42, -0.06, 2.2], [-1.98, -0.06, 3.38], [-0.42, -0.06, 3.38],
+        [0.82, -0.06, 2.2], [2.38, -0.06, 2.2], [0.82, -0.06, 3.38], [2.38, -0.06, 3.38],
+        [3.62, -0.06, 2.2], [5.18, -0.06, 2.2], [3.62, -0.06, 3.38], [5.18, -0.06, 3.38]].map((pos, idx) => (
+        <mesh key={`seat-leg-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.06, 0.08, 0.35, 10]} />
+          <meshStandardMaterial color="#aeb7c1" metalness={0.82} roughness={0.25} />
+        </mesh>
+      ))}
+
+      {/* Driver cockpit + storage */}
+      <mesh position={[0, 1.1, -4.4]} castShadow receiveShadow>
+        <boxGeometry args={[3.6, 1.1, 0.55]} />
+        <meshStandardMaterial color="#29313a" emissive="#18222d" emissiveIntensity={0.3} metalness={0.55} roughness={0.5} />
+      </mesh>
+      <mesh position={[-1.2, 1.35, -4.05]} rotation={[0.2, 0, 0]} castShadow receiveShadow>
+        <torusGeometry args={[0.34, 0.06, 12, 24]} />
+        <meshStandardMaterial color="#23272d" metalness={0.85} roughness={0.25} />
+      </mesh>
+      <mesh position={[0, 1.62, -4.1]} castShadow receiveShadow>
+        <boxGeometry args={[3, 0.42, 0.22]} />
+        <meshStandardMaterial color="#1f2935" emissive="#0f1d2b" emissiveIntensity={0.35} metalness={0.6} roughness={0.38} />
+      </mesh>
+      {[-0.9, 0, 0.9].map((x, idx) => (
+        <mesh key={`dash-screen-${idx}`} position={[x, 1.67, -3.95]}>
+          <planeGeometry args={[0.68, 0.22]} />
+          <meshStandardMaterial color={idx === 1 ? '#9bff6d' : '#6ad3ff'} emissive={idx === 1 ? '#9bff6d' : '#6ad3ff'} emissiveIntensity={0.85} metalness={0.55} roughness={0.2} />
+        </mesh>
+      ))}
+      {[-1.2, -0.4, 0.4, 1.2].map((x, idx) => (
+        <mesh key={`dash-knob-${idx}`} position={[x, 1.42, -3.86]} castShadow>
+          <cylinderGeometry args={[0.05, 0.05, 0.06, 10]} />
+          <meshStandardMaterial color="#dde4ee" metalness={0.9} roughness={0.2} />
+        </mesh>
+      ))}
+      {[-5.2, -4.2, 4.2, 5.2].map((x) => (
+        <mesh key={`bus-shelf-${x}`} position={[x, 2.8, 0.4]} castShadow receiveShadow>
+          <boxGeometry args={[0.9, 0.5, 1.6]} />
+          <meshStandardMaterial color="#3a2f24" emissive="#241910" emissiveIntensity={0.25} roughness={0.75} />
+        </mesh>
+      ))}
+
+      {/* Overhead luggage rails and side cases */}
+      {[-3.4, -1.2, 1.2, 3.4].map((z) => (
+        <mesh key={`rack-left-${z}`} position={[-5.35, 3.35, z]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1.25, 0.2, 0.85]} />
+          <meshStandardMaterial color="#303947" emissive="#1a2330" emissiveIntensity={0.24} metalness={0.5} roughness={0.5} />
+        </mesh>
+      ))}
+      {[-3.4, -1.2, 1.2, 3.4].map((z) => (
+        <mesh key={`rack-right-${z}`} position={[5.35, 3.35, z]} rotation={[0, -Math.PI / 2, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1.25, 0.2, 0.85]} />
+          <meshStandardMaterial color="#303947" emissive="#1a2330" emissiveIntensity={0.24} metalness={0.5} roughness={0.5} />
+        </mesh>
+      ))}
+      {[[-5.1, 0.55, -1.6], [5.1, 0.55, -1.6], [-5.1, 0.55, 1.2], [5.1, 0.55, 1.2]].map((pos, idx) => (
+        <mesh key={`side-case-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <boxGeometry args={[0.7, 0.9, 1.1]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#3a2230' : '#223a34'} emissive={idx % 2 === 0 ? '#23121c' : '#14251f'} emissiveIntensity={0.28} metalness={0.42} roughness={0.56} />
+        </mesh>
+      ))}
+      {[[-5.08, 1.08, -1.6], [5.08, 1.08, -1.6], [-5.08, 1.08, 1.2], [5.08, 1.08, 1.2]].map((pos, idx) => (
+        <mesh key={`side-case-latch-${idx}`} position={pos as [number, number, number]}>
+          <boxGeometry args={[0.1, 0.1, 0.24]} />
+          <meshStandardMaterial color="#bfc9d6" metalness={0.9} roughness={0.2} />
+        </mesh>
+      ))}
+
+      {/* Grab handles and hanging straps */}
+      {[-4.8, -2.4, 0, 2.4, 4.8].map((x) => (
+        <mesh key={`grab-${x}`} position={[x, 4.12, -0.36]} castShadow>
+          <torusGeometry args={[0.16, 0.03, 10, 20]} />
+          <meshStandardMaterial color="#dbe3ed" metalness={0.86} roughness={0.24} />
+        </mesh>
+      ))}
+      {[-3.6, -1.2, 1.2, 3.6].map((x) => (
+        <group key={`strap-${x}`} position={[x, 4.1, 0.9]}>
+          <mesh>
+            <cylinderGeometry args={[0.015, 0.015, 0.55, 8]} />
+            <meshStandardMaterial color="#f0f4fa" metalness={0.35} roughness={0.55} />
+          </mesh>
+          <mesh position={[0, -0.34, 0]}>
+            <torusGeometry args={[0.08, 0.02, 8, 18]} />
+            <meshStandardMaterial color="#f0f4fa" metalness={0.8} roughness={0.22} />
+          </mesh>
+        </group>
+      ))}
 
       {/* Atmosphere */}
       <Sparkles count={20} scale={10} size={1} speed={0.5} opacity={0.2} />
@@ -244,9 +429,10 @@ export function TourBus() {
         emoji="👻"
         name="Geist eines Roadies"
         onInteract={() => {
-          const hasForbiddenRiff = hasItem('Verbotenes Riff');
-          const hasTalisman = hasItem('Industrie-Talisman');
-          const hasGeisterDrink = hasItem('Geister-Drink');
+          const currentState = useStore.getState();
+          const hasForbiddenRiff = currentState.hasItem('Verbotenes Riff');
+          const hasTalisman = currentState.hasItem('Industrie-Talisman');
+          const hasGeisterDrink = currentState.hasItem('Geister-Drink');
           
           if (hasGeisterDrink && !flags.ghostRecipeQuestCompleted) {
             setDialogue({
@@ -358,18 +544,27 @@ export function TourBus() {
             setDialogue({
               text: 'Geist: "Ich hab die 80er überlebt, aber diese Tour... die wird euch vernichten. Was willst du wissen, Sterblicher?"',
               options: [
-                { text: 'Wie überlebe ich?', action: () => setDialogue('Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."') },
-                { text: 'Wo ist das beste Bier?', action: () => setDialogue('Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."') },
-                { text: 'Wer bist du eigentlich?', action: () => setDialogue('Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."') },
+                { text: 'Wie überlebe ich?', action: () => {
+                    setDialogue('Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."');
+                    increaseBandMood(5);
+                }},
+                { text: 'Wo ist das beste Bier?', action: () => {
+                    setDialogue('Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."');
+                    increaseBandMood(5);
+                }},
+                { text: 'Wer bist du eigentlich?', action: () => {
+                    setDialogue('Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."');
+                    increaseBandMood(5);
+                }},
                 { text: 'Kann ich dir irgendwie helfen?', action: () => {
                     setDialogue('Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."');
                     setFlag('ghostRecipeQuestStarted', true);
                     addQuest('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies');
+                    increaseBandMood(5);
                 }}
               ]
             });
           }
-          increaseBandMood(5);
         }}
       />
 
@@ -394,7 +589,7 @@ export function TourBus() {
         onInteract={() => {
           if (hasItem('Repariertes Kabel')) {
             setDialogue('Auf gehts zum Gig! Nächster Halt: Backstage.');
-            setTimeout(() => setScene('backstage'), 1000);
+            exitTimeoutRef.current = window.setTimeout(() => setScene('backstage'), 1000);
           } else {
             setDialogue('Wir können noch nicht los. Matze braucht erst ein funktionierendes Kabel.');
           }
@@ -416,6 +611,8 @@ export function TourBus() {
           NEUROTOXIC TOUR 2026
         </Text>
       </Float>
-    </group>
+
+      <Player bounds={{ x: [-5.2, 5.2], z: [-4.6, 4.6] }} />
+    </>
   );
 }

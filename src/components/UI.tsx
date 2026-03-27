@@ -165,7 +165,7 @@ export function UI() {
   const glitchIntensity = Math.max(0, (bandMood - 70) / 30) + (scene === 'void_station' ? 0.3 : 0);
 
   return (
-    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 scanlines ${bandMood > 85 ? 'animate-pulse brightness-125' : ''} ${bandMood > 90 ? 'animate-glitch' : ''}`}>
+    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 ${bandMood > 85 ? 'animate-pulse brightness-125' : ''} ${bandMood > 90 ? 'animate-glitch' : ''}`}>
       {/* Dynamic Glitch Overlay */}
       {glitchIntensity > 0 && (
         <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden select-none">
@@ -379,7 +379,7 @@ export function UI() {
 
       {/* Pause Menu */}
       {isPaused && (
-        <div className="absolute inset-0 bg-obsidian/80 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50 scanlines">
+        <div className="absolute inset-0 bg-obsidian/80 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}

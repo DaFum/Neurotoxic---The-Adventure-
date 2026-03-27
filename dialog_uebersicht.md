@@ -8,7 +8,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Zerrissenes Plakat:**
     * *Erstinteraktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`).
-    * *Wiederholte Interaktion:* Erneut betrachten (+5 BandMood bei jeder Interaktion).
+    * *Wiederholte Interaktion:* Erneut betrachten (kein Mood-Effekt mehr).
 * **Das Verbotene Riff (Item):**
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
@@ -109,7 +109,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * "Vielleicht später" (kein Mood-Effekt).
     * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood, setzt `ghostSecretRevealed`) ODER Begraben (+5 BandMood).
     * *Item (Verbotenes Riff):* "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
-    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe`.
+    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood pro beantworteter Frage). Option "Kann ich dir helfen?" startet Quest `ghost_recipe` (+5 BandMood).
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 
