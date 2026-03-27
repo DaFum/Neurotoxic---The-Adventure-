@@ -37,12 +37,18 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);
 
+  // ⚡ Bolt: Cache Vector3 instances to prevent memory allocations in the hot path
+  const playerPosVec = useRef(new THREE.Vector3()).current;
+  const targetPosVec = useRef(new THREE.Vector3(...position)).current;
+
   useFrame((state) => {
     if (isPaused) return;
 
     const playerPos = useStore.getState().playerPos;
-    const dist = new THREE.Vector3(...playerPos).distanceTo(new THREE.Vector3(...position));
-    setInRange(dist < 4.0);
+    // ⚡ Bolt: Update cached vectors and use distanceToSquared to avoid Math.sqrt
+    playerPosVec.set(playerPos[0], playerPos[1], playerPos[2]);
+    const distSq = playerPosVec.distanceToSquared(targetPosVec);
+    setInRange(distSq < 16.0); // 4.0 * 4.0 = 16.0
 
     if (ref.current) {
       const time = state.clock.elapsedTime;
