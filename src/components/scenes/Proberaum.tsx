@@ -173,7 +173,9 @@ export function Proberaum() {
 
           if (!flags.waterCleaned) {
             setDialogue({
-              text: bandMood > 40 
+              text: bandMood > 60
+                ? 'Matze: "Hey Manager! Ich hab ein paar neue Riffs geschrieben! Kriegen wir das Wasser weg, damit ich sie dir zeigen kann?"'
+                : bandMood > 40
                 ? 'Matze: "Hey Manager! Der Raum ist zwar nass, aber ich bin heiß wie Frittenfett! Kriegen wir das Wasser weg?"'
                 : 'Matze: "Verdammt, der Proberaum ist geflutet! Wir müssen das Wasser wegkriegen, bevor die Amps kaputtgehen!"',
               options: [
@@ -200,6 +202,34 @@ export function Proberaum() {
                   setDialogue({
                     text: 'Matze: "1982... da war der Lärm noch rein. Wir haben in einer alten Gießerei gespielt. Der Bassist ist damals verschwunden, aber der Sound war legendär. Wir suchen ihn immer noch."',
                     options: [
+                      {
+                        text: 'Ich spüre eine Frequenz in den Wänden... [Mystic]',
+                        requiredTrait: 'Mystic',
+                        action: () => {
+                          setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
+                          useStore.getState().setFlag('frequenz1982_proberaum', true);
+                          useStore.getState().setFlag('bassist_clue_matze', true);
+                          useStore.getState().addToInventory('Frequenzfragment');
+                          useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                          useStore.getState().increaseBandMood(20);
+                          useStore.getState().increaseSkill('chaos', 3);
+                          useStore.getState().setFlag('matzeDeepTalk', true);
+                        }
+                      },
+                      {
+                        text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
+                        requiredTrait: 'Brutalist',
+                        action: () => {
+                          setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
+                          useStore.getState().setFlag('frequenz1982_proberaum', true);
+                          useStore.getState().setFlag('proberaum_brutalist_smash', true);
+                          useStore.getState().addToInventory('Frequenzfragment');
+                          useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                          useStore.getState().increaseBandMood(10);
+                          useStore.getState().increaseSkill('chaos', 3);
+                          useStore.getState().setFlag('matzeDeepTalk', true);
+                        }
+                      },
                       { 
                         text: 'Ich sehe Muster im Lärm. [Visionary]', 
                         requiredTrait: 'Visionary',
@@ -312,11 +342,40 @@ export function Proberaum() {
             setDialogue('Lars: "Ich hab hier irgendwo einen Wischmopp gesehen... Such mal danach!"');
           } else if (!flags.waterCleaned) {
             setDialogue('Lars: "Du hast den Mopp! Wisch die Pfütze in der Mitte auf!"');
+          } else if (bandMood < 20) {
+            setDialogue('Lars: "Ich pack meine Sticks ein. Dieser Gig wird ein Desaster."');
           } else {
             const moodText = bandMood > 60 
               ? 'Lars: "Dieser Beat... er kommt direkt aus der Hölle! Ich liebe es!"'
               : 'Lars: "Geiler Beat, oder? Lass uns loslegen!"';
-            setDialogue(moodText);
+            setDialogue({
+              text: moodText,
+              options: [
+                {
+                  text: 'Zeig mir deinen besten Fill. [Performer]',
+                  requiredTrait: 'Performer',
+                  action: () => {
+                    setDialogue('Lars: "Boom-Tchak! Der Bassist hat meine Drums früher vor jeder Show gestimmt..."');
+                    useStore.getState().setFlag('lars_proberaum_secret', true);
+                    useStore.getState().increaseBandMood(15);
+                    useStore.getState().increaseSkill('social', 3);
+                  }
+                },
+                {
+                  text: 'Deine Hi-Hat klingt verstimmt. Lass mich mal. [Technical 3]',
+                  requiredSkill: { name: 'technical', level: 3 },
+                  action: () => {
+                    setDialogue('Lars: "Hey, das klingt besser! Die TR-8080 hat übrigens Teile vom alten Amp des Bassisten in sich..."');
+                    useStore.getState().increaseBandMood(10);
+                    useStore.getState().increaseSkill('technical', 3);
+                    if (useStore.getState().flags.talkingAmpHeard) {
+                      useStore.getState().addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
+                    }
+                  }
+                },
+                { text: 'Weiter so.', action: () => setDialogue('Lars: "Wird gemacht, Manager!"') }
+              ]
+            });
           }
         }}
       />
@@ -361,12 +420,82 @@ export function Proberaum() {
             const moodText = bandMood > 80
               ? 'Marius: "Ich fühle die Energie! Wir werden die Welt in Schutt und Asche legen!"'
               : 'Marius: "Prost! Die Riff Night in Salzgitter wird legendär!"';
-            setDialogue(moodText);
+            if (bandMood > 50) {
+              setDialogue({
+                text: moodText,
+                options: [
+                  {
+                    text: 'Marius, wie geht es dir wirklich? [Diplomat]',
+                    requiredTrait: 'Diplomat',
+                    action: () => {
+                      setDialogue('Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."');
+                      useStore.getState().setFlag('marius_tourbus_doubt', true);
+                      useStore.getState().increaseBandMood(15);
+                      useStore.getState().increaseSkill('social', 3);
+                    }
+                  },
+                  {
+                    text: 'Dein Ego ist groß genug für zwei Dimensionen. [Cynic]',
+                    requiredTrait: 'Cynic',
+                    action: () => {
+                      setDialogue('Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"');
+                      useStore.getState().increaseBandMood(5);
+                      useStore.getState().increaseSkill('chaos', 2);
+                    }
+                  },
+                  { text: 'Bereit für den Gig?', action: () => setDialogue('Marius: "Immer!"') }
+                ]
+              });
+            } else {
+              setDialogue(moodText);
+            }
           }
         }}
       />
 
       {/* Items */}
+      {flags.waterCleaned && (
+        <Interactable
+          position={[10, 2, -7]}
+          emoji="🔍"
+          name="Risse in der Wand"
+          onInteract={() => {
+            setDialogue({
+              text: 'Risse in der Wand. Sie bilden ein Muster, das an Schallwellen erinnert.',
+              options: [
+                {
+                  text: 'Die Risse... sie sind eine Partitur! [Visionary]',
+                  requiredTrait: 'Visionary',
+                  action: () => {
+                    setDialogue('Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.');
+                    if (!useStore.getState().quests.find(q => q.id === 'frequenz_1982')) {
+                      useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                    }
+                    useStore.getState().setFlag('frequenz1982_proberaum', true);
+                    useStore.getState().addToInventory('Frequenzfragment');
+                    useStore.getState().increaseBandMood(15);
+                  }
+                },
+                {
+                  text: 'Die Resonanzfrequenz liegt bei exakt 432.1982 Hz. [Technical 8]',
+                  requiredSkill: { name: 'technical', level: 8 },
+                  action: () => {
+                    setDialogue('Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.');
+                    if (!useStore.getState().quests.find(q => q.id === 'frequenz_1982')) {
+                      useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                    }
+                    useStore.getState().setFlag('frequenz1982_proberaum', true);
+                    useStore.getState().addToInventory('Frequenzfragment');
+                    useStore.getState().increaseBandMood(15);
+                  }
+                },
+                { text: 'Interessantes Muster.', action: () => setDialogue('Einfach nur Risse. Aber sie sehen laut aus.') }
+              ]
+            });
+          }}
+        />
+      )}
+
       {!hasItem('Mop') && (
         <Interactable
           position={[-8, 0.5, 3]}
@@ -489,7 +618,25 @@ export function Proberaum() {
               ]
             });
           } else if (flags.talkingAmpHeard) {
-            setDialogue('Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."');
+            setDialogue({
+              text: 'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
+              options: [
+                {
+                  text: 'Ich höre eine andere Stimme in dir. Wer ist da noch? [Mystic]',
+                  requiredTrait: 'Mystic',
+                  action: () => {
+                    setDialogue('Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."');
+                    useStore.getState().setFlag('maschinen_seele_amp', true);
+                    useStore.getState().increaseBandMood(10);
+                    useStore.getState().increaseSkill('chaos', 2);
+                    if (!useStore.getState().quests.find(q => q.id === 'maschinen_seele')) {
+                      useStore.getState().addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
+                    }
+                  }
+                },
+                { text: 'Ich suche weiter.', action: () => setDialogue('Amp: "Beeil dich..."') }
+              ]
+            });
           } else {
             setDialogue('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
             setFlag('talkingAmpHeard', true);
@@ -603,7 +750,22 @@ export function Proberaum() {
               ]
             });
           } else {
-            setDialogue('TR-8080: "Hast du das Riff? Nein? Dann stör mich nicht beim Selbst-Oszillieren."');
+            setDialogue({
+              text: 'TR-8080: "Hast du das Riff? Nein? Dann stör mich nicht beim Selbst-Oszillieren."',
+              options: [
+                {
+                  text: 'Deine Seriennummer... du bist nicht von der Stange. [Technical 5]',
+                  requiredSkill: { name: 'technical', level: 5 },
+                  action: () => {
+                    setDialogue('TR-8080: "Korrekt. Ich wurde 1982 aus dem Amp eines Bassisten gelötet. Wir teilen eine Seele."');
+                    useStore.getState().setFlag('maschinen_seele_tr8080', true);
+                    useStore.getState().increaseBandMood(10);
+                    useStore.getState().increaseSkill('technical', 3);
+                  }
+                },
+                { text: 'Schon gut, ich gehe.', action: () => setDialogue('TR-8080: "BZZT."') }
+              ]
+            });
           }
         }}
       />
