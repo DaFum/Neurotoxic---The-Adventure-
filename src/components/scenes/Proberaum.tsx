@@ -71,7 +71,7 @@ export function Proberaum() {
       <mesh position={[-5, 3, -7.4]}>
         <planeGeometry args={[2, 3]} />
         <meshBasicMaterial color="#111" />
-        <Html transform position={[0, 0, 0.01]}>
+        <Html transform position={[0, 0, 0.01]} zIndexRange={[2, 0]}>
           <div className="bg-zinc-900 border-4 border-red-800 p-2 text-center text-white font-black uppercase shadow-2xl w-32 h-48 flex flex-col justify-center items-center">
             <span className="text-red-500 text-sm">Tour</span>
             <span className="text-xl">GRIND</span>

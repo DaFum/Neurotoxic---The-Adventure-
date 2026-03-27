@@ -131,7 +131,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
           <mesh>
             <planeGeometry args={[1.5, 2]} />
             <meshStandardMaterial color="#000" transparent opacity={0} />
-            <Html transform distanceFactor={10} position={[0, 0, 0.1]} center>
+            <Html transform distanceFactor={10} position={[0, 0, 0.1]} center zIndexRange={[2, 0]}>
               <div className="relative group">
                 {/* Character Sprite (Industrial Manager) */}
                 <div

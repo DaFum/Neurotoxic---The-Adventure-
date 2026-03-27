@@ -33,11 +33,13 @@ export function Kaminstube() {
 
   const pointLightRef = useRef<THREE.PointLight>(null);
   const dirLightRef = useRef<THREE.DirectionalLight>(null);
+  const tRef = useRef(0);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (flags.ampFixed) {
       // Dynamic lighting when the amp is fixed (show starts)
-      const t = state.clock.elapsedTime;
+      tRef.current += delta || 0;
+      const t = tRef.current;
       const beat = Math.abs(Math.sin(t * 4)); // Simple beat sync
       
       if (pointLightRef.current) {
@@ -96,7 +98,7 @@ export function Kaminstube() {
       <mesh position={[4, 4, -7.9]}>
         <planeGeometry args={[3, 2]} />
         <meshBasicMaterial color="#111" />
-        <Html transform position={[0, 0, 0.01]}>
+        <Html transform position={[0, 0, 0.01]} zIndexRange={[2, 0]}>
           <div className="bg-orange-900 border-2 border-orange-500 p-2 text-center text-white font-black uppercase shadow-2xl w-48 h-32 flex flex-col justify-center items-center">
             <span className="text-orange-300 text-xs">Underground Metal Fest</span>
             <span className="text-xl">KAMINSTUBE</span>

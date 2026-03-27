@@ -11,6 +11,7 @@
  * - No major errors found.
  */
 import { useRef, useState, useEffect } from 'react';
+import type { MouseEvent } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Billboard } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -30,6 +31,7 @@ interface InteractableProps {
 
 export function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
   const ref = useRef<THREE.Group>(null);
+  const timeRef = useRef(0);
   const [hovered, setHovered] = useState(false);
   const [inRange, setInRange] = useState(false);
   const [interacted, setInteracted] = useState(false);
@@ -37,7 +39,7 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (isPaused) return;
 
     const playerPos = useStore.getState().playerPos;
@@ -45,7 +47,8 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     setInRange(dist < 4.0);
 
     if (ref.current) {
-      const time = state.clock.elapsedTime;
+      timeRef.current += delta || 0;
+      const time = timeRef.current;
       const moodFactor = 0.5 + (bandMood / 100);
       
       if (isBandMember) {
@@ -74,6 +77,12 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     }
   };
 
+  const handleDomInteract = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleInteract();
+  };
+
   return (
     <RigidBody type="fixed" position={position} colliders={false}>
       <CuboidCollider args={[0.75 * scale, 1 * scale, 0.5 * scale]} />
@@ -89,8 +98,11 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
           >
             <planeGeometry args={[1.5 * scale, 1.5 * scale]} />
             <meshStandardMaterial color="#fff" transparent opacity={0} />
-            <Html transform distanceFactor={10} position={[0, 0, 0.1]} center>
+            <Html transform distanceFactor={10} position={[0, 0, 0.1]} center zIndexRange={[2, 0]}>
               <div
+                onClick={handleDomInteract}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
                 className={`text-6xl select-none transition-all duration-200 relative ${
                   hovered ? 'scale-110' : 'scale-100'
                 } ${inRange && hovered ? 'cursor-pointer' : 'cursor-default'} ${

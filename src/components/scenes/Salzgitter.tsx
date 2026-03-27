@@ -31,11 +31,13 @@ export function Salzgitter() {
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
   const spotLight3Ref = useRef<THREE.SpotLight>(null);
+  const tRef = useRef(0);
 
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
+  useFrame((state, delta) => {
+    tRef.current += delta || 0;
+    const t = tRef.current;
     const beat = Math.abs(Math.sin(t * 4)); // Simple beat sync
-    
+
     if (spotLight1Ref.current) {
       spotLight1Ref.current.intensity = 5 + beat * 20;
       spotLight1Ref.current.position.x = Math.sin(t * 2) * 2;
@@ -97,7 +99,7 @@ export function Salzgitter() {
       <mesh position={[-6, 5, -10.9]}>
         <planeGeometry args={[4, 3]} />
         <meshBasicMaterial color="#111" />
-        <Html transform position={[0, 0, 0.01]}>
+        <Html transform position={[0, 0, 0.01]} zIndexRange={[2, 0]}>
           <div className="bg-purple-900 border-2 border-purple-500 p-2 text-center text-white font-black uppercase shadow-2xl w-64 h-48 flex flex-col justify-center items-center">
             <span className="text-purple-300 text-sm">SZaturday 3</span>
             <span className="text-3xl text-pink-500">RIFF NIGHT</span>
