@@ -40,6 +40,7 @@ kaminstube_wirt_betrayal: false,    // Discovered Wirt's hidden agenda
 salzgitter_encore_unlocked: false,  // Unlocked the secret encore
 salzgitter_true_ending: false,      // Achieved the true ending
 lars_proberaum_secret: false,       // Lars revealed secret in Proberaum
+lars_paced: false
 marius_tourbus_doubt: false,        // Marius expressed doubt in TourBus
 ```
 
