@@ -43,8 +43,8 @@ export function VoidStation() {
       <Sparkles count={120} scale={[60, 20, 60]} size={2} speed={0.3} opacity={0.3} color="#7e5dff" />
 
       {/* Surreal Floor */}
-      <RigidBody type="fixed">
-        <mesh receiveShadow position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <RigidBody type="fixed" position={[0, -0.1, 0]}>
+        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[50, 50]} />
           <MeshDistortMaterial 
             color="#34255a" 
@@ -327,8 +327,7 @@ export function VoidStation() {
           name="Marius' Ego"
           scale={0.5}
           onInteract={() => {
-            const trait = useStore.getState().trait;
-            const skills = useStore.getState().skills;
+            const { trait, skills } = useStore.getState();
 
             const egoActionWrapper = (originalAction: () => void) => () => {
               discoverLore('ego_philosophy');
