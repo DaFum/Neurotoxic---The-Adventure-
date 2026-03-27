@@ -112,23 +112,35 @@ export function Kaminstube() {
           emoji="📖"
           name="Flüsternder Kamin"
           onInteract={() => {
-            setDialogue({
+            const store = useStore.getState();
+            store.setDialogue({
               text: 'Der Kamin flüstert in einer Sprache, die nach verbranntem Holz und alten Geheimnissen klingt. Er scheint etwas über die Geschichte der Kaminstube zu wissen.',
               options: [
+                {
+                  text: 'Analysiere die Frequenz des Flüsterns. [Technical 7]',
+                  requiredSkill: { name: 'technical', level: 7 },
+                  action: () => {
+                    useStore.getState().setDialogue('Das Knistern ist kein Zufall. Es ist ein Code. Ein thermischer Algorithmus, der die Geschichte der ersten Industrial-Gigs hier speichert.');
+                    useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().completeQuest('forgotten_lore');
+                    useStore.getState().increaseBandMood(20);
+                    useStore.getState().increaseSkill('technical', 3);
+                  }
+                },
                 { 
                   text: 'Versuche, die Sprache zu deuten. [Diplomat]', 
                   requiredTrait: 'Diplomat',
                   action: () => {
-                    setDialogue('Du verstehst das Flüstern! Es erzählt von einem versteckten Archiv unter der Bühne, das die wahren Ursprünge des Industrial Metal enthält. Du hast die Lore entschlüsselt.');
-                    setFlag('forgotten_lore', true);
-                    completeQuest('forgotten_lore');
-                    increaseBandMood(20);
+                    useStore.getState().setDialogue('Du verstehst das Flüstern! Es erzählt von einem versteckten Archiv unter der Bühne, das die wahren Ursprünge des Industrial Metal enthält. Du hast die Lore entschlüsselt.');
+                    useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().completeQuest('forgotten_lore');
+                    useStore.getState().increaseBandMood(20);
                   }
                 },
-                { text: 'Ignoriere das Flüstern.', action: () => setDialogue('Es ist nur das Knistern des Feuers.') }
+                { text: 'Ignoriere das Flüstern.', action: () => useStore.getState().setDialogue('Es ist nur das Knistern des Feuers.') }
               ]
             });
-            addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
+            store.addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
           }}
         />
       )}
@@ -139,23 +151,58 @@ export function Kaminstube() {
         emoji="🧔"
         name="Wirt"
         onInteract={() => {
-          const bandMood = useStore.getState().bandMood;
-          const hasTalisman = hasItem('Industrie-Talisman');
+          const store = useStore.getState();
+          const bandMood = store.bandMood;
+          const hasTalisman = store.hasItem('Industrie-Talisman');
           
-          if (flags.wirtSecretItem) {
-            setDialogue('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');
+          if (store.flags.wirtSecretItem) {
+            store.setDialogue('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');
             return;
           }
 
-          if (hasTalisman && !flags.wirtSecretItem) {
-            setDialogue({
+          if (store.flags.kaminstube_wirt_betrayal) {
+            store.setDialogue('Wirt: "Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert."');
+            return;
+          }
+
+          if (store.flags.bassist_contacted && !store.flags.bassist_clue_wirt) {
+            store.setDialogue({
+              text: 'Wirt: "Ihr habt also den Bassisten gefunden... In der Frequenz. Ich wusste, dass er nicht einfach weggelaufen ist. Verdammt, ich schulde euch eine Erklärung."',
+              options: [
+                { text: 'Zwinge ihn zur Wahrheit. [Social 8]', requiredSkill: { name: 'social', level: 8 }, action: () => {
+                  useStore.getState().setDialogue('Wirt: "Okay! Ich war es. Ich habe den Amp manipuliert, der ihn in die Leere riss. Der Sound war zu gefährlich. Es tut mir leid."');
+                  useStore.getState().setFlag('bassist_clue_wirt', true);
+                  useStore.getState().discoverLore('wirt_confession');
+                  useStore.getState().increaseBandMood(20);
+                  useStore.getState().increaseSkill('social', 5);
+                }},
+                { text: 'Drohe ihm mit dem Lärm. [Brutalist]', requiredTrait: 'Brutalist', action: () => {
+                  useStore.getState().setDialogue('Wirt: "Nicht! Beschwöre nicht die Maschinen! Ich bekenne! Ich sabotierte den Gig 1982, um die Stadt zu schützen!"');
+                  useStore.getState().setFlag('bassist_clue_wirt', true);
+                  useStore.getState().discoverLore('wirt_confession');
+                  useStore.getState().increaseBandMood(15);
+                  useStore.getState().increaseSkill('chaos', 5);
+                }},
+                { text: 'Verzeihe ihm. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+                  useStore.getState().setDialogue('Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."');
+                  useStore.getState().setFlag('bassist_clue_wirt', true);
+                  useStore.getState().addToInventory('Turbo-Koffein');
+                  useStore.getState().increaseBandMood(30);
+                }}
+              ]
+            });
+            return;
+          }
+
+          if (hasTalisman && !store.flags.wirtSecretItem) {
+            store.setDialogue({
               text: 'Wirt: "Das ist... der Talisman von 1982. Ich erkenne ihn sofort. Er war der Grund, warum wir die Gießerei schließen mussten. Hier, nimm das. Es gehört zum Set."',
               options: [
                 { text: 'Was ist das?', action: () => {
-                  setDialogue('Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."');
-                  addToInventory('Altes Plektrum');
-                  setFlag('wirtSecretItem', true);
-                  increaseBandMood(20);
+                  useStore.getState().setDialogue('Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."');
+                  useStore.getState().addToInventory('Altes Plektrum');
+                  useStore.getState().setFlag('wirtSecretItem', true);
+                  useStore.getState().increaseBandMood(20);
                 }}
               ]
             });
@@ -163,33 +210,33 @@ export function Kaminstube() {
           }
 
           if (bandMood > 80) {
-            setDialogue({
+            store.setDialogue({
               text: 'Wirt: "Ich hab schon viele Bands hier gesehen, aber ihr... ihr habt den Schmerz und den Stahl im Blut. Die Bühne zittert bereits vor Vorfreude. Was wollt ihr wissen?"',
               options: [
                 { text: 'Erzähl mir vom Gig 1982.', action: () => {
-                  setDialogue('Wirt: "Es war laut. So laut, dass die Fenster in ganz Tangermünde zersprangen. Der Manager verschwand im Feedback. Manche sagen, er ist immer noch da draußen."');
-                  increaseBandMood(10);
+                  useStore.getState().setDialogue('Wirt: "Es war laut. So laut, dass die Fenster in ganz Tangermünde zersprangen. Der Manager verschwand im Feedback. Manche sagen, er ist immer noch da draußen."');
+                  useStore.getState().increaseBandMood(10);
                 }},
                 { text: 'Wie kommen wir nach Salzgitter?', action: () => {
-                  setDialogue('Wirt: "Folgt dem Lärm. Wenn die Realität dünn wird, seid ihr fast da."');
+                  useStore.getState().setDialogue('Wirt: "Folgt dem Lärm. Wenn die Realität dünn wird, seid ihr fast da."');
                 }}
               ]
             });
           } else if (bandMood < 30) {
-            setDialogue('Wirt: "Ihr seht aus, als hättet ihr gerade eure letzte Kassette im Regen verloren. Trinkt was, oder verschwindet. In der Kaminstube überleben nur die Harten."');
+            store.setDialogue('Wirt: "Ihr seht aus, als hättet ihr gerade eure letzte Kassette im Regen verloren. Trinkt was, oder verschwindet. In der Kaminstube überleben nur die Harten."');
           } else {
-            setDialogue({
+            store.setDialogue({
               text: 'Wirt: "Willkommen in der Kaminstube. Hier wurde Industrial Metal erfunden, als ein Heizkessel explodierte und jemand dazu schrie. Was wollt ihr?"',
               options: [
                 { text: 'Ein Bier, bitte.', action: () => {
-                  if (hasItem('Bier')) {
-                    setDialogue('Wirt: "Du hast doch schon eins! Trink das erst mal aus."');
+                  if (useStore.getState().hasItem('Bier')) {
+                    useStore.getState().setDialogue('Wirt: "Du hast doch schon eins! Trink das erst mal aus."');
                   } else {
-                    setDialogue('Wirt: "Klar, hier. Das offizielle Schmiermittel für den Industrial-Motor."');
-                    addToInventory('Bier');
+                    useStore.getState().setDialogue('Wirt: "Klar, hier. Das offizielle Schmiermittel für den Industrial-Motor."');
+                    useStore.getState().addToInventory('Bier');
                   }
                 }},
-                { text: 'Wer bist du?', action: () => setDialogue('Wirt: "Ich bin der Hüter der Stille, die nach dem Knall kommt. Und ich zapfe das beste Bier der Region."') }
+                { text: 'Wer bist du?', action: () => useStore.getState().setDialogue('Wirt: "Ich bin der Hüter der Stille, die nach dem Knall kommt. Und ich zapfe das beste Bier der Region."') }
               ]
             });
           }
@@ -204,11 +251,34 @@ export function Kaminstube() {
         isBandMember={true}
         idleType="headbang"
         onInteract={() => {
-          if (!flags.ampFixed) {
-            addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
-            setDialogue('Matze: "Mein Amp hat den Geist aufgegeben! Er hat wohl zu viel von der 432Hz-Energie aus der Void Station abbekommen."');
+          const store = useStore.getState();
+          if (!store.flags.ampFixed) {
+            store.addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
+            store.setDialogue('Matze: "Mein Amp hat den Geist aufgegeben! Er hat wohl zu viel von der 432Hz-Energie aus der Void Station abbekommen."');
           } else {
-            setDialogue('Matze: "Der Amp läuft wieder! Er klingt jetzt so dreckig wie ein Fabrikgelände im Ruhrpott. Perfekt."');
+            if (store.flags.tourbus_sabotage_discovered) {
+               if (store.flags.tourbus_matze_confession) {
+                 store.setDialogue('Matze: "Der Amp läuft... Ich spiele heute Abend nur für uns. Und für das Riff. Keine Angst, Manager."');
+               } else {
+                 store.setDialogue({
+                   text: 'Matze: "Der Amp läuft. Manager... über die Sache im Tourbus. Ich habe das Kabel zerschnitten. Ich hatte Panik, dass wir wie 1982 enden."',
+                   options: [
+                     { text: 'Wir stehen das gemeinsam durch. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+                       useStore.getState().setDialogue('Matze: "Danke. Ich werde dich nicht enttäuschen. Die Röhren glühen wieder."');
+                       useStore.getState().setFlag('tourbus_matze_confession', true);
+                       useStore.getState().increaseBandMood(30);
+                     }},
+                     { text: 'Kein Fehler mehr, oder du fliegst. [Brutalist]', requiredTrait: 'Brutalist', action: () => {
+                       useStore.getState().setDialogue('Matze: "Verstanden. Nur noch Hass und Lärm."');
+                       useStore.getState().setFlag('tourbus_matze_confession', true);
+                       useStore.getState().increaseBandMood(15);
+                     }}
+                   ]
+                 });
+               }
+            } else {
+              store.setDialogue('Matze: "Der Amp läuft wieder! Er klingt jetzt so dreckig wie ein Fabrikgelände im Ruhrpott. Perfekt."');
+            }
           }
         }}
       />
@@ -220,7 +290,25 @@ export function Kaminstube() {
         isBandMember={true}
         idleType="tap"
         onInteract={() => {
-          setDialogue('Lars: "Wusstest du, dass die Kaminstube früher eine echte Schmiede war? Der Rhythmus der Hämmer steckt noch in den Wänden. Ich spüre ihn!"');
+          const store = useStore.getState();
+          store.setDialogue({
+            text: 'Lars: "Wusstest du, dass die Kaminstube früher eine echte Schmiede war? Der Rhythmus der Hämmer steckt noch in den Wänden. Ich spüre ihn!"',
+            options: [
+              { text: 'Dann spiel im Takt der Hämmer. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
+                useStore.getState().setDialogue('Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"');
+                useStore.getState().increaseBandMood(15);
+                useStore.getState().increaseSkill('technical', 3);
+              }},
+              { text: 'Zerschmettere die Hämmer mit deinem Rhythmus. [Chaos 5]', requiredSkill: { name: 'chaos', level: 5 }, action: () => {
+                useStore.getState().setDialogue('Lars: "JA! Ein Polyrhythmus, der die Architektur der Halle in Frage stellt!"');
+                useStore.getState().increaseBandMood(20);
+                useStore.getState().increaseSkill('chaos', 3);
+              }},
+              { text: 'Hauptsache du bleibst im Takt.', action: () => {
+                useStore.getState().setDialogue('Lars: "Takt ist relativ. Aber okay, ich bemühe mich."');
+              }}
+            ]
+          });
         }}
       />
 
@@ -231,10 +319,15 @@ export function Kaminstube() {
         isBandMember={true}
         idleType="sway"
         onInteract={() => {
-          if (!flags.ampFixed) {
-            setDialogue('Marius: "Die Stille hier ist unerträglich. Sie erinnert mich an die Leere zwischen den Sternen. Wir müssen Lärm machen, Matze!"');
+          const store = useStore.getState();
+          if (!store.flags.ampFixed) {
+            store.setDialogue('Marius: "Die Stille hier ist unerträglich. Sie erinnert mich an die Leere zwischen den Sternen. Wir müssen Lärm machen, Matze!"');
           } else {
-            setDialogue('Marius: "Underground Metal Fest! Wir bringen euch den Sound der Maschinen und das Echo der Verzweiflung!"');
+            if (store.flags.egoContained) {
+               store.setDialogue('Marius: "Mein Ego brennt in mir! Ich werde diese Menge verschlingen und als Lärm wieder ausspucken! Salzgitter wird unser Altar sein!"');
+            } else {
+               store.setDialogue('Marius: "Underground Metal Fest! Wir bringen euch den Sound der Maschinen und das Echo der Verzweiflung!"');
+            }
           }
         }}
       />
@@ -290,8 +383,32 @@ export function Kaminstube() {
         name="Crowd"
         scale={2}
         onInteract={() => {
-          setDialogue('Die Menge tobt! NEUROTOXIC! NEUROTOXIC!');
-          increaseBandMood(5);
+          const store = useStore.getState();
+          if (store.flags.kaminstube_crowd_rallied) {
+            store.setDialogue('Die Menge tobt! Tangermünde gehört uns!');
+            return;
+          }
+
+          store.setDialogue({
+            text: 'Die Menge wartet ungeduldig. Ein paar rufen nach einer Cover-Band. Wir müssen sie auf unsere Seite ziehen.',
+            options: [
+              { text: 'Ruft sie zur Ordnung. [Social 5]', requiredSkill: { name: 'social', level: 5 }, action: () => {
+                useStore.getState().setDialogue('Manager: "Tangermünde! Seid ihr bereit für den Lärm?!" Die Menge brüllt zurück. Sie gehören uns.');
+                useStore.getState().setFlag('kaminstube_crowd_rallied', true);
+                useStore.getState().increaseBandMood(20);
+                useStore.getState().increaseSkill('social', 3);
+              }},
+              { text: 'Startet mit einem dissonanten Feedback. [Chaos 7]', requiredSkill: { name: 'chaos', level: 7 }, action: () => {
+                useStore.getState().setDialogue('Ein ohrenbetäubendes Fiepen zerschneidet die Stille. Die Cover-Band-Rufer verstummen in Schock. Der Rest der Halle rastet aus!');
+                useStore.getState().setFlag('kaminstube_crowd_rallied', true);
+                useStore.getState().increaseBandMood(25);
+                useStore.getState().increaseSkill('chaos', 4);
+              }},
+              { text: 'Ignorieren und aufbauen.', action: () => {
+                useStore.getState().setDialogue('Du ignorierst die Zwischenrufe. Die Musik wird für sich selbst sprechen.');
+              }}
+            ]
+          });
         }}
       />
 
