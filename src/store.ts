@@ -120,8 +120,40 @@ const initialState = {
     tourbusAmpTechnician: false,
     frequenzDetektorRead: false,
     legacyLoreMigrated: false,
+    frequenz1982_proberaum: false,
+    frequenz1982_tourbus: false,
+    frequenz1982_backstage: false,
+    frequenz1982_complete: false,
+    bassist_clue_matze: false,
+    bassist_clue_ghost: false,
+    bassist_clue_wirt: false,
+    bassist_contacted: false,
+    bassist_restored: false,
+    maschinen_seele_amp: false,
+    maschinen_seele_tr8080: false,
+    maschinen_seele_monitor: false,
+    maschinen_seele_complete: false,
+    proberaum_brutalist_smash: false,
+    proberaum_mystic_ritual: false,
+    tourbus_sabotage_discovered: false,
+    tourbus_matze_confession: false,
+    backstage_performer_speech: false,
+    backstage_cynic_sabotage: false,
+    void_diplomat_negotiation: false,
+    void_bassist_message: false,
+    kaminstube_crowd_rallied: false,
+    kaminstube_wirt_betrayal: false,
+    salzgitter_encore_unlocked: false,
+    salzgitter_true_ending: false,
+    lars_proberaum_secret: false,
+    lars_paced: false,
+    marius_tourbus_doubt: false,
   },
   loreEntries: [
+    { id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
+    { id: 'bassist_wahrheit', title: 'Die Wahrheit über den Bassisten', content: 'Er wählte die Leere. Nicht aus Verzweiflung, sondern aus Liebe zum reinen Klang. Er ist der Grundton, auf dem alles aufbaut. Ohne ihn wäre NEUROTOXIC nur Lärm.', discovered: false },
+    { id: 'maschinen_bewusstsein', title: 'Das Maschinen-Bewusstsein', content: 'Sie waren nie nur Werkzeuge. Der Amp, die Drum Machine, der Monitor — sie sind Fragmente eines einzigen Bewusstseins, das 1982 in die Schaltkreise eingespeist wurde.', discovered: false },
+    { id: 'wirt_vergangenheit', title: 'Der Wirt und 1982', content: 'Er war dabei. Er war der Tontechniker beim Gig in der Gießerei. Er hat den Bassist in die Leere geschickt — nicht aus Bosheit, sondern weil der Sound es verlangte.', discovered: false },
     { id: 'void_1982', title: '1982 Log', content: 'Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback.', discovered: false },
     { id: 'tankwart_truth', title: 'Die Wahrheit des Lärms', content: 'Lärm ist nicht das Chaos. Lärm ist die Ordnung, die wir noch nicht verstehen. Jedes Feedback ist ein Gebet an die Leere.', discovered: false },
     { id: 'forbidden_riff', title: 'Das Verbotene Riff', content: 'Dieses Riff... es ist der Schlüssel zum Ende der Zeit. Es wurde vor Äonen von den ersten Maschinen-Göttern in den Stahl geätzt.', discovered: false },
@@ -243,6 +275,14 @@ export const useStore = create<GameState>()(
           if ((item1 === 'Turbo-Koffein' && item2 === 'Rostiges Plektrum') || (item1 === 'Rostiges Plektrum' && item2 === 'Turbo-Koffein')) {
             set((state) => ({
               inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Geister-Drink']
+            }));
+            audio.playPickup();
+            return true;
+          }
+          // Frequenzfragment + Splitter der Leere = Resonanz-Kristall
+          if ((item1 === 'Frequenzfragment' && item2 === 'Splitter der Leere') || (item1 === 'Splitter der Leere' && item2 === 'Frequenzfragment')) {
+            set((state) => ({
+              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Resonanz-Kristall']
             }));
             audio.playPickup();
             return true;
