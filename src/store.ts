@@ -357,9 +357,20 @@ export const useStore = create<GameState>()(
 
                 newFlags.legacyLoreMigrated = true;
 
+                let updatedQuests = currentState.quests;
+                const fixCableQuestIndex = currentState.quests.findIndex(q => q.id === 'fix_cable');
+                if (fixCableQuestIndex !== -1) {
+                  updatedQuests = [...currentState.quests];
+                  updatedQuests[fixCableQuestIndex] = {
+                    ...updatedQuests[fixCableQuestIndex],
+                    id: 'cable'
+                  };
+                }
+
                 return {
                   loreEntries: migratedLore ? newEntries : currentState.loreEntries,
-                  flags: newFlags
+                  flags: newFlags,
+                  ...(fixCableQuestIndex !== -1 && { quests: updatedQuests })
                 };
               });
             }, 0);

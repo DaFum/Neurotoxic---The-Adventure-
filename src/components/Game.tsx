@@ -156,10 +156,10 @@ export function Game() {
                         <button
                           key={t.id}
                           onClick={() => {
-                          setTrait(t.id);
-                          t.skills.forEach(s => useStore.getState().increaseSkill(s.name, s.val));
+                            setTrait(t.id);
+                            t.skills.forEach(s => useStore.getState().increaseSkill(s.name, s.val));
                             audio.startMusic();
-                          setSelectingTrait(false);
+                            setSelectingTrait(false);
                             setScene('proberaum');
                           }}
                           className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left"
