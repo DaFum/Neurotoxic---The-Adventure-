@@ -327,8 +327,7 @@ export function VoidStation() {
           name="Marius' Ego"
           scale={0.5}
           onInteract={() => {
-            const trait = useStore.getState().trait;
-            const skills = useStore.getState().skills;
+            const { trait, skills } = useStore.getState();
 
             const egoActionWrapper = (originalAction: () => void) => () => {
               discoverLore('ego_philosophy');

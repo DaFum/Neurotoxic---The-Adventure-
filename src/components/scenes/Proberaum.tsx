@@ -274,10 +274,10 @@ export function Proberaum() {
             setDialogue('Ein altes, zerrissenes Plakat von der "Machine Hell" Tour 1999. Es ist mit schwarzem Edding überkritzelt: "DER RHYTHMUS IST DER KÄFIG. DIE FREQUENZ IST DER SCHLÜSSEL." Manager: "Das war das Jahr, als Lars versuchte, ein Schlagzeug aus alten Ölfässern und einem Presslufthammer zu bauen. Die Nachbarn haben uns damals fast angezeigt, weil die Frequenzen die Fensterscheiben im ganzen Block zum Bersten brachten."');
             setFlag('posterLoreRead', true);
             discoverLore('poster_lore');
+            increaseBandMood(5);
           } else {
             setDialogue('Das Plakat erinnert dich an die chaotischen Anfänge. Der Edding-Spruch scheint sich bei jedem Hinsehen leicht zu verändern.');
           }
-          increaseBandMood(5);
         }}
       />
 

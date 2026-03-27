@@ -70,8 +70,10 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     texture.needsUpdate = true;
     playerTextureRef.current = texture;
 
-    if (spriteRef.current) {
-      const material = spriteRef.current.material;
+    const sprite = spriteRef.current;
+
+    if (sprite) {
+      const material = sprite.material;
       if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
         material.map = texture;
         material.needsUpdate = true;
@@ -79,8 +81,8 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     }
 
     return () => {
-      if (spriteRef.current) {
-        const material = spriteRef.current.material;
+      if (sprite) {
+        const material = sprite.material;
         if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
           material.map = null;
           material.needsUpdate = true;
@@ -118,8 +120,10 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     texture.needsUpdate = true;
     labelTextureRef.current = texture;
 
-    if (labelSpriteRef.current) {
-      const material = labelSpriteRef.current.material;
+    const labelSprite = labelSpriteRef.current;
+
+    if (labelSprite) {
+      const material = labelSprite.material;
       if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
         material.map = texture;
         material.needsUpdate = true;
@@ -127,8 +131,8 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     }
 
     return () => {
-      if (labelSpriteRef.current) {
-        const material = labelSpriteRef.current.material;
+      if (labelSprite) {
+        const material = labelSprite.material;
         if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
           material.map = null;
           material.needsUpdate = true;
@@ -138,15 +142,6 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
         labelTextureRef.current = null;
       }
       texture.dispose();
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      playerTextureRef.current?.dispose();
-      playerTextureRef.current = null;
-      labelTextureRef.current?.dispose();
-      labelTextureRef.current = null;
     };
   }, []);
 

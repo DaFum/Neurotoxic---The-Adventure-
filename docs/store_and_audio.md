@@ -86,7 +86,7 @@ inventory, flags, quests, bandMood, loreEntries, trait, skills
 
 ```
 
-NOT persisted: scene, playerPos, dialogue, isPaused, cameraShake. Hinweis: `bandMood` wird persistiert und ueberschreibt beim Rehydrate seinen Initialwert.
+NOT persisted: scene, playerPos, dialogue, isPaused, cameraShake. Hinweis: `bandMood` wird persistiert und überschreibt beim Rehydrate seinen Initialwert.
 
 **Custom Merge Function (lines 290-316):**
 

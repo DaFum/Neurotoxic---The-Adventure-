@@ -19,6 +19,8 @@ import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Sparkles, Float, Text } from '@react-three/drei';
+import { useRef, useEffect } from 'react';
+import { RigidBody } from '@react-three/rapier';
 
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
@@ -32,6 +34,16 @@ export function TourBus() {
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
+  const exitTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -51,10 +63,12 @@ export function TourBus() {
         <boxGeometry args={[10, 5, 0.5]} />
         <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
       </mesh>
-      <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[12, 10]} />
-        <meshStandardMaterial color="#1a1d24" emissive="#0b0f16" emissiveIntensity={0.25} metalness={0.28} roughness={0.82} />
-      </mesh>
+      <RigidBody type="fixed" position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh>
+          <planeGeometry args={[12, 10]} />
+          <meshStandardMaterial color="#1a1d24" emissive="#0b0f16" emissiveIntensity={0.25} metalness={0.28} roughness={0.82} />
+        </mesh>
+      </RigidBody>
       <mesh position={[0, 4.3, 0]}>
         <boxGeometry args={[12, 0.3, 10]} />
         <meshStandardMaterial color="#2f3741" emissive="#151b22" emissiveIntensity={0.18} metalness={0.42} roughness={0.62} />
@@ -530,18 +544,27 @@ export function TourBus() {
             setDialogue({
               text: 'Geist: "Ich hab die 80er überlebt, aber diese Tour... die wird euch vernichten. Was willst du wissen, Sterblicher?"',
               options: [
-                { text: 'Wie überlebe ich?', action: () => setDialogue('Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."') },
-                { text: 'Wo ist das beste Bier?', action: () => setDialogue('Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."') },
-                { text: 'Wer bist du eigentlich?', action: () => setDialogue('Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."') },
+                { text: 'Wie überlebe ich?', action: () => {
+                    setDialogue('Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."');
+                    increaseBandMood(5);
+                }},
+                { text: 'Wo ist das beste Bier?', action: () => {
+                    setDialogue('Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."');
+                    increaseBandMood(5);
+                }},
+                { text: 'Wer bist du eigentlich?', action: () => {
+                    setDialogue('Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."');
+                    increaseBandMood(5);
+                }},
                 { text: 'Kann ich dir irgendwie helfen?', action: () => {
                     setDialogue('Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."');
                     setFlag('ghostRecipeQuestStarted', true);
                     addQuest('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies');
+                    increaseBandMood(5);
                 }}
               ]
             });
           }
-          increaseBandMood(5);
         }}
       />
 
@@ -566,7 +589,7 @@ export function TourBus() {
         onInteract={() => {
           if (hasItem('Repariertes Kabel')) {
             setDialogue('Auf gehts zum Gig! Nächster Halt: Backstage.');
-            setTimeout(() => setScene('backstage'), 1000);
+            exitTimeoutRef.current = window.setTimeout(() => setScene('backstage'), 1000);
           } else {
             setDialogue('Wir können noch nicht los. Matze braucht erst ein funktionierendes Kabel.');
           }

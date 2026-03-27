@@ -60,7 +60,7 @@ export function Backstage() {
       <Sparkles count={80} scale={[28, 10, 22]} size={1.2} speed={0.35} opacity={0.25} color="#c3ff86" />
 
       {/* Floor */}
-      <RigidBody type="fixed">
+      <RigidBody type="fixed" position={[0, -0.1, 0]}>
         <mesh receiveShadow position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[30, 20]} />
           <meshStandardMaterial color="#3e4a58" emissive="#1d2835" emissiveIntensity={0.34} metalness={0.35} roughness={0.76} />
