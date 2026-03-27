@@ -31,6 +31,8 @@ interface InteractableProps {
 export function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
   const [hovered, setHovered] = useState(false);
   const [inRange, setInRange] = useState(false);
@@ -38,6 +40,17 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const isPaused = useStore((state) => state.isPaused);
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);
+
+  const palette = useMemo(() => {
+    const seed = name.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    const hue = (seed * 37) % 360;
+    return {
+      accent: `hsl(${hue} 88% 62%)`,
+      accentSoft: `hsl(${(hue + 16) % 360} 62% 38%)`,
+      base: isBandMember ? '#324052' : '#3a3548',
+      trim: isBandMember ? '#5a7ca7' : '#74609d',
+    };
+  }, [name, isBandMember]);
 
   const emojiTexture = useMemo(() => {
     const size = 256;
@@ -102,7 +115,8 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
 
     const playerPos = useStore.getState().playerPos;
     const dist = new THREE.Vector3(...playerPos).distanceTo(new THREE.Vector3(...position));
-    setInRange(dist < 4.0);
+    const inRangeNow = dist < 4.0;
+    setInRange((prev) => (prev === inRangeNow ? prev : inRangeNow));
 
     if (ref.current) {
       timeRef.current += delta;
@@ -125,6 +139,22 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     if (spriteRef.current) {
       const pulse = interacted ? 1.2 : hovered ? 1.08 : 1;
       spriteRef.current.scale.set(1.8 * scale * pulse, 1.8 * scale * pulse, 1);
+    }
+
+    if (ringRef.current) {
+      ringRef.current.rotation.z += delta * (inRangeNow ? 2.8 : 1.4);
+      const ringScale = hovered ? 1.06 : 1;
+      ringRef.current.scale.set(ringScale, ringScale, ringScale);
+    }
+
+    if (coreRef.current) {
+      const time = timeRef.current;
+      coreRef.current.rotation.y += delta * 1.8;
+      coreRef.current.position.y = 0.26 * scale + Math.sin(time * 3.5) * 0.035 * scale;
+      const material = coreRef.current.material;
+      if (!Array.isArray(material) && material instanceof THREE.MeshStandardMaterial) {
+        material.emissiveIntensity = 0.45 + (hovered ? 0.35 : 0) + Math.abs(Math.sin(time * 6)) * 0.22;
+      }
     }
   });
 
@@ -149,6 +179,34 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     <RigidBody type="fixed" position={position} colliders={false}>
       <CuboidCollider args={[0.75 * scale, 1 * scale, 0.5 * scale]} />
       <group ref={ref}>
+        <mesh position={[0, -0.68 * scale, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.78 * scale, 0.92 * scale, 0.24 * scale, 24]} />
+          <meshStandardMaterial color={palette.base} emissive="#151a22" emissiveIntensity={0.3} metalness={0.55} roughness={0.5} />
+        </mesh>
+        <mesh position={[0, -0.56 * scale, 0]} rotation={[-Math.PI / 2, 0, 0]} ref={ringRef}>
+          <torusGeometry args={[0.78 * scale, 0.06 * scale, 12, 42]} />
+          <meshStandardMaterial color={palette.accent} emissive={palette.accent} emissiveIntensity={0.8} metalness={0.85} roughness={0.24} />
+        </mesh>
+        <mesh position={[0, -0.47 * scale, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.45 * scale, 0.68 * scale, 28]} />
+          <meshStandardMaterial color={palette.trim} emissive={palette.accentSoft} emissiveIntensity={0.3} metalness={0.4} roughness={0.5} />
+        </mesh>
+        <mesh ref={coreRef} position={[0, 0.26 * scale, 0]} castShadow>
+          <octahedronGeometry args={[0.26 * scale, 0]} />
+          <meshStandardMaterial color={palette.trim} emissive={palette.accent} emissiveIntensity={0.5} metalness={0.75} roughness={0.25} />
+        </mesh>
+        {isBandMember && (
+          <group>
+            <mesh position={[0, -0.08 * scale, -0.05 * scale]} castShadow receiveShadow>
+              <cylinderGeometry args={[0.2 * scale, 0.25 * scale, 0.55 * scale, 12]} />
+              <meshStandardMaterial color="#39465c" emissive="#1d2736" emissiveIntensity={0.25} metalness={0.5} roughness={0.45} />
+            </mesh>
+            <mesh position={[0, 0.28 * scale, -0.05 * scale]} castShadow>
+              <sphereGeometry args={[0.16 * scale, 14, 14]} />
+              <meshStandardMaterial color="#e3edf9" emissive="#9eb7d6" emissiveIntensity={0.22} metalness={0.2} roughness={0.45} />
+            </mesh>
+          </group>
+        )}
         <sprite
           ref={spriteRef}
           scale={[1.8 * scale, 1.8 * scale, 1]}

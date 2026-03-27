@@ -43,30 +43,33 @@ export function Kaminstube() {
       const beat = Math.abs(Math.sin(t * 4)); // Simple beat sync
       
       if (pointLightRef.current) {
-        pointLightRef.current.intensity = 2 + beat * 10;
+        pointLightRef.current.intensity = 4.5 + beat * 10;
         pointLightRef.current.color.setHSL((t * 0.5) % 1, 1, 0.5);
       }
       if (dirLightRef.current) {
-        dirLightRef.current.intensity = 0.5 + beat * 2;
+        dirLightRef.current.intensity = 1.3 + beat * 2;
       }
     }
   });
 
   return (
     <>
-      <color attach="background" args={['#2a1a1a']} />
-      <fog attach="fog" args={['#1d120f', 7, 36]} />
-      <ambientLight intensity={0.3} />
-      <pointLight ref={pointLightRef} position={[0, 5, -5]} intensity={2} color="#ffaa00" />
-      <directionalLight ref={dirLightRef} position={[10, 10, 5]} intensity={0.5} color="#ff4444" />
-      <pointLight position={[-9, 2.4, -3]} intensity={1.3} color="#ff7a3a" />
-      <pointLight position={[9, 2.2, -1]} intensity={1.1} color="#ff9c4a" />
+      <color attach="background" args={['#5b3a2a']} />
+      <fog attach="fog" args={['#5a3e2f', 18, 82]} />
+      <ambientLight intensity={0.92} />
+      <hemisphereLight args={['#fff1dc', '#5a4038', 0.75]} />
+      <pointLight ref={pointLightRef} position={[0, 5, -5]} intensity={4.5} color="#ffaa00" />
+      <directionalLight ref={dirLightRef} position={[10, 10, 5]} intensity={1.3} color="#ff6a4a" />
+      <pointLight position={[-9, 2.4, -3]} intensity={2.3} color="#ff7a3a" />
+      <pointLight position={[9, 2.2, -1]} intensity={2.1} color="#ff9c4a" />
+      <pointLight position={[0, 2.8, 3.6]} intensity={2} color="#fff2e1" />
+      <pointLight position={[0, 3.2, -2.5]} intensity={1.9} color="#7f7dff" />
       
       {/* Floor */}
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
         <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[30, 15]} />
-          <meshStandardMaterial color="#2a1b17" emissive="#1a100e" emissiveIntensity={0.24} metalness={0.22} roughness={0.86} />
+          <meshStandardMaterial color="#5a3f34" emissive="#2f1f1a" emissiveIntensity={0.34} metalness={0.22} roughness={0.76} />
         </mesh>
       </RigidBody>
 
@@ -82,7 +85,7 @@ export function Kaminstube() {
       <RigidBody type="fixed" position={[0, 5, -8]}>
         <mesh receiveShadow>
           <planeGeometry args={[30, 10]} />
-          <meshStandardMaterial color="#4b342d" emissive="#211510" emissiveIntensity={0.26} metalness={0.2} roughness={0.8} />
+          <meshStandardMaterial color="#6e4f45" emissive="#35211a" emissiveIntensity={0.36} metalness={0.2} roughness={0.72} />
         </mesh>
       </RigidBody>
 
@@ -101,6 +104,14 @@ export function Kaminstube() {
       <mesh position={[-11.5, 1.4, 2.2]}>
         <boxGeometry args={[2.1, 2.6, 1.2]} />
         <meshStandardMaterial color="#2a1a12" metalness={0.2} roughness={0.9} />
+      </mesh>
+      <mesh position={[-11.5, 2.9, 2.15]}>
+        <boxGeometry args={[2.4, 0.22, 1.38]} />
+        <meshStandardMaterial color="#6f4d34" emissive="#2e1f14" emissiveIntensity={0.26} roughness={0.76} />
+      </mesh>
+      <mesh position={[-11.5, 4.1, 2.2]}>
+        <boxGeometry args={[1.1, 2.2, 0.9]} />
+        <meshStandardMaterial color="#5b402e" emissive="#26190f" emissiveIntensity={0.2} roughness={0.82} />
       </mesh>
       <mesh position={[-11.5, 1.1, 2.75]}>
         <planeGeometry args={[1.3, 1.4]} />
@@ -137,6 +148,18 @@ export function Kaminstube() {
           ))}
         </group>
       ))}
+      {[[-6, 0.78, 1.3], [5.5, 0.78, 1.8], [9, 0.78, -3.2]].map((pos, idx) => (
+        <group key={`mug-${idx}`} position={pos as [number, number, number]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.13, 0.14, 0.22, 14]} />
+            <meshStandardMaterial color={idx % 2 === 0 ? '#f2d28d' : '#9dc8ff'} emissive={idx % 2 === 0 ? '#7f5c26' : '#3a5f87'} emissiveIntensity={0.34} roughness={0.62} />
+          </mesh>
+          <mesh position={[0.12, 0, 0]}>
+            <torusGeometry args={[0.05, 0.014, 8, 14]} />
+            <meshStandardMaterial color="#f2e8d1" metalness={0.22} roughness={0.55} />
+          </mesh>
+        </group>
+      ))}
 
       {/* Ceiling beams */}
       {[-10, -5, 0, 5, 10].map((x) => (
@@ -163,6 +186,18 @@ export function Kaminstube() {
         <boxGeometry args={[2.1, 2.1, 8.8]} />
         <meshStandardMaterial color="#5a2f1f" emissive="#2b140d" emissiveIntensity={0.28} metalness={0.2} roughness={0.8} />
       </mesh>
+      {[2.6, 0.8, -1, -2.8].map((z, idx) => (
+        <group key={`bar-tap-${idx}`} position={[10.34, 1.48, z]}>
+          <mesh castShadow receiveShadow>
+            <cylinderGeometry args={[0.05, 0.05, 0.5, 10]} />
+            <meshStandardMaterial color="#c3ccd6" metalness={0.9} roughness={0.2} />
+          </mesh>
+          <mesh position={[0.16, 0.1, 0]}>
+            <boxGeometry args={[0.24, 0.12, 0.08]} />
+            <meshStandardMaterial color={idx % 2 === 0 ? '#ffd36e' : '#9d8cff'} emissive={idx % 2 === 0 ? '#a56e18' : '#5b4aa8'} emissiveIntensity={0.44} />
+          </mesh>
+        </group>
+      ))}
       {[2.2, 1.3, 0.4].map((y, idx) => (
         <mesh key={`shelf-${idx}`} position={[10.35, y, -0.5]} castShadow receiveShadow>
           <boxGeometry args={[0.2, 0.08, 7.4]} />
@@ -187,6 +222,36 @@ export function Kaminstube() {
         <mesh key={`monitor-${x}`} position={[x, 0.62, -4.65]} castShadow receiveShadow>
           <boxGeometry args={[1.4, 0.8, 0.9]} />
           <meshStandardMaterial color="#1f2430" emissive="#0f1a2b" emissiveIntensity={0.3} metalness={0.58} roughness={0.45} />
+        </mesh>
+      ))}
+
+      {/* Stage drum kit and cable coils */}
+      <group position={[0.2, 0.66, -5.55]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.72, 0.75, 0.8, 22]} />
+          <meshStandardMaterial color="#344863" emissive="#1a2f49" emissiveIntensity={0.35} metalness={0.5} roughness={0.45} />
+        </mesh>
+        <mesh position={[-0.95, 0.16, 0.2]} castShadow>
+          <cylinderGeometry args={[0.36, 0.38, 0.46, 18]} />
+          <meshStandardMaterial color="#3f5877" emissive="#1f3652" emissiveIntensity={0.32} metalness={0.5} roughness={0.42} />
+        </mesh>
+        <mesh position={[0.98, 0.18, 0.15]} castShadow>
+          <cylinderGeometry args={[0.4, 0.42, 0.5, 18]} />
+          <meshStandardMaterial color="#3f5877" emissive="#1f3652" emissiveIntensity={0.32} metalness={0.5} roughness={0.42} />
+        </mesh>
+        <mesh position={[-0.35, 0.74, -0.12]}>
+          <cylinderGeometry args={[0.38, 0.38, 0.06, 20]} />
+          <meshStandardMaterial color="#d8e0ea" metalness={0.92} roughness={0.14} />
+        </mesh>
+        <mesh position={[0.72, 0.94, -0.12]} rotation={[0, 0, 0.18]}>
+          <cylinderGeometry args={[0.46, 0.46, 0.05, 20]} />
+          <meshStandardMaterial color="#f0d37c" emissive="#aa7a1f" emissiveIntensity={0.28} metalness={0.92} roughness={0.14} />
+        </mesh>
+      </group>
+      {[-1.4, -0.6, 0.2, 1].map((x) => (
+        <mesh key={`coil-${x}`} position={[x, 0.03, -3.85]} rotation={[-Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.22, 0.03, 10, 24]} />
+          <meshStandardMaterial color="#1d2330" metalness={0.55} roughness={0.4} />
         </mesh>
       ))}
 

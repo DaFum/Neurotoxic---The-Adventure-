@@ -25,6 +25,7 @@ interface PlayerProps {
 
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);
+  const modelRef = useRef<THREE.Group>(null);
   const velocity = useRef(new THREE.Vector3()).current;
   const shakeOffset = useRef(new THREE.Vector3()).current;
   const [, get] = useKeyboardControls();
@@ -38,6 +39,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
   const speed = 5;
   const spriteRef = useRef<THREE.Sprite>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
 
   const playerTexture = useMemo(() => {
     const canvas = document.createElement('canvas');
@@ -170,12 +172,24 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
       const dir = facingRight ? 1 : -1;
       spriteRef.current.scale.set(2.3 * dir, 2.3, 1);
     }
+
+    if (modelRef.current) {
+      const sway = isMoving ? Math.sin(state.clock.elapsedTime * 12) * 0.08 : 0;
+      modelRef.current.rotation.z = sway;
+      modelRef.current.rotation.y = THREE.MathUtils.lerp(modelRef.current.rotation.y, facingRight ? 0 : Math.PI, 0.16);
+    }
+
+    if (ringRef.current) {
+      ringRef.current.rotation.z += delta * (isMoving ? 2.8 : 1.2);
+      const pulse = isMoving ? 1.08 : 1;
+      ringRef.current.scale.set(pulse, pulse, pulse);
+    }
   });
 
   return (
     <RigidBody ref={bodyRef} position={[0, 1, 0]} lockRotations colliders={false}>
       <CuboidCollider args={[0.75, 1, 0.5]} />
-      <group>
+      <group ref={modelRef}>
         {/* Dust particles when moving */}
         {isMoving && (
           <Sparkles 
@@ -187,6 +201,39 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
             opacity={0.5} 
           />
         )}
+
+        <mesh position={[0, -0.72, 0]} rotation={[-Math.PI / 2, 0, 0]} ref={ringRef}>
+          <torusGeometry args={[0.85, 0.07, 12, 36]} />
+          <meshStandardMaterial color="#adff2f" emissive="#adff2f" emissiveIntensity={0.9} metalness={0.8} roughness={0.22} />
+        </mesh>
+        <mesh position={[0, -0.62, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.82, 0.95, 0.18, 22]} />
+          <meshStandardMaterial color="#2e3a46" emissive="#182026" emissiveIntensity={0.35} metalness={0.55} roughness={0.45} />
+        </mesh>
+        <mesh position={[0, -0.04, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.28, 0.34, 0.9, 16]} />
+          <meshStandardMaterial color="#3d4958" emissive="#1d2734" emissiveIntensity={0.28} metalness={0.58} roughness={0.4} />
+        </mesh>
+        <mesh position={[0, 0.55, 0]} castShadow>
+          <sphereGeometry args={[0.24, 16, 16]} />
+          <meshStandardMaterial color="#d7e6ff" emissive="#86a9d6" emissiveIntensity={0.2} metalness={0.24} roughness={0.4} />
+        </mesh>
+        <mesh position={[0.32, 0.02, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.12, 0.5, 0.2]} />
+          <meshStandardMaterial color="#273140" metalness={0.55} roughness={0.45} />
+        </mesh>
+        <mesh position={[-0.32, 0.02, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.12, 0.5, 0.2]} />
+          <meshStandardMaterial color="#273140" metalness={0.55} roughness={0.45} />
+        </mesh>
+        <mesh position={[0, 0.02, -0.24]} castShadow receiveShadow>
+          <boxGeometry args={[0.34, 0.52, 0.2]} />
+          <meshStandardMaterial color="#2a313c" emissive="#1a2434" emissiveIntensity={0.22} metalness={0.48} roughness={0.5} />
+        </mesh>
+        <mesh position={[0, 0.02, -0.36]}>
+          <planeGeometry args={[0.22, 0.14]} />
+          <meshStandardMaterial color="#5cf4ff" emissive="#5cf4ff" emissiveIntensity={0.75} metalness={0.6} roughness={0.25} />
+        </mesh>
 
         <sprite ref={spriteRef} scale={[2.3, 2.3, 1]} renderOrder={20}>
           <spriteMaterial map={playerTexture ?? undefined} transparent depthWrite={false} depthTest={false} />

@@ -77,7 +77,7 @@ export function Game() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-obsidian text-white scanlines overflow-hidden"
+            className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-obsidian text-white overflow-hidden"
           >
             {/* Background Decorative Elements */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -203,7 +203,13 @@ export function Game() {
             transition={{ duration: 1 }}
             className="w-full h-full"
           >
-            <Canvas shadows camera={{ position: [0, 5, 10], fov: 50 }}>
+            <Canvas
+              shadows
+              camera={{ position: [0, 5, 10], fov: 50 }}
+              onCreated={({ gl }) => {
+                gl.toneMappingExposure = 1.7;
+              }}
+            >
               <KeyboardControls
                 map={[
                   { name: 'forward', keys: ['ArrowUp', 'w', 'W'] },

@@ -36,12 +36,15 @@ export function Backstage() {
 
   return (
     <>
-      <color attach="background" args={['#030406']} />
-      <fog attach="fog" args={['#07090c', 10, 45]} />
-      <ambientLight intensity={0.2} />
-      <pointLight position={[0, 5, 0]} intensity={1.5} color="#adff2f" />
-      <pointLight position={[-10, 3, -4]} intensity={1.2} color="#6eff9d" />
-      <pointLight position={[10, 3, -4]} intensity={1.2} color="#8c6eff" />
+      <color attach="background" args={['#2a3340']} />
+      <fog attach="fog" args={['#2f3947', 24, 95]} />
+      <ambientLight intensity={0.9} />
+      <hemisphereLight args={['#eef6ff', '#334052', 0.72]} />
+      <directionalLight position={[0, 9, 7]} intensity={1.05} color="#fff5ea" />
+      <pointLight position={[0, 5, 0]} intensity={2.9} color="#adff2f" />
+      <pointLight position={[-10, 3, -4]} intensity={2.3} color="#6eff9d" />
+      <pointLight position={[10, 3, -4]} intensity={2.3} color="#8c6eff" />
+      <pointLight position={[0, 4, 6]} intensity={2.1} color="#ff68d2" />
       <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
       <Sparkles count={80} scale={[28, 10, 22]} size={1.2} speed={0.35} opacity={0.25} color="#c3ff86" />
 
@@ -49,7 +52,7 @@ export function Backstage() {
       <RigidBody type="fixed">
         <mesh receiveShadow position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[30, 20]} />
-          <meshStandardMaterial color="#1a1f26" emissive="#0d1218" emissiveIntensity={0.25} metalness={0.35} roughness={0.84} />
+          <meshStandardMaterial color="#3e4a58" emissive="#1d2835" emissiveIntensity={0.34} metalness={0.35} roughness={0.76} />
         </mesh>
       </RigidBody>
 
@@ -57,15 +60,15 @@ export function Backstage() {
       <RigidBody type="fixed">
         <mesh position={[0, 5, -10]}>
           <boxGeometry args={[30, 10, 1]} />
-          <meshStandardMaterial color="#171d24" emissive="#0d131a" emissiveIntensity={0.22} metalness={0.28} roughness={0.78} />
+          <meshStandardMaterial color="#344253" emissive="#172434" emissiveIntensity={0.32} metalness={0.28} roughness={0.7} />
         </mesh>
         <mesh position={[-15, 5, 0]} rotation={[0, Math.PI / 2, 0]}>
           <boxGeometry args={[20, 10, 1]} />
-          <meshStandardMaterial color="#141a20" emissive="#0c1116" emissiveIntensity={0.2} metalness={0.28} roughness={0.8} />
+          <meshStandardMaterial color="#303d4d" emissive="#162230" emissiveIntensity={0.3} metalness={0.28} roughness={0.72} />
         </mesh>
         <mesh position={[15, 5, 0]} rotation={[0, -Math.PI / 2, 0]}>
           <boxGeometry args={[20, 10, 1]} />
-          <meshStandardMaterial color="#141a20" emissive="#0c1116" emissiveIntensity={0.2} metalness={0.28} roughness={0.8} />
+          <meshStandardMaterial color="#303d4d" emissive="#162230" emissiveIntensity={0.3} metalness={0.28} roughness={0.72} />
         </mesh>
       </RigidBody>
 
@@ -124,6 +127,32 @@ export function Backstage() {
           <meshStandardMaterial color="#2a3440" emissive="#182531" emissiveIntensity={0.35} metalness={0.75} roughness={0.28} />
         </mesh>
       ))}
+      {[-11, -7, -3, 1, 5, 9].map((x, idx) => (
+        <group key={`flightcase-detail-${x}`} position={[x, 0.55, -2.2]}>
+          <mesh position={[0, 0.48, 0]}>
+            <boxGeometry args={[1.46, 0.08, 0.86]} />
+            <meshStandardMaterial color="#7f8fa3" emissive="#3c4d61" emissiveIntensity={0.25} metalness={0.85} roughness={0.2} />
+          </mesh>
+          {[-0.72, 0.72].map((px) => (
+            <mesh key={`flightcase-edge-${idx}-${px}`} position={[px, 0, 0]}>
+              <boxGeometry args={[0.08, 0.9, 0.92]} />
+              <meshStandardMaterial color="#aeb8c5" metalness={0.9} roughness={0.22} />
+            </mesh>
+          ))}
+          {[-0.45, 0.45].map((px) => (
+            <mesh key={`flightcase-wheel-l-${idx}-${px}`} position={[px, -0.58, -0.38]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
+              <meshStandardMaterial color="#1a2128" metalness={0.6} roughness={0.4} />
+            </mesh>
+          ))}
+          {[-0.45, 0.45].map((px) => (
+            <mesh key={`flightcase-wheel-r-${idx}-${px}`} position={[px, -0.58, 0.38]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
+              <meshStandardMaterial color="#1a2128" metalness={0.6} roughness={0.4} />
+            </mesh>
+          ))}
+        </group>
+      ))}
       <mesh position={[0, 3.8, -9.4]}>
         <planeGeometry args={[26, 5.8]} />
         <meshStandardMaterial color="#1b0f17" emissive="#2b1025" emissiveIntensity={0.45} />
@@ -133,6 +162,22 @@ export function Backstage() {
           <boxGeometry args={[2.2, 3.2, 0.7]} />
           <meshStandardMaterial color="#28303a" emissive="#121c2a" emissiveIntensity={0.32} metalness={0.55} roughness={0.5} />
         </mesh>
+      ))}
+      {[-9, -3, 3, 9].map((x, idx) => (
+        <group key={`rack-detail-${x}`} position={[x, 1.6, 6.8]}>
+          {[0.95, 0.25, -0.45].map((y, row) => (
+            <mesh key={`rack-screen-${idx}-${row}`} position={[0, y, 0.36]}>
+              <planeGeometry args={[1.8, 0.45]} />
+              <meshStandardMaterial color={row % 2 === 0 ? '#66e6ff' : '#b2ff6a'} emissive={row % 2 === 0 ? '#3ebed8' : '#6ea637'} emissiveIntensity={0.75} metalness={0.45} roughness={0.25} />
+            </mesh>
+          ))}
+          {[-0.7, 0.7].map((px) => (
+            <mesh key={`rack-post-${idx}-${px}`} position={[px, 0, 0.35]}>
+              <boxGeometry args={[0.08, 2.9, 0.08]} />
+              <meshStandardMaterial color="#bbc4cf" metalness={0.88} roughness={0.22} />
+            </mesh>
+          ))}
+        </group>
       ))}
       {[-10, -6, 6, 10].map((x) => (
         <mesh key={`stack-${x}`} position={[x, 1.7, -7.3]} castShadow receiveShadow>
@@ -145,6 +190,50 @@ export function Backstage() {
           <boxGeometry args={[1.8, 1.1, 2.2]} />
           <meshStandardMaterial color={idx % 2 === 0 ? '#2a3a52' : '#4b2936'} emissive={idx % 2 === 0 ? '#162236' : '#2c1520'} emissiveIntensity={0.28} roughness={0.74} />
         </mesh>
+      ))}
+
+      {/* Dressing desks and stage gear */}
+      {[[-12.9, 1.05, -4], [12.9, 1.05, -4]].map((pos, idx) => (
+        <group key={`desk-${idx}`} position={pos as [number, number, number]} rotation={[0, idx === 0 ? Math.PI / 2 : -Math.PI / 2, 0]}>
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[3.2, 0.16, 1.1]} />
+            <meshStandardMaterial color="#6f4c36" emissive="#362418" emissiveIntensity={0.3} roughness={0.72} />
+          </mesh>
+          {[-1.3, 1.3].map((x) => (
+            <mesh key={`desk-leg-${idx}-${x}`} position={[x, -0.48, 0.4]} castShadow receiveShadow>
+              <boxGeometry args={[0.16, 1, 0.16]} />
+              <meshStandardMaterial color="#b7c1cf" metalness={0.86} roughness={0.22} />
+            </mesh>
+          ))}
+          {[-1.3, 1.3].map((x) => (
+            <mesh key={`desk-leg-back-${idx}-${x}`} position={[x, -0.48, -0.4]} castShadow receiveShadow>
+              <boxGeometry args={[0.16, 1, 0.16]} />
+              <meshStandardMaterial color="#b7c1cf" metalness={0.86} roughness={0.22} />
+            </mesh>
+          ))}
+          {[-0.9, -0.3, 0.3, 0.9].map((x, n) => (
+            <mesh key={`desk-item-${idx}-${n}`} position={[x, 0.15, 0]} castShadow>
+              <boxGeometry args={[0.22, 0.08, 0.12]} />
+              <meshStandardMaterial color={n % 2 === 0 ? '#ff79d3' : '#72d8ff'} emissive={n % 2 === 0 ? '#a9357f' : '#2c7fab'} emissiveIntensity={0.5} metalness={0.55} roughness={0.35} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+      {[[-7, 0.7, 0.9], [-5.4, 0.7, 0.6], [5.6, 0.7, 0.8], [7.2, 0.7, 0.5]].map((pos, idx) => (
+        <group key={`amp-rack-${idx}`} position={pos as [number, number, number]}>
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[1.2, 1.4, 0.9]} />
+            <meshStandardMaterial color="#314257" emissive="#17283d" emissiveIntensity={0.36} metalness={0.58} roughness={0.4} />
+          </mesh>
+          <mesh position={[0, 0.26, 0.46]}>
+            <planeGeometry args={[0.86, 0.22]} />
+            <meshStandardMaterial color="#88ff70" emissive="#88ff70" emissiveIntensity={0.75} />
+          </mesh>
+          <mesh position={[0, -0.2, 0.46]}>
+            <planeGeometry args={[0.86, 0.22]} />
+            <meshStandardMaterial color="#6ac8ff" emissive="#6ac8ff" emissiveIntensity={0.72} />
+          </mesh>
+        </group>
       ))}
 
       {/* Backstage Elements */}
