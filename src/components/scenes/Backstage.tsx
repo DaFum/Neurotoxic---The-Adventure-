@@ -61,7 +61,7 @@ export function Backstage() {
 
       {/* Floor */}
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
-        <mesh receiveShadow position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[30, 20]} />
           <meshStandardMaterial color="#3e4a58" emissive="#1d2835" emissiveIntensity={0.34} metalness={0.35} roughness={0.76} />
         </mesh>

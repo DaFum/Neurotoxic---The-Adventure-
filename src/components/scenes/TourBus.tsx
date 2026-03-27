@@ -63,8 +63,8 @@ export function TourBus() {
         <boxGeometry args={[10, 5, 0.5]} />
         <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
       </mesh>
-      <RigidBody type="fixed" position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <mesh>
+      <RigidBody type="fixed" position={[0, -0.1, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[12, 10]} />
           <meshStandardMaterial color="#1a1d24" emissive="#0b0f16" emissiveIntensity={0.25} metalness={0.28} roughness={0.82} />
         </mesh>
