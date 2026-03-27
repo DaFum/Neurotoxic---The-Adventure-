@@ -14,7 +14,7 @@
 import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
-import { Environment, Float, Text, MeshDistortMaterial, MeshWobbleMaterial } from '@react-three/drei';
+import { Float, Text, MeshDistortMaterial, MeshWobbleMaterial, Sparkles, Stars } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 
 export function VoidStation() {
@@ -32,17 +32,19 @@ export function VoidStation() {
   return (
     <>
       <color attach="background" args={['#000000']} />
+      <fogExp2 attach="fog" args={['#06020d', 0.04]} />
       <ambientLight intensity={0.1} />
       <pointLight position={[0, 10, 0]} intensity={2} color="#ff00ff" />
       <pointLight position={[5, 5, 5]} intensity={1} color="#00ffff" />
-      <Environment preset="night" />
+      <Stars radius={140} depth={70} count={9000} factor={5} saturation={0} fade speed={0.8} />
+      <Sparkles count={120} scale={[60, 20, 60]} size={2} speed={0.3} opacity={0.3} color="#7e5dff" />
 
       {/* Surreal Floor */}
       <RigidBody type="fixed">
         <mesh receiveShadow position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[50, 50]} />
           <MeshDistortMaterial 
-            color="#050505" 
+            color="#150f22" 
             speed={2} 
             distort={0.4} 
             radius={1} 
@@ -63,6 +65,53 @@ export function VoidStation() {
           <MeshWobbleMaterial color="#ff00ff" speed={5} factor={2} />
         </mesh>
       </Float>
+
+      {/* Orbiting crystals */}
+      {[[-16, 1.6, -8], [-12, 2.1, 10], [12, 2.3, 10], [16, 1.8, -8], [0, 2.5, -16]].map((pos, idx) => (
+        <Float key={`crystal-${idx}`} speed={2 + idx * 0.2} rotationIntensity={1.6} floatIntensity={0.8}>
+          <mesh position={pos as [number, number, number]}>
+            <dodecahedronGeometry args={[1.2, 0]} />
+            <meshStandardMaterial color={idx % 2 === 0 ? '#7a4dff' : '#36d7ff'} emissive={idx % 2 === 0 ? '#3f22a2' : '#10618c'} emissiveIntensity={0.8} metalness={0.45} roughness={0.35} />
+          </mesh>
+        </Float>
+      ))}
+
+      {/* Distant anomaly rings */}
+      {[8, 14, 20].map((r, idx) => (
+        <mesh key={`anomaly-ring-${r}`} position={[0, 6 + idx * 0.8, -12 - idx * 4]} rotation={[Math.PI / 2.2, 0, 0]}>
+          <torusGeometry args={[r, 0.08, 16, 80]} />
+          <meshBasicMaterial color={idx % 2 ? '#6ffff5' : '#ff49f2'} transparent opacity={0.22} />
+        </mesh>
+      ))}
+
+      {/* Station interior modules */}
+      {[
+        [-14, 0.8, -2],
+        [-10, 0.8, 3],
+        [10, 0.8, 3],
+        [14, 0.8, -2],
+      ].map((pos, idx) => (
+        <mesh key={`void-console-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <boxGeometry args={[2.8, 1.6, 1.4]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#1a1330' : '#10273a'} emissive={idx % 2 === 0 ? '#2c1660' : '#124a66'} emissiveIntensity={0.55} metalness={0.55} roughness={0.42} />
+        </mesh>
+      ))}
+      {[-12, -6, 0, 6, 12].map((x) => (
+        <mesh key={`void-panel-${x}`} position={[x, 1.9, -1.3]}>
+          <planeGeometry args={[1.2, 0.26]} />
+          <meshBasicMaterial color="#57f5ff" transparent opacity={0.7} />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.15, -0.5]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[5.5, 7.2, 48]} />
+        <meshBasicMaterial color="#9f64ff" transparent opacity={0.2} />
+      </mesh>
+      {[[-15, 3.2, -3], [15, 3.2, -3], [-15, 3.2, 4], [15, 3.2, 4]].map((pos, idx) => (
+        <mesh key={`void-arch-${idx}`} position={pos as [number, number, number]} rotation={[0, idx < 2 ? Math.PI / 2 : -Math.PI / 2, 0]}>
+          <torusGeometry args={[1.6, 0.18, 14, 36]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#ff4fd3' : '#5be8ff'} emissive={idx % 2 === 0 ? '#7a1f61' : '#1a617a'} emissiveIntensity={0.7} metalness={0.65} roughness={0.28} />
+        </mesh>
+      ))}
 
       {/* The Cosmic Attendant */}
       <Interactable

@@ -11,9 +11,9 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useKeyboardControls, Html, Billboard, Sparkles } from '@react-three/drei';
+import { useKeyboardControls, Sparkles } from '@react-three/drei';
 import { RigidBody, RapierRigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useStore } from '../store';
@@ -37,6 +37,60 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const footstepTimer = useRef(0);
 
   const speed = 5;
+  const spriteRef = useRef<THREE.Sprite>(null);
+
+  const playerTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    ctx.clearRect(0, 0, 256, 256);
+    const glow = ctx.createRadialGradient(128, 128, 15, 128, 128, 115);
+    glow.addColorStop(0, 'rgba(173,255,47,0.35)');
+    glow.addColorStop(1, 'rgba(173,255,47,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(128, 128, 115, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '150px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🕶️', 128, 132);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    return texture;
+  }, []);
+
+  const labelTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 420;
+    canvas.height = 80;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    ctx.clearRect(0, 0, 420, 80);
+    ctx.fillStyle = 'rgba(5,5,5,0.82)';
+    ctx.fillRect(0, 0, 420, 80);
+    ctx.strokeStyle = 'rgba(173,255,47,0.8)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 416, 76);
+
+    ctx.fillStyle = '#adff2f';
+    ctx.font = '700 24px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('UNIT_01: MANAGER', 210, 40);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    return texture;
+  }, []);
 
   useEffect(() => {
     if (bodyRef.current) {
@@ -109,6 +163,13 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     if (cameraShake > 0) {
       setCameraShake(Math.max(0, cameraShake - delta * 2));
     }
+
+    if (spriteRef.current) {
+      const bounce = isMoving ? Math.abs(Math.sin(state.clock.elapsedTime * 10)) * 0.08 : 0;
+      spriteRef.current.position.y = 1.05 + bounce;
+      const dir = facingRight ? 1 : -1;
+      spriteRef.current.scale.set(2.3 * dir, 2.3, 1);
+    }
   });
 
   return (
@@ -127,34 +188,14 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
           />
         )}
 
-        <Billboard follow={true}>
-          <mesh>
-            <planeGeometry args={[1.5, 2]} />
-            <meshStandardMaterial color="#000" transparent opacity={0} />
-            <Html transform distanceFactor={10} position={[0, 0, 0.1]} center zIndexRange={[2, 0]}>
-              <div className="relative group">
-                {/* Character Sprite (Industrial Manager) */}
-                <div
-                  className={`text-7xl select-none transition-all duration-300 drop-shadow-[0_0_10px_rgba(173,255,47,0.3)] ${
-                    facingRight ? 'scale-x-100' : '-scale-x-100'
-                  } ${isMoving ? 'animate-bounce' : ''}`}
-                >
-                  🕶️
-                </div>
-                
-                {/* Status Label */}
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                  <div className="bg-obsidian border border-toxic/50 px-2 py-0.5 text-[8px] font-mono text-toxic uppercase tracking-widest">
-                    Unit_01: Manager
-                  </div>
-                </div>
-
-                {/* Proximity Pulse (Scan Effect) */}
-                <div className="absolute inset-0 border-2 border-toxic/20 rounded-full animate-ping scale-150 pointer-events-none opacity-20" />
-              </div>
-            </Html>
-          </mesh>
-        </Billboard>
+        <sprite ref={spriteRef} scale={[2.3, 2.3, 1]} renderOrder={20}>
+          <spriteMaterial map={playerTexture ?? undefined} transparent depthWrite={false} depthTest={false} />
+        </sprite>
+        {labelTexture && (
+          <sprite position={[0, -1.2, 0]} scale={[2.1, 0.4, 1]} renderOrder={19}>
+            <spriteMaterial map={labelTexture} transparent depthWrite={false} depthTest={false} />
+          </sprite>
+        )}
       </group>
     </RigidBody>
   );

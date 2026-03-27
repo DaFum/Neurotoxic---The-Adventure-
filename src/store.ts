@@ -279,7 +279,6 @@ export const useStore = create<GameState>()(
       partialize: (state) => ({
         inventory: state.inventory,
         flags: state.flags,
-        playerPos: state.playerPos,
         quests: state.quests,
         bandMood: state.bandMood,
         loreEntries: state.loreEntries,
@@ -307,6 +306,7 @@ export const useStore = create<GameState>()(
           ...currentState,
           ...persistedState,
           scene: currentState.scene,
+          playerPos: currentState.playerPos,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           flags: {

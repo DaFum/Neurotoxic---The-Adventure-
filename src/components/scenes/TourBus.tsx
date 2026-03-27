@@ -34,28 +34,122 @@ export function TourBus() {
 
   return (
     <group>
+      <color attach="background" args={['#0c0b0a']} />
+      <fog attach="fog" args={['#120f0c', 5, 30]} />
+
       {/* Bus Interior Walls */}
       <mesh position={[0, 2, -5]}>
         <boxGeometry args={[12, 5, 0.5]} />
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#232a33" emissive="#111820" emissiveIntensity={0.22} metalness={0.35} roughness={0.72} />
       </mesh>
       <mesh position={[-6, 2, 0]} rotation={[0, Math.PI / 2, 0]}>
         <boxGeometry args={[10, 5, 0.5]} />
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
       </mesh>
       <mesh position={[6, 2, 0]} rotation={[0, Math.PI / 2, 0]}>
         <boxGeometry args={[10, 5, 0.5]} />
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
       </mesh>
       <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[12, 10]} />
-        <meshStandardMaterial color="#0a0a0a" />
+        <meshStandardMaterial color="#1a1d24" emissive="#0b0f16" emissiveIntensity={0.25} metalness={0.28} roughness={0.82} />
       </mesh>
+      <mesh position={[0, 4.3, 0]}>
+        <boxGeometry args={[12, 0.3, 10]} />
+        <meshStandardMaterial color="#2f3741" emissive="#151b22" emissiveIntensity={0.18} metalness={0.42} roughness={0.62} />
+      </mesh>
+
+      {/* Window strips */}
+      {[-3.8, -1.2, 1.2, 3.8].map((z) => (
+        <mesh key={`win-left-${z}`} position={[-5.74, 2.45, z]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[1.65, 1.1]} />
+          <meshStandardMaterial color="#7fb7ff" emissive="#2d5f9d" emissiveIntensity={0.28} metalness={0.2} roughness={0.35} transparent opacity={0.72} />
+        </mesh>
+      ))}
+      {[-3.8, -1.2, 1.2, 3.8].map((z) => (
+        <mesh key={`win-right-${z}`} position={[5.74, 2.45, z]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[1.65, 1.1]} />
+          <meshStandardMaterial color="#7fb7ff" emissive="#2d5f9d" emissiveIntensity={0.28} metalness={0.2} roughness={0.35} transparent opacity={0.72} />
+        </mesh>
+      ))}
 
       {/* Lighting */}
       <ambientLight intensity={0.2} />
       <pointLight position={[0, 4, 0]} intensity={10} color="#ffaa00" />
       <spotLight position={[0, 4, 2]} angle={0.5} penumbra={1} intensity={20} color="#ffffff" />
+      <pointLight position={[-4, 2.8, -1]} intensity={2.5} color="#ff5a3d" />
+      <pointLight position={[4, 2.8, -1]} intensity={2.2} color="#2ac8ff" />
+
+      {/* Ceiling rail lights */}
+      {[-4.5, -1.5, 1.5, 4.5].map((x) => (
+        <mesh key={`bus-rail-${x}`} position={[x, 4.35, -0.3]}>
+          <boxGeometry args={[1.6, 0.06, 0.06]} />
+          <meshStandardMaterial color="#ffd166" emissive="#ffd166" emissiveIntensity={1.5} />
+        </mesh>
+      ))}
+
+      {/* Floor runner and side rails */}
+      <mesh position={[0, -0.03, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[2.2, 8.4]} />
+        <meshStandardMaterial color="#2e1b18" emissive="#1a0d0b" emissiveIntensity={0.22} roughness={0.92} />
+      </mesh>
+      <mesh position={[-1.16, -0.015, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.08, 8.4]} />
+        <meshStandardMaterial color="#ff7b4a" emissive="#ff7b4a" emissiveIntensity={0.6} />
+      </mesh>
+      <mesh position={[1.16, -0.015, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.08, 8.4]} />
+        <meshStandardMaterial color="#57d3ff" emissive="#57d3ff" emissiveIntensity={0.55} />
+      </mesh>
+
+      {/* Seat blocks */}
+      {[
+        [-4, 0.5, 2.8],
+        [-1.2, 0.5, 2.8],
+        [1.6, 0.5, 2.8],
+        [4.4, 0.5, 2.8],
+      ].map((pos, idx) => (
+        <mesh key={`seat-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <boxGeometry args={[2, 1, 1.8]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#4b2f24' : '#1f3b47'} emissive={idx % 2 === 0 ? '#2a160f' : '#112630'} emissiveIntensity={0.3} metalness={0.15} roughness={0.8} />
+        </mesh>
+      ))}
+
+      {/* Driver cockpit + storage */}
+      <mesh position={[0, 1.1, -4.4]} castShadow receiveShadow>
+        <boxGeometry args={[3.6, 1.1, 0.55]} />
+        <meshStandardMaterial color="#29313a" emissive="#18222d" emissiveIntensity={0.3} metalness={0.55} roughness={0.5} />
+      </mesh>
+      <mesh position={[-1.2, 1.35, -4.05]} rotation={[0.2, 0, 0]} castShadow receiveShadow>
+        <torusGeometry args={[0.34, 0.06, 12, 24]} />
+        <meshStandardMaterial color="#23272d" metalness={0.85} roughness={0.25} />
+      </mesh>
+      {[-5.2, -4.2, 4.2, 5.2].map((x) => (
+        <mesh key={`bus-shelf-${x}`} position={[x, 2.8, 0.4]} castShadow receiveShadow>
+          <boxGeometry args={[0.9, 0.5, 1.6]} />
+          <meshStandardMaterial color="#3a2f24" emissive="#241910" emissiveIntensity={0.25} roughness={0.75} />
+        </mesh>
+      ))}
+
+      {/* Overhead luggage rails and side cases */}
+      {[-3.4, -1.2, 1.2, 3.4].map((z) => (
+        <mesh key={`rack-left-${z}`} position={[-5.35, 3.35, z]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1.25, 0.2, 0.85]} />
+          <meshStandardMaterial color="#303947" emissive="#1a2330" emissiveIntensity={0.24} metalness={0.5} roughness={0.5} />
+        </mesh>
+      ))}
+      {[-3.4, -1.2, 1.2, 3.4].map((z) => (
+        <mesh key={`rack-right-${z}`} position={[5.35, 3.35, z]} rotation={[0, -Math.PI / 2, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1.25, 0.2, 0.85]} />
+          <meshStandardMaterial color="#303947" emissive="#1a2330" emissiveIntensity={0.24} metalness={0.5} roughness={0.5} />
+        </mesh>
+      ))}
+      {[[-5.1, 0.55, -1.6], [5.1, 0.55, -1.6], [-5.1, 0.55, 1.2], [5.1, 0.55, 1.2]].map((pos, idx) => (
+        <mesh key={`side-case-${idx}`} position={pos as [number, number, number]} castShadow receiveShadow>
+          <boxGeometry args={[0.7, 0.9, 1.1]} />
+          <meshStandardMaterial color={idx % 2 === 0 ? '#3a2230' : '#223a34'} emissive={idx % 2 === 0 ? '#23121c' : '#14251f'} emissiveIntensity={0.28} metalness={0.42} roughness={0.56} />
+        </mesh>
+      ))}
 
       {/* Atmosphere */}
       <Sparkles count={20} scale={10} size={1} speed={0.5} opacity={0.2} />

@@ -40,7 +40,7 @@ export default defineConfig(() => {
         'scheduler',
         'scheduler/index.js',
       ],
-      // Let Vite process these modules through our transform plugin.
+      // Prevent pre-bundling so our transform plugin runs on original (unbundled) dependency source.
       exclude: ['@dimforge/rapier3d-compat', '@react-three/rapier', '@react-three/fiber', 'three'],
     },
     plugins: [suppressThreeAndRapierDeprecationWarnings(), react(), tailwindcss()],
