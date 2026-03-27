@@ -569,7 +569,7 @@ Update the dialogue overview with all new trees, quests, and branches.
 - src/components/scenes/Kaminstube.tsx
 - src/components/scenes/Salzgitter.tsx
 - dialog_uebersicht.md
----
+
 ### Implementation Order
 - store.ts — flags, lore, item combination
 - Proberaum.tsx — Matze/Lars/Marius/Amp/TR-8080 expansion + new interactable
