@@ -44,6 +44,10 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);
 
+  // ⚡ Bolt Optimization: Cache Vector3 objects to prevent GC overhead in useFrame
+  const playerPosVector = useRef(new THREE.Vector3()).current;
+  const targetPosVector = useRef(new THREE.Vector3(...position)).current;
+
   const palette = useMemo(() => {
     const seed = name.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
     const hue = (seed * 37) % 360;
@@ -170,7 +174,12 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     if (isPaused) return;
 
     const playerPos = useStore.getState().playerPos;
-    const dist = new THREE.Vector3(...playerPos).distanceTo(new THREE.Vector3(...position));
+
+    // ⚡ Bolt Optimization: Reuse Vector3 objects to avoid allocations in animation loop
+    playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
+    targetPosVector.set(position[0], position[1], position[2]);
+
+    const dist = playerPosVector.distanceTo(targetPosVector);
     const inRangeNow = dist < 4.0;
     setInRange((prev) => (prev === inRangeNow ? prev : inRangeNow));
 
