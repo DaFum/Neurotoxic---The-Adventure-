@@ -22,7 +22,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Zweig C (Trait: Visionary): "Ich sehe Muster im Lärm." (+30 BandMood, +5 Chaos, Lore: `matze_1982_truth`, setzt `matzeDeepTalk`).
         * Zweig D (Skill: Technical 5): Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
         * Zweig E (Skill: Social 3): Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
-        * Standard: "Interessante Geschichte." (+10 BandMood, setzt `askedAbout1982` — wichtig für Geist-Dialoge im TourBus und Backstage).
+        * Standard: "Interessante Geschichte." (+10 BandMood, setzt `askedAbout1982` und `bassist_clue_matze` — wichtig für Geist-Dialoge im TourBus und Backstage sowie für die Bassist-Questline).
     * *Sabotage-Verdacht:* "Lars trommelt komisch" (startet `lars_proberaum_secret`).
     * *Vor dem Aufwischen:* Bittet darum, das Wasser aufzuwischen.
         * "Ich kümmere mich darum" (kein Mood-Effekt).
@@ -38,7 +38,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Trait: Visionary):* "Muster im Lärm" (+30 BandMood, +5 Chaos, setzt `matzeDeepTalk`).
             * *Unterzweig (Skill: Technical 5):* Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
             * *Unterzweig (Skill: Social 3):* Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
-            * *Unterzweig (Standard):* "Interessante Geschichte" (+10 BandMood, setzt `askedAbout1982` — wichtig für Geist-Dialoge im TourBus und Backstage).
+            * *Unterzweig (Standard):* "Interessante Geschichte" (+10 BandMood, setzt `askedAbout1982` und `bassist_clue_matze` — wichtig für Geist-Dialoge im TourBus und Backstage sowie für die Bassist-Questline).
         * Zweig C: "Buchhaltung" (-2 BandMood).
 * **Lars (Drummer):**
     * *Nach Rettung:*
@@ -73,6 +73,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion (Item: Mop):* Aufwischen (+20 BandMood, Quest-Abschluss: `water`).
 * **Sprechender Amp (Existenzielle Krise):**
     * *Initial:* Erzählt von der 5. Dimension (+2 BandMood, setzt `talkingAmpHeard`, Quest hinzugefügt: `repair_amp`).
+    * *Nach Erstkontakt, vor Reparatur (Trait: Mystic, einmalig):* "Ich höre eine andere Stimme in dir." (+10 BandMood, +2 Chaos, setzt `maschinen_seele_amp`, startet Quest `maschinen_seele` falls noch nicht aktiv). **Option verschwindet nach einmaligem Auslösen.**
     * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical, Quest-Abschluss: `repair_amp`, setzt `talkingAmpRepaired`).
     * *Nach Reparatur:* Bietet Therapie-Sitzung an (setzt `ampTherapyStarted`, Quest hinzugefügt: `amp_therapy`).
     * *Therapie-Sitzung:*
@@ -155,11 +156,16 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 3. Backstage (Vor dem Gig)
 
 * **Feedback-Monitor:**
-    * *Item (Verstärker-Schaltplan):*
-        * Zweig A (Skill: Technical 5): "Optimierte Frequenzen" (+30 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor_backstage`).
-        * Zweig B (Trait: Visionary): "Transzendente Frequenzen" (+40 BandMood, +5 Chaos, Quest-Abschluss: `feedback_monitor_backstage`).
-        * Zweig C: "Standard-Frequenzen" (+15 BandMood, Quest-Abschluss: `feedback_monitor_backstage`).
-    * *Initial:* Erhalt Quest (+5 BandMood).
+    * *Erstkontakt ("Hallo?"):* Setzt `feedbackMonitorBackstageTalked` (+5 BandMood). Innerer Dialog zeigt "Wie kann ich helfen?" → setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`.
+    * *Nach Erstkontakt, Quest noch nicht gestartet:* "Wie kann ich dir helfen?" startet Quest `feedback_monitor_backstage` (setzt `feedbackMonitorBackstageQuestStarted`). **Verhindert permanente Quest-Blockade.**
+    * *Quest gestartet, Item (Verstärker-Schaltplan):*
+        * Zweig A (Skill: Technical 5): "Optimierte Frequenzen" (+30 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor_backstage`, setzt `feedbackMonitorBackstageQuestCompleted`).
+        * Zweig B (Trait: Visionary): "Transzendente Frequenzen" (+40 BandMood, +5 Chaos, Quest-Abschluss: `feedback_monitor_backstage`, setzt `feedbackMonitorBackstageQuestCompleted`).
+        * Zweig C: "Standard-Frequenzen" (+15 BandMood, Quest-Abschluss: `feedback_monitor_backstage`, setzt `feedbackMonitorBackstageQuestCompleted`).
+    * *Quest abgeschlossen & beide Maschinen-Seele-Fragmente vorhanden (`maschinen_seele_amp` & `maschinen_seele_tr8080`):*
+        * (Trait: Mystic): "Vereinige das Maschinen-Bewusstsein" (+40 BandMood, +5 Chaos, setzt `maschinen_seele_complete`, Quest-Abschluss: `maschinen_seele`, **Lore:** `maschinen_bewusstsein`).
+        * (Skill: Technical 7): "Verbinde die Schaltkreise logisch" (+30 BandMood, +5 Technical, setzt `maschinen_seele_complete`, Quest-Abschluss: `maschinen_seele`, **Lore:** `maschinen_bewusstsein`).
+        * Standard-Fallback: "Lass die Verbindung einfach laufen" (+20 BandMood, setzt `maschinen_seele_complete`, Quest-Abschluss: `maschinen_seele`, **Lore:** `maschinen_bewusstsein`). *(Kein Trait/Skill erforderlich.)*
 * **Marius (Lampenfieber):**
     * *Optionen zur Beruhigung (Quest-Abschluss `marius` für jede, setzt `mariusCalmed`):*
         * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, setzt `mariusConfidenceBoost`).
@@ -186,7 +192,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Aufheben (Erhalt: Lötkolben).
 * **Ritual-Kreis:**
     * *Mit Resonanz-Kristall + Blaupause:*
-        * (Trait: Mystic): Frequenz vollenden (+50 BandMood, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
+        * (Trait: Mystic): Frequenz vollenden (+50 BandMood, entfernt `Resonanz-Kristall`, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
     * *Mit Frequenzfragment + Blaupause:*
         * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
@@ -218,8 +224,15 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * Standard: "Komm einfach mit" (+10 BandMood).
 * **Dunkle Materie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Dunkle Materie).
+* **Schwebender Bassist** *(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):*
+    * *Option (Skill: Social 8):* "Die Band braucht dich" (+40 BandMood, +3 Social, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
+    * *Option (Skill: Technical 10):* "Du hängst in einer Rückkopplungsschleife fest" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
+    * *Option (Trait: Mystic):* "Lass dich von der Leere tragen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
+    * *Standard:* "Ich lass dich besser in Ruhe" (kein Mood-Effekt).
 * **Diplomaten-Interface:**
-    * *Option (Trait: Diplomat):* Verhandeln (+30 BandMood, +5 Social, setzt `void_diplomat_negotiation`, Lore: `schaltpult_record`).
+    * *Option (Trait: Diplomat):* Verhandeln (+30 BandMood, +5 Social, setzt `void_diplomat_negotiation`, **Lore:** `schaltpult_record`).
+    * *Standard (immer verfügbar):* "Lies die Aufzeichnungen." (kein BandMood-Effekt, **Lore:** `schaltpult_record`). *(Macht die Lore für alle Traits erreichbar.)*
+    * *Nach Verhandlung:* "Status prüfen." (kein Effekt, Bestätigungsdialog).
 * **Schwebende Magnetbänder:**
     * *Option (Skill: Technical 5):* Band abspielen (+10 BandMood, +3 Technical, **Lore:** `magnetband_session`).
 * **Frequenz-Detektor:**
@@ -251,7 +264,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Wirt (Geheimnis):**
     * *Wenn Bassist kontaktiert (Flag `bassist_contacted`) — läuft auch wenn `wirtSecretItem` bereits gesetzt:*
-        * (Skill: Social 8): Zwingen (+20 BandMood, +5 Social, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
+        * (Skill: Social 8): Zwingen (+20 BandMood, +5 Social, setzt `bassist_clue_wirt`, Lore: `wirt_confession`).
         * (Trait: Brutalist): Drohen (+15 BandMood, +5 Chaos, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
         * (Trait: Diplomat): Verzeihen (+30 BandMood, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`, Erhalt: Turbo-Koffein).
 * **Matze:**
@@ -312,14 +325,15 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
         * (Skill: Chaos 15): "Maschinen-Seele entfesseln" (+40 BandMood, +5 Chaos, setzt `salzgitter_encore_unlocked`).
         * (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
     * *Wenn `lars_paced`:* (+25 BandMood).
-* **Schwebender Bassist:**
-    * *Wenn `bassist_contacted` & Item: `Resonanz-Kristall`:*
-        * "Kristall einsetzen" (+30 BandMood, entfernt Kristall, setzt `bassist_restored`, Lore: `bassist_wahrheit`).
+* **Schwebender Bassist** *(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):*
+    * *Item `Bassist-Saite` (Trait: Mystic):* "Gib ihm die Bassist-Saite aus dem Echo" (+40 BandMood, entfernt `Bassist-Saite`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
+    * *Item `Resonanz-Kristall`:* "Nimm den Resonanz-Kristall. Vollende das Riff" (+30 BandMood, entfernt `Resonanz-Kristall`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
+    * *Standard:* "Wir sehen uns auf der anderen Seite" (kein Mood-Effekt).
 * **Matze:**
     * *Item: Verbotenes Riff + Altes Plektrum:* Chaos 10 (+50 BandMood) oder Technical 10 (+40 BandMood).
 * **Fan:**
     * *Reagiert auf `backstage_performer_speech` oder `kaminstube_crowd_rallied` (+5 BandMood).*
-    * *(Trait: Diplomat):* Andenken geben (+20 BandMood).
+    * *(Trait: Diplomat, einmalig — Flag `gaveDiplomatSouvenir` noch nicht gesetzt):* Andenken geben (+20 BandMood, setzt `gaveDiplomatSouvenir`).
 * **Das Finale (Multi-Outcome Ende):**
     * **[TRUE ENDING]:** Benötigt `salzgitter_true_ending` & `bassist_restored` & `maschinen_seele_complete`. (+100 BandMood, schaltet letzte Lore frei).
     * **[SECRET ENCORE]:** Benötigt `salzgitter_encore_unlocked`. (+50 BandMood).

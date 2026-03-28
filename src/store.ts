@@ -138,14 +138,12 @@ const initialState = {
     salzgitter_fan_speech_heard: false,
     tankwart_fuel_quest_started: false,
     proberaum_brutalist_smash: false,
-    proberaum_mystic_ritual: false,
     tourbus_sabotage_discovered: false,
     tourbus_matze_confession: false,
     backstage_blueprint_found: false,
     backstage_performer_speech: false,
     backstage_cynic_sabotage: false,
     void_diplomat_negotiation: false,
-    void_bassist_message: false,
     kaminstube_crowd_rallied: false,
     kaminstube_wirt_betrayal: false,
     salzgitter_encore_unlocked: false,
@@ -346,7 +344,7 @@ export const useStore = create<GameState>()(
         skills: state.skills,
       }),
       merge: (persistedState: unknown, currentState: GameState) => {
-        const typedPersistedState = persistedState as Partial<GameState>;
+        const typedPersistedState = (persistedState !== null && typeof persistedState === 'object') ? persistedState as Partial<GameState> : {};
 
         const persistedQuests = Array.isArray(typedPersistedState.quests) ? typedPersistedState.quests : [];
         const persistedLore = Array.isArray(typedPersistedState.loreEntries) ? typedPersistedState.loreEntries : [];
@@ -373,7 +371,6 @@ export const useStore = create<GameState>()(
         return {
           ...currentState,
           ...typedPersistedState,
-          ...persistedState,
           scene: currentState.scene,
           playerPos: currentState.playerPos,
           quests: allQuests,

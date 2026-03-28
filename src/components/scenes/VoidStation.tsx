@@ -521,6 +521,13 @@ export function VoidStation() {
                   }
                 },
               {
+                text: 'Lies die Aufzeichnungen.',
+                action: () => {
+                  useStore.getState().discoverLore('schaltpult_record');
+                  useStore.getState().setDialogue('Du entzifferst die fragmentierten Logs: Aufnahmen von Frequenzen, die 1982 in Salzgitter gemessen wurden. Etwas hat damals angefangen — und noch nicht aufgehört.');
+                }
+              },
+              {
                 text: 'Verlassen.',
                 action: () => {
                   useStore.getState().setDialogue('Du lässt das Terminal in Ruhe.');
