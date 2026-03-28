@@ -373,7 +373,6 @@ export const useStore = create<GameState>()(
         return {
           ...currentState,
           ...typedPersistedState,
-          ...persistedState,
           scene: currentState.scene,
           playerPos: currentState.playerPos,
           quests: allQuests,
