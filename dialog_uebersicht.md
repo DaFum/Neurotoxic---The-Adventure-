@@ -123,31 +123,25 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Lesen (+5 BandMood).
 * **Rostiges Plektrum (Item):**
     * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum).
+* **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
+    * *Interaktion (Skill: Technical 3):* Öffnen (+10 BandMood, Erhalt: Frequenzfragment, setzt `frequenz1982_tourbus`).
+* **Batterie (Item):**
+    * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Geist eines Roadies:**
-    * *Item (Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, entfernt Geister-Drink).
-    * *Flag `askedAbout1982` gesetzt (aus Proberaum):*
+    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe`.
+    * *Nach Drink (Item: Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, entfernt Geister-Drink).
+        * Nachfolgende Option (Skill: Social 5): Nach Bassisten fragen (+25 BandMood, +5 Social, setzt `bassist_clue_ghost`, Lore: `roadie_bassist`).
+    * *1982-Follow-up (Flag `askedAbout1982` gesetzt):*
         * Zweig A (Trait: Visionary): "Erzähl mir alles" (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
         * Zweig B (Skill: Technical 7): "Anomalie analysieren" (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
         * Zweig C (Skill: Social 5): "Geist beruhigen" (+20 BandMood, +3 Social, setzt `ghostSecretRevealed`).
         * Standard: "Erzähl mir alles" (+20 BandMood, setzt `ghostSecretRevealed`).
         * "Vielleicht später" (kein Mood-Effekt).
-    * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood, setzt `ghostSecretRevealed`) ODER Begraben (+5 BandMood).
-    * *Item (Verbotenes Riff):* "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
-    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe`.
-* **Batterie (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Batterie).
+    * *Spezial-Items:*
+        * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood, setzt `ghostSecretRevealed`) ODER Begraben (+5 BandMood).
+        * *Item (Verbotenes Riff):* "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
 
 ---
-
-* **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
-    * *Interaktion (Skill: Technical 3):* Öffnen (+15 BandMood, Erhalt: Frequenzfragment, Erhalt: Magnetband, setzt `tourbus_secret_compartment_opened`, Lore: `frequenz_1982_tourbus`).
-* **Geist eines Roadies:**
-    * *Nach Drink:*
-        * Option (Skill: Social 5): Nach Bassisten fragen (+25 BandMood, +5 Social, setzt `bassist_clue_ghost`, Lore: `roadie_bassist`).
-    * *Flag `askedAbout1982` gesetzt (aus Proberaum):*
-        * Option (Trait: Visionary): "Erzähl mir alles" (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
-        * Option (Skill: Technical 7): "Anomalie analysieren" (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
-        * Option (Skill: Social 5): "Geist beruhigen" (+20 BandMood, +3 Social, setzt `ghostSecretRevealed`).
 
 ## 3. Backstage (Vor dem Gig)
 

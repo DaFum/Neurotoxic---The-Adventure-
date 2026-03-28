@@ -164,7 +164,11 @@ const initialState = {
     { id: 'inschrift_warning', title: 'Inschrift Warnung', content: 'Spiele nicht die verbotene Kadenz, es sei denn, du bist bereit, die Stille für immer zu töten. Salzgitter ist der Katalysator.', discovered: false },
     { id: 'ego_philosophy', title: 'Marius\' Ego-Philosophie', content: 'Die Leere ist langweilig, wenn es niemanden gibt, der dich anbetet. Die wahre Transzendenz braucht ein Publikum.', discovered: false },
     { id: 'poster_lore', title: 'Proberaum Poster', content: 'Das Poster zeigt eine Tour, die nie stattfand. Oder eine, die noch stattfinden wird. Die Zeit hier ist fließend.', discovered: false },
-    { id: 'cosmic_echo_decoded', title: 'Kosmisches Echo (Decoded)', content: 'Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort — sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge.', discovered: false }
+    { id: 'cosmic_echo_decoded', title: 'Kosmisches Echo (Decoded)', content: 'Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort — sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge.', discovered: false },
+    { id: 'tourbus_saboteur', title: 'Der Saboteur', content: 'Das Kabel wurde nicht durch Abnutzung zerstört. Jemand hat es mit einem Seitenschneider durchtrennt. Jemand, der Angst vor dem Gig hatte.', discovered: false },
+    { id: 'matze_1982_truth', title: 'Matzes Wahrheit über 1982', content: 'Er hat den Lärm verstanden. Die Gießerei war kein Unfall, sie war eine Offenbarung.', discovered: false },
+    { id: 'roadie_bassist', title: 'Der Roadie und der Bassist', content: 'Der Roadie schwört, dass der Bassist nicht abgehauen ist. Er wurde von einem 432Hz-Feedback-Loop verschluckt und wandert seitdem durch die Frequenzen.', discovered: false },
+    { id: 'wirt_confession', title: 'Die Beichte des Wirts', content: 'Er war es. Er hat 1982 den Verstärker manipuliert, weil der Sound zu gefährlich wurde. Er dachte, er rettet die Stadt, aber er hat den Bassisten geopfert.', discovered: false }
   ],
   playerPos: [0, 1, 0] as [number, number, number],
   isPaused: false,
