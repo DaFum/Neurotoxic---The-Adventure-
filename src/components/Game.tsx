@@ -26,6 +26,7 @@ import { Kaminstube } from './scenes/Kaminstube';
 import { Salzgitter } from './scenes/Salzgitter';
 import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
+import { VirtualJoystick } from './VirtualJoystick';
 import { audio } from '../audio';
 
 const STORAGE_KEY = 'neurotoxic-game-storage';
@@ -308,7 +309,9 @@ export function Game() {
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
             className="w-full h-full"
+            style={{ touchAction: 'none' }}
           >
+            <VirtualJoystick />
             <Canvas
               shadows
               camera={{ position: [0, 5, 10], fov: 50 }}
