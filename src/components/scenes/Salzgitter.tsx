@@ -311,6 +311,14 @@ export function Salzgitter() {
           const bandMood = useStore.getState().bandMood;
           const hasForbiddenRiff = useStore.getState().hasItem('Verbotenes Riff');
           const hasOldPick = useStore.getState().hasItem('Altes Plektrum');
+          const hasVoidPick = useStore.getState().hasItem('Void-Plektrum');
+
+          if (hasVoidPick) {
+             setDialogue('Matze: "Dieses Void-Plektrum... es schwingt in meiner Hand. Die Saiten werden heute Abend weinen. Danke, Manager!"');
+             increaseBandMood(20);
+             useStore.getState().removeFromInventory('Void-Plektrum');
+             return;
+          }
           
           if (hasForbiddenRiff) {
             if (hasOldPick) {
@@ -383,6 +391,32 @@ export function Salzgitter() {
         onInteract={() => {
           const store = useStore.getState();
           const bandMood = store.bandMood;
+
+          if (store.flags.larsRhythmPact) {
+            if (store.flags.larsVibrating) {
+              store.setDialogue('Lars: "DER PAKT! DIE ENERGIE! MANAGER, ICH BIN DER RHYTHMUS SELBST! WIR ZERTRÜMMERN DIE REALITÄT!"');
+              store.increaseBandMood(50);
+              store.increaseSkill('chaos', 5);
+            } else {
+              store.setDialogue('Lars: "Der Pakt ist erfüllt, Manager. Mein Herzschlag ist das Metronom dieser Welt. Lass uns die Realität zertrümmern."');
+              store.increaseBandMood(30);
+            }
+            store.setFlag('larsRhythmPact', false); // consume to avoid infinite loop
+            return;
+          }
+
+          if (store.flags.larsRhythmPact) {
+            if (store.flags.larsVibrating) {
+              store.setDialogue('Lars: "DER PAKT! DIE ENERGIE! MANAGER, ICH BIN DER RHYTHMUS SELBST! WIR ZERTRÜMMERN DIE REALITÄT!"');
+              store.increaseBandMood(50);
+              store.increaseSkill('chaos', 5);
+            } else {
+              store.setDialogue('Lars: "Der Pakt ist erfüllt, Manager. Mein Herzschlag ist das Metronom dieser Welt. Lass uns die Realität zertrümmern."');
+              store.increaseBandMood(30);
+            }
+            store.setFlag('larsRhythmPact', false); // consume to avoid infinite loop
+            return;
+          }
 
           if (store.flags.larsVibrating && store.flags.larsDrumPhilosophy) {
             if (store.flags.salzgitter_encore_unlocked) {
@@ -461,6 +495,32 @@ export function Salzgitter() {
           const store = useStore.getState();
           const bandMood = store.bandMood;
           const trait = store.trait;
+
+          if (store.flags.mariusEgoStrategy && store.flags.mariusConfidenceBoost && store.flags.egoContained && !store.flags.salzgitter_marius_greeted) {
+             store.increaseBandMood(40);
+             store.setFlag('salzgitter_marius_greeted', true);
+
+             if (store.flags.matzeDeepTalk && store.flags.larsDrumPhilosophy && (store.flags.mariusCalmed || store.flags.mariusConfidenceBoost) && !store.flags.salzgitterBandUnited) {
+                 store.setDialogue({
+                    text: 'Marius: "Manager... du hast mich aus dem Abgrund geholt. Mein Ego, meine Angst... du hast alles gerettet. Ich singe heute Abend für dich."',
+                    options: [
+                      {
+                         text: 'Die Band ist vereint.',
+                         action: () => {
+                            useStore.getState().setDialogue('Marius: "Und sieh sie dir an... Matze, Lars. Die Band ist vereint. Wir sind mehr als nur Lärm."');
+                            useStore.getState().increaseBandMood(30);
+                            useStore.getState().setFlag('salzgitterBandUnited', true);
+                            useStore.getState().addQuest('unite_band', 'Vereinige die Band vor dem Finale in Salzgitter');
+                            useStore.getState().completeQuest('unite_band');
+                         }
+                      }
+                    ] as any[]
+                 });
+             } else {
+                 store.setDialogue('Marius: "Manager... du hast mich aus dem Abgrund geholt. Mein Ego, meine Angst... du hast alles gerettet. Ich singe heute Abend für dich."');
+             }
+             return;
+          }
 
           if (trait === 'Performer' && !store.flags.salzgitter_performer_talked) {
             store.setDialogue({
@@ -551,6 +611,20 @@ export function Salzgitter() {
           scale={1.5}
           onInteract={() => {
             const store = useStore.getState();
+
+            if (store.flags.voidBassistSpoken) {
+               store.setFlag('voidBassistSpoken', false); // consume to avoid infinite loop
+               const completedMysteryQuest = store.quests.find(q => q.id === 'bassist_mystery')?.completed;
+               if (completedMysteryQuest) {
+                  store.setDialogue('Bassist: "Du erinnerst dich an mich. Ich gebe euch meinen Segen für das Konzert. Die Frequenzen sind vereint. Ein meisterhaftes Riff wartet auf euch."');
+                  store.increaseBandMood(30);
+               } else {
+                  store.setDialogue('Bassist: "Du erinnerst dich an mich. Ich bin bereit für den Gig."');
+                  store.increaseBandMood(20);
+               }
+               return;
+            }
+
             if (store.flags.bassist_restored) {
                store.setDialogue('Bassist: "Ich bin bereit. Der Grundton schwingt in meinem Blut. Wir bringen die Gießerei zurück."');
                return;
@@ -606,6 +680,11 @@ export function Salzgitter() {
           const hasSignedSetlist = store.hasItem('Signierte Setliste');
           const hasTalisman = store.hasItem('Industrie-Talisman');
 
+          if (store.flags.fanMovement) {
+             store.setDialogue('Fan: "WIR SIND EINS MIT DEM LÄRM! NEUROTOXIC! NEUROTOXIC!"');
+             return;
+          }
+
           if (hasTalisman) {
             store.setDialogue({
               text: 'Fan: "Ist das... ein echter Industrie-Talisman?! Den hab ich nur in den Legenden von 1982 gesehen!"',
@@ -654,11 +733,39 @@ export function Salzgitter() {
           }
 
           const options: any[] = [];
+
+          options.push({
+             text: 'Folgt mir! [Performer]',
+             requiredTrait: 'Performer',
+             action: () => {
+               useStore.getState().setDialogue('Fan: "EINER FÜR ALLE! ALLE FÜR DEN LÄRM!" Du beginnst einen Sprechchor, der sich durch die Menge pflanzt.');
+               useStore.getState().setFlag('fanMovement', true);
+               useStore.getState().addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
+               useStore.getState().completeQuest('fan_movement');
+               useStore.getState().increaseBandMood(35);
+             }
+          });
+
+          options.push({
+             text: 'Lasst uns zusammen singen! [Social 8]',
+             requiredSkill: { name: 'social', level: 8 },
+             action: () => {
+               useStore.getState().setDialogue('Fan: "Ein Fan-Chor? Ja! Das wird episch!" Die Menge summt das Eröffnungsriff.');
+               useStore.getState().setFlag('fanMovement', true);
+               useStore.getState().addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
+               useStore.getState().completeQuest('fan_movement');
+               useStore.getState().increaseBandMood(30);
+             }
+          });
+
           if (!store.flags.gaveDiplomatSouvenir) {
-            options.push({ text: 'Hier, ein Andenken. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+            options.push({ text: 'Wir sind alle eins mit der Musik. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
               useStore.getState().setFlag('gaveDiplomatSouvenir', true);
-              useStore.getState().setDialogue('Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"');
-              useStore.getState().increaseBandMood(20);
+              useStore.getState().setDialogue('Fan: "Du hast recht, Manager. Keine Barrieren. Nur wir und der Sound."');
+              useStore.getState().setFlag('fanMovement', true);
+              useStore.getState().addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
+              useStore.getState().completeQuest('fan_movement');
+              useStore.getState().increaseBandMood(25);
             }});
           }
           options.push(
@@ -689,8 +796,15 @@ export function Salzgitter() {
           store.completeQuest('final');
           store.setFlag('salzgitter_finalized', true);
 
-          if (store.flags.salzgitter_true_ending && store.flags.bassist_restored && store.flags.maschinen_seele_complete) {
-             store.setDialogue('Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt — er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]');
+          let finaleScore = 0;
+          if (store.flags.salzgitterBandUnited) finaleScore++;
+          if (store.flags.fanMovement) finaleScore++;
+          if (store.flags.backstageRitualPerformed) finaleScore++;
+          if (store.flags.wirtLegacy1982) finaleScore++;
+          if (store.flags.voidBassistSpoken) finaleScore++;
+
+          if (finaleScore >= 4 || (store.flags.salzgitter_true_ending && store.flags.bassist_restored && store.flags.maschinen_seele_complete)) {
+             store.setDialogue('Die Maschinen singen. Die Band ist vereint. Die Fans sind ein Chor des Lärms. Der Zyklus von 1982 ist vollendet und die Leere geschlossen. Der Manager hat nicht nur eine Tour gemanagt — er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [BESTES ENDE]');
              store.increaseBandMood(100);
              // Discover remaining lore logically associated with true ending
              store.discoverLore('bassist_wahrheit');
@@ -699,14 +813,14 @@ export function Salzgitter() {
           } else if (store.flags.salzgitter_encore_unlocked) {
              store.setDialogue('ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]');
              store.increaseBandMood(50);
-          } else if (store.flags.frequenz1982_complete && store.flags.mariusConfidenceBoost && store.bandMood > 70) {
-             store.setDialogue('Die Frequenz von 1982 hat die Halle erfüllt. Der Sound war perfekt. Die Fans liegen sich heulend in den Armen. Ein meisterhafter Auftritt! [GREAT ENDING]');
+          } else if (finaleScore >= 2 || (store.flags.frequenz1982_complete && store.flags.mariusConfidenceBoost && store.bandMood > 70)) {
+             store.setDialogue('Der Lärm zerreißt die Luft. Salzgitter fällt auf die Knie. Die Fans feiern euch! Ein großartiger Gig! [GUTES ENDE]');
              store.increaseBandMood(70);
           } else if (store.bandMood > 70 && store.flags.mariusConfidenceBoost) {
-             store.setDialogue('Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Tour ist ein Erfolg! [GOOD ENDING]');
+             store.setDialogue('Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Tour ist ein Erfolg! [NORMALES ENDE]');
              store.increaseBandMood(50);
           } else {
-             store.setDialogue('Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]');
+             store.setDialogue('Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [SCHLECHTES ENDE]');
              store.increaseBandMood(30);
           }
         }}

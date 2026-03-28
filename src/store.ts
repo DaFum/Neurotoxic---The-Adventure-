@@ -154,6 +154,20 @@ const initialState = {
     lars_paced: false,
     marius_tourbus_doubt: false,
     gaveDiplomatSouvenir: false,
+    matzeRiffWarning: false,
+    larsRhythmPact: false,
+    mariusEgoStrategy: false,
+    ampSentient: false,
+    ghostTrustEarned: false,
+    tourbusBandMeeting: false,
+    backstageRitualPerformed: false,
+    mariusStageFright: false,
+    voidBassistSpoken: false,
+    tankwartBargain: false,
+    wirtLegacy1982: false,
+    kaminFeuerPact: false,
+    salzgitterBandUnited: false,
+    fanMovement: false,
   },
   loreEntries: [
     { id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
@@ -173,7 +187,11 @@ const initialState = {
     { id: 'tourbus_saboteur', title: 'Der Saboteur', content: 'Das Kabel wurde nicht durch Abnutzung zerstört. Jemand hat es mit einem Seitenschneider durchtrennt. Jemand, der Angst vor dem Gig hatte.', discovered: false },
     { id: 'matze_1982_truth', title: 'Matzes Wahrheit über 1982', content: 'Er hat den Lärm verstanden. Die Gießerei war kein Unfall, sie war eine Offenbarung.', discovered: false },
     { id: 'roadie_bassist', title: 'Der Roadie und der Bassist', content: 'Der Roadie schwört, dass der Bassist nicht abgehauen ist. Er wurde von einem 432Hz-Feedback-Loop verschluckt und wandert seitdem durch die Frequenzen.', discovered: false },
-    { id: 'wirt_confession', title: 'Die Beichte des Wirts', content: 'Er war es. Er hat 1982 den Verstärker manipuliert, weil der Sound zu gefährlich wurde. Er dachte, er rettet die Stadt, aber er hat den Bassisten geopfert.', discovered: false }
+    { id: 'wirt_confession', title: 'Die Beichte des Wirts', content: 'Er war es. Er hat 1982 den Verstärker manipuliert, weil der Sound zu gefährlich wurde. Er dachte, er rettet die Stadt, aber er hat den Bassisten geopfert.', discovered: false },
+    { id: 'rhythm_pact', title: 'Der Rhythmus-Pakt', content: 'Lars und du habt einen Pakt geschlossen. Der Rhythmus ist kein Werkzeug — er ist ein Lebewesen. Wer ihn beherrscht, kontrolliert die Zeit selbst.', discovered: false },
+    { id: 'ghost_legacy', title: 'Das Vermächtnis des Roadies', content: 'Der Geist war einst der beste Roadie der Welt. Er starb 1982, als der Bassist verschwand — verschluckt vom gleichen Feedback-Loop. Sein letzter Wunsch: dass die Band weiterlebt.', discovered: false },
+    { id: 'bassist_truth', title: 'Die Wahrheit des Bassisten', content: 'Der Bassist ist nicht verschwunden. Er wurde eins mit der Frequenz. In der Void Station existiert er als reine Schwingung — weder tot noch lebendig.', discovered: false },
+    { id: 'kamin_prophecy', title: 'Prophezeiung des Kamins', content: 'Das Feuer flüstert: In Salzgitter wird die Grenze zwischen Musik und Realität brechen. Nur eine vereinte Band kann den Riss schließen.', discovered: false },
   ],
   playerPos: [0, 1, 0] as [number, number, number],
   isPaused: false,
@@ -289,7 +307,15 @@ export const useStore = create<GameState>()(
             audio.playPickup();
             return true;
           }
-          // Frequenzfragment + Splitter der Leere = Resonanz-Kristall
+                    // Splitter der Leere + Altes Plektrum = Void-Plektrum
+          if ((item1 === 'Splitter der Leere' && item2 === 'Altes Plektrum') || (item1 === 'Altes Plektrum' && item2 === 'Splitter der Leere')) {
+            set((state) => ({
+              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Void-Plektrum']
+            }));
+            audio.playPickup();
+            return true;
+          }
+// Frequenzfragment + Splitter der Leere = Resonanz-Kristall
           if ((item1 === 'Frequenzfragment' && item2 === 'Splitter der Leere') || (item1 === 'Splitter der Leere' && item2 === 'Frequenzfragment')) {
             set((state) => {
               const newInventory = [...state.inventory];

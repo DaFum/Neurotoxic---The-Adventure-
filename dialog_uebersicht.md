@@ -347,3 +347,37 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
 
 * **Resonanz-Kristall:** Entsteht durch die Kombination von `Frequenzfragment` und `Splitter der Leere`.
 * **Geister-Drink:** Entsteht durch die Kombination von `Turbo-Koffein` und `Rostiges Plektrum`. (Erforderlich für Ghost Roadie Quest).
+
+### EXPANDED TREES (NEW)
+**Proberaum:**
+- Matze: Reacts to `bandMood > 60`, Performer/Mystic trait branches. Sets `matzeDeepTalk`.
+- Lars: Rhythm Pact interaction sets `larsRhythmPact`, completes `rhythm_pact` quest, uncovers `rhythm_pact` lore.
+- Marius: Pre-show preparation. Performer/Cynic/Social branches. Sets `mariusEgoStrategy`.
+- Amp: Mystic path declares `ampSentient`.
+
+**Tourbus:**
+- Matze: Fear talk after fixing cable. Visionary/Technical/Social paths. Sets `matzeFearTalk`.
+- Marius: Band meeting interaction. Diplomat/Brutalist/Performer paths. Sets `tourbusBandMeeting`, completes `band_meeting`.
+- Ghost: Mystic/Social paths to build trust. Sets `ghostTrustEarned`, completes `ghost_trust`, uncovers `ghost_legacy`.
+
+**Backstage:**
+- Marius: Expanded stage fright resolution (Brutalist/Mystic/Performer) or ego strategy reference.
+- Lars: `larsRhythmPact` bonus energy dialogue and Chaos explosion path.
+- Monitor: Sentient amp references, specific quests.
+- Ritual Circle: Expanded into full quest `backstage_ritual`. Mystic/Performer/Technician paths. Sets `backstageRitualPerformed`.
+
+**Void Station:**
+- Tankwart: Ghost trust discount, Cynic/Performer specific interactions.
+- Bassist: Fully explorable entity. Social/Technical/Visionary/Mystic paths. Sets `voidBassistSpoken`, completes `bassist_mystery`, uncovers `bassist_truth`.
+- Marius' Ego: Easiest capture if `mariusEgoStrategy`. Brutalist/Diplomat paths.
+
+**Kaminstube:**
+- Wirt: Legacy of 1982. Diplomat/Social/Chaos/Ghost Trust paths. Sets `wirtLegacy1982`, completes `wirt_legacy`.
+- Kamin: Whispering fire expansion. Technical/Diplomat/Mystic/Chaos paths. Sets `kaminFeuerPact`, completes `forgotten_lore`, uncovers `kamin_prophecy`.
+- Lars/Marius: Cross-scene reactivity (Rhythm pact, Ego strategy).
+
+**Salzgitter:**
+- Cross-scene flag checks for Matze, Lars, and Marius.
+- Marius unites band if conditions met, completing `unite_band` and setting `salzgitterBandUnited`.
+- Fan movement interaction. Performer/Social/Diplomat paths. Sets `fanMovement`, completes `fan_movement`.
+- Finale uses `finaleScore` based on multiple cross-scene flags for new Best Ending.
