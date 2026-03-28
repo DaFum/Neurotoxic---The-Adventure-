@@ -346,7 +346,7 @@ export const useStore = create<GameState>()(
         skills: state.skills,
       }),
       merge: (persistedState: unknown, currentState: GameState) => {
-        const typedPersistedState = persistedState as Partial<GameState>;
+        const typedPersistedState = (persistedState !== null && typeof persistedState === 'object') ? persistedState as Partial<GameState> : {};
 
         const persistedQuests = Array.isArray(typedPersistedState.quests) ? typedPersistedState.quests : [];
         const persistedLore = Array.isArray(typedPersistedState.loreEntries) ? typedPersistedState.loreEntries : [];

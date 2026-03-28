@@ -653,17 +653,21 @@ export function Salzgitter() {
             return;
           }
 
-          const options: any[] = [
-             { text: 'Hier, ein Andenken. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
-               useStore.getState().setDialogue('Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"');
-               useStore.getState().increaseBandMood(20);
-             }},
+          const options: any[] = [];
+          if (!store.flags.gaveDiplomatSouvenir) {
+            options.push({ text: 'Hier, ein Andenken. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+              useStore.getState().setFlag('gaveDiplomatSouvenir', true);
+              useStore.getState().setDialogue('Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"');
+              useStore.getState().increaseBandMood(20);
+            }});
+          }
+          options.push(
              { text: 'Ich schau mal was ich tun kann.', action: () => useStore.getState().setDialogue('Fan: "Bitte beeil dich, ich steh hier schon seit 4 Uhr morgens!"') },
              { text: 'Wer bist du nochmal?', action: () => {
                useStore.getState().setDialogue('Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"');
                useStore.getState().increaseBandMood(-2);
              }}
-          ];
+          );
           store.setDialogue({
             text: 'Fan: "Ich liebe NEUROTOXIC! Hast du vielleicht ein Autogramm für mich? Oder ein Plektrum?"',
             options

@@ -617,6 +617,7 @@ export function Backstage() {
                    useStore.getState().setFlag('frequenz1982_complete', true);
                    useStore.getState().discoverLore('frequenz_1982_decoded');
                    useStore.getState().increaseBandMood(50);
+                   useStore.getState().removeFromInventory('Resonanz-Kristall');
                  }},
                  { text: 'Zerschmettere den Kristall im Zentrum! [Brutalist]', requiredTrait: 'Brutalist', action: () => {
                    useStore.getState().setDialogue('Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');

@@ -186,7 +186,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Aufheben (Erhalt: Lötkolben).
 * **Ritual-Kreis:**
     * *Mit Resonanz-Kristall + Blaupause:*
-        * (Trait: Mystic): Frequenz vollenden (+50 BandMood, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
+        * (Trait: Mystic): Frequenz vollenden (+50 BandMood, entfernt `Resonanz-Kristall`, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
     * *Mit Frequenzfragment + Blaupause:*
         * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
@@ -218,6 +218,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * Standard: "Komm einfach mit" (+10 BandMood).
 * **Dunkle Materie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Dunkle Materie).
+* **Schwebender Bassist** *(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):*
+    * *Option (Skill: Social 8):* "Die Band braucht dich" (+40 BandMood, +3 Social, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
+    * *Option (Skill: Technical 10):* "Du hängst in einer Rückkopplungsschleife fest" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
+    * *Option (Trait: Mystic):* "Lass dich von der Leere tragen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
+    * *Standard:* "Ich lass dich besser in Ruhe" (kein Mood-Effekt).
 * **Diplomaten-Interface:**
     * *Option (Trait: Diplomat):* Verhandeln (+30 BandMood, +5 Social, setzt `void_diplomat_negotiation`, Lore: `schaltpult_record`).
 * **Schwebende Magnetbänder:**
@@ -312,14 +317,15 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
         * (Skill: Chaos 15): "Maschinen-Seele entfesseln" (+40 BandMood, +5 Chaos, setzt `salzgitter_encore_unlocked`).
         * (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
     * *Wenn `lars_paced`:* (+25 BandMood).
-* **Schwebender Bassist:**
-    * *Wenn `bassist_contacted` & Item: `Resonanz-Kristall`:*
-        * "Kristall einsetzen" (+30 BandMood, entfernt Kristall, setzt `bassist_restored`, Lore: `bassist_wahrheit`).
+* **Schwebender Bassist** *(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):*
+    * *Item `Bassist-Saite` (Trait: Mystic):* "Gib ihm die Bassist-Saite aus dem Echo" (+40 BandMood, entfernt `Bassist-Saite`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
+    * *Item `Resonanz-Kristall`:* "Nimm den Resonanz-Kristall. Vollende das Riff" (+30 BandMood, entfernt `Resonanz-Kristall`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
+    * *Standard:* "Wir sehen uns auf der anderen Seite" (kein Mood-Effekt).
 * **Matze:**
     * *Item: Verbotenes Riff + Altes Plektrum:* Chaos 10 (+50 BandMood) oder Technical 10 (+40 BandMood).
 * **Fan:**
     * *Reagiert auf `backstage_performer_speech` oder `kaminstube_crowd_rallied` (+5 BandMood).*
-    * *(Trait: Diplomat):* Andenken geben (+20 BandMood).
+    * *(Trait: Diplomat, einmalig — Flag `gaveDiplomatSouvenir` noch nicht gesetzt):* Andenken geben (+20 BandMood, setzt `gaveDiplomatSouvenir`).
 * **Das Finale (Multi-Outcome Ende):**
     * **[TRUE ENDING]:** Benötigt `salzgitter_true_ending` & `bassist_restored` & `maschinen_seele_complete`. (+100 BandMood, schaltet letzte Lore frei).
     * **[SECRET ENCORE]:** Benötigt `salzgitter_encore_unlocked`. (+50 BandMood).
