@@ -236,6 +236,7 @@ export function Proberaum() {
                         action: () => {
                           setDialogue('Matze: "Du siehst sie auch?! Die Geometrie des Feedbacks... Du bist der Manager, den wir brauchen. In Salzgitter wird alles zusammenfallen."');
                           setFlag('matzeDeepTalk', true);
+                    useStore.getState().discoverLore('matze_1982_truth');
                           increaseBandMood(30);
                           useStore.getState().increaseSkill('chaos', 5);
                         }
@@ -348,6 +349,12 @@ export function Proberaum() {
             const moodText = bandMood > 60 
               ? 'Lars: "Dieser Beat... er kommt direkt aus der Hölle! Ich liebe es!"'
               : 'Lars: "Geiler Beat, oder? Lass uns loslegen!"';
+
+            if (useStore.getState().flags.lars_proberaum_secret) {
+               setDialogue('Lars: "Die Hi-Hat ist perfekt. Ich bin bereit."');
+               return;
+            }
+
             setDialogue({
               text: moodText,
               options: [
@@ -366,6 +373,7 @@ export function Proberaum() {
                   requiredSkill: { name: 'technical', level: 3 },
                   action: () => {
                     setDialogue('Lars: "Hey, das klingt besser! Die TR-8080 hat übrigens Teile vom alten Amp des Bassisten in sich..."');
+                    useStore.getState().setFlag('lars_proberaum_secret', true);
                     useStore.getState().increaseBandMood(10);
                     useStore.getState().increaseSkill('technical', 3);
                     if (useStore.getState().flags.talkingAmpHeard) {
@@ -750,10 +758,9 @@ export function Proberaum() {
               ]
             });
           } else {
-            setDialogue({
-              text: 'TR-8080: "Hast du das Riff? Nein? Dann stör mich nicht beim Selbst-Oszillieren."',
-              options: [
-                {
+            const options: any[] = [];
+            if (!useStore.getState().flags.maschinen_seele_tr8080) {
+              options.push({
                   text: 'Deine Seriennummer... du bist nicht von der Stange. [Technical 5]',
                   requiredSkill: { name: 'technical', level: 5 },
                   action: () => {
@@ -762,9 +769,13 @@ export function Proberaum() {
                     useStore.getState().increaseBandMood(10);
                     useStore.getState().increaseSkill('technical', 3);
                   }
-                },
-                { text: 'Schon gut, ich gehe.', action: () => setDialogue('TR-8080: "BZZT."') }
-              ]
+              });
+            }
+            options.push({ text: 'Schon gut, ich gehe.', action: () => setDialogue('TR-8080: "BZZT."') });
+
+            setDialogue({
+              text: 'TR-8080: "Hast du das Riff? Nein? Dann stör mich nicht beim Selbst-Oszillieren."',
+              options
             });
           }
         }}

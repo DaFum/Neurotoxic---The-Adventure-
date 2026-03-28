@@ -172,14 +172,14 @@ export function Kaminstube() {
                 { text: 'Zwinge ihn zur Wahrheit. [Social 8]', requiredSkill: { name: 'social', level: 8 }, action: () => {
                   useStore.getState().setDialogue('Wirt: "Okay! Ich war es. Ich habe den Amp manipuliert, der ihn in die Leere riss. Der Sound war zu gefährlich. Es tut mir leid."');
                   useStore.getState().setFlag('bassist_clue_wirt', true);
-                  useStore.getState().discoverLore('wirt_confession');
+                  useStore.getState().discoverLore('wirt_vergangenheit');
                   useStore.getState().increaseBandMood(20);
                   useStore.getState().increaseSkill('social', 5);
                 }},
                 { text: 'Drohe ihm mit dem Lärm. [Brutalist]', requiredTrait: 'Brutalist', action: () => {
                   useStore.getState().setDialogue('Wirt: "Nicht! Beschwöre nicht die Maschinen! Ich bekenne! Ich sabotierte den Gig 1982, um die Stadt zu schützen!"');
                   useStore.getState().setFlag('bassist_clue_wirt', true);
-                  useStore.getState().discoverLore('wirt_confession');
+                  useStore.getState().discoverLore('wirt_vergangenheit');
                   useStore.getState().increaseBandMood(15);
                   useStore.getState().increaseSkill('chaos', 5);
                 }},
@@ -266,11 +266,13 @@ export function Kaminstube() {
                      { text: 'Wir stehen das gemeinsam durch. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
                        useStore.getState().setDialogue('Matze: "Danke. Ich werde dich nicht enttäuschen. Die Röhren glühen wieder."');
                        useStore.getState().setFlag('tourbus_matze_confession', true);
+                       useStore.getState().completeQuest('tourbus_saboteur');
                        useStore.getState().increaseBandMood(30);
                      }},
                      { text: 'Kein Fehler mehr, oder du fliegst. [Brutalist]', requiredTrait: 'Brutalist', action: () => {
                        useStore.getState().setDialogue('Matze: "Verstanden. Nur noch Hass und Lärm."');
                        useStore.getState().setFlag('tourbus_matze_confession', true);
+                       useStore.getState().completeQuest('tourbus_saboteur');
                        useStore.getState().increaseBandMood(15);
                      }}
                    ]
@@ -291,20 +293,28 @@ export function Kaminstube() {
         idleType="tap"
         onInteract={() => {
           const store = useStore.getState();
+          if (store.flags.kaminstube_lars_talked) {
+             store.setDialogue('Lars: "Die Schmiede ruft. Ich habe den Takt verinnerlicht."');
+             return;
+          }
+
           store.setDialogue({
             text: 'Lars: "Wusstest du, dass die Kaminstube früher eine echte Schmiede war? Der Rhythmus der Hämmer steckt noch in den Wänden. Ich spüre ihn!"',
             options: [
               { text: 'Dann spiel im Takt der Hämmer. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
                 useStore.getState().setDialogue('Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"');
+                useStore.getState().setFlag('kaminstube_lars_talked', true);
                 useStore.getState().increaseBandMood(15);
                 useStore.getState().increaseSkill('technical', 3);
               }},
               { text: 'Zerschmettere die Hämmer mit deinem Rhythmus. [Chaos 5]', requiredSkill: { name: 'chaos', level: 5 }, action: () => {
                 useStore.getState().setDialogue('Lars: "JA! Ein Polyrhythmus, der die Architektur der Halle in Frage stellt!"');
+                useStore.getState().setFlag('kaminstube_lars_talked', true);
                 useStore.getState().increaseBandMood(20);
                 useStore.getState().increaseSkill('chaos', 3);
               }},
               { text: 'Hauptsache du bleibst im Takt.', action: () => {
+                useStore.getState().setFlag('kaminstube_lars_talked', true);
                 useStore.getState().setDialogue('Lars: "Takt ist relativ. Aber okay, ich bemühe mich."');
               }}
             ]

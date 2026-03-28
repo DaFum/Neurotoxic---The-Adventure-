@@ -100,6 +100,7 @@ export function Backstage() {
                   { text: 'Vereinige das Maschinen-Bewusstsein. [Mystic]', requiredTrait: 'Mystic', action: () => {
                       useStore.getState().setDialogue('Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.');
                       useStore.getState().setFlag('maschinen_seele_complete', true);
+                      useStore.getState().completeQuest('maschinen_seele');
                       useStore.getState().discoverLore('maschinen_bewusstsein');
                       useStore.getState().increaseBandMood(40);
                       useStore.getState().increaseSkill('chaos', 5);
@@ -107,6 +108,7 @@ export function Backstage() {
                   { text: 'Verbinde die Schaltkreise logisch. [Technical 7]', requiredSkill: { name: 'technical', level: 7 }, action: () => {
                       useStore.getState().setDialogue('Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.');
                       useStore.getState().setFlag('maschinen_seele_complete', true);
+                      useStore.getState().completeQuest('maschinen_seele');
                       useStore.getState().discoverLore('maschinen_bewusstsein');
                       useStore.getState().increaseBandMood(30);
                       useStore.getState().increaseSkill('technical', 5);
@@ -422,6 +424,8 @@ export function Backstage() {
              return;
           }
 
+          const hasFrequenzfragment = store.hasItem('Frequenzfragment');
+
           if (hasResonanz && store.flags.backstage_blueprint_found) {
              store.setDialogue({
                text: 'Du hast den Resonanz-Kristall und die Blaupause. Der Ritual-Kreis pulsiert in einem unnatürlichen Takt.',
@@ -432,9 +436,21 @@ export function Backstage() {
                    useStore.getState().discoverLore('frequenz_1982_decoded');
                    useStore.getState().increaseBandMood(50);
                  }},
-                 { text: 'Breche das Muster mit reiner Kraft. [Brutalist]', requiredTrait: 'Brutalist', action: () => {
-                   useStore.getState().setDialogue('Du zerschmetterst den Kristall im Zentrum. Die freigesetzte Energie ist brutal und pur. Die Frequenz gehört jetzt NEUROTOXIC!');
-                   useStore.getState().removeFromInventory('Resonanz-Kristall');
+                 { text: 'Zurücktreten.', action: () => {
+                   useStore.getState().setDialogue('Das ist zu gefährlich vor dem Gig.');
+                 }}
+               ]
+             });
+             return;
+          }
+
+          if (hasFrequenzfragment && store.flags.backstage_blueprint_found) {
+             store.setDialogue({
+               text: 'Du hast das Frequenzfragment und die Blaupause. Der Ritual-Kreis summt latent.',
+               options: [
+                 { text: 'Erzwinge die Frequenz mit purer Kraft! [Brutalist]', requiredTrait: 'Brutalist', action: () => {
+                   useStore.getState().setDialogue('Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
+                   useStore.getState().removeFromInventory('Frequenzfragment');
                    useStore.getState().setFlag('frequenz1982_complete', true);
                    useStore.getState().discoverLore('frequenz_1982_decoded');
                    useStore.getState().increaseBandMood(40);

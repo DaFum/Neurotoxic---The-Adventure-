@@ -217,7 +217,10 @@ export function Salzgitter() {
 
           if (store.flags.lars_paced) {
              store.setDialogue('Lars: "Danke, dass du mich im Backstage gebremst hast. Meine Schläge sind jetzt... chirurgisch. Jeder Akzent sitzt wie ein Skalpell."');
-             store.increaseBandMood(25);
+             if (!store.flags.salzgitter_lars_paced_talked) {
+                 store.setFlag('salzgitter_lars_paced_talked', true);
+                 store.increaseBandMood(25);
+             }
              return;
           }
 
@@ -262,12 +265,13 @@ export function Salzgitter() {
           const bandMood = store.bandMood;
           const trait = store.trait;
 
-          if (trait === 'Performer') {
+          if (trait === 'Performer' && !store.flags.salzgitter_performer_talked) {
             store.setDialogue({
               text: 'Marius: "Manager, schau dir diese Menge an! Sie warten nur darauf, dass ich sie mit meiner Stimme in Ekstase versetze. Hast du ein paar Tipps für den perfekten Auftritt?"',
               options: [
                 { text: 'Fokussiere dich auf die erste Reihe.', action: () => {
                   useStore.getState().setDialogue('Marius: "Gute Idee. Die erste Reihe ist der Anker für die gesamte Energie. Ich werde sie hypnotisieren!"');
+                  useStore.getState().setFlag('salzgitter_performer_talked', true);
                   useStore.getState().increaseBandMood(30);
                   useStore.getState().increaseSkill('social', 5);
                 }}
@@ -388,17 +392,6 @@ export function Salzgitter() {
           const hasSignedSetlist = store.hasItem('Signierte Setliste');
           const hasTalisman = store.hasItem('Industrie-Talisman');
 
-          if (store.flags.backstage_performer_speech) {
-            store.setDialogue('Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"');
-            store.increaseBandMood(5); // Only triggered repeatedly for small boosts, or just narrative flavor
-            return;
-          }
-
-          if (store.flags.kaminstube_crowd_rallied) {
-            store.setDialogue('Fan: "Tangermünde spricht noch immer über euch! Ihr seid Legenden! Bitte macht ein Foto mit mir!"');
-            return;
-          }
-
           if (hasTalisman) {
             store.setDialogue({
               text: 'Fan: "Ist das... ein echter Industrie-Talisman?! Den hab ich nur in den Legenden von 1982 gesehen!"',
@@ -429,23 +422,35 @@ export function Salzgitter() {
                 }}
               ]
             });
-          } else {
-            const options: any[] = [
-               { text: 'Hier, ein Andenken. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
-                 useStore.getState().setDialogue('Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"');
-                 useStore.getState().increaseBandMood(20);
-               }},
-               { text: 'Ich schau mal was ich tun kann.', action: () => useStore.getState().setDialogue('Fan: "Bitte beeil dich, ich steh hier schon seit 4 Uhr morgens!"') },
-               { text: 'Wer bist du nochmal?', action: () => {
-                 useStore.getState().setDialogue('Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"');
-                 useStore.getState().increaseBandMood(-2);
-               }}
-            ];
-            store.setDialogue({
-              text: 'Fan: "Ich liebe NEUROTOXIC! Hast du vielleicht ein Autogramm für mich? Oder ein Plektrum?"',
-              options
-            });
+            return;
           }
+
+          if (store.flags.backstage_performer_speech) {
+            store.setDialogue('Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"');
+            store.increaseBandMood(5); // Only triggered repeatedly for small boosts, or just narrative flavor
+            return;
+          }
+
+          if (store.flags.kaminstube_crowd_rallied) {
+            store.setDialogue('Fan: "Tangermünde spricht noch immer über euch! Ihr seid Legenden! Bitte macht ein Foto mit mir!"');
+            return;
+          }
+
+          const options: any[] = [
+             { text: 'Hier, ein Andenken. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+               useStore.getState().setDialogue('Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"');
+               useStore.getState().increaseBandMood(20);
+             }},
+             { text: 'Ich schau mal was ich tun kann.', action: () => useStore.getState().setDialogue('Fan: "Bitte beeil dich, ich steh hier schon seit 4 Uhr morgens!"') },
+             { text: 'Wer bist du nochmal?', action: () => {
+               useStore.getState().setDialogue('Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"');
+               useStore.getState().increaseBandMood(-2);
+             }}
+          ];
+          store.setDialogue({
+            text: 'Fan: "Ich liebe NEUROTOXIC! Hast du vielleicht ein Autogramm für mich? Oder ein Plektrum?"',
+            options
+          });
         }}
       />
 

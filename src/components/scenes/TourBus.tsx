@@ -136,6 +136,9 @@ export function TourBus() {
                   action: () => {
                     setDialogue('Matze: "Was?! Wer würde uns so sabotieren?!" Er sieht sehr geschockt aus.');
                     useStore.getState().setFlag('tourbus_sabotage_discovered', true);
+                    useStore.getState().discoverLore('tourbus_saboteur');
+                    useStore.getState().increaseBandMood(20);
+                    useStore.getState().increaseSkill('technical', 5);
                     useStore.getState().addQuest('tourbus_saboteur', 'Finde heraus, wer das Kabel sabotiert hat');
                   }
                 },
@@ -395,7 +398,7 @@ export function TourBus() {
             return;
           }
 
-          if ((flags.askedAbout1982 || bandMood > 70) && !flags.ghostSecretRevealed) {
+          if (flags.askedAbout1982 && !flags.ghostSecretRevealed) {
             setDialogue({
               text: 'Geist: "Du hast Matze nach 1982 gefragt... du bist neugierig. Das ist gefährlich. Willst du wirklich wissen, was mit dem Bassisten geschah?"',
               options: [
@@ -425,6 +428,7 @@ export function TourBus() {
                   action: () => {
                     setDialogue('Geist: "Deine Stimme ist... beruhigend. Fast wie ein sanfter Chorus-Effekt. Na gut, ich erzähle es dir. Er ist jetzt Teil des Feedbacks. Er wartet in Salzgitter."');
                     setFlag('ghostSecretRevealed', true);
+                    useStore.getState().discoverLore('roadie_bassist');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('social', 3);
                   }

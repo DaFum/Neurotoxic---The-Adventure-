@@ -179,7 +179,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Ritual-Kreis:**
     * *Mit Resonanz-Kristall + Blaupause:*
         * (Trait: Mystic): Frequenz vollenden (+50 BandMood, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
-        * (Trait: Brutalist): Kristall zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
+    * *Mit Frequenzfragment + Blaupause:*
+        * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
     * *Item (Verbotenes Riff):* Resonanz (+15 BandMood).
     * *Standard:* (+5 BandMood).
@@ -209,8 +210,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * Standard: "Komm einfach mit" (+10 BandMood).
 * **Dunkle Materie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Dunkle Materie).
-* **Gesplittertes Schaltpult:**
-    * *Interaktion:* "Tiefer graben" (**Lore:** `schaltpult_record`).
+* **Diplomaten-Interface:**
+    * *Option (Trait: Diplomat):* Verhandeln (+30 BandMood, +5 Social, setzt `void_diplomat_negotiation`, Lore: `schaltpult_record`).
 * **Schwebende Magnetbänder:**
     * *Option (Skill: Technical 5):* Band abspielen (+10 BandMood, +3 Technical, **Lore:** `magnetband_session`).
 * **Frequenz-Detektor:**
