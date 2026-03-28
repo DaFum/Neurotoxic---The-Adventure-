@@ -440,7 +440,7 @@ export function Proberaum() {
                       { text: 'Interessante Geschichte.', action: () => {
                         setDialogue('Matze: "Manche Dinge lassen sich nicht in Worte fassen. Lass uns weitermachen."');
                         setFlag('askedAbout1982', true);
-                        useStore.getState().setFlag('bassist_clue_matze', true);
+                        setFlag('bassist_clue_matze', true);
                         increaseBandMood(10);
                       }}
                     ]

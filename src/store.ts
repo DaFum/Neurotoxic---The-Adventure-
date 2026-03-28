@@ -153,6 +153,7 @@ const initialState = {
     lars_proberaum_secret: false,
     lars_paced: false,
     marius_tourbus_doubt: false,
+    gaveDiplomatSouvenir: false,
   },
   loreEntries: [
     { id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
