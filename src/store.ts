@@ -332,31 +332,33 @@ export const useStore = create<GameState>()(
         trait: state.trait,
         skills: state.skills,
       }),
-      merge: (persistedState: any, currentState: GameState) => {
+      merge: (persistedState: unknown, currentState: GameState) => {
+        const typedPersistedState = persistedState as Partial<GameState>;
+
         const mergedQuests = currentState.quests.map(q => {
-          const persistedQuest = persistedState.quests?.find((pq: any) => pq.id === q.id);
+          const persistedQuest = typedPersistedState.quests?.find(pq => pq.id === q.id);
           return persistedQuest ? { ...q, completed: persistedQuest.completed } : q;
         });
 
-        const dynamicQuests = (persistedState.quests || []).filter((pq: any) =>
-          !currentState.quests.find((q: any) => q.id === pq.id)
+        const dynamicQuests = (typedPersistedState.quests || []).filter(pq =>
+          !currentState.quests.find(q => q.id === pq.id)
         );
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
         const mergedLoreEntries = currentState.loreEntries.map(e => {
-          const persistedEntry = persistedState.loreEntries?.find((pe: any) => pe.id === e.id);
+          const persistedEntry = typedPersistedState.loreEntries?.find(pe => pe.id === e.id);
           return persistedEntry ? { ...e, discovered: persistedEntry.discovered } : e;
         });
 
         return {
           ...currentState,
-          ...persistedState,
+          ...typedPersistedState,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           flags: {
             ...currentState.flags,
-            ...persistedState.flags,
+            ...typedPersistedState.flags,
           }
         };
       },
