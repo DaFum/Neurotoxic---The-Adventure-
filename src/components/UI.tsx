@@ -503,6 +503,7 @@ export function UI() {
                   <span className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</span>
                   <button 
                     onClick={() => setDialogue(null)}
+                    aria-label="Close dialogue"
                     className="text-toxic hover:text-white transition-colors"
                   >
                     <X size={16} />
