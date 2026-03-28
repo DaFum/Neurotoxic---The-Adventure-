@@ -82,11 +82,11 @@ Only these fields are persisted:
 
 ```
 
-scene, inventory, flags, playerPos, quests, bandMood, loreEntries, trait, skills
+inventory, flags, quests, bandMood, loreEntries, trait, skills
 
 ```
 
-NOT persisted: dialogue, isPaused, cameraShake, bandMood initial value
+NOT persisted: scene, playerPos, dialogue, isPaused, cameraShake. Hinweis: `bandMood` wird persistiert und überschreibt beim Rehydrate seinen Initialwert.
 
 **Custom Merge Function (lines 290-316):**
 
@@ -370,13 +370,11 @@ localStorage → zustand hydrate → merge + migration
 
     ↓
 
-Game mounts → checks scene state
+Game mounts → scene is forced to menu during merge
 
     ↓
 
-    If 'menu': show menu, wait for trait selection
-
-    If not: render 3D scene with physics
+    Show menu, wait for trait selection
 
 ```
 

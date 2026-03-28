@@ -12,7 +12,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Zerrissenes Plakat:**
     * *Erstinteraktion:* Liest die Geschichte der Tour 1999 (+5 BandMood, **Lore:** `poster_lore`).
-    * *Wiederholte Interaktion:* Erneut betrachten (+5 BandMood bei jeder Interaktion).
+    * *Wiederholte Interaktion:* Erneut betrachten (kein Mood-Effekt mehr).
 * **Das Verbotene Riff (Item):**
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**

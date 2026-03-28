@@ -337,10 +337,8 @@ export const useStore = create<GameState>()(
     {
       name: 'neurotoxic-game-storage',
       partialize: (state) => ({
-        scene: state.scene,
         inventory: state.inventory,
         flags: state.flags,
-        playerPos: state.playerPos,
         quests: state.quests,
         bandMood: state.bandMood,
         loreEntries: state.loreEntries,
@@ -375,6 +373,9 @@ export const useStore = create<GameState>()(
         return {
           ...currentState,
           ...typedPersistedState,
+          ...persistedState,
+          scene: currentState.scene,
+          playerPos: currentState.playerPos,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           flags: {

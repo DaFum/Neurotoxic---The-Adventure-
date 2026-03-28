@@ -6,7 +6,7 @@
 - `addQuest()` replaces any existing quest with the same ID (deduplication) — safe to call repeatedly
 - `discoverLore()` is idempotent — calling it twice on the same ID is safe
 - Persistence uses a custom merge in `onRehydrateStorage` that preserves player progress when new quests/lore are added to code. Adding new initial quests or loreEntries won't wipe saved data.
-- Only these fields persist to localStorage: `scene`, `inventory`, `flags`, `playerPos`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
+- Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. `scene`, `playerPos`, `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
 
 ## Audio (`audio.ts`)
 - All sound methods call `init()` internally — no need to initialize AudioContext before playing
