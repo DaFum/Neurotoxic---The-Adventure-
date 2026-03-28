@@ -256,7 +256,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Wirt (Geheimnis):**
     * *Wenn Bassist kontaktiert (Flag `bassist_contacted`) — läuft auch wenn `wirtSecretItem` bereits gesetzt:*
-        * (Skill: Social 8): Zwingen (+20 BandMood, +5 Social, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
+        * (Skill: Social 8): Zwingen (+20 BandMood, +5 Social, setzt `bassist_clue_wirt`, Lore: `wirt_confession`).
         * (Trait: Brutalist): Drohen (+15 BandMood, +5 Chaos, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
         * (Trait: Diplomat): Verzeihen (+30 BandMood, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`, Erhalt: Turbo-Koffein).
 * **Matze:**

@@ -341,7 +341,7 @@ export function Kaminstube() {
                 { text: 'Zwinge ihn zur Wahrheit. [Social 8]', requiredSkill: { name: 'social', level: 8 }, action: () => {
                   useStore.getState().setDialogue('Wirt: "Okay! Ich war es. Ich habe den Amp manipuliert, der ihn in die Leere riss. Der Sound war zu gefährlich. Es tut mir leid."');
                   useStore.getState().setFlag('bassist_clue_wirt', true);
-                  useStore.getState().discoverLore('wirt_vergangenheit');
+                  useStore.getState().discoverLore('wirt_confession');
                   useStore.getState().increaseBandMood(20);
                   useStore.getState().increaseSkill('social', 5);
                 }},
