@@ -362,6 +362,20 @@ export function Salzgitter() {
                }}
             ];
 
+            if (store.hasItem('Bassist-Saite')) {
+               options.unshift({
+                 text: 'Gib ihm die Bassist-Saite aus dem Echo. [Mystic]',
+                 requiredTrait: 'Mystic' as any,
+                 action: () => {
+                   useStore.getState().setDialogue('Bassist: "Das... das ist ein Teil von mir! Mein alter Rhythmus... ich erinnere mich!"');
+                   useStore.getState().setFlag('bassist_restored', true);
+                   useStore.getState().discoverLore('bassist_wahrheit');
+                   useStore.getState().increaseBandMood(40);
+                   useStore.getState().removeFromInventory('Bassist-Saite');
+                 }
+               });
+            }
+
             if (store.hasItem('Resonanz-Kristall')) {
                options.unshift({
                  text: 'Nimm den Resonanz-Kristall. Vollende das Riff.',

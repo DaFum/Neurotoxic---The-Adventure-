@@ -155,7 +155,6 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Optionen zur Beruhigung (Quest-Abschluss `marius` für jede):*
         * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, setzt `mariusConfidenceBoost`).
         * (Trait: Performer): "Nimm die Halle" (+35 BandMood, +5 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`).
-        * (Trait: Visionary): "Sehe deine Vision" (+35 BandMood, +3 Chaos, setzt `mariusConfidenceBoost`).
         * (Trait: Brutalist): "Sing oder flieg" (+10 BandMood).
         * (Info: 1982 vorhanden): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`) ODER "Wovon redest du?" (-5 BandMood).
         * "Lego-Trick" (+10 BandMood).
