@@ -18,6 +18,7 @@ import { RigidBody, RapierRigidBody, CuboidCollider } from '@react-three/rapier'
 import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
+import { touchInput } from '../touchInput';
 
 interface PlayerProps {
   bounds?: { x: [number, number]; z: [number, number] };
@@ -161,14 +162,16 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
     if (forward) velocity.z -= 1;
     if (backward) velocity.z += 1;
-    if (left) {
-      velocity.x -= 1;
-      setFacingRight(false);
-    }
-    if (right) {
-      velocity.x += 1;
-      setFacingRight(true);
-    }
+    if (left) velocity.x -= 1;
+    if (right) velocity.x += 1;
+
+    // Add virtual joystick input (touch devices)
+    velocity.x += touchInput.x;
+    velocity.z += touchInput.z;
+
+    // Update facing direction from combined input
+    if (velocity.x < -0.1) setFacingRight(false);
+    else if (velocity.x > 0.1) setFacingRight(true);
 
     const moving = velocity.length() > 0;
     setIsMoving(moving);

@@ -371,11 +371,20 @@ export function UI() {
       </div>
 
       {/* Controls Hint */}
-      <div className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-auto">
-        WASD / Pfeiltasten = Bewegen<br/>
-        Mausklick = Interagieren<br/>
-        ESC = Pause
+      <div className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none">
+        Joystick / WASD = Bewegen<br/>
+        Tippen / Klick = Interagieren
       </div>
+
+      {/* Touch-accessible Pause Button */}
+      <button
+        onClick={() => setPaused(!isPaused)}
+        className="absolute bottom-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto"
+        aria-label="Pause"
+        style={{ touchAction: 'none' }}
+      >
+        ⏸
+      </button>
 
       {/* Pause Menu */}
       {isPaused && (
