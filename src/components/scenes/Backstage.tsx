@@ -295,6 +295,13 @@ export function Backstage() {
                       useStore.getState().increaseBandMood(30);
                       useStore.getState().increaseSkill('technical', 5);
                   }},
+                  { text: 'Lass die Verbindung einfach laufen.', action: () => {
+                      useStore.getState().setDialogue('Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."');
+                      useStore.getState().setFlag('maschinen_seele_complete', true);
+                      useStore.getState().completeQuest('maschinen_seele');
+                      useStore.getState().discoverLore('maschinen_bewusstsein');
+                      useStore.getState().increaseBandMood(20);
+                  }},
                   { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "WIR WARTEN. BZZZT."') }
                 ]
               });
@@ -337,11 +344,19 @@ export function Backstage() {
           }
 
           if (store.flags.feedbackMonitorBackstageTalked) {
+            const options: any[] = [
+              { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "BZZZT. Beeil dich. Das Rauschen wird lauter."') }
+            ];
+            if (!store.flags.feedbackMonitorBackstageQuestStarted) {
+              options.unshift({ text: 'Wie kann ich dir helfen?', action: () => {
+                useStore.getState().setDialogue('Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."');
+                useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
+                useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
+              }});
+            }
             store.setDialogue({
               text: 'Monitor: "BZZZT. Ich habe schon tausend Sänger kommen und gehen sehen. Marius? Der klingt wie eine rostige Kreissäge in einem Mixer. BZZZT. Aber er hat... Seele. Eine sehr, sehr verzerrte Seele. Hast du den Schaltplan gefunden?"',
-              options: [
-                { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "BZZZT. Beeil dich. Das Rauschen wird lauter."') }
-              ]
+              options
             });
             return;
           }

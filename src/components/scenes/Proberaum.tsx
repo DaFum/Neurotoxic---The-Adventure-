@@ -440,6 +440,7 @@ export function Proberaum() {
                       { text: 'Interessante Geschichte.', action: () => {
                         setDialogue('Matze: "Manche Dinge lassen sich nicht in Worte fassen. Lass uns weitermachen."');
                         setFlag('askedAbout1982', true);
+                        useStore.getState().setFlag('bassist_clue_matze', true);
                         increaseBandMood(10);
                       }}
                     ]
@@ -802,24 +803,26 @@ export function Proberaum() {
               ]
             });
           } else if (flags.talkingAmpHeard) {
+            const ampOptions: any[] = [];
+            if (!flags.maschinen_seele_amp) {
+              ampOptions.push({
+                text: 'Ich höre eine andere Stimme in dir. Wer ist da noch? [Mystic]',
+                requiredTrait: 'Mystic',
+                action: () => {
+                  setDialogue('Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."');
+                  useStore.getState().setFlag('maschinen_seele_amp', true);
+                  useStore.getState().increaseBandMood(10);
+                  useStore.getState().increaseSkill('chaos', 2);
+                  if (!useStore.getState().quests.find(q => q.id === 'maschinen_seele')) {
+                    useStore.getState().addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
+                  }
+                }
+              });
+            }
+            ampOptions.push({ text: 'Ich suche weiter.', action: () => setDialogue('Amp: "Beeil dich..."') });
             setDialogue({
               text: 'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
-              options: [
-                {
-                  text: 'Ich höre eine andere Stimme in dir. Wer ist da noch? [Mystic]',
-                  requiredTrait: 'Mystic',
-                  action: () => {
-                    setDialogue('Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."');
-                    useStore.getState().setFlag('maschinen_seele_amp', true);
-                    useStore.getState().increaseBandMood(10);
-                    useStore.getState().increaseSkill('chaos', 2);
-                    if (!useStore.getState().quests.find(q => q.id === 'maschinen_seele')) {
-                      useStore.getState().addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
-                    }
-                  }
-                },
-                { text: 'Ich suche weiter.', action: () => setDialogue('Amp: "Beeil dich..."') }
-              ]
+              options: ampOptions
             });
           } else {
             setDialogue('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
