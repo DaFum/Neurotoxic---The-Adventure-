@@ -19,7 +19,7 @@ export interface LoreEntry {
   discovered: boolean;
 }
 
-interface DialogueOption {
+export interface DialogueOption {
   text: string;
   action?: () => void;
   nextDialogue?: Dialogue;
@@ -120,8 +120,47 @@ const initialState = {
     tourbusAmpTechnician: false,
     frequenzDetektorRead: false,
     legacyLoreMigrated: false,
+    frequenz1982_proberaum: false,
+    frequenz1982_tourbus: false,
+    frequenz1982_backstage: false,
+    frequenz1982_complete: false,
+    bassist_clue_matze: false,
+    bassist_clue_ghost: false,
+    bassist_clue_wirt: false,
+    bassist_contacted: false,
+    bassist_restored: false,
+    maschinen_seele_amp: false,
+    maschinen_seele_tr8080: false,
+    maschinen_seele_complete: false,
+    salzgitter_lars_paced_talked: false,
+    kaminstube_lars_talked: false,
+    salzgitter_performer_talked: false,
+    salzgitter_fan_speech_heard: false,
+    tankwart_fuel_quest_started: false,
+    proberaum_brutalist_smash: false,
+    proberaum_mystic_ritual: false,
+    tourbus_sabotage_discovered: false,
+    tourbus_matze_confession: false,
+    backstage_blueprint_found: false,
+    backstage_performer_speech: false,
+    backstage_cynic_sabotage: false,
+    void_diplomat_negotiation: false,
+    void_bassist_message: false,
+    kaminstube_crowd_rallied: false,
+    kaminstube_wirt_betrayal: false,
+    salzgitter_encore_unlocked: false,
+    salzgitter_true_ending: false,
+    salzgitter_finalized: false,
+    salzgitter_marius_greeted: false,
+    lars_proberaum_secret: false,
+    lars_paced: false,
+    marius_tourbus_doubt: false,
   },
   loreEntries: [
+    { id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
+    { id: 'bassist_wahrheit', title: 'Die Wahrheit über den Bassisten', content: 'Er wählte die Leere. Nicht aus Verzweiflung, sondern aus Liebe zum reinen Klang. Er ist der Grundton, auf dem alles aufbaut. Ohne ihn wäre NEUROTOXIC nur Lärm.', discovered: false },
+    { id: 'maschinen_bewusstsein', title: 'Das Maschinen-Bewusstsein', content: 'Sie waren nie nur Werkzeuge. Der Amp, die Drum Machine, der Monitor — sie sind Fragmente eines einzigen Bewusstseins, das 1982 in die Schaltkreise eingespeist wurde.', discovered: false },
+    { id: 'wirt_vergangenheit', title: 'Der Wirt und 1982', content: 'Er war dabei. Er war der Tontechniker beim Gig in der Gießerei. Er hat den Bassist in die Leere geschickt — nicht aus Bosheit, sondern weil der Sound es verlangte.', discovered: false },
     { id: 'void_1982', title: '1982 Log', content: 'Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback.', discovered: false },
     { id: 'tankwart_truth', title: 'Die Wahrheit des Lärms', content: 'Lärm ist nicht das Chaos. Lärm ist die Ordnung, die wir noch nicht verstehen. Jedes Feedback ist ein Gebet an die Leere.', discovered: false },
     { id: 'forbidden_riff', title: 'Das Verbotene Riff', content: 'Dieses Riff... es ist der Schlüssel zum Ende der Zeit. Es wurde vor Äonen von den ersten Maschinen-Göttern in den Stahl geätzt.', discovered: false },
@@ -131,7 +170,11 @@ const initialState = {
     { id: 'inschrift_warning', title: 'Inschrift Warnung', content: 'Spiele nicht die verbotene Kadenz, es sei denn, du bist bereit, die Stille für immer zu töten. Salzgitter ist der Katalysator.', discovered: false },
     { id: 'ego_philosophy', title: 'Marius\' Ego-Philosophie', content: 'Die Leere ist langweilig, wenn es niemanden gibt, der dich anbetet. Die wahre Transzendenz braucht ein Publikum.', discovered: false },
     { id: 'poster_lore', title: 'Proberaum Poster', content: 'Das Poster zeigt eine Tour, die nie stattfand. Oder eine, die noch stattfinden wird. Die Zeit hier ist fließend.', discovered: false },
-    { id: 'cosmic_echo_decoded', title: 'Kosmisches Echo (Decoded)', content: 'Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort — sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge.', discovered: false }
+    { id: 'cosmic_echo_decoded', title: 'Kosmisches Echo (Decoded)', content: 'Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort — sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge.', discovered: false },
+    { id: 'tourbus_saboteur', title: 'Der Saboteur', content: 'Das Kabel wurde nicht durch Abnutzung zerstört. Jemand hat es mit einem Seitenschneider durchtrennt. Jemand, der Angst vor dem Gig hatte.', discovered: false },
+    { id: 'matze_1982_truth', title: 'Matzes Wahrheit über 1982', content: 'Er hat den Lärm verstanden. Die Gießerei war kein Unfall, sie war eine Offenbarung.', discovered: false },
+    { id: 'roadie_bassist', title: 'Der Roadie und der Bassist', content: 'Der Roadie schwört, dass der Bassist nicht abgehauen ist. Er wurde von einem 432Hz-Feedback-Loop verschluckt und wandert seitdem durch die Frequenzen.', discovered: false },
+    { id: 'wirt_confession', title: 'Die Beichte des Wirts', content: 'Er war es. Er hat 1982 den Verstärker manipuliert, weil der Sound zu gefährlich wurde. Er dachte, er rettet die Stadt, aber er hat den Bassisten geopfert.', discovered: false }
   ],
   playerPos: [0, 1, 0] as [number, number, number],
   isPaused: false,
@@ -247,6 +290,23 @@ export const useStore = create<GameState>()(
             audio.playPickup();
             return true;
           }
+          // Frequenzfragment + Splitter der Leere = Resonanz-Kristall
+          if ((item1 === 'Frequenzfragment' && item2 === 'Splitter der Leere') || (item1 === 'Splitter der Leere' && item2 === 'Frequenzfragment')) {
+            set((state) => {
+              const newInventory = [...state.inventory];
+              const idx1 = newInventory.indexOf(item1);
+              const idx2 = newInventory.indexOf(item2);
+              // Remove higher index first to avoid index shifting
+              const higher = Math.max(idx1, idx2);
+              const lower = Math.min(idx1, idx2);
+              newInventory.splice(higher, 1);
+              newInventory.splice(lower, 1);
+              newInventory.push('Resonanz-Kristall');
+              return { inventory: newInventory };
+            });
+            audio.playPickup();
+            return true;
+          }
         }
         return false;
       },
@@ -260,7 +320,7 @@ export const useStore = create<GameState>()(
         quests: state.quests.map(q => q.id === id ? { ...q, completed: true } : q)
       })),
       increaseBandMood: (amount) => set((state) => ({
-        bandMood: Math.min(100, state.bandMood + amount)
+        bandMood: Math.max(0, Math.min(100, state.bandMood + amount))
       })),
       setCameraShake: (cameraShake) => set({ cameraShake }),
       discoverLore: (id) => set((state) => {
@@ -285,25 +345,34 @@ export const useStore = create<GameState>()(
         trait: state.trait,
         skills: state.skills,
       }),
-      merge: (persistedState: any, currentState: GameState) => {
+      merge: (persistedState: unknown, currentState: GameState) => {
+        const typedPersistedState = persistedState as Partial<GameState>;
+
+        const persistedQuests = Array.isArray(typedPersistedState.quests) ? typedPersistedState.quests : [];
+        const persistedLore = Array.isArray(typedPersistedState.loreEntries) ? typedPersistedState.loreEntries : [];
+        const persistedFlags = (typedPersistedState.flags !== null && typeof typedPersistedState.flags === 'object')
+          ? typedPersistedState.flags
+          : {};
+
         const mergedQuests = currentState.quests.map(q => {
-          const persistedQuest = persistedState.quests?.find((pq: any) => pq.id === q.id);
+          const persistedQuest = persistedQuests.find(pq => pq.id === q.id);
           return persistedQuest ? { ...q, completed: persistedQuest.completed } : q;
         });
 
-        const dynamicQuests = (persistedState.quests || []).filter((pq: any) =>
-          !currentState.quests.find((q: any) => q.id === pq.id)
+        const dynamicQuests = persistedQuests.filter(pq =>
+          !currentState.quests.find(q => q.id === pq.id)
         );
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
         const mergedLoreEntries = currentState.loreEntries.map(e => {
-          const persistedEntry = persistedState.loreEntries?.find((pe: any) => pe.id === e.id);
+          const persistedEntry = persistedLore.find(pe => pe.id === e.id);
           return persistedEntry ? { ...e, discovered: persistedEntry.discovered } : e;
         });
 
         return {
           ...currentState,
+          ...typedPersistedState,
           ...persistedState,
           scene: currentState.scene,
           playerPos: currentState.playerPos,
@@ -311,7 +380,7 @@ export const useStore = create<GameState>()(
           loreEntries: mergedLoreEntries,
           flags: {
             ...currentState.flags,
-            ...persistedState.flags,
+            ...persistedFlags,
           }
         };
       },

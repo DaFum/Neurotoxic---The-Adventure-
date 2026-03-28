@@ -252,6 +252,11 @@ export function TourBus() {
         name="Matze"
         idleType="sway"
         onInteract={() => {
+          if (bandMood < 20 && !hasItem('Repariertes Kabel') && !flags.tourbus_sabotage_discovered) {
+            setDialogue('Matze: "Lass mich in Ruhe. Dieses kaputte Kabel ist das Ende der Band."');
+            return;
+          }
+
           if (hasItem('Repariertes Kabel')) {
             setDialogue({
               text: bandMood > 70 
@@ -264,7 +269,43 @@ export function TourBus() {
                 }}
               ]
             });
-          } else if (bandMood < 30) {
+            return;
+          }
+
+          if (flags.tourbus_sabotage_discovered && !flags.tourbus_matze_confession) {
+            if (flags.marius_tourbus_doubt) {
+              setDialogue({
+                text: 'Matze: "Das zerschnittene Kabel... okay, ich geb\'s ja zu. Irgendwas stimmt nicht."',
+                options: [
+                  {
+                    text: 'Matze, ich glaube Marius zweifelt an der Band. [Social 5]',
+                    requiredSkill: { name: 'social', level: 5 },
+                    action: () => {
+                      setDialogue('Matze: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..."');
+                      useStore.getState().setFlag('tourbus_matze_confession', true);
+                      useStore.getState().completeQuest('tourbus_saboteur');
+                      useStore.getState().increaseBandMood(10);
+                      useStore.getState().increaseSkill('social', 3);
+                    }
+                  },
+                  {
+                    text: 'Wer auch immer das war, kriegt eine Abreibung. [Brutalist]',
+                    requiredTrait: 'Brutalist',
+                    action: () => {
+                      setDialogue('Matze schaut ertappt weg und schweigt schuldbewusst.');
+                      useStore.getState().increaseBandMood(-5);
+                    }
+                  },
+                  { text: 'Wir finden den Schuldigen.', action: () => setDialogue('Matze: "Ja... genau. Wir suchen weiter."') }
+                ]
+              });
+            } else {
+              setDialogue('Matze: "Wer würde uns absichtlich sabotieren? Wir müssen Beweise finden."');
+            }
+            return;
+          }
+
+          if (bandMood < 30) {
             setDialogue('Matze: "Alter, ich hab so schlechte Laune. Die Tour fängt ja super an... und mein Kabel ist auch noch im Eimer."');
           } else {
             setDialogue({
@@ -274,6 +315,18 @@ export function TourBus() {
                     setDialogue('Matze: "Beeil dich, ohne Kabel kein Metal."');
                     addQuest('cable', 'Repariere Matzes Kabel mit Klebeband und defektem Kabel');
                 }},
+                {
+                  text: 'Das Kabel wurde nicht gebrochen, es wurde durchtrennt. [Technical 5]',
+                  requiredSkill: { name: 'technical', level: 5 },
+                  action: () => {
+                    setDialogue('Matze: "Was?! Wer würde uns so sabotieren?!" Er sieht sehr geschockt aus.');
+                    useStore.getState().setFlag('tourbus_sabotage_discovered', true);
+                    useStore.getState().discoverLore('tourbus_saboteur');
+                    useStore.getState().increaseBandMood(20);
+                    useStore.getState().increaseSkill('technical', 5);
+                    useStore.getState().addQuest('tourbus_saboteur', 'Finde heraus, wer das Kabel sabotiert hat');
+                  }
+                },
                 { text: 'Vielleicht ist es Schicksal.', action: () => {
                   setDialogue('Matze: "Schicksal? Das ist Sabotage! Such das Tape!"');
                   increaseBandMood(-5);
@@ -306,10 +359,51 @@ export function TourBus() {
               ]
             });
           } else {
-            const moodText = bandMood > 60 
-              ? 'Marius: "Die Energie im Bus ist fantastisch! Tangermünde wird beben!"'
-              : 'Marius: "Nächster Halt: Tangermünde! Bist du bereit für die Kaminstube?"';
-            setDialogue(moodText);
+            if (bandMood < 30) {
+              setFlag('marius_tourbus_doubt', true);
+              setDialogue({
+                text: 'Marius: "Ich bin ein Betrug. Ohne mein Ego bin ich nur ein Typ, der in ein Mikrofon schreit."',
+                options: [
+                  {
+                    text: 'Du brauchst kein Ego, um zu schreien. Zeig es ihnen! [Social 7]',
+                    requiredSkill: { name: 'social', level: 7 },
+                    action: () => {
+                      setDialogue('Marius: "Vielleicht... hast du recht. Die Kaminstube wird brennen!"');
+                      useStore.getState().increaseBandMood(10);
+                    }
+                  },
+                  {
+                    text: 'Die Band braucht dich, Marius. Bleib fokussiert. [Diplomat]',
+                    requiredTrait: 'Diplomat',
+                    action: () => {
+                      setDialogue('Marius: "Ich werde sie nicht im Stich lassen. Danke, Manager."');
+                      useStore.getState().increaseBandMood(15);
+                    }
+                  },
+                  { text: 'Dann hör auf zu jammern.', action: () => setDialogue('Marius: "Du verstehst mich nicht..."') }
+                ]
+              });
+            } else {
+              const moodText = bandMood > 60
+                ? 'Marius: "Die Energie im Bus ist fantastisch! Tangermünde wird beben!"'
+                : 'Marius: "Nächster Halt: Tangermünde! Bist du bereit für die Kaminstube?"';
+              setDialogue({
+                text: moodText,
+                options: [
+                  {
+                    text: 'Marius, dein Charisma funktioniert auch ohne Ego. [Performer]',
+                    requiredTrait: 'Performer',
+                    action: () => {
+                      setDialogue('Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"');
+                      useStore.getState().setFlag('marius_tourbus_doubt', false);
+                      useStore.getState().increaseBandMood(15);
+                      useStore.getState().increaseSkill('social', 3);
+                    }
+                  },
+                  { text: 'Wir sind auf dem Weg.', action: () => setDialogue('Marius: "Lass uns fahren."') }
+                ]
+              });
+            }
           }
         }}
       />
@@ -457,6 +551,35 @@ export function TourBus() {
             return;
           }
 
+          if (flags.bassist_clue_matze && !flags.bassist_clue_ghost) {
+            setDialogue({
+              text: 'Geist: "Matze hat geredet? Er sollte besser schweigen über die Dinge, die er nicht versteht."',
+              options: [
+                {
+                  text: 'Matze hat mir vom Bassisten erzählt. Warst du dabei?',
+                  action: () => {
+                    setDialogue('Geist: "Dabei? Ich war derjenige, der sein Kabel eingesteckt hat. Das letzte Kabel, das er je brauchte. Die Frequenz... sie hat ihn einfach verschluckt."');
+                    useStore.getState().setFlag('bassist_clue_ghost', true);
+                    useStore.getState().increaseBandMood(15);
+                    useStore.getState().increaseSkill('social', 3);
+                  }
+                },
+                {
+                  text: 'Ich spüre seine Präsenz in deinem Echo. [Mystic]',
+                  requiredTrait: 'Mystic',
+                  action: () => {
+                    setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
+                    useStore.getState().addToInventory('Bassist-Saite');
+                    useStore.getState().setFlag('bassist_clue_ghost', true);
+                    useStore.getState().increaseBandMood(20);
+                  }
+                },
+                { text: 'Erzähl mir nichts.', action: () => setDialogue('Geist: "Der Lärm ist lauter als die Wahrheit."') }
+              ]
+            });
+            return;
+          }
+
           if (flags.ghostSecretRevealed) {
             setDialogue('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
             return;
@@ -492,6 +615,7 @@ export function TourBus() {
                   action: () => {
                     setDialogue('Geist: "Deine Stimme ist... beruhigend. Fast wie ein sanfter Chorus-Effekt. Na gut, ich erzähle es dir. Er ist jetzt Teil des Feedbacks. Er wartet in Salzgitter."');
                     setFlag('ghostSecretRevealed', true);
+                    useStore.getState().discoverLore('roadie_bassist');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('social', 3);
                   }
@@ -567,6 +691,38 @@ export function TourBus() {
           }
         }}
       />
+
+      {flags.tourbus_sabotage_discovered && (
+        <Interactable
+          position={[-4, 0.5, -4]}
+          emoji="📦"
+          name="Verstecktes Fach"
+          onInteract={() => {
+            setDialogue({
+              text: 'Ein kleines Geheimfach in der Wandverkleidung. Du findest eine Notiz in Matzes Handschrift: "Sie dürfen nicht nach Salzgitter. Die Frequenz wird ihn aufwecken."',
+              options: [
+                {
+                  text: 'Untersuche das Fach genauer. [Technical 3]',
+                  requiredSkill: { name: 'technical', level: 3 },
+                  action: () => {
+                    const hasQuest = useStore.getState().quests.find(q => q.id === 'frequenz_1982');
+                    const hasFoundHere = useStore.getState().flags.frequenz1982_tourbus;
+                    if (hasQuest && !hasFoundHere) {
+                      setDialogue('Unter der Notiz entdeckst du ein Magnetband-Schnipsel. Das ist ein weiteres Frequenzfragment!');
+                      useStore.getState().setFlag('frequenz1982_tourbus', true);
+                      useStore.getState().addToInventory('Frequenzfragment');
+                      useStore.getState().increaseBandMood(10);
+                    } else {
+                      setDialogue('Du untersuchst die Verkleidung. Nichts weiter zu finden, außer etwas getrocknetem Klebstoff.');
+                    }
+                  }
+                },
+                { text: 'Steck die Notiz ein.', action: () => setDialogue('Ein düsteres Geheimnis, das du nun hütest.') }
+              ]
+            });
+          }}
+        />
+      )}
 
       {!hasItem('Batterie') && (
         <Interactable

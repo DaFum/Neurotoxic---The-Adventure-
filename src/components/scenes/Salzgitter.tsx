@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows } from '@react-three/drei';
@@ -380,33 +381,72 @@ export function Salzgitter() {
         isBandMember={true}
         idleType="tap"
         onInteract={() => {
-          const bandMood = useStore.getState().bandMood;
-          if (flags.larsVibrating) {
-            setDialogue({
+          const store = useStore.getState();
+          const bandMood = store.bandMood;
+
+          if (store.flags.larsVibrating && store.flags.larsDrumPhilosophy) {
+            if (store.flags.salzgitter_encore_unlocked) {
+              store.setDialogue('Lars: "DER BEAT IST EWIG! ICH HABE BEREITS DIE MASCHINEN-SEELE ENTFESSELT! DER REST IST NUR NOCH LÄRM!"');
+              return;
+            }
+            store.setDialogue({
+              text: 'Lars: "ALLES IST ZU LANGSAM! DIE ZEIT, DER RAUM, DAS PUBLIKUM! ICH KANN DIE TAKTSTRICHE IN DER LUFT SEHEN! WAS SOLL ICH TUN, MANAGER?!"',
+              options: [
+                { text: 'Lars, entfessle die Maschinen-Seele! [Chaos 15]', requiredSkill: { name: 'chaos', level: 15 }, action: () => {
+                  useStore.getState().setDialogue('Lars: "JAAAAAAAAA! DIE DRUMS BRENNEN! DIE REALITÄT KOCHT! DAS IST DER ULTIMATIVE BEAT!"');
+                  useStore.getState().setFlag('salzgitter_encore_unlocked', true);
+                  useStore.getState().increaseBandMood(40);
+                  useStore.getState().increaseSkill('chaos', 5);
+                }},
+                { text: 'Fokussiere die kinetische Energie! [Technical 12]', requiredSkill: { name: 'technical', level: 12 }, action: () => {
+                  useStore.getState().setDialogue('Lars: "100% EFFIZIENZ! KEIN MILLIMETER VERSCHWENDET! ICH BIN DER ROBOTER-GOTT DER SNARE!"');
+                  useStore.getState().setFlag('salzgitter_encore_unlocked', true);
+                  useStore.getState().increaseBandMood(40);
+                  useStore.getState().increaseSkill('technical', 5);
+                }},
+                { text: 'Einfach durchatmen.', action: () => {
+                  useStore.getState().setDialogue('Lars: "ATMEN IST FÜR FLEISCHSÄCKE! ABER OKAY!"');
+                }}
+              ]
+            });
+            return;
+          }
+
+          if (store.flags.lars_paced) {
+             store.setDialogue('Lars: "Danke, dass du mich im Backstage gebremst hast. Meine Schläge sind jetzt... chirurgisch. Jeder Akzent sitzt wie ein Skalpell."');
+             if (!store.flags.salzgitter_lars_paced_talked) {
+                 store.setFlag('salzgitter_lars_paced_talked', true);
+                 store.increaseBandMood(25);
+             }
+             return;
+          }
+
+          if (store.flags.larsVibrating) {
+            store.setDialogue({
               text: 'Lars: "ICH BIN DIE MASCHINE! MEIN HERZ IST EIN DIESELMOTOR! ICH SEHE DIE SOUNDWELLEN ALS PHYSISCHE OBJEKTE!"',
               options: [
                 { 
                   text: 'Synchronisiere die Frequenz. [Technical 10]', 
                   requiredSkill: { name: 'technical', level: 10 },
                   action: () => {
-                    setDialogue('Lars: "SYNC_COMPLETE! ICH BIN JETZT EIN TEIL DES NETZWERKS! DER BEAT IST ABSOLUT!"');
-                    increaseBandMood(30);
+                    useStore.getState().setDialogue('Lars: "SYNC_COMPLETE! ICH BIN JETZT EIN TEIL DES NETZWERKS! DER BEAT IST ABSOLUT!"');
+                    useStore.getState().increaseBandMood(30);
                     useStore.getState().increaseSkill('technical', 5);
                   }
                 },
                 { text: 'Halt durch, Lars!', action: () => {
-                  setDialogue('Lars: "KEINE ZEIT FÜR PAUSEN! NUR NOCH LÄRM!"');
+                  useStore.getState().setDialogue('Lars: "KEINE ZEIT FÜR PAUSEN! NUR NOCH LÄRM!"');
                 }}
               ]
             });
-            increaseBandMood(10);
-          } else if (flags.larsDrumPhilosophy) {
-            setDialogue('Lars: "Ich denke an den Zorn der Maschinen. Jeder Schlag ist ein Urteil. Salzgitter wird beben!"');
-            increaseBandMood(5);
+            store.increaseBandMood(10);
+          } else if (store.flags.larsDrumPhilosophy) {
+            store.setDialogue('Lars: "Ich denke an den Zorn der Maschinen. Jeder Schlag ist ein Urteil. Salzgitter wird beben!"');
+            store.increaseBandMood(5);
           } else if (bandMood > 70) {
-            setDialogue('Lars: "MEIN HERZ SCHLÄGT IM TAKT DER MASCHINEN! ICH BIN BEREIT!"');
+            store.setDialogue('Lars: "MEIN HERZ SCHLÄGT IM TAKT DER MASCHINEN! ICH BIN BEREIT!"');
           } else {
-            setDialogue('Lars: "Die Drums sind mikrofoniert. Ich bin bereit, alles zu geben!"');
+            store.setDialogue('Lars: "Die Drums sind mikrofoniert. Ich bin bereit, alles zu geben!"');
           }
         }}
       />
@@ -418,16 +458,18 @@ export function Salzgitter() {
         isBandMember={true}
         idleType="sway"
         onInteract={() => {
-          const bandMood = useStore.getState().bandMood;
-          const trait = useStore.getState().trait;
+          const store = useStore.getState();
+          const bandMood = store.bandMood;
+          const trait = store.trait;
 
-          if (trait === 'Performer') {
-            setDialogue({
+          if (trait === 'Performer' && !store.flags.salzgitter_performer_talked) {
+            store.setDialogue({
               text: 'Marius: "Manager, schau dir diese Menge an! Sie warten nur darauf, dass ich sie mit meiner Stimme in Ekstase versetze. Hast du ein paar Tipps für den perfekten Auftritt?"',
               options: [
                 { text: 'Fokussiere dich auf die erste Reihe.', action: () => {
-                  setDialogue('Marius: "Gute Idee. Die erste Reihe ist der Anker für die gesamte Energie. Ich werde sie hypnotisieren!"');
-                  increaseBandMood(30);
+                  useStore.getState().setDialogue('Marius: "Gute Idee. Die erste Reihe ist der Anker für die gesamte Energie. Ich werde sie hypnotisieren!"');
+                  useStore.getState().setFlag('salzgitter_performer_talked', true);
+                  useStore.getState().increaseBandMood(30);
                   useStore.getState().increaseSkill('social', 5);
                 }}
               ]
@@ -435,72 +477,143 @@ export function Salzgitter() {
             return;
           }
 
-          if (flags.mariusConfidenceBoost) {
-            setDialogue({
+          if (store.flags.mariusConfidenceBoost) {
+            const options: any[] = [
+              {
+                text: 'Kanalisiere den Zorn. [Chaos 10]',
+                requiredSkill: { name: 'chaos', level: 10 },
+                action: () => {
+                  useStore.getState().setDialogue('Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"');
+                  useStore.getState().increaseBandMood(40);
+                  useStore.getState().increaseSkill('chaos', 5);
+                }
+              },
+              {
+                text: 'Beruhige die Menge. [Social 10]',
+                requiredSkill: { name: 'social', level: 10 },
+                action: () => {
+                  useStore.getState().setDialogue('Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."');
+                  useStore.getState().increaseBandMood(30);
+                  useStore.getState().increaseSkill('social', 5);
+                }
+              },
+              { text: 'Lass es raus!', action: () => {
+                useStore.getState().setDialogue('Marius: "AAAAAAHHHHHHHH!!!!"');
+              }}
+            ];
+
+            if (store.flags.egoContained && store.flags.bassist_contacted) {
+               options.unshift({
+                 text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
+                 requiredSkill: { name: 'social', level: 12 },
+                 action: () => {
+                   useStore.getState().setDialogue('Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"');
+                   useStore.getState().setFlag('salzgitter_true_ending', true);
+                   useStore.getState().increaseBandMood(50);
+                 }
+               });
+            } else if (store.flags.backstage_performer_speech) {
+               options.unshift({
+                 text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
+                 requiredTrait: 'Performer',
+                 action: () => {
+                   useStore.getState().setDialogue('Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"');
+                   useStore.getState().increaseBandMood(30);
+                   useStore.getState().increaseSkill('social', 5);
+                 }
+               });
+            }
+
+            store.setDialogue({
               text: 'Marius: "Manager, danke für den Zuspruch im Backstage. Ich fühle mich unbesiegbar. Die Fans werden meine Stimme noch in 100 Jahren hören!"',
-              options: [
-                { 
-                  text: 'Kanalisiere den Zorn. [Chaos 10]', 
-                  requiredSkill: { name: 'chaos', level: 10 },
-                  action: () => {
-                    setDialogue('Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"');
-                    increaseBandMood(40);
-                    useStore.getState().increaseSkill('chaos', 5);
-                  }
-                },
-                { 
-                  text: 'Beruhige die Menge. [Social 10]', 
-                  requiredSkill: { name: 'social', level: 10 },
-                  action: () => {
-                    setDialogue('Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."');
-                    increaseBandMood(30);
-                    useStore.getState().increaseSkill('social', 5);
-                  }
-                },
-                { text: 'Lass es raus!', action: () => {
-                  setDialogue('Marius: "AAAAAAHHHHHHHH!!!!"');
-                }}
-              ]
+              options
             });
-            increaseBandMood(15);
+            if (!store.flags.salzgitter_marius_greeted) {
+              store.setFlag('salzgitter_marius_greeted', true);
+              store.increaseBandMood(15);
+            }
           } else if (bandMood > 90) {
-            setDialogue('Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"');
+            store.setDialogue('Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"');
           } else if (bandMood > 50) {
-            setDialogue('Marius: "Danke, dass du uns als Manager hierher gebracht hast! NEUROTOXIC RULES!"');
+            store.setDialogue('Marius: "Danke, dass du uns als Manager hierher gebracht hast! NEUROTOXIC RULES!"');
           } else {
-            setDialogue('Marius: "Ich bin nervös, aber wir ziehen das durch. Für den Metal!"');
+            store.setDialogue('Marius: "Ich bin nervös, aber wir ziehen das durch. Für den Metal!"');
           }
         }}
       />
 
       {/* Lore: Floating Bassist */}
-      <Interactable
-        position={[0, 8, -5]}
-        emoji="🎸"
-        name="Schwebender Bassist"
-        scale={1.5}
-        onInteract={() => {
-          setDialogue('Ein Bassist in einer glitzernden Robe schwebt über der Bühne. Er murmelt: "Die 4. Dimension war okay, aber das Catering hier ist besser. Sagt Lars, er soll den 13. Takt weglassen. Er weiß warum."');
-          increaseBandMood(10);
-        }}
-      />
+      {flags.bassist_contacted && (
+        <Interactable
+          position={[0, 8, -5]}
+          emoji="🎸"
+          name="Schwebender Bassist"
+          scale={1.5}
+          onInteract={() => {
+            const store = useStore.getState();
+            if (store.flags.bassist_restored) {
+               store.setDialogue('Bassist: "Ich bin bereit. Der Grundton schwingt in meinem Blut. Wir bringen die Gießerei zurück."');
+               return;
+            }
+
+            const options: DialogueOption[] = [
+               { text: 'Wir sehen uns auf der anderen Seite.', action: () => {
+                 useStore.getState().setDialogue('Bassist: "Der Sound ist alles."');
+               }}
+            ];
+
+            if (store.hasItem('Bassist-Saite')) {
+               options.unshift({
+                 text: 'Gib ihm die Bassist-Saite aus dem Echo. [Mystic]',
+                 requiredTrait: 'Mystic',
+                 action: () => {
+                   useStore.getState().setDialogue('Bassist: "Das... das ist ein Teil von mir! Mein alter Rhythmus... ich erinnere mich!"');
+                   useStore.getState().setFlag('bassist_restored', true);
+                   useStore.getState().discoverLore('bassist_wahrheit');
+                   useStore.getState().increaseBandMood(40);
+                   useStore.getState().removeFromInventory('Bassist-Saite');
+                 }
+               });
+            }
+
+            if (store.hasItem('Resonanz-Kristall')) {
+               options.unshift({
+                 text: 'Nimm den Resonanz-Kristall. Vollende das Riff.',
+                 action: () => {
+                   useStore.getState().setDialogue('Bassist: "Der Kristall... er verbindet die Dimensionen. Ich setze ihn ein, wenn wir die letzte Note spielen. Danke, Manager."');
+                   useStore.getState().setFlag('bassist_restored', true);
+                   useStore.getState().discoverLore('bassist_wahrheit');
+                   useStore.getState().increaseBandMood(30);
+                   useStore.getState().removeFromInventory('Resonanz-Kristall');
+                 }
+               });
+            }
+
+            store.setDialogue({
+              text: 'Bassist: "Du hast mich gefunden. Hier, in der Frequenz. Danke. Sag der Band... der Sound war es wert."',
+              options
+            });
+          }}
+        />
+      )}
 
       <Interactable
         position={[8, 0, 5]}
         emoji="🤩"
         name="Fan"
         onInteract={() => {
-          const hasSignedSetlist = useStore.getState().hasItem('Signierte Setliste');
-          const hasTalisman = useStore.getState().hasItem('Industrie-Talisman');
+          const store = useStore.getState();
+          const hasSignedSetlist = store.hasItem('Signierte Setliste');
+          const hasTalisman = store.hasItem('Industrie-Talisman');
 
           if (hasTalisman) {
-            setDialogue({
+            store.setDialogue({
               text: 'Fan: "Ist das... ein echter Industrie-Talisman?! Den hab ich nur in den Legenden von 1982 gesehen!"',
               options: [
                 { text: 'Ein Geschenk für dich.', action: () => {
-                  setDialogue('Fan: "Ich werde ihn in Ehren halten! Du bist der beste Manager der Welt! Ich spüre die pure Kraft des Stahls!"');
+                  useStore.getState().setDialogue('Fan: "Ich werde ihn in Ehren halten! Du bist der beste Manager der Welt! Ich spüre die pure Kraft des Stahls!"');
                   useStore.getState().removeFromInventory('Industrie-Talisman');
-                  increaseBandMood(40);
+                  useStore.getState().increaseBandMood(40);
                 }}
               ]
             });
@@ -508,45 +621,90 @@ export function Salzgitter() {
           }
 
           if (hasSignedSetlist) {
-            setDialogue({
+            store.setDialogue({
               text: 'Fan: "OH MEIN GOTT! Eine signierte Setliste! Das ist der beste Tag meines Lebens! Darf ich dich umarmen?"',
               options: [
                 { text: 'Klar, komm her!', action: () => {
-                  setDialogue('Fan: "Du riechst nach Erfolg und... altem Kaffee. Danke!"');
+                  useStore.getState().setDialogue('Fan: "Du riechst nach Erfolg und... altem Kaffee. Danke!"');
                   useStore.getState().removeFromInventory('Signierte Setliste');
-                  increaseBandMood(25);
+                  useStore.getState().increaseBandMood(25);
                 }},
                 { text: 'Abstand halten, bitte.', action: () => {
-                  setDialogue('Fan: "Verstehe. Die Aura eines Managers ist zu stark. Danke für die Liste!"');
+                  useStore.getState().setDialogue('Fan: "Verstehe. Die Aura eines Managers ist zu stark. Danke für die Liste!"');
                   useStore.getState().removeFromInventory('Signierte Setliste');
-                  increaseBandMood(15);
+                  useStore.getState().increaseBandMood(15);
                 }}
               ]
             });
-          } else {
-            setDialogue({
-              text: 'Fan: "Ich liebe NEUROTOXIC! Hast du vielleicht ein Autogramm für mich? Oder ein Plektrum?"',
-              options: [
-                { text: 'Ich schau mal was ich tun kann.', action: () => setDialogue('Fan: "Bitte beeil dich, ich steh hier schon seit 4 Uhr morgens!"') },
-                { text: 'Wer bist du nochmal?', action: () => {
-                  setDialogue('Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"');
-                  increaseBandMood(-2);
-                }}
-              ]
-            });
+            return;
           }
+
+          if (store.flags.backstage_performer_speech) {
+            store.setDialogue('Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"');
+            if (!store.flags.salzgitter_fan_speech_heard) {
+              store.setFlag('salzgitter_fan_speech_heard', true);
+              store.increaseBandMood(5);
+            }
+            return;
+          }
+
+          if (store.flags.kaminstube_crowd_rallied) {
+            store.setDialogue('Fan: "Tangermünde spricht noch immer über euch! Ihr seid Legenden! Bitte macht ein Foto mit mir!"');
+            return;
+          }
+
+          const options: any[] = [
+             { text: 'Hier, ein Andenken. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+               useStore.getState().setDialogue('Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"');
+               useStore.getState().increaseBandMood(20);
+             }},
+             { text: 'Ich schau mal was ich tun kann.', action: () => useStore.getState().setDialogue('Fan: "Bitte beeil dich, ich steh hier schon seit 4 Uhr morgens!"') },
+             { text: 'Wer bist du nochmal?', action: () => {
+               useStore.getState().setDialogue('Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"');
+               useStore.getState().increaseBandMood(-2);
+             }}
+          ];
+          store.setDialogue({
+            text: 'Fan: "Ich liebe NEUROTOXIC! Hast du vielleicht ein Autogramm für mich? Oder ein Plektrum?"',
+            options
+          });
         }}
       />
 
       <Interactable
         position={[0, 1, 0]}
         emoji="🏆"
-        name="Tour Erfolgreich"
+        name="Das Finale"
         scale={2}
         onInteract={() => {
-          completeQuest('final');
-          increaseBandMood(50);
-          setDialogue('Herzlichen Glückwunsch! Du hast die Tour erfolgreich gemanagt. NEUROTOXIC hat die Bühne gerockt!');
+          const store = useStore.getState();
+          if (store.flags.salzgitter_finalized) {
+            store.setDialogue('Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.');
+            return;
+          }
+          store.completeQuest('final');
+          store.setFlag('salzgitter_finalized', true);
+
+          if (store.flags.salzgitter_true_ending && store.flags.bassist_restored && store.flags.maschinen_seele_complete) {
+             store.setDialogue('Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt — er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]');
+             store.increaseBandMood(100);
+             // Discover remaining lore logically associated with true ending
+             store.discoverLore('bassist_wahrheit');
+             store.discoverLore('maschinen_bewusstsein');
+             store.discoverLore('frequenz_1982_decoded');
+          } else if (store.flags.salzgitter_encore_unlocked) {
+             store.setDialogue('ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]');
+             store.increaseBandMood(50);
+          } else if (store.flags.frequenz1982_complete && store.flags.mariusConfidenceBoost && store.bandMood > 70) {
+             store.setDialogue('Die Frequenz von 1982 hat die Halle erfüllt. Der Sound war perfekt. Die Fans liegen sich heulend in den Armen. Ein meisterhafter Auftritt! [GREAT ENDING]');
+             store.increaseBandMood(70);
+          } else if (store.bandMood > 70 && store.flags.mariusConfidenceBoost) {
+             store.setDialogue('Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Tour ist ein Erfolg! [GOOD ENDING]');
+             store.increaseBandMood(50);
+          } else {
+             store.setDialogue('Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]');
+             store.increaseBandMood(30);
+          }
         }}
       />
 
