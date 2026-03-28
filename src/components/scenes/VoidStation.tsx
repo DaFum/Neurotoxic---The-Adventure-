@@ -141,12 +141,14 @@ export function VoidStation() {
             const options = [
               { text: '440Hz - Standard Industrial Power.', action: () => {
                 useStore.getState().setDialogue('Tankwart: "Eine solide Wahl. Der Lärm wird mächtig sein und die Wände der Realität einreißen."');
+                useStore.getState().removeFromInventory('Dunkle Materie');
                 useStore.getState().setFlag('voidRefueled', true);
                 useStore.getState().completeQuest('void');
                 useStore.getState().increaseBandMood(25);
               }},
               { text: '432Hz - Wir wollen die Chakren der Fans öffnen.', action: () => {
                 useStore.getState().setDialogue('Tankwart: "Interessant. Die Fans werden verwirrt sein, aber ihre Seelen werden im Takt des Universums schwingen."');
+                useStore.getState().removeFromInventory('Dunkle Materie');
                 useStore.getState().setFlag('voidRefueled', true);
                 useStore.getState().completeQuest('void');
                 useStore.getState().increaseBandMood(10);
@@ -156,6 +158,7 @@ export function VoidStation() {
             if (hasKristall) {
               const mysticOption: any = { text: 'Betanke ihn mit der Frequenz des Resonanz-Kristalls. [Mystic]', requiredTrait: 'Mystic', action: () => {
                 useStore.getState().setDialogue('Tankwart: "Die Frequenz von 1982... Du hast sie gefunden! Der Van wird nicht fahren, er wird DURCH die Realität schneiden. Salzgitter wird niemals wieder dasselbe sein."');
+                useStore.getState().removeFromInventory('Dunkle Materie');
                 useStore.getState().setFlag('voidRefueled', true);
                 useStore.getState().setFlag('tankwart_fuel_quest_started', true); // Reusing as a marker for the special fuel
                 useStore.getState().completeQuest('void');

@@ -2,6 +2,8 @@
 
 *Aktualisiert für Phase 1-7 Erweiterungen (Maschinen-Seele, Frequenz 1982, Bassist-Quest, etc.)*
 
+> **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx` oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `Proberaum.tsx`, `TourBus.tsx`, `Backstage.tsx`, `VoidStation.tsx`, `Kaminstube.tsx`, `Salzgitter.tsx`, `store.ts`.
+
 Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Einträge und deren Voraussetzungen (Traits, Skills, Items) aus allen Szenen zusammen.
 
 ---
@@ -14,11 +16,13 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Das Verbotene Riff (Item):**
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
-    * *Nach Wasser (BandMood > 50):* "Erzähl mir von 1982" (setzt `askedAbout1982`).
-        * Zweig A (Trait: Mystic): "Der Sound war nicht nur laut..." (+20 BandMood, +5 Chaos, Erhalt: Industrie-Talisman, Lore: `matze_1982_truth`).
-        * Zweig B (Trait: Brutalist): "Zerstörung ist der Weg." (+15 BandMood, +3 Chaos).
-        * Zweig C (Skill: Technical 3): "Röhren glühen." (+10 BandMood, +3 Technical).
-        * Standard: "Wir machen Geschichte." (+5 BandMood).
+    * *Nach dem Aufwischen (Wasser aufgewischt):* Option "Erzähl mir von der Tour 1982." öffnet einen Unterdialog.
+        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (+20 BandMood, +3 Chaos, Erhalt: Frequenzfragment, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `frequenz1982_proberaum`, `matzeDeepTalk`).
+        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (+10 BandMood, +3 Chaos, Erhalt: Frequenzfragment, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `frequenz1982_proberaum`, `proberaum_brutalist_smash`, `matzeDeepTalk`).
+        * Zweig C (Trait: Visionary): "Ich sehe Muster im Lärm." (+30 BandMood, +5 Chaos, Lore: `matze_1982_truth`, setzt `matzeDeepTalk`).
+        * Zweig D (Skill: Technical 5): Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
+        * Zweig E (Skill: Social 3): Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
+        * Standard: "Interessante Geschichte." (+10 BandMood, setzt `askedAbout1982` — wichtig für Geist-Dialoge im TourBus und Backstage).
     * *Sabotage-Verdacht:* "Lars trommelt komisch" (startet `lars_proberaum_secret`).
     * *Vor dem Aufwischen:* Bittet darum, das Wasser aufzuwischen.
         * "Ich kümmere mich darum" (kein Mood-Effekt).
@@ -92,21 +96,24 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 2. TourBus (Unterwegs)
 
 * **Matze:**
-    * *Ohne Kabel (BandMood < 30):* Klagt über schlechte Laune und kaputtes Kabel (kein Mood-Effekt).
-    * *Ohne Kabel (BandMood >= 30):*
-        * "Ich suche danach" (Quest hinzugefügt: `cable`).
-        * "Vielleicht Schicksal" (Sabotage-Vorwurf, -5 BandMood).
-    * *Mit Repariertem Kabel:* "Bühne abreißen" (+10 BandMood, Quest-Abschluss: `cable`).
-* **Matze:**
-    * *Sabotage Entdeckung (Item: Defektes Kabel):*
-        * Zweig A (Skill: Technical 5): Analyse (+20 BandMood, +5 Technical, setzt `tourbus_sabotage_discovered`, Lore: `tourbus_saboteur`).
-        * Zweig B (Standard): Reparatur (+10 BandMood, +2 Technical, Kabel repariert).
+    * *Ohne Kabel (BandMood < 20):* Klagt über schlechte Laune (kein Mood-Effekt, kein Optionsmenü).
+    * *Ohne Kabel (BandMood >= 20, kein Sabotage-Verdacht):*
+        * "Ich suche danach." (Quest hinzugefügt: `cable`).
+        * "Das Kabel wurde nicht gebrochen, es wurde durchtrennt." [Technical 5] (+20 BandMood, +5 Technical, setzt `tourbus_sabotage_discovered`, Lore: `tourbus_saboteur`, Quest gestartet: `tourbus_saboteur`).
+        * "Vielleicht Schicksal." (-5 BandMood).
+    * *Mit Repariertem Kabel:* "Bühne abreißen!" (+10 BandMood, Quest-Abschluss: `cable`).
+    * *Sabotage entdeckt & `marius_tourbus_doubt` gesetzt & kein Geständnis:*
+        * [Social 5]: Matze gesteht Sabotage (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
+        * [Brutalist]: Schweigend ertappt (-5 BandMood).
 * **Marius:**
-    * *BandMood < 30:* Nervenzusammenbruch.
-        * Option (Trait: Diplomat): Beruhigen (+20 BandMood, setzt `marius_tourbus_doubt`).
-        * Option (Trait: Brutalist): Anschreien (+5 BandMood, +5 Chaos, setzt `marius_tourbus_doubt`).
-    * *Item (Marius' Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
-    * *Ohne Ego:* Stimmungsabhängiger Dialog (kein Mood-Effekt).
+    * *Item (Marius Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
+    * *BandMood < 30 (kein Ego):* Nervenzusammenbruch — Anzeige des Dialogs setzt automatisch `marius_tourbus_doubt: true`.
+        * [Social 7]: Aufmuntern (+10 BandMood).
+        * [Diplomat]: Fokussieren (+15 BandMood).
+        * Standard: kein Effekt.
+    * *BandMood >= 30 (kein Ego):*
+        * [Performer]: Baut Selbstbewusstsein auf (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt: false`).
+        * Standard: kein Effekt.
 * **Defekter Verstärker (Trait: Technician):**
     * *Spezial-Option:* Lötstelle reparieren (+20 BandMood, +10 Technical).
 * **Klebeband (Item):**
@@ -124,19 +131,21 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Rostiges Plektrum (Item):**
     * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum).
 * **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
-    * *Interaktion (Skill: Technical 3):* Öffnen (+10 BandMood, Erhalt: Frequenzfragment, setzt `frequenz1982_tourbus`).
+    * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` bereits aktiv** (+10 BandMood, Erhalt: Frequenzfragment, setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar.
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Geist eines Roadies:**
     * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe`.
     * *Nach Drink (Item: Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, entfernt Geister-Drink).
-        * Nachfolgende Option (Skill: Social 5): Nach Bassisten fragen (+25 BandMood, +5 Social, setzt `bassist_clue_ghost`, Lore: `roadie_bassist`).
+    * *bassist_clue_matze gesetzt & bassist_clue_ghost noch nicht gesetzt:*
+        * Standard: "Matze hat geredet? Ich war dabei." (+15 BandMood, +3 Social, setzt `bassist_clue_ghost`).
+        * [Mystic]: "Ich spüre seine Präsenz." (+20 BandMood, setzt `bassist_clue_ghost`, Erhalt: Bassist-Saite).
     * *1982-Follow-up (Flag `askedAbout1982` gesetzt):*
-        * Zweig A (Trait: Visionary): "Erzähl mir alles" (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
-        * Zweig B (Skill: Technical 7): "Anomalie analysieren" (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
-        * Zweig C (Skill: Social 5): "Geist beruhigen" (+20 BandMood, +3 Social, setzt `ghostSecretRevealed`).
-        * Standard: "Erzähl mir alles" (+20 BandMood, setzt `ghostSecretRevealed`).
-        * "Vielleicht später" (kein Mood-Effekt).
+        * [Visionary]: "Erzähl mir alles." (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
+        * [Technical 7]: "Anomalie analysieren." (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
+        * [Social 5]: "Geist beruhigen." (+20 BandMood, +3 Social, setzt `ghostSecretRevealed`, Lore: `roadie_bassist`).
+        * Standard: "Erzähl mir alles." (+20 BandMood, setzt `ghostSecretRevealed`).
+        * "Vielleicht später." (kein Mood-Effekt).
     * *Spezial-Items:*
         * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood, setzt `ghostSecretRevealed`) ODER Begraben (+5 BandMood).
         * *Item (Verbotenes Riff):* "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
@@ -152,11 +161,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Zweig C: "Standard-Frequenzen" (+15 BandMood, Quest-Abschluss: `feedback_monitor_backstage`).
     * *Initial:* Erhalt Quest (+5 BandMood).
 * **Marius (Lampenfieber):**
-    * *Optionen zur Beruhigung (Quest-Abschluss `marius` für jede):*
+    * *Optionen zur Beruhigung (Quest-Abschluss `marius` für jede, setzt `mariusCalmed`):*
         * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, setzt `mariusConfidenceBoost`).
         * (Trait: Performer): "Nimm die Halle" (+35 BandMood, +5 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`).
-        * (Trait: Brutalist): "Sing oder flieg" (+10 BandMood).
-        * (Info: 1982 vorhanden): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`) ODER "Wovon redest du?" (-5 BandMood).
+        * (Trait: Brutalist): "Sing oder flieg" (+10 BandMood). **Hinweis: setzt NICHT `mariusConfidenceBoost` — kein Zugang zu Good/Great Endings.**
+        * (Flag `askedAbout1982` gesetzt): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`) ODER "Wovon redest du?" (-5 BandMood).
         * "Lego-Trick" (+10 BandMood).
 * **Lars (Energie-Mangel):**
     * *Item (Turbo-Koffein):*
@@ -241,22 +250,22 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ---
 
 * **Wirt (Geheimnis):**
-    * *Wenn Bassist kontaktiert:*
-        * (Skill: Social 8): Zwingen (+20 BandMood, +5 Social, setzt `bassist_clue_wirt`, Lore: `wirt_confession`).
-        * (Trait: Brutalist): Drohen (+15 BandMood, +5 Chaos).
-        * (Trait: Diplomat): Verzeihen (+30 BandMood, Erhalt: Turbo-Koffein).
+    * *Wenn Bassist kontaktiert (Flag `bassist_contacted`) — läuft auch wenn `wirtSecretItem` bereits gesetzt:*
+        * (Skill: Social 8): Zwingen (+20 BandMood, +5 Social, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
+        * (Trait: Brutalist): Drohen (+15 BandMood, +5 Chaos, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
+        * (Trait: Diplomat): Verzeihen (+30 BandMood, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`, Erhalt: Turbo-Koffein).
 * **Matze:**
-    * *Sabotage-Geständnis (Wenn Sabotage entdeckt):*
-        * (Trait: Diplomat): Vergeben (+30 BandMood, setzt `tourbus_matze_confession`).
-        * (Trait: Brutalist): Warnen (+15 BandMood).
+    * *Sabotage-Geständnis (Wenn Sabotage entdeckt & Amp repariert):*
+        * (Trait: Diplomat): Vergeben (+30 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
+        * (Trait: Brutalist): Warnen (+15 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
 * **Lars:**
     * *Rhythmus der Schmiede:*
-        * (Skill: Technical 5): 120 BPM (+15 BandMood, +3 Technical).
-        * (Skill: Chaos 5): Polyrhythmus (+20 BandMood, +3 Chaos).
+        * (Skill: Technical 5): 120 BPM (+15 BandMood, +3 Technical, setzt `kaminstube_lars_talked`).
+        * (Skill: Chaos 5): Polyrhythmus (+20 BandMood, +3 Chaos, setzt `kaminstube_lars_talked`).
 * **Crowd:**
     * *Menge anheizen:*
         * (Skill: Social 5): (+20 BandMood, +3 Social, setzt `kaminstube_crowd_rallied`).
-        * (Skill: Chaos 7): (+25 BandMood, +4 Chaos).
+        * (Skill: Chaos 7): (+25 BandMood, +4 Chaos, setzt `kaminstube_crowd_rallied`).
 * **Flüsternder Kamin:**
     * *Option (Skill: Technical 7):* Frequenz analysieren (+20 BandMood, +3 Technical).
     * *Option (Trait: Diplomat):* Sprache deuten (+20 BandMood).

@@ -192,6 +192,10 @@ export function Salzgitter() {
           const bandMood = store.bandMood;
 
           if (store.flags.larsVibrating && store.flags.larsDrumPhilosophy) {
+            if (store.flags.salzgitter_encore_unlocked) {
+              store.setDialogue('Lars: "DER BEAT IST EWIG! ICH HABE BEREITS DIE MASCHINEN-SEELE ENTFESSELT! DER REST IST NUR NOCH LÄRM!"');
+              return;
+            }
             store.setDialogue({
               text: 'Lars: "ALLES IST ZU LANGSAM! DIE ZEIT, DER RAUM, DAS PUBLIKUM! ICH KANN DIE TAKTSTRICHE IN DER LUFT SEHEN! WAS SOLL ICH TUN, MANAGER?!"',
               options: [
@@ -441,7 +445,10 @@ export function Salzgitter() {
 
           if (store.flags.backstage_performer_speech) {
             store.setDialogue('Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"');
-            store.increaseBandMood(5); // Only triggered repeatedly for small boosts, or just narrative flavor
+            if (!store.flags.salzgitter_fan_speech_heard) {
+              store.setFlag('salzgitter_fan_speech_heard', true);
+              store.increaseBandMood(5);
+            }
             return;
           }
 
@@ -475,7 +482,12 @@ export function Salzgitter() {
         scale={2}
         onInteract={() => {
           const store = useStore.getState();
+          if (store.flags.salzgitter_finalized) {
+            store.setDialogue('Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.');
+            return;
+          }
           store.completeQuest('final');
+          store.setFlag('salzgitter_finalized', true);
 
           if (store.flags.salzgitter_true_ending && store.flags.bassist_restored && store.flags.maschinen_seele_complete) {
              store.setDialogue('Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt — er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]');

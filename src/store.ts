@@ -150,6 +150,7 @@ const initialState = {
     kaminstube_wirt_betrayal: false,
     salzgitter_encore_unlocked: false,
     salzgitter_true_ending: false,
+    salzgitter_finalized: false,
     lars_proberaum_secret: false,
     lars_paced: false,
     marius_tourbus_doubt: false,
@@ -309,7 +310,7 @@ export const useStore = create<GameState>()(
         quests: state.quests.map(q => q.id === id ? { ...q, completed: true } : q)
       })),
       increaseBandMood: (amount) => set((state) => ({
-        bandMood: Math.min(100, state.bandMood + amount)
+        bandMood: Math.max(0, Math.min(100, state.bandMood + amount))
       })),
       setCameraShake: (cameraShake) => set({ cameraShake }),
       discoverLore: (id) => set((state) => {

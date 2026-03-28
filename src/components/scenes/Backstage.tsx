@@ -43,7 +43,7 @@ export function Backstage() {
 
       {/* Floor */}
       <RigidBody type="fixed">
-        <mesh receiveShadow position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh receiveShadow position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[30, 20]} />
           <meshStandardMaterial color="#111" />
         </mesh>
@@ -191,7 +191,7 @@ export function Backstage() {
 
       {/* Marius - Lampenfieber */}
       <Interactable
-        position={[-4, 0, -5]}
+        position={[-4, 1, -5]}
         emoji="😰"
         name="Marius"
         isBandMember={true}
@@ -271,7 +271,7 @@ export function Backstage() {
 
       {/* Lars - Needs Energy */}
       <Interactable
-        position={[4, 0, -5]}
+        position={[4, 1, -5]}
         emoji="🥁"
         name="Lars"
         isBandMember={true}
@@ -435,6 +435,14 @@ export function Backstage() {
                    useStore.getState().setFlag('frequenz1982_complete', true);
                    useStore.getState().discoverLore('frequenz_1982_decoded');
                    useStore.getState().increaseBandMood(50);
+                 }},
+                 { text: 'Zerschmettere den Kristall im Zentrum! [Brutalist]', requiredTrait: 'Brutalist', action: () => {
+                   useStore.getState().setDialogue('Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
+                   useStore.getState().removeFromInventory('Resonanz-Kristall');
+                   useStore.getState().setFlag('frequenz1982_complete', true);
+                   useStore.getState().discoverLore('frequenz_1982_decoded');
+                   useStore.getState().increaseBandMood(40);
+                   useStore.getState().increaseSkill('chaos', 5);
                  }},
                  { text: 'Zurücktreten.', action: () => {
                    useStore.getState().setDialogue('Das ist zu gefährlich vor dem Gig.');
