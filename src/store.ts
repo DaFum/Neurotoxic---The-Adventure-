@@ -151,6 +151,7 @@ const initialState = {
     salzgitter_encore_unlocked: false,
     salzgitter_true_ending: false,
     salzgitter_finalized: false,
+    salzgitter_marius_greeted: false,
     lars_proberaum_secret: false,
     lars_paced: false,
     marius_tourbus_doubt: false,

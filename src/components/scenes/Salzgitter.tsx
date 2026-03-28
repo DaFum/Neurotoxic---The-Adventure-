@@ -336,7 +336,10 @@ export function Salzgitter() {
               text: 'Marius: "Manager, danke für den Zuspruch im Backstage. Ich fühle mich unbesiegbar. Die Fans werden meine Stimme noch in 100 Jahren hören!"',
               options
             });
-            store.increaseBandMood(15);
+            if (!store.flags.salzgitter_marius_greeted) {
+              store.setFlag('salzgitter_marius_greeted', true);
+              store.increaseBandMood(15);
+            }
           } else if (bandMood > 90) {
             store.setDialogue('Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"');
           } else if (bandMood > 50) {
