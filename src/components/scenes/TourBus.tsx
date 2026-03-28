@@ -175,6 +175,7 @@ export function TourBus() {
             });
           } else {
             if (bandMood < 30) {
+              setFlag('marius_tourbus_doubt', true);
               setDialogue({
                 text: 'Marius: "Ich bin ein Betrug. Ohne mein Ego bin ich nur ein Typ, der in ein Mikrofon schreit."',
                 options: [

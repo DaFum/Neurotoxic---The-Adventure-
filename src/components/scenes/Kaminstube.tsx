@@ -155,11 +155,6 @@ export function Kaminstube() {
           const bandMood = store.bandMood;
           const hasTalisman = store.hasItem('Industrie-Talisman');
           
-          if (store.flags.wirtSecretItem) {
-            store.setDialogue('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');
-            return;
-          }
-
           if (store.flags.kaminstube_wirt_betrayal) {
             store.setDialogue('Wirt: "Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert."');
             return;
@@ -186,11 +181,17 @@ export function Kaminstube() {
                 { text: 'Verzeihe ihm. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
                   useStore.getState().setDialogue('Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."');
                   useStore.getState().setFlag('bassist_clue_wirt', true);
+                  useStore.getState().discoverLore('wirt_vergangenheit');
                   useStore.getState().addToInventory('Turbo-Koffein');
                   useStore.getState().increaseBandMood(30);
                 }}
               ]
             });
+            return;
+          }
+
+          if (store.flags.wirtSecretItem) {
+            store.setDialogue('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');
             return;
           }
 

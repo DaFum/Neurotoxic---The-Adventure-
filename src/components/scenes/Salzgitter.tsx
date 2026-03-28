@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Environment, ContactShadows, Html } from '@react-three/drei';
@@ -192,6 +193,10 @@ export function Salzgitter() {
           const bandMood = store.bandMood;
 
           if (store.flags.larsVibrating && store.flags.larsDrumPhilosophy) {
+            if (store.flags.salzgitter_encore_unlocked) {
+              store.setDialogue('Lars: "DER BEAT IST EWIG! ICH HABE BEREITS DIE MASCHINEN-SEELE ENTFESSELT! DER REST IST NUR NOCH LÄRM!"');
+              return;
+            }
             store.setDialogue({
               text: 'Lars: "ALLES IST ZU LANGSAM! DIE ZEIT, DER RAUM, DAS PUBLIKUM! ICH KANN DIE TAKTSTRICHE IN DER LUFT SEHEN! WAS SOLL ICH TUN, MANAGER?!"',
               options: [
@@ -331,7 +336,10 @@ export function Salzgitter() {
               text: 'Marius: "Manager, danke für den Zuspruch im Backstage. Ich fühle mich unbesiegbar. Die Fans werden meine Stimme noch in 100 Jahren hören!"',
               options
             });
-            store.increaseBandMood(15);
+            if (!store.flags.salzgitter_marius_greeted) {
+              store.setFlag('salzgitter_marius_greeted', true);
+              store.increaseBandMood(15);
+            }
           } else if (bandMood > 90) {
             store.setDialogue('Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"');
           } else if (bandMood > 50) {
@@ -356,7 +364,7 @@ export function Salzgitter() {
                return;
             }
 
-            const options: any[] = [
+            const options: DialogueOption[] = [
                { text: 'Wir sehen uns auf der anderen Seite.', action: () => {
                  useStore.getState().setDialogue('Bassist: "Der Sound ist alles."');
                }}
@@ -365,7 +373,7 @@ export function Salzgitter() {
             if (store.hasItem('Bassist-Saite')) {
                options.unshift({
                  text: 'Gib ihm die Bassist-Saite aus dem Echo. [Mystic]',
-                 requiredTrait: 'Mystic' as any,
+                 requiredTrait: 'Mystic',
                  action: () => {
                    useStore.getState().setDialogue('Bassist: "Das... das ist ein Teil von mir! Mein alter Rhythmus... ich erinnere mich!"');
                    useStore.getState().setFlag('bassist_restored', true);
@@ -441,7 +449,10 @@ export function Salzgitter() {
 
           if (store.flags.backstage_performer_speech) {
             store.setDialogue('Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"');
-            store.increaseBandMood(5); // Only triggered repeatedly for small boosts, or just narrative flavor
+            if (!store.flags.salzgitter_fan_speech_heard) {
+              store.setFlag('salzgitter_fan_speech_heard', true);
+              store.increaseBandMood(5);
+            }
             return;
           }
 
@@ -475,7 +486,12 @@ export function Salzgitter() {
         scale={2}
         onInteract={() => {
           const store = useStore.getState();
+          if (store.flags.salzgitter_finalized) {
+            store.setDialogue('Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.');
+            return;
+          }
           store.completeQuest('final');
+          store.setFlag('salzgitter_finalized', true);
 
           if (store.flags.salzgitter_true_ending && store.flags.bassist_restored && store.flags.maschinen_seele_complete) {
              store.setDialogue('Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt — er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]');
