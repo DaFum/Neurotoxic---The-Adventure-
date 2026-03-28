@@ -329,7 +329,8 @@ export function UI() {
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
                       key={i} 
                       onClick={() => toggleItemSelection(item)}
-                      className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 ${
+                      aria-pressed={selectedItems.includes(item)}
+                      className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic ${
                         selectedItems.includes(item) 
                         ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]' 
                         : 'bg-zinc-900/50 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-500'
@@ -512,7 +513,8 @@ export function UI() {
                   <span className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</span>
                   <button 
                     onClick={() => setDialogue(null)}
-                    className="text-toxic hover:text-white transition-colors"
+                    aria-label="Close transmission"
+                    className="text-toxic hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
                   >
                     <X size={16} />
                   </button>
