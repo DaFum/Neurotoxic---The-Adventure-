@@ -454,7 +454,7 @@ export function Proberaum() {
       />
 
       {/* Items */}
-      {flags.waterCleaned && (
+      {flags.waterCleaned && !flags.frequenz1982_proberaum && (
         <Interactable
           position={[10, 2, -7]}
           emoji="🔍"

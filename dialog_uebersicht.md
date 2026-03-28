@@ -158,31 +158,24 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Zweig C: "Standard-Frequenzen" (+15 BandMood, Quest-Abschluss: `feedback_monitor_backstage`).
     * *Initial:* Erhalt Quest (+5 BandMood).
 * **Marius (Lampenfieber):**
-    * *Optionen zur Beruhigung:*
-        * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, Quest-Abschluss: `marius`).
-        * (Trait: Visionary): "Sehe deine Vision" (+35 BandMood, +3 Chaos, Quest-Abschluss: `marius`).
-        * (Info: 1982 vorhanden): "Erinnerung an 1982" (+25 BandMood, Quest-Abschluss: `marius`) ODER "Wovon redest du?" (-5 BandMood).
-        * "Lego-Trick" (+10 BandMood, Quest-Abschluss: `marius`).
-        * "Equipment verkaufen" (-5 BandMood, zwingt ihn aber vor lauter Schreck auf die Bühne, Quest-Abschluss: `marius`).
-* **Lars (Energie-Mangel):**
-    * *Item (Turbo-Koffein):*
-        * Zweig A: "Auf Ex" (+40 BandMood, Lars "vibriert").
-        * Zweig B: "Nur ein Schluck" (+20 BandMood).
-    * *Item (Energiedrink):* (+10 BandMood).
-* **Marius (Lampenfieber):**
-    * *Optionen zur Beruhigung:*
+    * *Optionen zur Beruhigung (Quest-Abschluss `marius` für jede):*
         * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, setzt `mariusConfidenceBoost`).
-        * (Trait: Performer): "Nimm die Halle" (+35 BandMood, +5 Social, setzt `backstage_performer_speech`).
+        * (Trait: Performer): "Nimm die Halle" (+35 BandMood, +5 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`).
         * (Trait: Visionary): "Sehe deine Vision" (+35 BandMood, +3 Chaos, setzt `mariusConfidenceBoost`).
         * (Trait: Brutalist): "Sing oder flieg" (+10 BandMood).
-        * (Info 1982 vorhanden): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`).
+        * (Info: 1982 vorhanden): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`) ODER "Wovon redest du?" (-5 BandMood).
+        * "Lego-Trick" (+10 BandMood).
 * **Lars (Energie-Mangel):**
     * *Item (Turbo-Koffein):*
         * Auf Ex: (+40 BandMood, setzt `larsVibrating`, `larsEnergized`).
         * Nur ein Schluck (Trait: Diplomat): (+30 BandMood, +3 Social, setzt `lars_paced`, `larsEnergized`).
+        * Nur ein Schluck (Standard): (+20 BandMood, setzt `larsEnergized`).
+    * *Item (Energiedrink):* (+10 BandMood, setzt `larsEnergized`).
     * *Wenn Lars Vibriert:*
         * (Skill: Chaos 5): "Chaos" (+20 BandMood, +3 Chaos, setzt `larsDrumPhilosophy`).
         * (Skill: Technical 5): "Metronom" (+10 BandMood, setzt `larsDrumPhilosophy`).
+* **Alte Blaupause (Nur wenn Sabotage entdeckt):**
+    * *Option (Skill: Technical 7):* Analysieren (+3 Technical, setzt `backstage_blueprint_found`, Hinweis auf 432Hz).
 * **Setliste (Item):**
     * *Interaktion:* Aufheben (Erhalt: Setliste, Quest-Abschluss: `setlist`).
 * **Stift (Item):**
@@ -190,6 +183,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Lötkolben (Item):**
     * *Interaktion:* Aufheben (Erhalt: Lötkolben).
 * **Ritual-Kreis:**
+    * *Mit Resonanz-Kristall + Blaupause:*
+        * (Trait: Mystic): Frequenz vollenden (+50 BandMood, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
+        * (Trait: Brutalist): Kristall zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
     * *Item (Verbotenes Riff):* Resonanz (+15 BandMood).
     * *Standard:* (+5 BandMood).
@@ -333,4 +329,4 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
 ## 7. Crafting & Items (Zustand Store)
 
 * **Resonanz-Kristall:** Entsteht durch die Kombination von `Frequenzfragment` und `Splitter der Leere`.
-* **Geister-Drink:** Entsteht durch die Kombination von `Bier` und `Dunkle Materie`. (Erforderlich für Ghost Roadie Quest).
+* **Geister-Drink:** Entsteht durch die Kombination von `Turbo-Koffein` und `Rostiges Plektrum`. (Erforderlich für Ghost Roadie Quest).
