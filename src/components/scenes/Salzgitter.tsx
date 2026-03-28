@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Environment, ContactShadows, Html } from '@react-three/drei';
@@ -360,7 +361,7 @@ export function Salzgitter() {
                return;
             }
 
-            const options: any[] = [
+            const options: DialogueOption[] = [
                { text: 'Wir sehen uns auf der anderen Seite.', action: () => {
                  useStore.getState().setDialogue('Bassist: "Der Sound ist alles."');
                }}
@@ -369,7 +370,7 @@ export function Salzgitter() {
             if (store.hasItem('Bassist-Saite')) {
                options.unshift({
                  text: 'Gib ihm die Bassist-Saite aus dem Echo. [Mystic]',
-                 requiredTrait: 'Mystic' as any,
+                 requiredTrait: 'Mystic',
                  action: () => {
                    useStore.getState().setDialogue('Bassist: "Das... das ist ein Teil von mir! Mein alter Rhythmus... ich erinnere mich!"');
                    useStore.getState().setFlag('bassist_restored', true);

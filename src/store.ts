@@ -19,7 +19,7 @@ export interface LoreEntry {
   discovered: boolean;
 }
 
-interface DialogueOption {
+export interface DialogueOption {
   text: string;
   action?: () => void;
   nextDialogue?: Dialogue;
@@ -291,9 +291,18 @@ export const useStore = create<GameState>()(
           }
           // Frequenzfragment + Splitter der Leere = Resonanz-Kristall
           if ((item1 === 'Frequenzfragment' && item2 === 'Splitter der Leere') || (item1 === 'Splitter der Leere' && item2 === 'Frequenzfragment')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Resonanz-Kristall']
-            }));
+            set((state) => {
+              const newInventory = [...state.inventory];
+              const idx1 = newInventory.indexOf(item1);
+              const idx2 = newInventory.indexOf(item2);
+              // Remove higher index first to avoid index shifting
+              const higher = Math.max(idx1, idx2);
+              const lower = Math.min(idx1, idx2);
+              newInventory.splice(higher, 1);
+              newInventory.splice(lower, 1);
+              newInventory.push('Resonanz-Kristall');
+              return { inventory: newInventory };
+            });
             audio.playPickup();
             return true;
           }
@@ -340,19 +349,25 @@ export const useStore = create<GameState>()(
       merge: (persistedState: unknown, currentState: GameState) => {
         const typedPersistedState = persistedState as Partial<GameState>;
 
+        const persistedQuests = Array.isArray(typedPersistedState.quests) ? typedPersistedState.quests : [];
+        const persistedLore = Array.isArray(typedPersistedState.loreEntries) ? typedPersistedState.loreEntries : [];
+        const persistedFlags = (typedPersistedState.flags !== null && typeof typedPersistedState.flags === 'object')
+          ? typedPersistedState.flags
+          : {};
+
         const mergedQuests = currentState.quests.map(q => {
-          const persistedQuest = typedPersistedState.quests?.find(pq => pq.id === q.id);
+          const persistedQuest = persistedQuests.find(pq => pq.id === q.id);
           return persistedQuest ? { ...q, completed: persistedQuest.completed } : q;
         });
 
-        const dynamicQuests = (typedPersistedState.quests || []).filter(pq =>
+        const dynamicQuests = persistedQuests.filter(pq =>
           !currentState.quests.find(q => q.id === pq.id)
         );
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
         const mergedLoreEntries = currentState.loreEntries.map(e => {
-          const persistedEntry = typedPersistedState.loreEntries?.find(pe => pe.id === e.id);
+          const persistedEntry = persistedLore.find(pe => pe.id === e.id);
           return persistedEntry ? { ...e, discovered: persistedEntry.discovered } : e;
         });
 
@@ -363,7 +378,7 @@ export const useStore = create<GameState>()(
           loreEntries: mergedLoreEntries,
           flags: {
             ...currentState.flags,
-            ...typedPersistedState.flags,
+            ...persistedFlags,
           }
         };
       },
