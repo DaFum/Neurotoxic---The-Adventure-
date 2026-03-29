@@ -16,6 +16,7 @@
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
@@ -937,7 +938,7 @@ export function Proberaum() {
               ]
             });
           } else if (flags.talkingAmpHeard) {
-            const ampOptions: any[] = [];
+            const ampOptions: DialogueOption[] = [];
             if (!flags.maschinen_seele_amp) {
               ampOptions.push({
                 text: 'Ich höre eine andere Stimme in dir. Wer ist da noch? [Mystic]',
@@ -1071,7 +1072,7 @@ export function Proberaum() {
               ]
             });
           } else {
-            const options: any[] = [];
+            const options: DialogueOption[] = [];
             if (!useStore.getState().flags.maschinen_seele_tr8080) {
               options.push({
                   text: 'Deine Seriennummer... du bist nicht von der Stange. [Technical 5]',

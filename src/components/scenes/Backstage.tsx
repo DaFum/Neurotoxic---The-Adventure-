@@ -16,6 +16,7 @@
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Stars, Float, Text, Sparkles } from '@react-three/drei';
@@ -345,7 +346,7 @@ export function Backstage() {
           }
 
           if (store.flags.feedbackMonitorBackstageTalked) {
-            const options: any[] = [
+            const options: DialogueOption[] = [
               { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "BZZZT. Beeil dich. Das Rauschen wird lauter."') }
             ];
             if (!store.flags.feedbackMonitorBackstageQuestStarted) {
@@ -414,7 +415,7 @@ export function Backstage() {
             return;
           }
 
-          const options: any[] = [
+          const options: DialogueOption[] = [
             {
               text: 'Du bist ein Gott am Mikrofon. Vertrau dir. [Social 5]',
               requiredSkill: { name: 'social', level: 5 },
@@ -435,7 +436,6 @@ export function Backstage() {
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().setFlag('backstage_performer_speech', true);
-                useStore.getState().setFlag('mariusStageFright', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(30);
                 useStore.getState().increaseSkill('social', 3);
@@ -447,7 +447,6 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "...Du hast Recht. Zerstören. Einfach alles zerstören!"');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().setFlag('mariusStageFright', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(20);
                 useStore.getState().increaseSkill('chaos', 3);
@@ -460,7 +459,6 @@ export function Backstage() {
                 useStore.getState().setDialogue('Marius: "Die Frequenz... ich spüre sie. Ich bin nur das Gefäß. Die Musik spricht."');
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
-                useStore.getState().setFlag('mariusStageFright', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(25);
                 useStore.getState().increaseSkill('chaos', 3);
@@ -549,7 +547,7 @@ export function Backstage() {
               store.setDialogue('Lars: "VOLLGAS! Ich spüre die Farben der Musik!"');
             }
           } else if (hasTurbo) {
-            const options: any[] = [
+            const options: DialogueOption[] = [
               { text: 'Trink es auf Ex!', action: () => {
                 useStore.getState().setDialogue('Lars: "ICH BIN EIN BLITZ! ICH BIN DER DONNER! MEINE HÄNDE VIBRIEREN SO SCHNELL, DASS ICH DURCH WÄNDE GEHEN KANN!"');
                 useStore.getState().removeFromInventory('Turbo-Koffein');

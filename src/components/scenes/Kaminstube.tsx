@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
@@ -426,7 +427,7 @@ export function Kaminstube() {
           if (bandMood > 80 && !store.flags.wirtLegacy1982) {
             const knowsSecret = store.flags.askedAbout1982 || store.flags.ghostSecretRevealed;
             if (knowsSecret) {
-               const wirtOptions: any[] = [
+               const wirtOptions: DialogueOption[] = [
                   { text: 'Erzähl mir die ganze Geschichte von 1982.', action: () => {
                      useStore.getState().setDialogue({
                         text: 'Wirt: "Das ist gefährliches Wissen... Der Manager von damals, er wusste, worauf er sich einlässt."',
@@ -566,7 +567,7 @@ export function Kaminstube() {
              return;
           }
 
-          const options: any[] = [
+          const options: DialogueOption[] = [
               { text: 'Dann spiel im Takt der Hämmer. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
                 useStore.getState().setDialogue('Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"');
                 useStore.getState().setFlag('kaminstube_lars_talked', true);

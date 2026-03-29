@@ -368,10 +368,10 @@ export function Salzgitter() {
                   },
                   { text: 'Viel Erfolg, Matze.', action: () => {
                     useStore.getState().setDialogue('Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."');
+                    useStore.getState().increaseBandMood(20);
                   }}
                 ]
               });
-              store.increaseBandMood(20);
             } else {
               store.setDialogue('Matze: "Manager, das Verbotene Riff... es brennt in meinen Fingern! Es ist schwer zu kontrollieren. Ich hoffe, ich zerreiße nicht die ganze Realität heute Abend!"');
             }
@@ -474,7 +474,7 @@ export function Salzgitter() {
           }
 
           if (store.flags.larsRhythmPact) {
-             const options: any[] = [];
+             const options: DialogueOption[] = [];
              if (store.flags.larsVibrating) {
                 options.push({ text: 'Hyperpowered Lars!', action: () => {
                    useStore.getState().setDialogue('Lars: "DER RHYTHMUS IST IN MIR EXPLODIERT! DER PAKT WIRD DIE REALITÄT ZERFETZEN!"');
@@ -488,7 +488,7 @@ export function Salzgitter() {
                 }});
              }
              store.setDialogue({
-                text: 'Lars: "Der Pakt ist erfüllt, Manager. Der Rhythmus verlangt nach Auslasslassung!"',
+                text: 'Lars: "Der Pakt ist erfüllt, Manager. Der Rhythmus verlangt nach Auslassung!"',
                 options
              });
              return;
@@ -572,7 +572,7 @@ export function Salzgitter() {
           }
 
           if (store.flags.mariusConfidenceBoost) {
-            const options: any[] = [
+            const options: DialogueOption[] = [
               {
                 text: 'Kanalisiere den Zorn. [Chaos 10]',
                 requiredSkill: { name: 'chaos', level: 10 },
@@ -770,7 +770,7 @@ export function Salzgitter() {
             return;
           }
 
-          const options: any[] = [];
+          const options: DialogueOption[] = [];
 
           options.push(
              { text: 'Folgt mir! [Performer]', requiredTrait: 'Performer', action: () => {
