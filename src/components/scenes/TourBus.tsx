@@ -268,6 +268,7 @@ export function TourBus() {
                   action: () => {
                     setDialogue('Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen."');
                     increaseBandMood(15);
+                    completeQuest('cable');
                   }
                 },
                 {
@@ -277,6 +278,7 @@ export function TourBus() {
                     setDialogue('Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält."');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 3);
+                    completeQuest('cable');
                   }
                 },
                 {
@@ -286,9 +288,13 @@ export function TourBus() {
                     setDialogue('Matze: "Zusammen... ja. Wir sind eine verdammte Einheit."');
                     increaseBandMood(15);
                     useStore.getState().increaseSkill('social', 3);
+                    completeQuest('cable');
                   }
                 },
-                { text: 'Ein bisschen schon.', action: () => setDialogue('Matze: "Gut. Angst hält uns wach."') },
+                { text: 'Ein bisschen schon.', action: () => {
+                    setDialogue('Matze: "Gut. Angst hält uns wach."');
+                    completeQuest('cable');
+                }},
                 { text: 'Lass uns die Bühne abreißen!', action: () => {
                     increaseBandMood(10);
                     completeQuest('cable');

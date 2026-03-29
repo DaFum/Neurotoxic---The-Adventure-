@@ -32,10 +32,6 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *BandMood > 60 Bonus:* Matze ist hyped und will einen Power-Chord zeigen.
         * [Chaos 5]: Riss in der Wand (+15 BandMood, setzt `matzeRiffWarning`).
         * Standard: Aufheben für Salzgitter (setzt `matzeRiffWarning`).
-    * *Spezial (Trait: Performer):* "Zeig mir, wie du die Crowd liest." (+20 BandMood, +3 Social, setzt `matzeDeepTalk`).
-    * *BandMood > 60 Bonus:* Matze ist hyped und will einen Power-Chord zeigen.
-        * [Chaos 5]: Riss in der Wand (+15 BandMood, setzt `matzeRiffWarning`).
-        * Standard: Aufheben für Salzgitter (setzt `matzeRiffWarning`).
     * *Item (Industrie-Talisman):* Erkennt den Talisman.
         * Zweig A: "Für die Band" (+30 BandMood, setzt `matzeDeepTalk`).
         * Zweig B: "Geheimnis bewahren" (+15 BandMood, setzt `matzeDeepTalk`).
@@ -61,10 +57,6 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Chaos 3):* Beat lehren (+20 BandMood, +2 Chaos, setzt `larsDrumPhilosophy`).
             * *Unterzweig (Skill: Technical 3):* Schlagkraft-Analyse (+15 BandMood, +2 Technical, setzt `larsDrumPhilosophy`).
             * *Unterzweig (Standard):* "Klingt anstrengend" (kein Mood-Effekt).
-    * *Rhythmus-Pakt (Nachdem larsDrumPhilosophy gesetzt wurde):*
-        * [Brutalist]: Aggressiver Pakt (+25 BandMood, +5 Chaos, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
-        * [Diplomat]: Harmonischer Pakt (+20 BandMood, +5 Social, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
-        * Standard: Bedenkzeit.
     * *Rhythmus-Pakt (Nachdem larsDrumPhilosophy gesetzt wurde):*
         * [Brutalist]: Aggressiver Pakt (+25 BandMood, +5 Chaos, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
         * [Diplomat]: Harmonischer Pakt (+20 BandMood, +5 Social, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
@@ -279,9 +271,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Aufheben (Erhalt: Dunkle Materie).
 * **Schwebender Bassist** *(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):*
     * *Option (Skill: Social 8):* "Die Band vermisst dich" (+25 BandMood, +3 Social, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
-    * *Option (Skill: Technical 8):* "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
-    * *Option (Trait: Mystic):* "Ich höre deine Melodie" (+30 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Option (Skill: Technical 10):* "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Option (Trait: Mystic):* "Ich höre deine Melodie" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
     * *Option (Trait: Visionary):* "Ich sehe dich zwischen den Dimensionen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Standard:* "Ich lass dich besser in Ruhe" (kein Mood-Effekt).
 * **Diplomaten-Interface:**
     * *Option (Trait: Diplomat):* Verhandeln (+30 BandMood, +5 Social, setzt `void_diplomat_negotiation`, **Lore:** `schaltpult_record`).
     * *Standard (immer verfügbar):* "Lies die Aufzeichnungen." (kein BandMood-Effekt, **Lore:** `schaltpult_record`). *(Macht die Lore für alle Traits erreichbar.)*
@@ -377,10 +370,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Wenn egoContained & bassist_contacted): "Sing für den Bassisten" (+50 BandMood).
         * (Skill: Chaos 10): "Zorn kanalisieren" (+40 BandMood, +5 Chaos).
         * (Skill: Social 10): "Menge beruhigen" (+30 BandMood, +5 Social).
-* **Schwebender Bassist:**
-    * *Wenn voidBassistSpoken (und Quest abgeschlossen):* "Erinnert sich" (+30 BandMood, setzt `bassist_restored`).
-    * *Item (Bassist-Saite) (Trait: Mystic):* Übergeben (+40 BandMood, setzt `bassist_restored`, Lore `bassist_wahrheit`).
-    * *Item (Resonanz-Kristall):* Einsetzen (+30 BandMood, setzt `bassist_restored`, Lore `bassist_wahrheit`).
+
 * **Fan:**
     * *Fan Movement Quest:*
         * (Trait: Performer): "Folgt mir!" (+35 BandMood, Quest `fan_movement`, setzt `fanMovement`).
@@ -406,6 +396,7 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
         * (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
     * *Wenn `lars_paced`:* (+25 BandMood).
 * **Schwebender Bassist** *(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):*
+    * *Wenn voidBassistSpoken (und Quest abgeschlossen):* "Erinnert sich" (+30 BandMood, setzt `bassist_restored`).
     * *Item `Bassist-Saite` (Trait: Mystic):* "Gib ihm die Bassist-Saite aus dem Echo" (+40 BandMood, entfernt `Bassist-Saite`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
     * *Item `Resonanz-Kristall`:* "Nimm den Resonanz-Kristall. Vollende das Riff" (+30 BandMood, entfernt `Resonanz-Kristall`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
     * *Standard:* "Wir sehen uns auf der anderen Seite" (kein Mood-Effekt).

@@ -259,11 +259,150 @@ export function Backstage() {
         </Text>
       </Float>
 
+
       {/* Absurd NPC: Sentient Feedback Monitor */}
       <Interactable
         position={[-6, 0.5, 4]}
         emoji="📺"
         name="Feedback-Monitor"
+        onInteract={() => {
+          const store = useStore.getState();
+          const hasSchaltplan = store.hasItem('Verstärker-Schaltplan');
+          const hasMaschinenSeele = store.flags.maschinen_seele_amp && store.flags.maschinen_seele_tr8080;
+
+          if (store.flags.maschinen_seele_complete) {
+            store.setDialogue('Monitor: "WIR SIND EINS. DAS FEEDBACK IST DER PULS DER MASCHINE. SALZGITTER WIRD ERWACHEN."');
+            return;
+          }
+
+          if (store.flags.feedbackMonitorBackstageQuestCompleted) {
+            if (hasMaschinenSeele) {
+              store.setDialogue({
+                text: 'Monitor: "BZZZT. Du hast die Fragmente. Amp. TR-8080. Und meine Frequenzen sind offen. Sollen wir uns verbinden?"',
+                options: [
+                  { text: 'Vereinige das Maschinen-Bewusstsein. [Mystic]', requiredTrait: 'Mystic', action: () => {
+                      useStore.getState().setDialogue('Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.');
+                      useStore.getState().setFlag('maschinen_seele_complete', true);
+                      useStore.getState().completeQuest('maschinen_seele');
+                      useStore.getState().discoverLore('maschinen_bewusstsein');
+                      useStore.getState().increaseBandMood(40);
+                      useStore.getState().increaseSkill('chaos', 5);
+                  }},
+                  { text: 'Verbinde die Schaltkreise logisch. [Technical 7]', requiredSkill: { name: 'technical', level: 7 }, action: () => {
+                      useStore.getState().setDialogue('Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.');
+                      useStore.getState().setFlag('maschinen_seele_complete', true);
+                      useStore.getState().completeQuest('maschinen_seele');
+                      useStore.getState().discoverLore('maschinen_bewusstsein');
+                      useStore.getState().increaseBandMood(30);
+                      useStore.getState().increaseSkill('technical', 5);
+                  }},
+                  { text: 'Lass die Verbindung einfach laufen.', action: () => {
+                      useStore.getState().setDialogue('Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."');
+                      useStore.getState().setFlag('maschinen_seele_complete', true);
+                      useStore.getState().completeQuest('maschinen_seele');
+                      useStore.getState().discoverLore('maschinen_bewusstsein');
+                      useStore.getState().increaseBandMood(20);
+                  }},
+                  { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "WIR WARTEN. BZZZT."') }
+                ]
+              });
+              return;
+            }
+            store.setDialogue('Monitor: "BZZZT. Die Frequenzen sind perfekt. Aber etwas fehlt noch. Andere Stimmen im Rauschen."');
+            return;
+          }
+
+          if (store.flags.feedbackMonitorBackstageQuestStarted && hasSchaltplan) {
+            store.setDialogue({
+              text: 'Monitor: "Du hast den Schaltplan! Kannst du meine Frequenzen optimieren?"',
+              options: [
+                { text: 'Optimierte Frequenzen. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
+                    useStore.getState().setDialogue('Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."');
+                    useStore.getState().setFlag('feedbackMonitorBackstageQuestCompleted', true);
+                    useStore.getState().completeQuest('feedback_monitor_backstage');
+                    useStore.getState().increaseBandMood(30);
+                    useStore.getState().increaseSkill('technical', 5);
+                    useStore.getState().removeFromInventory('Verstärker-Schaltplan');
+                }},
+                { text: 'Transzendente Frequenzen. [Visionary]', requiredTrait: 'Visionary', action: () => {
+                    useStore.getState().setDialogue('Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."');
+                    useStore.getState().setFlag('feedbackMonitorBackstageQuestCompleted', true);
+                    useStore.getState().completeQuest('feedback_monitor_backstage');
+                    useStore.getState().increaseBandMood(40);
+                    useStore.getState().increaseSkill('chaos', 5);
+                    useStore.getState().removeFromInventory('Verstärker-Schaltplan');
+                }},
+                { text: 'Standard-Frequenzen.', action: () => {
+                    useStore.getState().setDialogue('Monitor: "BZZZT. Okay, das reicht für einen Standard-Gig."');
+                    useStore.getState().setFlag('feedbackMonitorBackstageQuestCompleted', true);
+                    useStore.getState().completeQuest('feedback_monitor_backstage');
+                    useStore.getState().increaseBandMood(15);
+                    useStore.getState().removeFromInventory('Verstärker-Schaltplan');
+                }}
+              ]
+            });
+            return;
+          }
+
+          if (store.flags.feedbackMonitorBackstageTalked) {
+            const options: any[] = [
+              { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "BZZZT. Beeil dich. Das Rauschen wird lauter."') }
+            ];
+            if (!store.flags.feedbackMonitorBackstageQuestStarted) {
+              options.unshift({ text: 'Wie kann ich dir helfen?', action: () => {
+                useStore.getState().setDialogue('Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."');
+                useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
+                useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
+              }});
+            }
+            if (store.flags.ampSentient) {
+              options.unshift({ text: 'Der Amp hat mir von dir erzählt.', action: () => {
+                useStore.getState().setDialogue('Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."');
+                useStore.getState().increaseBandMood(25);
+                useStore.getState().increaseSkill('technical', 5);
+                useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
+                useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
+              }});
+            }
+            store.setDialogue({
+              text: 'Monitor: "BZZZT. Ich habe schon tausend Sänger kommen und gehen sehen. Marius? Der klingt wie eine rostige Kreissäge in einem Mixer. BZZZT. Aber er hat... Seele. Eine sehr, sehr verzerrte Seele. Hast du den Schaltplan gefunden?"',
+              options
+            });
+            return;
+          }
+
+          store.setDialogue({
+            text: 'Ein alter Feedback-Monitor flackert plötzlich auf. Er scheint... zu atmen?',
+            options: [
+              { text: 'Hallo?', action: () => {
+                useStore.getState().setDialogue({
+                  text: 'Monitor: "BZZZT. Hallo, Fleischsack. Ich habe schon tausend Sänger kommen und gehen sehen. Marius? Der klingt wie eine rostige Kreissäge in einem Mixer. BZZZT. Aber er hat... Seele. Eine sehr, sehr verzerrte Seele. Wenn du mir hilfst, meine Frequenzen zu optimieren, helfe ich dir beim Gig in Salzgitter."',
+                  options: [
+                    { text: 'Wie kann ich helfen?', action: () => {
+                      useStore.getState().setDialogue('Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."');
+                      useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
+                      useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
+                    }}
+                  ]
+                });
+                useStore.getState().setFlag('feedbackMonitorBackstageTalked', true);
+                useStore.getState().increaseBandMood(5);
+              }},
+              { text: 'Schalte dich ab.', action: () => {
+                useStore.getState().setDialogue('Monitor: "BZZZT. Ich bin unsterblich. Ich bin das Feedback, das niemals endet. BZZZT."');
+              }}
+            ]
+          });
+        }}
+      />
+
+      {/* Marius - Lampenfieber */}
+      <Interactable
+        position={[-4, 1, -5]}
+        emoji="😰"
+        name="Marius"
+        isBandMember={true}
+        idleType="sway"
 
         onInteract={() => {
           const store = useStore.getState();

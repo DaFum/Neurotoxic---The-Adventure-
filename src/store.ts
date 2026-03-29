@@ -154,7 +154,6 @@ const initialState = {
     lars_paced: false,
     marius_tourbus_doubt: false,
     gaveDiplomatSouvenir: false,
-  },
     matzeRiffWarning: false,
     larsRhythmPact: false,
     mariusEgoStrategy: false,
@@ -169,6 +168,8 @@ const initialState = {
     kaminFeuerPact: false,
     salzgitterBandUnited: false,
     fanMovement: false,
+  },
+
 
   loreEntries: [
 
