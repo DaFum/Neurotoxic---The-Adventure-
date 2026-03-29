@@ -259,6 +259,7 @@ export function Backstage() {
         </Text>
       </Float>
 
+
       {/* Absurd NPC: Sentient Feedback Monitor */}
       <Interactable
         position={[-6, 0.5, 4]}
@@ -268,7 +269,7 @@ export function Backstage() {
           const store = useStore.getState();
           const hasSchaltplan = store.hasItem('Verstärker-Schaltplan');
           const hasMaschinenSeele = store.flags.maschinen_seele_amp && store.flags.maschinen_seele_tr8080;
-          
+
           if (store.flags.maschinen_seele_complete) {
             store.setDialogue('Monitor: "WIR SIND EINS. DAS FEEDBACK IST DER PULS DER MASCHINE. SALZGITTER WIRD ERWACHEN."');
             return;
@@ -354,6 +355,15 @@ export function Backstage() {
                 useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
               }});
             }
+            if (store.flags.ampSentient) {
+              options.unshift({ text: 'Der Amp hat mir von dir erzählt.', action: () => {
+                useStore.getState().setDialogue('Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."');
+                useStore.getState().increaseBandMood(25);
+                useStore.getState().increaseSkill('technical', 5);
+                useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
+                useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
+              }});
+            }
             store.setDialogue({
               text: 'Monitor: "BZZZT. Ich habe schon tausend Sänger kommen und gehen sehen. Marius? Der klingt wie eine rostige Kreissäge in einem Mixer. BZZZT. Aber er hat... Seele. Eine sehr, sehr verzerrte Seele. Hast du den Schaltplan gefunden?"',
               options
@@ -393,6 +403,7 @@ export function Backstage() {
         name="Marius"
         isBandMember={true}
         idleType="sway"
+
         onInteract={() => {
           const store = useStore.getState();
           const bandMood = store.bandMood;
@@ -403,68 +414,101 @@ export function Backstage() {
             return;
           }
 
+          const options: any[] = [
+            {
+              text: 'Du bist ein Gott am Mikrofon. Vertrau dir. [Social 5]',
+              requiredSkill: { name: 'social', level: 5 },
+              action: () => {
+                useStore.getState().setDialogue('Marius: "Ein Gott... ja. Ein Gott des Lärms! Danke, Manager. Ich werde sie alle in Grund und Boden schreien!"');
+                useStore.getState().setFlag('mariusCalmed', true);
+                useStore.getState().setFlag('mariusConfidenceBoost', true);
+                useStore.getState().completeQuest('marius');
+                useStore.getState().increaseBandMood(30);
+                useStore.getState().increaseSkill('social', 3);
+              }
+            },
+            {
+              text: 'Stell dir vor, du bist der einzige Mensch auf der Bühne. [Performer]',
+              requiredTrait: 'Performer',
+              action: () => {
+                useStore.getState().setDialogue('Marius: "Nur ich und das Mikrofon... Keine Erwartungen, nur reiner Ausdruck. Das ist brillant!"');
+                useStore.getState().setFlag('mariusCalmed', true);
+                useStore.getState().setFlag('mariusConfidenceBoost', true);
+                useStore.getState().setFlag('backstage_performer_speech', true);
+                useStore.getState().setFlag('mariusStageFright', true);
+                useStore.getState().completeQuest('marius');
+                useStore.getState().increaseBandMood(30);
+                useStore.getState().increaseSkill('social', 3);
+              }
+            },
+            {
+              text: 'Angst ist Schwäche. Zerstöre sie. [Brutalist]',
+              requiredTrait: 'Brutalist',
+              action: () => {
+                useStore.getState().setDialogue('Marius: "...Du hast Recht. Zerstören. Einfach alles zerstören!"');
+                useStore.getState().setFlag('mariusCalmed', true);
+                useStore.getState().setFlag('mariusStageFright', true);
+                useStore.getState().completeQuest('marius');
+                useStore.getState().increaseBandMood(20);
+                useStore.getState().increaseSkill('chaos', 3);
+              }
+            },
+            {
+              text: 'Lass die Frequenz durch dich fließen. [Mystic]',
+              requiredTrait: 'Mystic',
+              action: () => {
+                useStore.getState().setDialogue('Marius: "Die Frequenz... ich spüre sie. Ich bin nur das Gefäß. Die Musik spricht."');
+                useStore.getState().setFlag('mariusCalmed', true);
+                useStore.getState().setFlag('mariusConfidenceBoost', true);
+                useStore.getState().setFlag('mariusStageFright', true);
+                useStore.getState().completeQuest('marius');
+                useStore.getState().increaseBandMood(25);
+                useStore.getState().increaseSkill('chaos', 3);
+              }
+            },
+            { text: 'Stell dir einfach vor, sie wären alle aus Lego.', action: () => {
+              useStore.getState().setDialogue('Marius: "Lego? Das macht es irgendwie... schmerzhafter? Aber okay, ich versuchs."');
+              useStore.getState().setFlag('mariusCalmed', true);
+              useStore.getState().completeQuest('marius');
+              useStore.getState().increaseBandMood(10);
+            }},
+            { text: 'Denk an den Gig 1982. Wir haben Schlimmeres überlebt.', action: () => {
+              if (useStore.getState().flags.askedAbout1982) {
+                useStore.getState().setDialogue('Marius: "1982... ja. Als die Gießerei bebte. Wenn wir das überlebt haben, ist Tangermünde ein Kinderspiel."');
+                useStore.getState().setFlag('mariusCalmed', true);
+                useStore.getState().setFlag('mariusConfidenceBoost', true);
+                useStore.getState().completeQuest('marius');
+                useStore.getState().increaseBandMood(25);
+              } else {
+                useStore.getState().setDialogue('Marius: "1982? Da war ich noch nicht mal in der Band. Wovon redest du? Das macht mich nur noch nervöser!"');
+                useStore.getState().increaseBandMood(-5);
+              }
+            }}
+          ];
+
+          if (store.flags.mariusEgoStrategy) {
+            options.unshift({
+              text: 'Erinnerst du dich an unsere Strategie?',
+              action: () => {
+                useStore.getState().setDialogue('Marius: "Die Strategie... ja! Ego-Management aktiviert! Ich habe die absolute Kontrolle!"');
+                useStore.getState().setFlag('mariusCalmed', true);
+                useStore.getState().setFlag('mariusConfidenceBoost', true);
+                useStore.getState().completeQuest('marius');
+                useStore.getState().increaseBandMood(35);
+              }
+            });
+          }
+
           store.setDialogue({
             text: bandMood > 50
               ? 'Marius: "Ich bin nervös, aber die Stimmung in der Band gibt mir Kraft. Meinst du, wir schaffen das? Die Fans in Tangermünde sind... intensiv."'
               : 'Marius: "Ich... ich kann das nicht. Da draußen sind Tausende! Was wenn ich meinen Text vergesse? Was wenn die Maschinen versagen?"',
-            options: [
-              { 
-                text: 'Du bist ein Gott am Mikrofon. Vertrau dir. [Social 5]', 
-                requiredSkill: { name: 'social', level: 5 },
-                action: () => {
-                  useStore.getState().setDialogue('Marius: "Ein Gott... ja. Ein Gott des Lärms! Danke, Manager. Ich werde sie alle in Grund und Boden schreien!"');
-                  useStore.getState().setFlag('mariusCalmed', true);
-                  useStore.getState().setFlag('mariusConfidenceBoost', true);
-                  useStore.getState().completeQuest('marius');
-                  useStore.getState().increaseBandMood(30);
-                  useStore.getState().increaseSkill('social', 3);
-                }
-              },
-              { 
-                text: 'Die Halle wartet auf dich. Nimm sie dir. [Performer]',
-                requiredTrait: 'Performer',
-                action: () => {
-                  useStore.getState().setDialogue('Marius: "Du hast Recht. Die Bühne ist mein Altar. Ich werde predigen!"');
-                  useStore.getState().setFlag('mariusCalmed', true);
-                  useStore.getState().setFlag('mariusConfidenceBoost', true);
-                  useStore.getState().setFlag('backstage_performer_speech', true);
-                  useStore.getState().completeQuest('marius');
-                  useStore.getState().increaseBandMood(35);
-                  useStore.getState().increaseSkill('social', 5);
-                }
-              },
-              {
-                text: 'Hör auf zu jammern und sing, oder du fliegst. [Brutalist]',
-                requiredTrait: 'Brutalist',
-                action: () => {
-                  useStore.getState().setDialogue('Marius: "...Du bist eiskalt. Gut. Der Hass macht mich fokussiert."');
-                  useStore.getState().setFlag('mariusCalmed', true);
-                  useStore.getState().completeQuest('marius');
-                  useStore.getState().increaseBandMood(10);
-                }
-              },
-              { text: 'Stell dir einfach vor, sie wären alle aus Lego.', action: () => {
-                useStore.getState().setDialogue('Marius: "Lego? Das macht es irgendwie... schmerzhafter? Aber okay, ich versuchs. Wenn ich drauftrete, schreie ich wenigstens authentisch."');
-                useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
-                useStore.getState().increaseBandMood(10);
-              }},
-              { text: 'Denk an den Gig 1982. Wir haben Schlimmeres überlebt.', action: () => {
-                if (useStore.getState().flags.askedAbout1982) {
-                  useStore.getState().setDialogue('Marius: "1982... ja. Als die Gießerei bebte. Wenn wir das überlebt haben, ist Tangermünde ein Kinderspiel. Danke für die Erinnerung."');
-                  useStore.getState().setFlag('mariusCalmed', true);
-                  useStore.getState().setFlag('mariusConfidenceBoost', true);
-                  useStore.getState().completeQuest('marius');
-                  useStore.getState().increaseBandMood(25);
-                } else {
-                  useStore.getState().setDialogue('Marius: "1982? Da war ich noch nicht mal in der Band. Wovon redest du? Das macht mich nur noch nervöser!"');
-                  useStore.getState().increaseBandMood(-5);
-                }
-              }}
-            ]
+            options
           });
         }}
+
       />
+
 
       {/* Lars - Needs Energy */}
       <Interactable
@@ -505,37 +549,59 @@ export function Backstage() {
               store.setDialogue('Lars: "VOLLGAS! Ich spüre die Farben der Musik!"');
             }
           } else if (hasTurbo) {
-            store.setDialogue({
-              text: 'Lars: "WAS IST DAS?! Turbo-Koffein?! Gib her, ich will die Schallmauer durchbrechen!"',
-              options: [
-                { text: 'Trink es auf Ex!', action: () => {
-                  useStore.getState().setDialogue('Lars: "ICH BIN EIN BLITZ! ICH BIN DER DONNER! MEINE HÄNDE VIBRIEREN SO SCHNELL, DASS ICH DURCH WÄNDE GEHEN KANN!"');
+            const options: any[] = [
+              { text: 'Trink es auf Ex!', action: () => {
+                useStore.getState().setDialogue('Lars: "ICH BIN EIN BLITZ! ICH BIN DER DONNER! MEINE HÄNDE VIBRIEREN SO SCHNELL, DASS ICH DURCH WÄNDE GEHEN KANN!"');
+                useStore.getState().removeFromInventory('Turbo-Koffein');
+                useStore.getState().setFlag('larsEnergized', true);
+                useStore.getState().setFlag('larsVibrating', true);
+                useStore.getState().increaseBandMood(40);
+              }},
+              { text: 'Nur einen Schluck. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+                useStore.getState().setDialogue('Lars: "Du hast recht. Ein kontrollierter Burn. Mein Rhythmus wird unaufhaltsam sein."');
+                useStore.getState().removeFromInventory('Turbo-Koffein');
+                useStore.getState().setFlag('larsEnergized', true);
+                useStore.getState().setFlag('lars_paced', true);
+                useStore.getState().increaseBandMood(30);
+                useStore.getState().increaseSkill('social', 3);
+              }},
+              { text: 'Nur einen Schluck.', action: () => {
+                useStore.getState().setDialogue('Lars: "Nur einen Schluck? Bist du wahnsinnig? Das Zeug ist wie Raketentreibstoff! ... Okay, ich fühl mich schon besser."');
+                useStore.getState().removeFromInventory('Turbo-Koffein');
+                useStore.getState().setFlag('larsEnergized', true);
+                useStore.getState().increaseBandMood(20);
+              }}
+            ];
+
+            if (store.flags.larsRhythmPact) {
+               options.unshift({ text: 'Der Pakt hält.', action: () => {
+                  useStore.getState().setDialogue('Lars: "Der Pakt hält! Diese Energie... sie speist direkt das Zentrum des Rhythmus!"');
+                  useStore.getState().removeFromInventory('Turbo-Koffein');
+                  useStore.getState().setFlag('larsEnergized', true);
+                  useStore.getState().increaseBandMood(40);
+               }});
+               options.unshift({ text: 'Lass den Rhythmus explodieren! [Chaos 5]', requiredSkill: { name: 'chaos', level: 5 }, action: () => {
+                  useStore.getState().setDialogue('Lars: "EXPLOSION! DER PAKT BRICHT DIE GRENZEN!"');
                   useStore.getState().removeFromInventory('Turbo-Koffein');
                   useStore.getState().setFlag('larsEnergized', true);
                   useStore.getState().setFlag('larsVibrating', true);
-                  useStore.getState().increaseBandMood(40);
-                }},
-                { text: 'Nur einen Schluck. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
-                  useStore.getState().setDialogue('Lars: "Du hast recht. Ein kontrollierter Burn. Mein Rhythmus wird unaufhaltsam sein."');
-                  useStore.getState().removeFromInventory('Turbo-Koffein');
-                  useStore.getState().setFlag('larsEnergized', true);
-                  useStore.getState().setFlag('lars_paced', true);
-                  useStore.getState().increaseBandMood(30);
-                  useStore.getState().increaseSkill('social', 3);
-                }},
-                { text: 'Nur einen Schluck.', action: () => {
-                  useStore.getState().setDialogue('Lars: "Nur einen Schluck? Bist du wahnsinnig? Das Zeug ist wie Raketentreibstoff! ... Okay, ich fühl mich schon besser."');
-                  useStore.getState().removeFromInventory('Turbo-Koffein');
-                  useStore.getState().setFlag('larsEnergized', true);
-                  useStore.getState().increaseBandMood(20);
-                }}
-              ]
+                  useStore.getState().increaseBandMood(50);
+               }});
+            }
+
+            store.setDialogue({
+              text: 'Lars: "WAS IST DAS?! Turbo-Koffein?! Gib her, ich will die Schallmauer durchbrechen!"',
+              options
             });
           } else if (store.hasItem('Energiedrink')) {
             store.setDialogue('Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."');
             store.removeFromInventory('Energiedrink');
             store.setFlag('larsEnergized', true);
             store.increaseBandMood(10);
+            if (store.flags.larsRhythmPact) {
+               store.increaseBandMood(15);
+               store.setDialogue('Lars: "JA! Der Treibstoff für unseren Pakt!"');
+            }
           } else {
             store.setDialogue('Lars: "Ich bin total platt. Ohne Koffein geht hier gar nichts. Hast du was Stärkeres als Wasser?"');
           }
@@ -605,6 +671,7 @@ export function Backstage() {
           }}
         />
       )}
+
 
       <Interactable
         position={[-10, 0, 5]}
@@ -680,12 +747,61 @@ export function Backstage() {
           if (hasForbiddenRiff) {
             store.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
             store.increaseBandMood(15);
+            return;
+          }
+
+          if (store.flags.mariusCalmed && !store.flags.backstageRitualPerformed) {
+             store.setDialogue({
+                text: 'Manager: "Zeit für unser Ritual. Lasst uns die Energien bündeln."',
+                options: [
+                   { text: 'Kosmisches Ritual. [Mystic]', requiredTrait: 'Mystic', action: () => {
+                      useStore.getState().setDialogue('Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(35);
+                      useStore.getState().increaseSkill('chaos', 5);
+                   }},
+                   { text: 'Showmanship Ritual. [Performer]', requiredTrait: 'Performer', action: () => {
+                      useStore.getState().setDialogue('Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(30);
+                      useStore.getState().increaseSkill('social', 5);
+                   }},
+                   { text: 'Frequenz-Anpassung. [Technician]', requiredTrait: 'Technician', action: () => {
+                      useStore.getState().setDialogue('Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(25);
+                      useStore.getState().increaseSkill('technical', 5);
+                   }},
+                   { text: 'Einfacher Gruppen-Chant.', action: () => {
+                      useStore.getState().setDialogue('Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(15);
+                   }}
+                ]
+             });
+             return;
+          }
+
+          if (store.flags.backstageRitualPerformed) {
+             store.setDialogue('Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.');
           } else {
-            store.setDialogue('Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Manager: "Wirklich? Vor jedem Auftritt?" Marius: "Es hilft gegen das Lampenfieber!"');
-            store.increaseBandMood(5);
+             store.setDialogue('Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.');
+             store.increaseBandMood(5);
+             if (!store.quests.find(q => q.id === 'backstage_ritual')) {
+               store.addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+             }
           }
         }}
       />
+
 
       {/* Exit to TourBus */}
       <Interactable

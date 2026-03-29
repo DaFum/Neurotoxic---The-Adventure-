@@ -28,6 +28,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * "Ich kümmere mich darum" (kein Mood-Effekt).
         * "Neues Genre?" (-5 BandMood).
     * *Spezial (Trait: Cynic):* Option, die Tour als "schlechten Witz" zu bezeichnen (+20 BandMood, +5 Chaos).
+    * *Spezial (Trait: Performer):* "Zeig mir, wie du die Crowd liest." (+20 BandMood, +3 Social, setzt `matzeDeepTalk`).
+    * *BandMood > 60 Bonus:* Matze ist hyped und will einen Power-Chord zeigen.
+        * [Chaos 5]: Riss in der Wand (+15 BandMood, setzt `matzeRiffWarning`).
+        * Standard: Aufheben für Salzgitter (setzt `matzeRiffWarning`).
     * *Item (Industrie-Talisman):* Erkennt den Talisman.
         * Zweig A: "Für die Band" (+30 BandMood, setzt `matzeDeepTalk`).
         * Zweig B: "Geheimnis bewahren" (+15 BandMood, setzt `matzeDeepTalk`).
@@ -53,11 +57,20 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Chaos 3):* Beat lehren (+20 BandMood, +2 Chaos, setzt `larsDrumPhilosophy`).
             * *Unterzweig (Skill: Technical 3):* Schlagkraft-Analyse (+15 BandMood, +2 Technical, setzt `larsDrumPhilosophy`).
             * *Unterzweig (Standard):* "Klingt anstrengend" (kein Mood-Effekt).
+    * *Rhythmus-Pakt (Nachdem larsDrumPhilosophy gesetzt wurde):*
+        * [Brutalist]: Aggressiver Pakt (+25 BandMood, +5 Chaos, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
+        * [Diplomat]: Harmonischer Pakt (+20 BandMood, +5 Social, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
+        * Standard: Bedenkzeit.
 * **Marius (Sänger):**
-    * *Nach Bier:*
-        * Zweig A (Trait: Diplomat): "Du bist der Frontmann" (+25 BandMood, +5 Social).
-        * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +5 Chaos).
-        * Standard: "Weiter so." (+10 BandMood).
+    * *Nach Bier (Wie bereitest du dich auf Salzgitter vor?):*
+        * (Trait: Performer): Bühnenpräsenz-Coaching (+15 BandMood, +3 Social, setzt `mariusEgoStrategy`).
+        * (Trait: Cynic): "Du wirst auf der Bühne sterben" (+10 BandMood, +3 Chaos).
+        * (Skill: Social 7): Ego-Management-Plan (+20 BandMood, setzt `mariusEgoStrategy`).
+        * Standard: "Bleib einfach cool" (kein Effekt).
+        * *Nach Erstkontakt (BandMood > 50):*
+            * Zweig A (Trait: Diplomat): "Du bist der Frontmann" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
+            * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos).
+            * Standard: "Bereit für den Gig?" (+10 BandMood).
     * *Ohne Bier:* Fordert Bier.
         * "Ich beeile mich" (kein Mood-Effekt).
         * "Trink doch Wasser" (-5 BandMood).
@@ -77,6 +90,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical, Quest-Abschluss: `repair_amp`, setzt `talkingAmpRepaired`).
     * *Nach Reparatur:* Bietet Therapie-Sitzung an (setzt `ampTherapyStarted`, Quest hinzugefügt: `amp_therapy`).
     * *Therapie-Sitzung:*
+        * Option (Trait: Mystic): "Ich höre deine wahre Stimme, Amp" (+20 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted` & `ampSentient`).
         * Option (Trait: Diplomat): "Du bist ein Bewusstsein" (+30 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
         * Option (Trait: Brutalist): "Du bist ein Werkzeug" (+10 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
 * **Schrottmetall (Item):**
@@ -89,6 +103,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Item (Verbotenes Riff):* Maschine absorbiert das Riff.
         * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
 * **Feedback-Monitor:**
+    * *Wenn ampSentient gesetzt:* "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, startet Quest).
     * *Initial:* Fragt nach dem Quanten-Kabel (setzt `feedbackMonitorTalked`, Quest hinzugefügt: `feedback_monitor`).
     * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`, entfernt Quanten-Kabel).
 
@@ -102,10 +117,19 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * "Ich suche danach." (Quest hinzugefügt: `cable`).
         * "Das Kabel wurde nicht gebrochen, es wurde durchtrennt." [Technical 5] (+20 BandMood, +5 Technical, setzt `tourbus_sabotage_discovered`, Lore: `tourbus_saboteur`, Quest gestartet: `tourbus_saboteur`).
         * "Vielleicht Schicksal." (-5 BandMood).
-    * *Mit Repariertem Kabel:* "Bühne abreißen!" (+10 BandMood, Quest-Abschluss: `cable`).
+    * *Mit Repariertem Kabel (Angst vor Salzgitter?):*
+        * [Visionary]: "Ich sehe unseren Sieg" (+15 BandMood, Quest-Abschluss: `cable`).
+        * [Technical 5]: "Soundcheck analysiert" (+20 BandMood, +3 Technical, Quest-Abschluss: `cable`).
+        * [Social 5]: "Wir schaffen das zusammen" (+15 BandMood, +3 Social, Quest-Abschluss: `cable`).
+        * Standard: "Ein bisschen schon" oder "Lass uns die Bühne abreißen!" (+10 BandMood, Quest-Abschluss: `cable`).
     * *Sabotage entdeckt & `marius_tourbus_doubt` gesetzt & kein Geständnis:*
         * [Social 5]: Matze gesteht Sabotage (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
         * [Brutalist]: Schweigend ertappt (-5 BandMood).
+* **Band-Besprechung (Mitte des Busses, nachdem Sabotage entdeckt wurde):**
+    * (Trait: Diplomat): Vermitteln (+30 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
+    * (Trait: Brutalist): Zusammenreißen (+20 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
+    * (Trait: Performer): Motivationsrede (+25 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
+    * Standard: Einfache Ansagen (+10 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
 * **Marius:**
     * *Item (Marius Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
     * *BandMood < 30 (kein Ego):* Nervenzusammenbruch — Anzeige des Dialogs setzt automatisch `marius_tourbus_doubt: true`.
@@ -147,6 +171,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * [Social 5]: "Geist beruhigen." (+20 BandMood, +3 Social, setzt `ghostSecretRevealed`, Lore: `roadie_bassist`).
         * Standard: "Erzähl mir alles." (+20 BandMood, setzt `ghostSecretRevealed`).
         * "Vielleicht später." (kein Mood-Effekt).
+    * *Vertrauens-Pfad (Wenn ghostSecretRevealed & askedAbout1982 gesetzt):*
+        * [Mystic]: "Ich will dir wirklich helfen" (+25 BandMood, Quest `ghost_trust`, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
+        * [Social 7]: "Erzähl mir deine Geschichte" (+20 BandMood, Quest `ghost_trust`, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
+        * Standard: "Nur aus Neugier".
     * *Spezial-Items:*
         * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood, setzt `ghostSecretRevealed`) ODER Begraben (+5 BandMood).
         * *Item (Verbotenes Riff):* "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
@@ -168,13 +196,18 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Standard-Fallback: "Lass die Verbindung einfach laufen" (+20 BandMood, setzt `maschinen_seele_complete`, Quest-Abschluss: `maschinen_seele`, **Lore:** `maschinen_bewusstsein`). *(Kein Trait/Skill erforderlich.)*
 * **Marius (Lampenfieber):**
     * *Optionen zur Beruhigung (Quest-Abschluss `marius` für jede, setzt `mariusCalmed`):*
+        * *Bonus (Wenn mariusEgoStrategy gesetzt):* "Erinnerst du dich an unsere Strategie?" (+35 BandMood, +5 Social, setzt `mariusConfidenceBoost`).
         * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, setzt `mariusConfidenceBoost`).
-        * (Trait: Performer): "Nimm die Halle" (+35 BandMood, +5 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`).
-        * (Trait: Brutalist): "Sing oder flieg" (+10 BandMood). **Hinweis: setzt NICHT `mariusConfidenceBoost` — kein Zugang zu Good/Great Endings.**
-        * (Flag `askedAbout1982` gesetzt): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`) ODER "Wovon redest du?" (-5 BandMood).
+        * (Trait: Performer): "Einziger Mensch auf der Bühne" (+30 BandMood, +3 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`, `mariusStageFright`).
+        * (Trait: Mystic): "Lass die Frequenz durch dich fließen" (+25 BandMood, +3 Chaos, setzt `mariusConfidenceBoost`, `mariusStageFright`).
+        * (Trait: Brutalist): "Angst ist Schwäche. Zerstöre sie" (+20 BandMood, +3 Chaos, setzt `mariusStageFright`). **Hinweis: setzt NICHT `mariusConfidenceBoost`.**
+        * (Flag `askedAbout1982` gesetzt): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`).
         * "Lego-Trick" (+10 BandMood).
 * **Lars (Energie-Mangel):**
     * *Item (Turbo-Koffein):*
+        * *Bonus (Wenn larsRhythmPact gesetzt):*
+            * [Chaos 5]: "Lass den Rhythmus explodieren!" (+50 BandMood, setzt `larsVibrating`, `larsEnergized`).
+            * "Der Pakt hält." (+40 BandMood, setzt `larsEnergized`).
         * Auf Ex: (+40 BandMood, setzt `larsVibrating`, `larsEnergized`).
         * Nur ein Schluck (Trait: Diplomat): (+30 BandMood, +3 Social, setzt `lars_paced`, `larsEnergized`).
         * Nur ein Schluck (Standard): (+20 BandMood, setzt `larsEnergized`).
@@ -191,6 +224,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Lötkolben (Item):**
     * *Interaktion:* Aufheben (Erhalt: Lötkolben).
 * **Ritual-Kreis:**
+    * *Bandritual (Wenn mariusCalmed gesetzt & backstageRitualPerformed noch nicht):*
+        * [Mystic]: Kosmisches Ritual (+35 BandMood, +5 Chaos, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
+        * [Performer]: Showmanship Ritual (+30 BandMood, +5 Social, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
+        * [Technician]: Frequenz-Anpassung (+25 BandMood, +5 Technical, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
+        * Standard: Einfacher Chant (+15 BandMood, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
     * *Mit Resonanz-Kristall + Blaupause:*
         * (Trait: Mystic): Frequenz vollenden (+50 BandMood, entfernt `Resonanz-Kristall`, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
     * *Mit Frequenzfragment + Blaupause:*
@@ -204,7 +242,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 4. VoidStation (Die Realitäts-Grenze)
 
 * **Kosmischer Tankwart:**
+    * *Wenn ghostTrustEarned gesetzt:* "Wir spielen für ihn in Salzgitter." (+20 BandMood, setzt `tankwartBargain`).
     * *Spezial (Trait: Mystic):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere).
+    * *Spezial (Trait: Cynic):* "Das ist doch alles Quatsch. Gib mir Sprit." (+15 BandMood, +3 Chaos).
+    * *Spezial (Trait: Performer):* "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social).
     * *Item (Industrie-Talisman):* "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
     * *Item (Verbotenes Riff):* "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
     * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss: `void`) ODER 432Hz (+10 BandMood, Quest-Abschluss: `void`).
@@ -218,16 +259,21 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Option (Trait: Visionary):* Nachricht entschlüsseln (+20 BandMood, Quest-Abschluss: `cosmic_echo`, **Lore:** `cosmic_echo_decoded`).
 * **Marius' Ego (Item):**
     * *Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius' Ego" und schaltet **Lore:** `ego_philosophy` frei. Quest-Abschluss: `ego`.*
+    * *Bonus (Wenn mariusEgoStrategy):* "Wende unsere Strategie an." (+35 BandMood).
+    * *Bonus (Wenn marius_tourbus_doubt) (Trait: Diplomat):* "Marius glaubt nicht mehr an sich. Du musst ihn retten." (+40 BandMood, +5 Social, setzt `mariusConfidenceBoost`).
     * Option (Trait: Visionary): "Vision leitet uns" (+30 BandMood, +5 Chaos).
     * Option (Skill: Technical 8): "Resonanzfrequenz instabil" (+20 BandMood, +5 Technical).
     * Option (Skill: Social 8): "Fans brauchen dich" (+25 BandMood, +5 Social).
+    * Option (Trait: Brutalist): "Ich zwinge dich zurück!" (+15 BandMood, +3 Chaos).
+    * Option (Trait: Diplomat): "Verhandeln wir." (+25 BandMood, +3 Social).
     * Standard: "Komm einfach mit" (+10 BandMood).
 * **Dunkle Materie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Dunkle Materie).
 * **Schwebender Bassist** *(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):*
-    * *Option (Skill: Social 8):* "Die Band braucht dich" (+40 BandMood, +3 Social, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
-    * *Option (Skill: Technical 10):* "Du hängst in einer Rückkopplungsschleife fest" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
-    * *Option (Trait: Mystic):* "Lass dich von der Leere tragen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, **Lore:** `bassist_wahrheit`).
+    * *Option (Skill: Social 8):* "Die Band vermisst dich" (+25 BandMood, +3 Social, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Option (Skill: Technical 10):* "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Option (Trait: Mystic):* "Ich höre deine Melodie" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Option (Trait: Visionary):* "Ich sehe dich zwischen den Dimensionen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
     * *Standard:* "Ich lass dich besser in Ruhe" (kein Mood-Effekt).
 * **Diplomaten-Interface:**
     * *Option (Trait: Diplomat):* Verhandeln (+30 BandMood, +5 Social, setzt `void_diplomat_negotiation`, **Lore:** `schaltpult_record`).
@@ -245,9 +291,17 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 ## 5. Kaminstube (Nebenquest-Ort)
 
-* **Flüsternder Kamin (Trait: Diplomat):**
-    * *Spezial-Option:* Sprache deuten (+20 BandMood, Quest-Abschluss: `forgotten_lore`).
+* **Flüsternder Kamin:**
+    * *Option (Trait: Mystic):* "Wärme fühlen" (+20 BandMood, Quest `forgotten_lore`, Lore `kamin_prophecy`, setzt `kaminFeuerPact`).
+    * *Option (Trait: Diplomat):* "Sprache deuten" (+20 BandMood, Quest `forgotten_lore`, Lore `kamin_prophecy`, setzt `kaminFeuerPact`).
+    * *Option (Skill: Technical 8):* "Akustik analysieren" (+15 BandMood, +3 Technical, Quest `forgotten_lore`, Lore `kamin_prophecy`, setzt `kaminFeuerPact`).
+    * *Option (Skill: Chaos 7):* "Feuer zwingen" (+10 BandMood, +3 Chaos, Quest `forgotten_lore`, Lore `kamin_prophecy`, setzt `kaminFeuerPact`).
 * **Wirt:**
+    * *BandMood > 80 & 1982 angesprochen / Geist-Geheimnis bekannt:*
+        * *Bonus (Wenn ghostTrustEarned):* "Der Geist hat mich geschickt." (+30 BandMood, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
+        * Option (Trait: Diplomat): "Ich bin vertrauenswürdig." (+25 BandMood, +5 Social, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
+        * Option (Skill: Social 7): "Es ist wichtig für die Band." (+20 BandMood, +3 Social, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
+        * Option (Skill: Chaos 5): "Die Wahrheit muss raus!" (+15 BandMood, +3 Chaos, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
     * *Item (Industrie-Talisman):* Erhält "Altes Plektrum" (wichtig für Matze in Salzgitter) (+20 BandMood, Erhalt: Altes Plektrum).
     * *BandMood > 80:* Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
     * *Standard:* Erhalt: Bier.
@@ -271,9 +325,15 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Sabotage-Geständnis (Wenn Sabotage entdeckt & Amp repariert):*
         * (Trait: Diplomat): Vergeben (+30 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
         * (Trait: Brutalist): Warnen (+15 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
+* **Marius:**
+    * *Reaktionen auf Zustände:*
+        * (Wenn mariusEgoStrategy gesetzt): "Strategie funktioniert" (+10 BandMood).
+        * (Wenn egoContained gesetzt): "Mein Ego brennt in mir!"
+        * Standard: "Underground Metal Fest!"
 * **Lars:**
     * *Rhythmus der Schmiede:*
-        * (Skill: Technical 5): 120 BPM (+15 BandMood, +3 Technical, setzt `kaminstube_lars_talked`).
+        * *Bonus (Wenn larsRhythmPact):* "Ort hat eigenen Rhythmus." (+10 BandMood, setzt `kaminstube_lars_talked`).
+        * (Skill: Technical 5): 120 BPM (+15 BandMood, +3 Technical, setzt `kaminstube_lars_talked`) ODER "Akustik perfekt" (+10 BandMood, +2 Technical).
         * (Skill: Chaos 5): Polyrhythmus (+20 BandMood, +3 Chaos, setzt `kaminstube_lars_talked`).
 * **Crowd:**
     * *Menge anheizen:*
@@ -286,29 +346,39 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 6. Salzgitter (Das Finale)
 
 * **Matze:**
-    * *Item (Verbotenes Riff + Altes Plektrum):* Riff wird gebändigt.
-        * Option (Skill: Chaos 10): "Chaos kanalisieren" (+70 BandMood, +5 Chaos).
-        * Option (Skill: Technical 10): "Präzision im Chaos" (+60 BandMood, +5 Technical).
+    * *Item (Verbotenes Riff + Void-Plektrum):* Ultimativer Sound.
+        * Option (Skill: Chaos 10): (+70 BandMood, +5 Chaos).
+        * Option (Skill: Technical 10): (+60 BandMood, +5 Technical).
         * Standard: (+20 BandMood).
-    * *Nur Verbotenes Riff (ohne Plektrum):* Er warnt vor Realitätsrissen.
-    * *Deep Talk (Trait: Visionary):* (+50 BandMood, +5 Chaos).
-    * *Deep Talk (Standard):* (+10 BandMood).
+    * *Item (Verbotenes Riff + Altes Plektrum):* Riff wird gebändigt.
+        * Option (Skill: Chaos 10): (+50 BandMood, +5 Chaos).
+        * Option (Skill: Technical 10): (+40 BandMood, +5 Technical).
+        * Standard: (+20 BandMood).
+    * *Deep Talk & Wirt Legacy 1982:*
+        * Option (Trait: Mystic): "Frequenzen sind bereit" (+40 BandMood bei `backstageRitualPerformed`, sonst +20).
+        * Standard: "Wir brechen den Fluch" (+20 BandMood).
 * **Lars:**
-    * *Wenn "vibriert" (Koffein im Backstage auf Ex getrunken):*
-        * Option (Skill: Technical 10): "Frequenz synchronisieren" (+40 BandMood, +5 Technical).
-        * Standard: (+10 BandMood).
-    * *Philosophie:* (+5 BandMood).
+    * *Wenn larsRhythmPact:*
+        * *Bonus (Wenn larsVibrating):* Hyperpowered Lars (+50 BandMood, +5 Chaos).
+        * Standard: "Realität zertrümmern" (+30 BandMood).
 * **Marius:**
-    * *Trait (Performer):* Spezial-Tipp für die Show geben (+30 BandMood, +5 Social).
-    * *Confidence Boost (Skill: Chaos 10):* "Zorn kanalisieren" (+55 BandMood, +5 Chaos).
-    * *Confidence Boost (Skill: Social 10):* "Menge beruhigen" (+45 BandMood, +5 Social).
-    * *Confidence Boost (Standard):* (+15 BandMood).
-* **Schwebender Bassist:**
-    * *Interaktion:* Betrachten (+10 BandMood).
+    * *Trait (Performer):* Spezial-Tipp für die erste Reihe geben (+30 BandMood, +5 Social).
+    * *Unite Band (mariusEgoStrategy + mariusConfidenceBoost + egoContained):*
+        * Wenn Band bereit (Matze & Lars Quests): "Die Band ist vereint." (+30 BandMood, Quest `unite_band`, setzt `salzgitterBandUnited`).
+    * *Confidence Boost:*
+        * (Wenn backstage_performer_speech): (+30 BandMood, +5 Social).
+        * (Wenn egoContained & bassist_contacted): "Sing für den Bassisten" (+50 BandMood).
+        * (Skill: Chaos 10): "Zorn kanalisieren" (+40 BandMood, +5 Chaos).
+        * (Skill: Social 10): "Menge beruhigen" (+30 BandMood, +5 Social).
+
 * **Fan:**
+    * *Fan Movement Quest:*
+        * (Trait: Performer): "Folgt mir!" (+35 BandMood, Quest `fan_movement`, setzt `fanMovement`).
+        * (Skill: Social 8): "Zusammen singen!" (+30 BandMood, Quest `fan_movement`, setzt `fanMovement`).
+        * (Trait: Diplomat): "Eins mit der Musik" (+25 BandMood, Quest `fan_movement`, setzt `fanMovement`).
     * *Item (Industrie-Talisman):* Als Geschenk übergeben (+40 BandMood).
     * *Item (Signierte Setliste):* Übergeben (+25 BandMood bei Umarmung / +15 bei Abstand).
-    * *Standard:* Beleidigen (-2 BandMood).
+    * *Diplomat Andenken:* (+20 BandMood, setzt `gaveDiplomatSouvenir`).
 * **Tour Erfolgreich:**
     * *Interaktion:* Finale (+50 BandMood, Quest-Abschluss: `final`).
 
@@ -326,6 +396,7 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
         * (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
     * *Wenn `lars_paced`:* (+25 BandMood).
 * **Schwebender Bassist** *(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):*
+    * *Wenn voidBassistSpoken (und Quest abgeschlossen):* "Erinnert sich" (+30 BandMood, setzt `bassist_restored`).
     * *Item `Bassist-Saite` (Trait: Mystic):* "Gib ihm die Bassist-Saite aus dem Echo" (+40 BandMood, entfernt `Bassist-Saite`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
     * *Item `Resonanz-Kristall`:* "Nimm den Resonanz-Kristall. Vollende das Riff" (+30 BandMood, entfernt `Resonanz-Kristall`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
     * *Standard:* "Wir sehen uns auf der anderen Seite" (kein Mood-Effekt).
@@ -337,8 +408,8 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
 * **Das Finale (Multi-Outcome Ende):**
     * **[TRUE ENDING]:** Benötigt `salzgitter_true_ending` & `bassist_restored` & `maschinen_seele_complete`. (+100 BandMood, schaltet letzte Lore frei).
     * **[SECRET ENCORE]:** Benötigt `salzgitter_encore_unlocked`. (+50 BandMood).
-    * **[GREAT ENDING]:** Benötigt `frequenz1982_complete` & `mariusConfidenceBoost` & BandMood > 70. (+70 BandMood).
-    * **[GOOD ENDING]:** Benötigt `mariusConfidenceBoost` & BandMood > 70. (+50 BandMood).
+    * **[BEST ENDING]:** Benötigt 4 oder mehr Finale-Flags (`salzgitterBandUnited`, `fanMovement`, `backstageRitualPerformed`, `wirtLegacy1982`, `voidBassistSpoken`) ODER (`frequenz1982_complete` & `mariusConfidenceBoost` & BandMood > 70). (+70 BandMood).
+    * **[GOOD ENDING]:** Benötigt 2 oder mehr Finale-Flags ODER (`mariusConfidenceBoost` & BandMood > 70). (+50 BandMood).
     * **[STANDARD ENDING]:** Wenn keine Bedingungen erfüllt sind. (+30 BandMood).
 
 ---
@@ -347,3 +418,4 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
 
 * **Resonanz-Kristall:** Entsteht durch die Kombination von `Frequenzfragment` und `Splitter der Leere`.
 * **Geister-Drink:** Entsteht durch die Kombination von `Turbo-Koffein` und `Rostiges Plektrum`. (Erforderlich für Ghost Roadie Quest).
+* **Void-Plektrum:** Entsteht durch die Kombination von `Splitter der Leere` und `Altes Plektrum`.
