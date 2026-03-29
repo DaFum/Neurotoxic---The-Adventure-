@@ -652,13 +652,6 @@ export function Salzgitter() {
                return;
             }
 
-            if (store.flags.voidBassistSpoken && store.quests.find(q => q.id === 'bassist_mystery' && q.completed)) {
-               store.setDialogue('Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."');
-               store.increaseBandMood(30);
-               store.setFlag('bassist_restored', true);
-               return;
-            }
-
             const options: DialogueOption[] = [
                { text: 'Wir sehen uns auf der anderen Seite.', action: () => {
                  useStore.getState().setDialogue('Bassist: "Der Sound ist alles."');
@@ -690,6 +683,14 @@ export function Salzgitter() {
                    useStore.getState().removeFromInventory('Resonanz-Kristall');
                  }
                });
+            }
+
+            // Auto-restore via VoidStation contact only if player has no special items
+            if (store.flags.voidBassistSpoken && store.quests.find(q => q.id === 'bassist_mystery' && q.completed) && !store.hasItem('Bassist-Saite') && !store.hasItem('Resonanz-Kristall')) {
+               store.setDialogue('Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."');
+               store.increaseBandMood(30);
+               store.setFlag('bassist_restored', true);
+               return;
             }
 
             if (store.flags.voidBassistSpoken) {

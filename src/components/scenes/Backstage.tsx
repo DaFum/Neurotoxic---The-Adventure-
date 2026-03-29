@@ -356,7 +356,7 @@ export function Backstage() {
                 useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
               }});
             }
-            if (store.flags.ampSentient) {
+            if (store.flags.ampSentient && !store.flags.feedbackMonitorBackstageQuestStarted) {
               options.unshift({ text: 'Der Amp hat mir von dir erzählt.', action: () => {
                 useStore.getState().setDialogue('Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."');
                 useStore.getState().increaseBandMood(25);
@@ -592,14 +592,13 @@ export function Backstage() {
               options
             });
           } else if (store.hasItem('Energiedrink')) {
-            store.setDialogue('Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."');
+            const energyText = store.flags.larsRhythmPact
+              ? 'Lars: "JA! Der Treibstoff für unseren Pakt! Der Rhythmus explodiert in mir!"'
+              : 'Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."';
+            store.setDialogue(energyText);
             store.removeFromInventory('Energiedrink');
             store.setFlag('larsEnergized', true);
-            store.increaseBandMood(10);
-            if (store.flags.larsRhythmPact) {
-               store.increaseBandMood(15);
-               store.setDialogue('Lars: "JA! Der Treibstoff für unseren Pakt!"');
-            }
+            store.increaseBandMood(store.flags.larsRhythmPact ? 25 : 10);
           } else {
             store.setDialogue('Lars: "Ich bin total platt. Ohne Koffein geht hier gar nichts. Hast du was Stärkeres als Wasser?"');
           }
@@ -742,12 +741,6 @@ export function Backstage() {
             return;
           }
 
-          if (hasForbiddenRiff) {
-            store.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
-            store.increaseBandMood(15);
-            return;
-          }
-
           if (store.flags.mariusCalmed && !store.flags.backstageRitualPerformed) {
              store.setDialogue({
                 text: 'Manager: "Zeit für unser Ritual. Lasst uns die Energien bündeln."',
@@ -788,7 +781,10 @@ export function Backstage() {
              return;
           }
 
-          if (store.flags.backstageRitualPerformed) {
+          if (hasForbiddenRiff) {
+            store.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
+            store.increaseBandMood(15);
+          } else if (store.flags.backstageRitualPerformed) {
              store.setDialogue('Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.');
           } else {
              store.setDialogue('Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.');

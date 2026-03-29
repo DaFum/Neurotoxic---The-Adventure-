@@ -335,17 +335,21 @@ export function Kaminstube() {
                   action: () => {
                     useStore.getState().setDialogue('Das Knistern ist kein Zufall. Es ist ein Code. Ein thermischer Algorithmus, der die Geschichte der ersten Industrial-Gigs hier speichert.');
                     useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
                     useStore.getState().completeQuest('forgotten_lore');
                     useStore.getState().increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 3);
                   }
                 },
-                { 
-                  text: 'Versuche, die Sprache zu deuten. [Diplomat]', 
+                {
+                  text: 'Versuche, die Sprache zu deuten. [Diplomat]',
                   requiredTrait: 'Diplomat',
                   action: () => {
                     useStore.getState().setDialogue('Du verstehst das Flüstern! Es erzählt von einem versteckten Archiv unter der Bühne, das die wahren Ursprünge des Industrial Metal enthält. Du hast die Lore entschlüsselt.');
                     useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
                     useStore.getState().completeQuest('forgotten_lore');
                     useStore.getState().increaseBandMood(20);
                   }

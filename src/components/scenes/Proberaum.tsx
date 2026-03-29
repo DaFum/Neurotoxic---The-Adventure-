@@ -401,6 +401,16 @@ export function Proberaum() {
                   setDialogue('Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."');
                   increaseBandMood(10);
                 }},
+                {
+                  text: 'Zeig mir, wie du die Crowd liest. [Performer]',
+                  requiredTrait: 'Performer',
+                  action: () => {
+                    setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
+                    useStore.getState().setFlag('matzeDeepTalk', true);
+                    useStore.getState().increaseBandMood(20);
+                    useStore.getState().increaseSkill('social', 3);
+                  }
+                },
                 { text: 'Erzähl mir von der Tour 1982.', action: () => {
                   setDialogue({
                     text: 'Matze: "1982... da war der Lärm noch rein. Wir haben in einer alten Gießerei gespielt. Der Bassist ist damals verschwunden, aber der Sound war legendär. Wir suchen ihn immer noch."',
@@ -417,16 +427,6 @@ export function Proberaum() {
                           useStore.getState().increaseBandMood(25);
                           useStore.getState().increaseSkill('chaos', 4);
                           useStore.getState().setFlag('matzeDeepTalk', true);
-                        }
-                      },
-                      {
-                        text: 'Zeig mir, wie du die Crowd liest. [Performer]',
-                        requiredTrait: 'Performer',
-                        action: () => {
-                          setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
-                          useStore.getState().setFlag('matzeDeepTalk', true);
-                          useStore.getState().increaseBandMood(20);
-                          useStore.getState().increaseSkill('social', 3);
                         }
                       },
                       { text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',

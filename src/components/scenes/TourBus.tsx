@@ -671,7 +671,7 @@ export function TourBus() {
           }
 
 
-          if (flags.ghostSecretRevealed && !flags.ghostTrustEarned && flags.askedAbout1982) {
+          if (flags.ghostSecretRevealed && !flags.ghostTrustEarned) {
             setDialogue({
               text: 'Geist: "Du kennst jetzt mein Geheimnis. Warum bist du noch hier?"',
               options: [
