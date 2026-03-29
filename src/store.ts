@@ -310,7 +310,18 @@ export const useStore = create<GameState>()(
         return false;
       },
       setFlag: (flag, value) => set((state) => ({ flags: { ...state.flags, [flag]: value } })),
-      setPlayerPos: (playerPos) => set({ playerPos }),
+      setPlayerPos: (playerPos) => set((state) => {
+        // ⚡ Bolt Optimization: Prevent unnecessary re-renders by returning same state if position hasn't changed
+        // This avoids triggering Zustand subscribers 60x per second in useFrame
+        if (
+          state.playerPos[0] === playerPos[0] &&
+          state.playerPos[1] === playerPos[1] &&
+          state.playerPos[2] === playerPos[2]
+        ) {
+          return state;
+        }
+        return { playerPos };
+      }),
       setPaused: (isPaused) => set({ isPaused }),
       addQuest: (id, text) => set((state) => ({ 
         quests: [...state.quests.filter(q => q.id !== id), { id, text, completed: false }] 
