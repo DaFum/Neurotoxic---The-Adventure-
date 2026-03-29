@@ -363,6 +363,32 @@ export function Proberaum() {
               ]
             });
           } else {
+
+            if (bandMood > 60 && !flags.matzeRiffWarning) {
+              setDialogue({
+                text: 'Matze: "Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?"',
+                options: [
+                  {
+                    text: 'Lass hören! [Chaos 5]',
+                    requiredSkill: { name: 'chaos', level: 5 },
+                    action: () => {
+                      setDialogue('Matze schlägt die Saiten an. Ein Riss in der Wand entsteht. "WHOOPS! Aber geil, oder?"');
+                      useStore.getState().increaseBandMood(15);
+                      useStore.getState().setFlag('matzeRiffWarning', true);
+                    }
+                  },
+                  {
+                    text: 'Heb es dir für Salzgitter auf.',
+                    action: () => {
+                      setDialogue('Matze: "Stimmt, die Wände hier halten das eh nicht aus."');
+                      useStore.getState().setFlag('matzeRiffWarning', true);
+                    }
+                  }
+                ]
+              });
+              return;
+            }
+
             const moodText = bandMood > 70 
               ? 'Matze: "Alter, ich fühl mich wie ein junger Gott! Lass uns Tangermünde zeigen, was Lärm wirklich bedeutet!"'
               : 'Matze: "Puh, danke! Jetzt können wir endlich für den Gig in Tangermünde proben. Bist du bereit für den Wahnsinn?"';
@@ -387,13 +413,22 @@ export function Proberaum() {
                           useStore.getState().setFlag('bassist_clue_matze', true);
                           useStore.getState().addToInventory('Frequenzfragment');
                           useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                          useStore.getState().increaseBandMood(20);
-                          useStore.getState().increaseSkill('chaos', 3);
+                          useStore.getState().increaseBandMood(25);
+                          useStore.getState().increaseSkill('chaos', 4);
                           useStore.getState().setFlag('matzeDeepTalk', true);
                         }
                       },
                       {
-                        text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
+                        text: 'Zeig mir, wie du die Crowd liest. [Performer]',
+                        requiredTrait: 'Performer',
+                        action: () => {
+                          setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
+                          useStore.getState().setFlag('matzeDeepTalk', true);
+                          useStore.getState().increaseBandMood(20);
+                          useStore.getState().increaseSkill('social', 3);
+                        }
+                      },
+                      { text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
                         requiredTrait: 'Brutalist',
                         action: () => {
                           setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
@@ -465,10 +500,61 @@ export function Proberaum() {
         onInteract={() => {
           const hasBeer = hasItem('Bier');
           
-          if (flags.larsDrumPhilosophy) {
-            setDialogue('Lars: "Der Rhythmus ist das Skelett der Welt. Wir sind nur die Knochenbrecher."');
+          if (flags.larsDrumPhilosophy && flags.larsRhythmPact) {
+            setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
             return;
           }
+
+          if (flags.larsDrumPhilosophy && !flags.larsRhythmPact) {
+            setDialogue({
+              text: 'Lars: "Du kennst jetzt meine Philosophie. Der Beat ist alles. Bist du bereit für den nächsten Schritt?"',
+              options: [
+                {
+                  text: 'Lass uns einen Rhythmus-Pakt schließen.',
+                  action: () => {
+                    setDialogue({
+                      text: 'Lars: "Ein Pakt... das ist ernst. Wie soll unser Pakt klingen?"',
+                      options: [
+                        {
+                          text: 'Aggressiv und unaufhaltsam. [Brutalist]',
+                          requiredTrait: 'Brutalist',
+                          action: () => {
+                            setDialogue('Lars: "JA! Wir werden die Zeit selbst zertrümmern!"');
+                            useStore.getState().increaseBandMood(25);
+                            useStore.getState().increaseSkill('chaos', 5);
+                            useStore.getState().setFlag('larsRhythmPact', true);
+                            useStore.getState().addQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
+                            useStore.getState().completeQuest('rhythm_pact');
+                            useStore.getState().discoverLore('rhythm_pact');
+                          }
+                        },
+                        {
+                          text: 'Harmonisch und präzise. [Diplomat]',
+                          requiredTrait: 'Diplomat',
+                          action: () => {
+                            setDialogue('Lars: "Ein perfektes Uhrwerk. Der Rhythmus wird uns leiten."');
+                            useStore.getState().increaseBandMood(20);
+                            useStore.getState().increaseSkill('social', 5);
+                            useStore.getState().setFlag('larsRhythmPact', true);
+                            useStore.getState().addQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
+                            useStore.getState().completeQuest('rhythm_pact');
+                            useStore.getState().discoverLore('rhythm_pact');
+                          }
+                        },
+                        {
+                          text: 'Ich brauche Bedenkzeit.',
+                          action: () => setDialogue('Lars: "Der Beat wartet auf niemanden lange."')
+                        }
+                      ]
+                    });
+                  }
+                },
+                { text: 'Ein andermal.', action: () => setDialogue('Lars: "Dann trommle ich eben alleine weiter."') }
+              ]
+            });
+            return;
+          }
+
 
           if (hasBeer && !flags.gaveBeerToLars) {
             setDialogue({
@@ -609,6 +695,46 @@ export function Proberaum() {
               setDialogue({
                 text: moodText,
                 options: [
+
+                  {
+                    text: 'Wie bereitest du dich auf Salzgitter vor?',
+                    action: () => {
+                      setDialogue({
+                        text: 'Marius: "Ich meditiere über meine Großartigkeit. Was schlägst du vor?"',
+                        options: [
+                          {
+                            text: 'Ich coache deine Bühnenpräsenz. [Performer]',
+                            requiredTrait: 'Performer',
+                            action: () => {
+                              setDialogue('Marius: "Ah, von einem Meister lernen. Zeig mir, wie ich das Licht fange."');
+                              useStore.getState().increaseBandMood(15);
+                              useStore.getState().increaseSkill('social', 3);
+                              useStore.getState().setFlag('mariusEgoStrategy', true);
+                            }
+                          },
+                          {
+                            text: 'Du wirst auf der Bühne sterben. [Cynic]',
+                            requiredTrait: 'Cynic',
+                            action: () => {
+                              setDialogue('Marius: "WAS?! ...Nein, du hast recht. Ich muss wütender werden!"');
+                              useStore.getState().increaseBandMood(10);
+                              useStore.getState().increaseSkill('chaos', 3);
+                            }
+                          },
+                          {
+                            text: 'Hier ist ein Ego-Management-Plan. [Social 7]',
+                            requiredSkill: { name: 'social', level: 7 },
+                            action: () => {
+                              setDialogue('Marius: "Ein... Plan? Ok, das könnte helfen, nicht die Kontrolle zu verlieren."');
+                              useStore.getState().increaseBandMood(20);
+                              useStore.getState().setFlag('mariusEgoStrategy', true);
+                            }
+                          },
+                          { text: 'Bleib einfach cool.', action: () => setDialogue('Marius: "Ich bin immer cool."') }
+                        ]
+                      });
+                    }
+                  },
                   {
                     text: 'Marius, wie geht es dir wirklich? [Diplomat]',
                     requiredTrait: 'Diplomat',
@@ -759,6 +885,14 @@ export function Proberaum() {
             setDialogue({
               text: 'Amp: "Hast du über meine Existenz nachgedacht? Bin ich nur ein Werkzeug oder ein Bewusstsein?"',
               options: [
+
+                { text: 'Ich höre deine wahre Stimme, Amp. Du bist ein leuchtendes Wesen. [Mystic]', requiredTrait: 'Mystic', action: () => {
+                    setDialogue('Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"');
+                    setFlag('ampTherapyCompleted', true);
+                    setFlag('ampSentient', true);
+                    completeQuest('amp_therapy');
+                    increaseBandMood(20);
+                }},
                 { text: 'Du bist ein Bewusstsein. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
                     setDialogue('Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."');
                     setFlag('ampTherapyCompleted', true);

@@ -32,6 +32,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *BandMood > 60 Bonus:* Matze ist hyped und will einen Power-Chord zeigen.
         * [Chaos 5]: Riss in der Wand (+15 BandMood, setzt `matzeRiffWarning`).
         * Standard: Aufheben für Salzgitter (setzt `matzeRiffWarning`).
+    * *Spezial (Trait: Performer):* "Zeig mir, wie du die Crowd liest." (+20 BandMood, +3 Social, setzt `matzeDeepTalk`).
+    * *BandMood > 60 Bonus:* Matze ist hyped und will einen Power-Chord zeigen.
+        * [Chaos 5]: Riss in der Wand (+15 BandMood, setzt `matzeRiffWarning`).
+        * Standard: Aufheben für Salzgitter (setzt `matzeRiffWarning`).
     * *Item (Industrie-Talisman):* Erkennt den Talisman.
         * Zweig A: "Für die Band" (+30 BandMood, setzt `matzeDeepTalk`).
         * Zweig B: "Geheimnis bewahren" (+15 BandMood, setzt `matzeDeepTalk`).
@@ -57,6 +61,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Chaos 3):* Beat lehren (+20 BandMood, +2 Chaos, setzt `larsDrumPhilosophy`).
             * *Unterzweig (Skill: Technical 3):* Schlagkraft-Analyse (+15 BandMood, +2 Technical, setzt `larsDrumPhilosophy`).
             * *Unterzweig (Standard):* "Klingt anstrengend" (kein Mood-Effekt).
+    * *Rhythmus-Pakt (Nachdem larsDrumPhilosophy gesetzt wurde):*
+        * [Brutalist]: Aggressiver Pakt (+25 BandMood, +5 Chaos, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
+        * [Diplomat]: Harmonischer Pakt (+20 BandMood, +5 Social, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
+        * Standard: Bedenkzeit.
     * *Rhythmus-Pakt (Nachdem larsDrumPhilosophy gesetzt wurde):*
         * [Brutalist]: Aggressiver Pakt (+25 BandMood, +5 Chaos, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
         * [Diplomat]: Harmonischer Pakt (+20 BandMood, +5 Social, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
@@ -258,6 +266,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Kosmisches Echo:**
     * *Option (Trait: Visionary):* Nachricht entschlüsseln (+20 BandMood, Quest-Abschluss: `cosmic_echo`, **Lore:** `cosmic_echo_decoded`).
 * **Marius' Ego (Item):**
+    * *Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius' Ego" und schaltet **Lore:** `ego_philosophy` frei. Quest-Abschluss: `ego`.*
     * *Bonus (Wenn mariusEgoStrategy):* "Wende unsere Strategie an." (+35 BandMood).
     * *Bonus (Wenn marius_tourbus_doubt) (Trait: Diplomat):* "Marius glaubt nicht mehr an sich. Du musst ihn retten." (+40 BandMood, +5 Social, setzt `mariusConfidenceBoost`).
     * Option (Trait: Visionary): "Vision leitet uns" (+30 BandMood, +5 Chaos).

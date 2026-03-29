@@ -178,7 +178,25 @@ export function VoidStation() {
             return;
           }
 
+          if (flags.ghostTrustEarned && !flags.tankwartBargain) {
+            setDialogue({
+              text: 'Tankwart: "Ich sehe das Zeichen des Roadies an dir. Er vertraut dir. Das bedeutet, du bist kein gewöhnlicher Manager."',
+              options: [
+                {
+                  text: 'Wir spielen für ihn in Salzgitter.',
+                  action: () => {
+                    setDialogue('Tankwart: "Ein edles Ziel. Die Frequenzen werden euch gewogen sein."');
+                    useStore.getState().setFlag('tankwartBargain', true);
+                    useStore.getState().increaseBandMood(20);
+                  }
+                }
+              ]
+            });
+            return;
+          }
+
           if (trait === 'Mystic') {
+
             setDialogue({
               text: 'Tankwart: "Deine Aura... sie schwingt in Frequenzen, die ich seit Äonen nicht mehr gespürt habe. Du bist ein Wanderer zwischen den Welten. Was suchst du in der Leere?"',
               options: [
@@ -272,9 +290,20 @@ export function VoidStation() {
             setDialogue({
               text: bandMood < 30 
                 ? 'Tankwart: "Eure Seelen sind so leer wie mein Tank. Findet Dunkle Materie, bevor ihr in der Bedeutungslosigkeit verblasst. Diese Station existiert nur für jene mit wahrem Lärm im Herzen."'
-                : 'Tankwart: "Willkommen an der Station zwischen den Takten. Hier wird die Zeit gedehnt und der Schall zur Materie. Der Van benötigt Dunkle Materie, um die Realität zu durchbrechen. Was suchst du hier wirklich?"',
+                : (flags.backstageRitualPerformed ? 'Tankwart: "Ich spüre die Energie eures Rituals. Ihr seid vorbereitet auf den Lärm. Was suchst du hier wirklich?"' : 'Tankwart: "Willkommen an der Station zwischen den Takten. Hier wird die Zeit gedehnt und der Schall zur Materie. Der Van benötigt Dunkle Materie, um die Realität zu durchbrechen. Was suchst du hier wirklich?"'),
               options: [
                 { text: 'Nur Treibstoff für den Gig.', action: () => setDialogue('Tankwart: "So pragmatisch. Sucht in den Ecken der Existenz, wo das Licht sich krümmt."') },
+                { text: 'Das ist doch alles Quatsch. Gib mir Sprit. [Cynic]', requiredTrait: 'Cynic', action: () => {
+                  setDialogue('Tankwart: "Quatsch? Schau dich um, Fleischsack. Du stehst in der 5. Dimension. Hier ist der Sprit."');
+                  increaseBandMood(15);
+                  useStore.getState().increaseSkill('chaos', 3);
+                }},
+                { text: 'Ich spiele für dich, Tankwart. [Performer]', requiredTrait: 'Performer', action: () => {
+                  setDialogue('Du legst eine kosmische Performance hin. Der Tankwart applaudiert lautlos. "Bravo. Die Leere liebt eine gute Show."');
+                  increaseBandMood(25);
+                  useStore.getState().increaseSkill('social', 5);
+                }},
+
                 { text: 'Die Antwort auf das ultimative Riff.', action: () => {
                   setDialogue('Tankwart: "Das Riff ist in dir... und in der Pfütze im Proberaum, die seit 1982 niemals getrocknet ist."');
                   increaseBandMood(5);
@@ -336,53 +365,13 @@ export function VoidStation() {
         />
       )}
 
+
       {flags.bassist_clue_matze && flags.bassist_clue_ghost && !flags.bassist_contacted && (
         <Interactable
           position={[-12, 4, 12]}
           emoji="👻"
           name="Schwebender Bassist"
-          onInteract={() => {
-            const store = useStore.getState();
-            store.setDialogue({
-              text: 'Eine geisterhafte Gestalt zupft an einem vier-saitigen Instrument aus purer Energie. Bassist: "Die Frequenz... sie ist hier so laut. Ich kann nicht zurück."',
-              options: [
-                { text: 'Die Band braucht dich. [Social 8]', requiredSkill: { name: 'social', level: 8 }, action: () => {
-                  useStore.getState().setDialogue('Bassist: "Sie brauchen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."');
-                  useStore.getState().setFlag('bassist_contacted', true);
-                  useStore.getState().increaseBandMood(40);
-                  useStore.getState().discoverLore('bassist_wahrheit');
-                  useStore.getState().increaseSkill('social', 3);
-                }},
-                { text: 'Du hängst in einer Rückkopplungsschleife fest. [Technical 10]', requiredSkill: { name: 'technical', level: 10 }, action: () => {
-                  useStore.getState().setDialogue('Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"');
-                  useStore.getState().setFlag('bassist_contacted', true);
-                  useStore.getState().increaseBandMood(50);
-                  useStore.getState().discoverLore('bassist_wahrheit');
-                  useStore.getState().increaseSkill('technical', 3);
-                }},
-                { text: 'Lass dich von der Leere tragen. [Mystic]', requiredTrait: 'Mystic', action: () => {
-                  useStore.getState().setDialogue('Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."');
-                  useStore.getState().setFlag('bassist_contacted', true);
-                  useStore.getState().increaseBandMood(40);
-                  useStore.getState().discoverLore('bassist_wahrheit');
-                  useStore.getState().increaseSkill('chaos', 3);
-                }},
-                { text: 'Ich lass dich besser in Ruhe.', action: () => {
-                  useStore.getState().setDialogue('Bassist: "Die Frequenzen... so viele Frequenzen..."');
-                }}
-              ]
-            });
-          }}
-        />
-      )}
 
-      {/* Marius' Ego (Floating interaction) */}
-      {!flags.egoContained && (
-        <Interactable
-          position={[5, 2, 0]}
-          emoji="👑"
-          name="Marius' Ego"
-          scale={0.5}
           onInteract={() => {
             const store = useStore.getState();
 
@@ -391,7 +380,7 @@ export function VoidStation() {
               originalAction();
             };
 
-            const options = [
+            const options: any[] = [
               {
                 text: 'Du bist die Vision, die uns leitet. [Visionary]',
                 requiredTrait: 'Visionary',
@@ -429,6 +418,30 @@ export function VoidStation() {
                 })
               },
               {
+                text: 'Ich zwinge dich zurück! [Brutalist]',
+                requiredTrait: 'Brutalist',
+                action: egoActionWrapper(() => {
+                  useStore.getState().setDialogue('Marius\' Ego: "Agh! Deine rohe Gewalt ist... erdrückend! Ich ergebe mich!"');
+                  useStore.getState().addToInventory('Marius Ego');
+                  useStore.getState().setFlag('egoContained', true);
+                  useStore.getState().completeQuest('ego');
+                  useStore.getState().increaseBandMood(15);
+                  useStore.getState().increaseSkill('chaos', 3);
+                })
+              },
+              {
+                text: 'Verhandeln wir. [Diplomat]',
+                requiredTrait: 'Diplomat',
+                action: egoActionWrapper(() => {
+                  useStore.getState().setDialogue('Marius\' Ego: "Verhandeln? Nun gut, wenn ich ein größeres Mikrofon bekomme... deal."');
+                  useStore.getState().addToInventory('Marius Ego');
+                  useStore.getState().setFlag('egoContained', true);
+                  useStore.getState().completeQuest('ego');
+                  useStore.getState().increaseBandMood(25);
+                  useStore.getState().increaseSkill('social', 3);
+                })
+              },
+              {
                 text: 'Komm einfach mit, du aufgeblasene Kugel.',
                 action: egoActionWrapper(() => {
                   useStore.getState().setDialogue('Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."');
@@ -439,6 +452,19 @@ export function VoidStation() {
                 })
               }
             ];
+
+            if (store.flags.mariusEgoStrategy) {
+               options.unshift({
+                 text: 'Wende unsere Strategie an. [Bonus]',
+                 action: egoActionWrapper(() => {
+                   useStore.getState().setDialogue('Marius\' Ego: "Die Strategie! Oh ja, ich entsinne mich. Es ist alles Teil des großen Plans. Ich füge mich!"');
+                   useStore.getState().addToInventory('Marius Ego');
+                   useStore.getState().setFlag('egoContained', true);
+                   useStore.getState().completeQuest('ego');
+                   useStore.getState().increaseBandMood(35);
+                 })
+               });
+            }
 
             if (store.flags.marius_tourbus_doubt) {
                options.unshift({
@@ -461,6 +487,7 @@ export function VoidStation() {
               options: options as any[]
             });
           }}
+
         />
       )}
 

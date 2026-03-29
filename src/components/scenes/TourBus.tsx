@@ -257,12 +257,38 @@ export function TourBus() {
             return;
           }
 
+
           if (hasItem('Repariertes Kabel')) {
             setDialogue({
-              text: bandMood > 70 
-                ? 'Matze: "Das Kabel ist perfekt! Ich fühle die pure Elektrizität!"'
-                : 'Matze: "Danke fürs Reparieren. Jetzt kann ich endlich wieder Krach machen."',
+              text: 'Matze: "Hast du Angst vor Salzgitter?"',
               options: [
+                {
+                  text: 'Ich sehe unseren Sieg. [Visionary]',
+                  requiredTrait: 'Visionary',
+                  action: () => {
+                    setDialogue('Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen."');
+                    increaseBandMood(15);
+                  }
+                },
+                {
+                  text: 'Ich habe den Soundcheck analysiert. [Technical 5]',
+                  requiredSkill: { name: 'technical', level: 5 },
+                  action: () => {
+                    setDialogue('Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält."');
+                    increaseBandMood(20);
+                    useStore.getState().increaseSkill('technical', 3);
+                  }
+                },
+                {
+                  text: 'Wir schaffen das zusammen. [Social 5]',
+                  requiredSkill: { name: 'social', level: 5 },
+                  action: () => {
+                    setDialogue('Matze: "Zusammen... ja. Wir sind eine verdammte Einheit."');
+                    increaseBandMood(15);
+                    useStore.getState().increaseSkill('social', 3);
+                  }
+                },
+                { text: 'Ein bisschen schon.', action: () => setDialogue('Matze: "Gut. Angst hält uns wach."') },
                 { text: 'Lass uns die Bühne abreißen!', action: () => {
                     increaseBandMood(10);
                     completeQuest('cable');
@@ -271,6 +297,7 @@ export function TourBus() {
             });
             return;
           }
+
 
           if (flags.tourbus_sabotage_discovered && !flags.tourbus_matze_confession) {
             if (flags.marius_tourbus_doubt) {
@@ -407,6 +434,63 @@ export function TourBus() {
           }
         }}
       />
+
+
+      {/* Band Meeting Interactable */}
+      {!flags.tourbusBandMeeting && flags.tourbus_sabotage_discovered && (
+        <Interactable
+          position={[0, 0.5, 0]}
+          emoji="📢"
+          name="Band-Besprechung"
+          onInteract={() => {
+            setDialogue({
+              text: 'Manager: "Zeit für eine kurze Band-Besprechung in der Mitte des Busses."',
+              options: [
+                {
+                  text: 'Vermittle zwischen den Spannungen. [Diplomat]',
+                  requiredTrait: 'Diplomat',
+                  action: () => {
+                    setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
+                    useStore.getState().setFlag('tourbusBandMeeting', true);
+                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().increaseBandMood(30);
+                  }
+                },
+                {
+                  text: 'Reißt euch zusammen! [Brutalist]',
+                  requiredTrait: 'Brutalist',
+                  action: () => {
+                    setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
+                    useStore.getState().setFlag('tourbusBandMeeting', true);
+                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().increaseBandMood(20);
+                  }
+                },
+                {
+                  text: 'Motivationsrede halten. [Performer]',
+                  requiredTrait: 'Performer',
+                  action: () => {
+                    setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
+                    useStore.getState().setFlag('tourbusBandMeeting', true);
+                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().increaseBandMood(25);
+                  }
+                },
+                { text: 'Einfache Ansagen machen.', action: () => {
+                    setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
+                    useStore.getState().setFlag('tourbusBandMeeting', true);
+                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().increaseBandMood(10);
+                }}
+              ]
+            });
+          }}
+        />
+      )}
 
       {/* Broken Amp - Technician Interaction */}
       {!flags.tourbusAmpTechnician && (
@@ -580,10 +664,46 @@ export function TourBus() {
             return;
           }
 
+
+          if (flags.ghostSecretRevealed && !flags.ghostTrustEarned && flags.askedAbout1982) {
+            setDialogue({
+              text: 'Geist: "Du kennst jetzt mein Geheimnis. Warum bist du noch hier?"',
+              options: [
+                {
+                  text: 'Ich will dir wirklich helfen. [Mystic]',
+                  requiredTrait: 'Mystic',
+                  action: () => {
+                    setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
+                    useStore.getState().setFlag('ghostTrustEarned', true);
+                    useStore.getState().increaseBandMood(25);
+                    useStore.getState().discoverLore('ghost_legacy');
+                    useStore.getState().addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
+                    useStore.getState().completeQuest('ghost_trust');
+                  }
+                },
+                {
+                  text: 'Erzähl mir deine Geschichte. [Social 7]',
+                  requiredSkill: { name: 'social', level: 7 },
+                  action: () => {
+                    setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
+                    useStore.getState().setFlag('ghostTrustEarned', true);
+                    useStore.getState().increaseBandMood(20);
+                    useStore.getState().discoverLore('ghost_legacy');
+                    useStore.getState().addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
+                    useStore.getState().completeQuest('ghost_trust');
+                  }
+                },
+                { text: 'Nur aus Neugier.', action: () => setDialogue('Geist: "Neugier tötet die Katze. Oder den Roadie."') }
+              ]
+            });
+            return;
+          }
+
           if (flags.ghostSecretRevealed) {
             setDialogue('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
             return;
           }
+
 
           if (flags.askedAbout1982 && !flags.ghostSecretRevealed) {
             setDialogue({
