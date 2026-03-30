@@ -946,21 +946,12 @@ export function Proberaum() {
                 { text: 'Nicht jetzt.', action: () => setDialogue('Amp: "Verstehe. Das Rauschen kehrt zurück..."') }
               ]
             });
-          } else if (hasItem('Lötkolben') && hasItem('Schrottmetall')) {
-            setDialogue({
-              text: 'Amp: "Du hast die Werkzeuge... kannst du meine Schaltkreise neu verlöten?"',
-              options: [
-                { text: 'Repariere den Amp.', action: () => {
-                    setDialogue('Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."');
-                    setFlag('talkingAmpRepaired', true);
-                    completeQuest('repair_amp');
-                    increaseBandMood(20);
-                    useStore.getState().increaseSkill('technical', 5);
-                }},
-                { text: 'Nicht jetzt.', action: () => setDialogue('Amp: "Das Rauschen... es wird lauter..."') }
-              ]
-            });
-          } else if (flags.talkingAmpHeard) {
+          } else if (!flags.talkingAmpHeard) {
+            setDialogue('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
+            setFlag('talkingAmpHeard', true);
+            addQuest('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
+            increaseBandMood(2);
+          } else {
             const ampOptions: DialogueOption[] = [];
             if (!flags.maschinen_seele_amp) {
               ampOptions.push({
@@ -977,16 +968,30 @@ export function Proberaum() {
                 }
               });
             }
+            if (hasItem('Lötkolben') && hasItem('Schrottmetall')) {
+              ampOptions.push({
+                text: 'Repariere den Amp.', action: () => {
+                    setDialogue('Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."');
+                    setFlag('talkingAmpRepaired', true);
+                    if (!useStore.getState().quests.find(q => q.id === 'repair_amp')) {
+                      useStore.getState().addQuest('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
+                    }
+                    completeQuest('repair_amp');
+                    useStore.getState().removeFromInventory('Lötkolben');
+                    useStore.getState().removeFromInventory('Schrottmetall');
+                    increaseBandMood(20);
+                    useStore.getState().increaseSkill('technical', 5);
+                }
+              });
+            }
             ampOptions.push({ text: 'Ich suche weiter.', action: () => setDialogue('Amp: "Beeil dich..."') });
+
             setDialogue({
-              text: 'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
+              text: hasItem('Lötkolben') && hasItem('Schrottmetall')
+                ? 'Amp: "Du hast die Werkzeuge... kannst du meine Schaltkreise neu verlöten?"'
+                : 'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
               options: ampOptions
             });
-          } else {
-            setDialogue('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
-            setFlag('talkingAmpHeard', true);
-            addQuest('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
-            increaseBandMood(2);
           }
         }}
       />
