@@ -28,6 +28,7 @@ import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
 import { VirtualJoystick } from './VirtualJoystick';
 import { audio } from '../audio';
+import { KeyboardInteractionProvider } from './KeyboardInteractionManager';
 
 const STORAGE_KEY = 'neurotoxic-game-storage';
 
@@ -104,6 +105,7 @@ export function Game() {
   }, [isPaused, scene]);
 
   return (
+    <KeyboardInteractionProvider>
     <div className="w-full h-screen bg-black relative overflow-hidden font-sans">
       <WorldEvents />
       <UI />
@@ -345,5 +347,6 @@ export function Game() {
         )}
       </AnimatePresence>
     </div>
+    </KeyboardInteractionProvider>
   );
 }
