@@ -106,6 +106,7 @@ const initialState = {
     larsVibrating: false,
     drumMachineQuestStarted: false,
     drumMachineQuestCompleted: false,
+    kaminstubeDrumLoreHeard: false,
     egoTalked: false,
     feedbackMonitorTalked: false,
     feedbackMonitorQuestCompleted: false,

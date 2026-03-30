@@ -17,32 +17,7 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
-
-interface KeyboardInteractionCandidate {
-  id: string;
-  distance: number;
-  trigger: () => void;
-}
-
-let keyboardInteractionCandidate: KeyboardInteractionCandidate | null = null;
-let keyboardInteractionCandidateUpdatedAt = -Infinity;
-let keyboardListenerInstalled = false;
-
-function installKeyboardInteractionListener() {
-  if (keyboardListenerInstalled || typeof window === 'undefined') return;
-
-  keyboardListenerInstalled = true;
-  window.addEventListener('keydown', (event) => {
-    if ((event.key !== 'e' && event.key !== 'E') || event.repeat) return;
-    if (!keyboardInteractionCandidate) return;
-
-    // Ignore stale targets when the player moved away or switched scenes.
-    if (performance.now() - keyboardInteractionCandidateUpdatedAt > 300) return;
-
-    event.preventDefault();
-    keyboardInteractionCandidate.trigger();
-  });
-}
+import { useKeyboardInteraction } from './KeyboardInteractionManager';
 
 interface InteractableProps {
   position: [number, number, number];
@@ -65,9 +40,12 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const ringRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
+  const distanceRef = useRef(Infinity);
+  const inRangeRef = useRef(false);
   const [hovered, setHovered] = useState(false);
   const [inRange, setInRange] = useState(false);
   const [interacted, setInteracted] = useState(false);
+  const { register, unregister } = useKeyboardInteraction();
   const isPaused = useStore((state) => state.isPaused);
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);
@@ -199,15 +177,13 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   }, []);
 
   useEffect(() => {
-    installKeyboardInteractionListener();
-
-    return () => {
-      if (keyboardInteractionCandidate?.id === instanceIdRef.current) {
-        keyboardInteractionCandidate = null;
-        keyboardInteractionCandidateUpdatedAt = -Infinity;
-      }
-    };
-  }, []);
+    const id = instanceIdRef.current;
+    register(id, () => {
+      if (!inRangeRef.current) return null;
+      return { distance: distanceRef.current, trigger: handleInteractRef.current };
+    });
+    return () => unregister(id);
+  }, [register, unregister]);
 
   useFrame((state, delta) => {
     if (isPaused) return;
@@ -220,24 +196,9 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
 
     const dist = playerPosVector.distanceTo(targetPosVector);
     const inRangeNow = dist < 4.0;
+    distanceRef.current = dist;
+    inRangeRef.current = inRangeNow;
     setInRange((prev) => (prev === inRangeNow ? prev : inRangeNow));
-
-    const now = performance.now();
-
-    if (now - keyboardInteractionCandidateUpdatedAt > 34) {
-      keyboardInteractionCandidate = null;
-    }
-
-    if (inRangeNow) {
-      if (!keyboardInteractionCandidate || dist < keyboardInteractionCandidate.distance) {
-        keyboardInteractionCandidate = {
-          id: instanceIdRef.current,
-          distance: dist,
-          trigger: () => handleInteractRef.current(),
-        };
-        keyboardInteractionCandidateUpdatedAt = now;
-      }
-    }
 
     if (ref.current) {
       timeRef.current += delta;

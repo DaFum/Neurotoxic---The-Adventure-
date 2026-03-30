@@ -27,6 +27,7 @@ export function Kaminstube() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
+  const removeFromInventory = useStore((state) => state.removeFromInventory);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
@@ -616,7 +617,7 @@ export function Kaminstube() {
       />
 
       {/* Items */}
-      {!hasItem('Röhre') && (
+      {!hasItem('Röhre') && !flags.ampFixed && (
         <Interactable
           position={[8, 0.5, 2]}
           emoji="🔌"
@@ -642,6 +643,7 @@ export function Kaminstube() {
               if (!state.quests.find((q) => q.id === 'amp')) {
                 addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
               }
+              removeFromInventory('Röhre');
               setFlag('ampFixed', true);
               completeQuest('amp');
               increaseBandMood(30);
@@ -660,7 +662,10 @@ export function Kaminstube() {
         name="Kaputter Drum-Computer"
         onInteract={() => {
           setDialogue('Ein alter TR-808, der aussieht, als wäre er in einem Hochofen geschmolzen. Er gibt nur noch ein rhythmisches Klacken von sich, das seltsam beruhigend wirkt. Lars: "Das ist das Herzstück der ersten NEUROTOXIC-Platte. Er ist gestorben, als wir versuchten, ihn an ein Atomkraftwerk anzuschließen."');
-          increaseBandMood(10);
+          if (!flags.kaminstubeDrumLoreHeard) {
+            increaseBandMood(10);
+            setFlag('kaminstubeDrumLoreHeard', true);
+          }
         }}
       />
 

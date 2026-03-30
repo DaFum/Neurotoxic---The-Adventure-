@@ -107,6 +107,7 @@ export function UI() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat) return;
       if ((event.key === 'h' || event.key === 'H') && scene !== 'menu') {
         event.preventDefault();
         setShowHudPanels((prev) => !prev);
