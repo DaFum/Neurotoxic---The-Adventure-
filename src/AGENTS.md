@@ -3,10 +3,24 @@
 ## Store (`store.ts`)
 - `setScene()` always resets `playerPos` to `[0, 1, 0]` — every scene must work with this spawn point
 - `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the existing switch block
-- `addQuest()` replaces any existing quest with the same ID (deduplication) — safe to call repeatedly
 - `discoverLore()` is idempotent — calling it twice on the same ID is safe
 - Persistence uses a custom merge in `onRehydrateStorage` that preserves player progress when new quests/lore are added to code. Adding new initial quests or loreEntries won't wipe saved data.
 - Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. `scene`, `playerPos`, `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
+
+### Quest API
+- `addQuest(id, text)` — no-op if any quest with that id already exists (active, completed, or failed). Never reopens a completed quest. For scene-entry objectives call it inside a mount `useEffect(() => { addQuest(...); }, [])`.
+- `startAndFinishQuest(id, text)` — records a milestone directly as completed in one step; idempotent. Use for one-shot events with no open phase (band meeting, fan movement, ritual, bassist contact, etc.).
+- `completeQuest(id)` — always call this alongside `setFlag('xCompleted', true)` when resolving a quest. Flags alone do not update the journal; using only a flag causes quest-log drift.
+- `failQuest(id)` — marks a quest failed; appears with strikethrough in the journal.
+- Quest entries have `status: QuestStatus` (`'active' | 'completed' | 'failed'`) — not `completed: boolean`. Read with `q.status === 'completed'`, not `q.completed`.
+
+### Flags
+- All known flags are enumerated in the `Flag` union type in `store.ts`. `setFlag()` only accepts `Flag` values — TypeScript will catch unknown flag names at compile time.
+- Before using a new flag, add it to the `Flag` union in `store.ts`. Using an unlisted string will be a type error.
+
+### Dialogue Engine (`dialogueEngine.ts`)
+- `executeDialogueOption(option)` — runs the full pipeline (requirement check → action → flag/quest effects → navigation). Used by UI; do not replicate this logic in scene callbacks.
+- `canSelectOption(option)` — pure requirement check (trait / skill / quest deps); returns bool. Used by UI to compute locked state.
 
 ## Audio (`audio.ts`)
 - All sound methods call `init()` internally — no need to initialize AudioContext before playing

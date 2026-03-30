@@ -21,7 +21,13 @@
 - `requiredSkill` must be an object `{ name: 'skill', level: N }` — passing a string silently fails
 - `questDependencies` hides the option unless those quests are completed — ensure referenced quests exist
 
+## Quest API in Scenes
+- Scene-specific quests (objectives the player only learns about by entering the scene) must be registered in a mount `useEffect(() => { addQuest(id, text); }, [])`, not in `initialState`. This prevents future-scene spoilers in the journal.
+- Use `startAndFinishQuest(id, text)` for one-shot milestones that have no open phase (e.g. band meeting, ritual, bassist contact). Do NOT use `addQuest + completeQuest` for these.
+- Always call `completeQuest(id)` when a questline resolves, even if you also set a completion flag. Relying only on a flag causes quest-log drift (journal stays open, narrative says done).
+
 ## Gotchas
+- Flag names passed to `setFlag()` and `flagToSet.flag` must exist in the `Flag` union in `store.ts` — TypeScript enforces this. Add new flags to the union before using them.
 - Collected items must use conditional rendering: `{!hasItem('X') && <Interactable ... />}` — otherwise the item persists after pickup
 - Multiple interactables at the same position must be mutually exclusive via flags
 - `removeFromInventory()` is NOT automatic — explicitly call it when an item is consumed
