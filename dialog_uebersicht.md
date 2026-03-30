@@ -248,7 +248,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Kosmischer Tankwart:**
     * *Wenn ghostTrustEarned gesetzt:* "Wir spielen für ihn in Salzgitter." (+20 BandMood, setzt `tankwartBargain`).
-    * *Spezial (Trait: Mystic):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere).
+    * *Spezial (Trait: Mystic, einmalig — `tankwartMysticDone` noch nicht gesetzt):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere, setzt `tankwartMysticDone`). Wird vor `ghostTrustEarned`-Zweig geprüft, sofern `ghostTrustEarned` noch nicht gesetzt ist. **Setzt NICHT `tankwartPhilosophy`** — ermöglicht Mystic-Spielern auch nach diesem Dialog das Betanken des Vans.
     * *Fallback-Text:* Wenn `backstageRitualPerformed` gesetzt, reagiert der Tankwart mit einem ritualbewussten Begrüßungstext statt des Standard-Textes.
     * *Spezial (Trait: Cynic, einmalig):* "Das ist doch alles Quatsch. Gib mir Sprit." (+15 BandMood, +3 Chaos, setzt `tankwartBargain`).
     * *Spezial (Trait: Performer, einmalig):* "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social, setzt `tankwartBargain`).

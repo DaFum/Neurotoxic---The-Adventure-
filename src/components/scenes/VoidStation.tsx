@@ -206,14 +206,14 @@ export function VoidStation() {
             return;
           }
 
-          if (trait === 'Mystic') {
+          if (trait === 'Mystic' && !flags.tankwartMysticDone) {
             setDialogue({
               text: 'Tankwart: "Deine Aura... sie schwingt in Frequenzen, die ich seit Äonen nicht mehr gespürt habe. Du bist ein Wanderer zwischen den Welten. Was suchst du in der Leere?"',
               options: [
                 { text: 'Ich suche die Wahrheit.', action: () => {
                   setDialogue('Tankwart: "Die Wahrheit ist ein Riff, das niemals endet. Hier, nimm diesen Splitter der Leere. Er wird dir helfen, das Verbotene Riff zu verstehen."');
                   addToInventory('Splitter der Leere');
-                  setFlag('tankwartPhilosophy', true);
+                  setFlag('tankwartMysticDone', true);
                   increaseBandMood(30);
                 }}
               ]
