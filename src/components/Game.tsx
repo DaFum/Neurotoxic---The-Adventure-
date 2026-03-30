@@ -235,6 +235,7 @@ export function Game() {
                       </button>
                     </div>
                     <button
+                      aria-label="Cancel save prompt"
                       onClick={() => setShowSavePrompt(false)}
                       className="mt-6 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest"
                     >
@@ -281,6 +282,7 @@ export function Game() {
                       ))}
                     </div>
                     <button 
+                      aria-label="Back to main terminal"
                       onClick={() => setSelectingTrait(false)}
                       className="mt-8 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest"
                     >
