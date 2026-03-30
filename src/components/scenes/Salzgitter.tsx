@@ -30,8 +30,6 @@ import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 export function Salzgitter() {
   const setDialogue = useStore((state) => state.setDialogue);
   const setFlag = useStore((state) => state.setFlag);
-  const addQuest = useStore((state) => state.addQuest);
-  const completeQuest = useStore((state) => state.completeQuest);
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const flags = useStore((state) => state.flags);
@@ -594,8 +592,7 @@ export function Salzgitter() {
                    bandReady ? { text: 'Die Band ist vereint.', action: () => {
                       useStore.getState().setDialogue('Marius: "Wir sind eine Wand aus Lärm. Lasst uns die Welt niederreißen!"');
                       useStore.getState().setFlag('salzgitterBandUnited', true);
-                      useStore.getState().addQuest('unite_band', 'Vereinige die Band vor dem Finale in Salzgitter');
-                      useStore.getState().completeQuest('unite_band');
+                      useStore.getState().startAndFinishQuest('unite_band', 'Vereinige die Band vor dem Finale in Salzgitter');
                       useStore.getState().increaseBandMood(30);
                    }} : { text: 'Wir geben unser Bestes.', action: () => {
                       useStore.getState().setDialogue('Marius: "Ja, wir werden alles geben."');

@@ -23,7 +23,7 @@
 
 ## Quest API in Scenes
 - Scene-specific quests (objectives the player only learns about by entering the scene) must be registered in a mount `useEffect(() => { addQuest(id, text); }, [])`, not in `initialState`. This prevents future-scene spoilers in the journal.
-- Use `startAndFinishQuest(id, text)` for one-shot milestones that have no open phase (e.g. band meeting, ritual, bassist contact). Do NOT use `addQuest + completeQuest` for these.
+- Use `startAndFinishQuest(id, text)` for one-shot milestones that have no open phase (e.g. band meeting, bassist contact, wirt_legacy). Do NOT use `addQuest + completeQuest` for these — unless the quest can be discovered as 'active' first via a separate code path (e.g. `backstage_ritual` has a discovery path at the ritual circle before the player performs it, so it must use `addQuest + completeQuest`).
 - Always call `completeQuest(id)` when a questline resolves, even if you also set a completion flag. Relying only on a flag causes quest-log drift (journal stays open, narrative says done).
 
 ## Gotchas
