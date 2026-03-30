@@ -167,7 +167,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
           ))}
         </group>
       );
-    default:
+    case 'salzgitter':
       return (
         <group>
           {[[-15, 3.2, -7.8], [15, 3.2, -7.8], [-15, 3.2, -3.8], [15, 3.2, -3.8]].map((pos, idx) => (
@@ -202,5 +202,8 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
           ))}
         </group>
       );
+    default:
+      return null;
   }
 }
+
