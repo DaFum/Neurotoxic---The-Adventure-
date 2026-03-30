@@ -24,6 +24,7 @@ interface PlayerProps {
   bounds?: { x: [number, number]; z: [number, number] };
 }
 
+/** Player function. */
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);
   const modelRef = useRef<THREE.Group>(null);

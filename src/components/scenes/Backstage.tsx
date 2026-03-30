@@ -24,6 +24,7 @@ import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
+/** Backstage function. */
 export function Backstage() {
   const addToInventory = useStore((state) => state.addToInventory);
   const setDialogue = useStore((state) => state.setDialogue);

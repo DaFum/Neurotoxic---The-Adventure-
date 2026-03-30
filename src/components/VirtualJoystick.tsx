@@ -5,6 +5,7 @@ const BASE_R = 56;   // outer ring radius px
 const KNOB_R = 22;   // inner knob radius px
 const MAX = BASE_R - KNOB_R; // max knob travel px
 
+/** VirtualJoystick function. */
 export function VirtualJoystick() {
   const [visible, setVisible] = useState(false);
   const baseRef = useRef<HTMLDivElement>(null);

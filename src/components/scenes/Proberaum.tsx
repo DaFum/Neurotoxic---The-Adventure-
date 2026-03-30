@@ -23,6 +23,7 @@ import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
+/** Proberaum function. */
 export function Proberaum() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);

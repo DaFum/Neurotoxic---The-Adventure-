@@ -6,6 +6,7 @@ interface SceneEnvironmentSetpiecesProps {
   variant: SceneVariant;
 }
 
+/** SceneEnvironmentSetpieces function. */
 export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpiecesProps) {
   switch (variant) {
     case 'proberaum':

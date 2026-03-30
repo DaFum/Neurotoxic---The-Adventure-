@@ -29,6 +29,7 @@ interface InteractableProps {
   idleType?: 'headbang' | 'tap' | 'sway';
 }
 
+/** Interactable function. */
 export function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);

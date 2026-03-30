@@ -13,6 +13,7 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { audio } from '../audio';
 
+/** WorldEvents function. */
 export function WorldEvents() {
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);

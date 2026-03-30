@@ -18,7 +18,8 @@ class AudioEngine {
   currentAmbient: string | null = null;
   tempo = 250;
 
-  init() {
+  /** init method. */
+    init() {
     if (!this.ctx) {
       this.ctx = new AudioContext();
     }
@@ -27,7 +28,8 @@ class AudioEngine {
     }
   }
 
-  setTempo(newTempo: number) {
+  /** setTempo method. */
+    setTempo(newTempo: number) {
     this.tempo = newTempo;
     if (this.isPlayingMusic) {
       this.stopMusic();
@@ -35,7 +37,8 @@ class AudioEngine {
     }
   }
 
-  playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
+  /** playTone method. */
+    playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
@@ -53,13 +56,15 @@ class AudioEngine {
     osc.stop(this.ctx.currentTime + duration);
   }
 
-  playInteract() {
+  /** playInteract method. */
+    playInteract() {
     this.init();
     this.playTone(440, 'square', 0.1, 0.05);
     setTimeout(() => this.playTone(880, 'square', 0.1, 0.05), 50);
   }
 
-  playPickup() {
+  /** playPickup method. */
+    playPickup() {
     this.init();
     this.playTone(300, 'sawtooth', 0.1, 0.1);
     setTimeout(() => this.playTone(400, 'sawtooth', 0.1, 0.1), 100);
@@ -67,25 +72,29 @@ class AudioEngine {
     setTimeout(() => this.playTone(800, 'sawtooth', 0.3, 0.1), 300);
   }
 
-  playFootstep() {
+  /** playFootstep method. */
+    playFootstep() {
     this.init();
     // Low noise burst for footstep
     this.playTone(60 + Math.random() * 20, 'sine', 0.05, 0.02);
   }
 
-  playInteraction() {
+  /** playInteraction method. */
+    playInteraction() {
     this.init();
     // High-tech beep
     this.playTone(1200, 'sine', 0.05, 0.05);
     setTimeout(() => this.playTone(1600, 'sine', 0.05, 0.05), 50);
   }
 
-  playTypewriter() {
+  /** playTypewriter method. */
+    playTypewriter() {
     this.init();
     this.playTone(600 + Math.random() * 200, 'sine', 0.02, 0.02);
   }
 
-  startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter') {
+  /** startAmbient method. */
+    startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter') {
     this.init();
     if (this.currentAmbient === type) return;
     this.stopAmbient();
@@ -137,7 +146,8 @@ class AudioEngine {
     }, type === 'kaminstube' ? 100 : 1000);
   }
 
-  stopAmbient() {
+  /** stopAmbient method. */
+    stopAmbient() {
     if (this.ambientInterval) {
       clearInterval(this.ambientInterval);
       this.ambientInterval = null;
@@ -145,7 +155,8 @@ class AudioEngine {
     this.currentAmbient = null;
   }
 
-  startMusic() {
+  /** startMusic method. */
+    startMusic() {
     this.init();
     if (this.isPlayingMusic) return;
     this.isPlayingMusic = true;
@@ -192,7 +203,8 @@ class AudioEngine {
     }, this.tempo); // Dynamic BPM
   }
 
-  stopMusic() {
+  /** stopMusic method. */
+    stopMusic() {
     this.isPlayingMusic = false;
     if (this.musicInterval) {
       clearInterval(this.musicInterval);
@@ -201,4 +213,5 @@ class AudioEngine {
   }
 }
 
+/** audio variable. */
 export const audio = new AudioEngine();

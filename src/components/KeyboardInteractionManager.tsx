@@ -14,6 +14,7 @@ interface KeyboardInteractionContextValue {
 
 const KeyboardInteractionContext = createContext<KeyboardInteractionContextValue | null>(null);
 
+/** KeyboardInteractionProvider function. */
 export function KeyboardInteractionProvider({ children }: { children: ReactNode }) {
   const registryRef = useRef(new Map<string, () => InteractableInfo | null>());
 
@@ -53,6 +54,7 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
   );
 }
 
+/** useKeyboardInteraction function. */
 export function useKeyboardInteraction() {
   const ctx = useContext(KeyboardInteractionContext);
   if (!ctx) throw new Error('useKeyboardInteraction must be used within KeyboardInteractionProvider');

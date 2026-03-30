@@ -22,6 +22,7 @@
 
 import { Game } from './components/Game';
 
+/** App function. */
 export default function App() {
   return <Game />;
 }

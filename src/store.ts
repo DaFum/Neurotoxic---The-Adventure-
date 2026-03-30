@@ -4,14 +4,17 @@ import { audio } from './audio';
 
 type Scene = 'menu' | 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
 
+/** Trait type alias. */
 export type Trait = 'Visionary' | 'Technician' | 'Brutalist' | 'Diplomat' | 'Mystic' | 'Performer' | 'Cynic';
 
+/** Skills interface. */
 export interface Skills {
   technical: number;
   social: number;
   chaos: number;
 }
 
+/** LoreEntry interface. */
 export interface LoreEntry {
   id: string;
   title: string;
@@ -19,6 +22,7 @@ export interface LoreEntry {
   discovered: boolean;
 }
 
+/** DialogueOption interface. */
 export interface DialogueOption {
   text: string;
   action?: () => void;

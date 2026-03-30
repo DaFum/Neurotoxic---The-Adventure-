@@ -32,6 +32,7 @@ import { KeyboardInteractionProvider } from './KeyboardInteractionManager';
 
 const STORAGE_KEY = 'neurotoxic-game-storage';
 
+/** Game function. */
 export function Game() {
   const scene = useStore((state) => state.scene);
   const trait = useStore((state) => state.trait);
