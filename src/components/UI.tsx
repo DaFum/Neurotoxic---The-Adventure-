@@ -28,6 +28,7 @@
  * - No major errors found.
  */
 import { useStore } from '../store';
+import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
 import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -44,9 +45,6 @@ export function UI() {
   const inventory = useStore((state) => state.inventory);
   const combineItems = useStore((state) => state.combineItems);
   const quests = useStore((state) => state.quests);
-  const addQuest = useStore((state) => state.addQuest);
-  const completeQuest = useStore((state) => state.completeQuest);
-  const setFlag = useStore((state) => state.setFlag);
   const bandMood = useStore((state) => state.bandMood);
   const scene = useStore((state) => state.scene);
   const setScene = useStore((state) => state.setScene);
@@ -66,8 +64,8 @@ export function UI() {
     typeof window === 'undefined' ? false : window.innerWidth < 1280
   ));
 
-  const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.completed).map(q => q.id)), [quests]);
-  const openQuestCount = useMemo(() => quests.filter(q => !q.completed).length, [quests]);
+  const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.status === 'completed').map(q => q.id)), [quests]);
+  const openQuestCount = useMemo(() => quests.filter(q => q.status === 'active').length, [quests]);
   const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
   const loreCodexContainerRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
@@ -434,10 +432,10 @@ export function UI() {
               Mission_Objectives
             </div>
             <div className="flex flex-col gap-3 w-full">
-              {quests.filter(q => !q.completed || scene === 'salzgitter').map((quest) => (
-                <div key={quest.id} className={`flex items-start gap-3 text-[10px] font-mono leading-tight ${quest.completed ? 'text-toxic/30' : 'text-zinc-300'}`}>
-                  <div className={`mt-0.5 shrink-0 w-2 h-2 border ${quest.completed ? 'bg-toxic border-toxic' : 'border-zinc-600'}`} />
-                  <span className={quest.completed ? 'line-through' : ''}>{quest.text}</span>
+              {quests.filter(q => q.status !== 'completed' || scene === 'salzgitter').map((quest) => (
+                <div key={quest.id} className={`flex items-start gap-3 text-[10px] font-mono leading-tight ${quest.status === 'completed' ? 'text-toxic/30' : quest.status === 'failed' ? 'text-blood/50' : 'text-zinc-300'}`}>
+                  <div className={`mt-0.5 shrink-0 w-2 h-2 border ${quest.status === 'completed' ? 'bg-toxic border-toxic' : quest.status === 'failed' ? 'bg-blood border-blood' : 'border-zinc-600'}`} />
+                  <span className={quest.status !== 'active' ? 'line-through' : ''}>{quest.text}</span>
                 </div>
               ))}
             </div>
@@ -607,32 +605,13 @@ export function UI() {
                       const skillReq = option.requiredSkill;
                       const traitReq = option.requiredTrait;
                       const questDeps = option.questDependencies;
-                      const hasSkill = !skillReq || (skills[skillReq.name] >= skillReq.level);
-                      const hasTrait = !traitReq || (trait === traitReq);
-                      const hasQuestDeps = !questDeps || questDeps.every(qid => completedQuestIds.has(qid));
-                      const isLocked = !hasSkill || !hasTrait || !hasQuestDeps;
+                      const isLocked = !canSelectOption(option);
 
                       return (
                         <button
                           key={idx}
                           disabled={isLocked}
-                          onClick={() => {
-                            if (!isLocked) {
-                              const preActionDialogue = useStore.getState().dialogue;
-                              if (option.action) option.action();
-                              if (option.flagToSet) setFlag(option.flagToSet.flag, option.flagToSet.value);
-                              if (option.questToAdd) addQuest(option.questToAdd.id, option.questToAdd.text);
-                              if (option.questToComplete) completeQuest(option.questToComplete);
-
-                              const postActionDialogue = useStore.getState().dialogue;
-
-                              if (option.nextDialogue) {
-                                setDialogue(option.nextDialogue);
-                              } else if (option.closeOnSelect !== false && preActionDialogue === postActionDialogue) {
-                                setDialogue(null);
-                              }
-                            }
-                          }}
+                          onClick={() => executeDialogueOption(option)}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
                             isLocked 
                             ? 'bg-zinc-900/50 border-zinc-800 text-zinc-600 cursor-not-allowed grayscale' 

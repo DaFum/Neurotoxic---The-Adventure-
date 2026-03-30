@@ -5,6 +5,116 @@ import { audio } from './audio';
 type Scene = 'menu' | 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
 
 /**
+ * Status of a quest in the player's log.
+ */
+export type QuestStatus = 'active' | 'completed' | 'failed';
+
+/**
+ * All known boolean game flags. Using a union type here gives autocomplete
+ * and catches typos at compile time when calling setFlag().
+ */
+export type Flag =
+  | 'waterCleaned'
+  | 'ampFixed'
+  | 'gotBeer'
+  | 'cableFixed'
+  | 'setlistFound'
+  | 'mariusCalmed'
+  | 'larsEnergized'
+  | 'voidRefueled'
+  | 'talkingAmpHeard'
+  | 'talkingAmpRepaired'
+  | 'forbiddenRiffFound'
+  | 'egoContained'
+  | 'matzeDeepTalk'
+  | 'showedRiffToMatze'
+  | 'ghostSecretRevealed'
+  | 'tankwartPhilosophy'
+  | 'tankwartMysticDone'
+  | 'wirtSecretItem'
+  | 'tankwartReactedToRiff'
+  | 'larsDrumPhilosophy'
+  | 'mariusConfidenceBoost'
+  | 'askedAbout1982'
+  | 'larsVibrating'
+  | 'drumMachineQuestStarted'
+  | 'drumMachineQuestCompleted'
+  | 'kaminstubeDrumLoreHeard'
+  | 'egoTalked'
+  | 'feedbackMonitorTalked'
+  | 'feedbackMonitorQuestCompleted'
+  | 'feedbackMonitorBackstageTalked'
+  | 'feedbackMonitorBackstageQuestStarted'
+  | 'feedbackMonitorBackstageQuestCompleted'
+  | 'feedbackMonitorQuestStarted'
+  | 'ghostRecipeQuestStarted'
+  | 'ghostRecipeQuestCompleted'
+  | 'ampTherapyStarted'
+  | 'ampTherapyCompleted'
+  | 'cosmic_echo'
+  | 'forgotten_lore'
+  | 'posterLoreRead'
+  | 'proberaumPosterVisionary'
+  | 'tourbusAmpTechnician'
+  | 'magnetbandPlayed'
+  | 'frequenzDetektorRead'
+  | 'frequenzCalibrated'
+  | 'inschriftDecoded'
+  | 'legacyLoreMigrated'
+  | 'frequenz1982_proberaum'
+  | 'frequenz1982_tourbus'
+  | 'frequenz1982_backstage'
+  | 'frequenz1982_complete'
+  | 'bassist_clue_matze'
+  | 'bassist_clue_ghost'
+  | 'bassist_clue_wirt'
+  | 'bassist_contacted'
+  | 'bassist_restored'
+  | 'maschinen_seele_amp'
+  | 'maschinen_seele_tr8080'
+  | 'maschinen_seele_complete'
+  | 'salzgitter_lars_paced_talked'
+  | 'kaminstube_lars_talked'
+  | 'salzgitter_performer_talked'
+  | 'salzgitter_fan_speech_heard'
+  | 'tankwart_fuel_quest_started'
+  | 'proberaum_brutalist_smash'
+  | 'tourbus_sabotage_discovered'
+  | 'tourbus_matze_confession'
+  | 'backstage_blueprint_found'
+  | 'backstage_performer_speech'
+  | 'backstage_cynic_sabotage'
+  | 'void_diplomat_negotiation'
+  | 'kaminstube_crowd_rallied'
+  | 'kaminstube_wirt_betrayal'
+  | 'salzgitter_encore_unlocked'
+  | 'salzgitter_true_ending'
+  | 'salzgitter_finalized'
+  | 'salzgitter_marius_greeted'
+  | 'lars_proberaum_secret'
+  | 'lars_paced'
+  | 'marius_tourbus_doubt'
+  | 'gaveDiplomatSouvenir'
+  | 'matzeRiffWarning'
+  | 'larsRhythmPact'
+  | 'gaveBeerToLars'
+  | 'mariusEgoStrategy'
+  | 'ampSentient'
+  | 'ghostTrustEarned'
+  | 'tourbusBandMeeting'
+  | 'backstageRitualPerformed'
+  | 'voidBassistSpoken'
+  | 'tankwartBargain'
+  | 'wirtLegacy1982'
+  | 'kaminFeuerPact'
+  | 'salzgitterBandUnited'
+  | 'fanMovement'
+  | 'larsRhythmPactClaimed'
+  | 'matzeRiffDialogueDone'
+  | 'matzePerformerTalk'
+  | 'salzgitterMatzeWirtDone';
+
+/**
  * Defines the possible personality traits a player can select.
  * Traits influence dialogue options and interactions.
  */
@@ -55,14 +165,15 @@ export interface DialogueOption {
   nextDialogue?: Dialogue;
   questToAdd?: { id: string; text: string };
   questToComplete?: string;
-  flagToSet?: { flag: string; value: boolean };
+  questToFail?: string;
+  flagToSet?: { flag: Flag; value: boolean };
   requiredSkill?: { name: keyof Skills; level: number };
   requiredTrait?: Trait;
   questDependencies?: string[];
   closeOnSelect?: boolean;
 }
 
-interface Dialogue {
+export interface Dialogue {
   text: string;
   options?: DialogueOption[];
   urgency?: 1 | 2 | 3;
@@ -115,15 +226,16 @@ interface GameState {
   removeFromInventory: (item: string) => void;
   hasItem: (item: string) => boolean;
   combineItems: (item1: string, item2: string) => boolean;
-  flags: Record<string, boolean>;
-  setFlag: (flag: string, value: boolean) => void;
+  flags: Record<Flag, boolean>;
+  setFlag: (flag: Flag, value: boolean) => void;
   playerPos: [number, number, number];
   setPlayerPos: (pos: [number, number, number]) => void;
   isPaused: boolean;
   setPaused: (paused: boolean) => void;
-  quests: { id: string; text: string; completed: boolean }[];
+  quests: { id: string; text: string; status: QuestStatus }[];
   addQuest: (id: string, text: string) => void;
   completeQuest: (id: string) => void;
+  failQuest: (id: string) => void;
   bandMood: number;
   increaseBandMood: (amount: number) => void;
   cameraShake: number;
@@ -272,15 +384,15 @@ const initialState = {
   playerPos: [0, 1, 0] as [number, number, number],
   isPaused: false,
   quests: [
-    { id: 'water', text: 'Wisch das Wasser im Proberaum auf', completed: false },
-    { id: 'beer', text: 'Besorg Marius ein kühles Bier', completed: false },
-    { id: 'keys', text: 'Finde die Autoschlüssel für den Van', completed: false },
-    { id: 'setlist', text: 'Finde die Setliste im Backstage', completed: false },
-    { id: 'marius', text: 'Beruhige Marius vor dem Auftritt', completed: false },
-    { id: 'void', text: 'Betanke den Van mit dunkler Materie', completed: false },
-    { id: 'ego', text: 'Fange Marius entflohenes Ego ein', completed: false },
-    { id: 'cosmic_echo', text: 'Untersuche das kosmische Echo in der Void Station', completed: false },
-    { id: 'forgotten_lore', text: 'Entschlüssele die vergessene Lore in der Kaminstube', completed: false },
+    { id: 'water', text: 'Wisch das Wasser im Proberaum auf', status: 'active' as QuestStatus },
+    { id: 'beer', text: 'Besorg Marius ein kühles Bier', status: 'active' as QuestStatus },
+    { id: 'keys', text: 'Finde die Autoschlüssel für den Van', status: 'active' as QuestStatus },
+    { id: 'setlist', text: 'Finde die Setliste im Backstage', status: 'active' as QuestStatus },
+    { id: 'marius', text: 'Beruhige Marius vor dem Auftritt', status: 'active' as QuestStatus },
+    { id: 'void', text: 'Betanke den Van mit dunkler Materie', status: 'active' as QuestStatus },
+    { id: 'ego', text: 'Fange Marius entflohenes Ego ein', status: 'active' as QuestStatus },
+    { id: 'cosmic_echo', text: 'Untersuche das kosmische Echo in der Void Station', status: 'active' as QuestStatus },
+    { id: 'forgotten_lore', text: 'Entschlüssele die vergessene Lore in der Kaminstube', status: 'active' as QuestStatus },
   ],
   bandMood: 20,
   cameraShake: 0,
@@ -410,11 +522,14 @@ export const useStore = create<GameState>()(
         return { playerPos };
       }),
       setPaused: (isPaused) => set({ isPaused }),
-      addQuest: (id, text) => set((state) => ({ 
-        quests: [...state.quests.filter(q => q.id !== id), { id, text, completed: false }] 
+      addQuest: (id, text) => set((state) => ({
+        quests: [...state.quests.filter(q => q.id !== id), { id, text, status: 'active' as QuestStatus }]
       })),
       completeQuest: (id) => set((state) => ({
-        quests: state.quests.map(q => q.id === id ? { ...q, completed: true } : q)
+        quests: state.quests.map(q => q.id === id ? { ...q, status: 'completed' as QuestStatus } : q)
+      })),
+      failQuest: (id) => set((state) => ({
+        quests: state.quests.map(q => q.id === id ? { ...q, status: 'failed' as QuestStatus } : q)
       })),
       increaseBandMood: (amount) => set((state) => ({
         bandMood: Math.max(0, Math.min(100, state.bandMood + amount))
@@ -453,12 +568,19 @@ export const useStore = create<GameState>()(
 
         const mergedQuests = currentState.quests.map(q => {
           const persistedQuest = persistedQuests.find(pq => pq.id === q.id);
-          return persistedQuest ? { ...q, completed: persistedQuest.completed } : q;
+          if (!persistedQuest) return q;
+          // Handle old saves (completed: boolean) and new saves (status: QuestStatus)
+          const pq = persistedQuest as unknown as { id: string; text: string; status?: QuestStatus; completed?: boolean };
+          const status: QuestStatus = pq.status ?? (pq.completed ? 'completed' : 'active');
+          return { ...q, status };
         });
 
-        const dynamicQuests = persistedQuests.filter(pq =>
-          !currentState.quests.find(q => q.id === pq.id)
-        );
+        const dynamicQuests = persistedQuests
+          .filter(pq => !currentState.quests.find(q => q.id === pq.id))
+          .map(pq => {
+            const p = pq as unknown as { id: string; text: string; status?: QuestStatus; completed?: boolean };
+            return { id: p.id, text: p.text, status: (p.status ?? (p.completed ? 'completed' : 'active')) as QuestStatus };
+          });
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
@@ -482,7 +604,7 @@ export const useStore = create<GameState>()(
       },
       onRehydrateStorage: () => (state) => {
         if (state) {
-          if (!state.flags.legacyLoreMigrated || state.flags.feedbackMonitorQuestStarted !== undefined) {
+          if (!state.flags.legacyLoreMigrated || state.flags.feedbackMonitorQuestStarted) {
             setTimeout(() => {
               useStore.setState((currentState) => {
                 const newEntries = [...currentState.loreEntries];
@@ -506,18 +628,15 @@ export const useStore = create<GameState>()(
 
                 const newFlags = { ...currentState.flags };
 
-                // Migrate feedback monitor flags
-                if (newFlags.feedbackMonitorQuestStarted !== undefined) {
-                  if (newFlags.feedbackMonitorQuestStarted) {
-                    // Backstage quest was started.
-                    newFlags.feedbackMonitorBackstageTalked = true;
-                    newFlags.feedbackMonitorBackstageQuestStarted = true;
-                    if (newFlags.feedbackMonitorQuestCompleted) {
-                      newFlags.feedbackMonitorBackstageQuestCompleted = true;
-                    }
+                // Migrate legacy feedback monitor flag
+                if (newFlags.feedbackMonitorQuestStarted) {
+                  newFlags.feedbackMonitorBackstageTalked = true;
+                  newFlags.feedbackMonitorBackstageQuestStarted = true;
+                  if (newFlags.feedbackMonitorQuestCompleted) {
+                    newFlags.feedbackMonitorBackstageQuestCompleted = true;
                   }
-                  // Remove the unused flag
-                  delete newFlags.feedbackMonitorQuestStarted;
+                  // Zero out the migrated flag rather than deleting (required by typed Record<Flag, boolean>)
+                  newFlags.feedbackMonitorQuestStarted = false;
                 }
 
                 newFlags.legacyLoreMigrated = true;

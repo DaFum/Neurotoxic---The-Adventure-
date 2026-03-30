@@ -263,7 +263,7 @@ export function TourBus() {
           }
 
 
-          if (hasItem('Repariertes Kabel') && !useStore.getState().quests.find(q => q.id === 'cable' && q.completed)) {
+          if (hasItem('Repariertes Kabel') && !useStore.getState().quests.find(q => q.id === 'cable' && q.status === 'completed')) {
             setDialogue({
               text: 'Matze: "Hast du Angst vor Salzgitter?"',
               options: [

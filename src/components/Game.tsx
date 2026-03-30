@@ -83,7 +83,7 @@ export function Game() {
 
       const hasTrait = saved.trait !== null && saved.trait !== undefined;
       const hasInventory = Array.isArray(saved.inventory) && saved.inventory.length > 0;
-      const hasCompletedQuest = Array.isArray(saved.quests) && saved.quests.some((q: any) => q?.completed);
+      const hasCompletedQuest = Array.isArray(saved.quests) && saved.quests.some((q: any) => q?.status === 'completed' || q?.completed === true);
       const hasLoreProgress = Array.isArray(saved.loreEntries) && saved.loreEntries.some((e: any) => e?.discovered);
       const hasMoodOrSkillProgress =
         saved.bandMood !== undefined && typeof saved.bandMood === 'number' && (

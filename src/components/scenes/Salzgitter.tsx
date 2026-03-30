@@ -720,7 +720,7 @@ export function Salzgitter() {
             }
 
             // Auto-restore via VoidStation contact only if player has no special items
-            if (store.flags.voidBassistSpoken && store.quests.find(q => q.id === 'bassist_mystery' && q.completed) && !store.hasItem('Bassist-Saite') && !store.hasItem('Resonanz-Kristall')) {
+            if (store.flags.voidBassistSpoken && store.quests.find(q => q.id === 'bassist_mystery' && q.status === 'completed') && !store.hasItem('Bassist-Saite') && !store.hasItem('Resonanz-Kristall')) {
                store.setDialogue('Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."');
                store.increaseBandMood(30);
                store.setFlag('bassist_restored', true);
