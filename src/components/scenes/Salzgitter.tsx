@@ -12,7 +12,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
@@ -24,10 +24,19 @@ import { RigidBody } from '@react-three/rapier';
 
 export function Salzgitter() {
   const setDialogue = useStore((state) => state.setDialogue);
+  const setFlag = useStore((state) => state.setFlag);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const flags = useStore((state) => state.flags);
+
+  const startFanMovement = useCallback((dialogueText: string, moodIncrease: number) => {
+    setDialogue(dialogueText);
+    setFlag('fanMovement', true);
+    addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
+    completeQuest('fan_movement');
+    increaseBandMood(moodIncrease);
+  }, [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood]);
 
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
@@ -790,14 +799,6 @@ export function Salzgitter() {
             store.setDialogue('Fan: "Tangermünde spricht noch immer über euch! Ihr seid Legenden! Bitte macht ein Foto mit mir!"');
             return;
           }
-
-          const startFanMovement = (dialogueText: string, moodIncrease: number) => {
-            store.setDialogue(dialogueText);
-            store.setFlag('fanMovement', true);
-            store.addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-            store.completeQuest('fan_movement');
-            store.increaseBandMood(moodIncrease);
-          };
 
           const options: DialogueOption[] = [];
 

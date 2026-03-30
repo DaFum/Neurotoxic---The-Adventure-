@@ -192,6 +192,20 @@ export function VoidStation() {
             return;
           }
 
+          if (flags.ghostTrustEarned && !flags.tankwartBargain) {
+            setDialogue({
+              text: 'Tankwart: "Ich sehe den Staub von 1982 an deinen Schuhen. Der Geist hat dich geschickt."',
+              options: [
+                { text: 'Wir brauchen deine Hilfe.', action: () => {
+                  setDialogue('Tankwart: "Für einen Freund des Geistes gibt es einen besonderen Rabatt in der Leere."');
+                  setFlag('tankwartBargain', true);
+                  increaseBandMood(20);
+                }}
+              ]
+            });
+            return;
+          }
+
           if (trait === 'Mystic') {
             setDialogue({
               text: 'Tankwart: "Deine Aura... sie schwingt in Frequenzen, die ich seit Äonen nicht mehr gespürt habe. Du bist ein Wanderer zwischen den Welten. Was suchst du in der Leere?"',
@@ -201,20 +215,6 @@ export function VoidStation() {
                   addToInventory('Splitter der Leere');
                   setFlag('tankwartPhilosophy', true);
                   increaseBandMood(30);
-                }}
-              ]
-            });
-            return;
-          }
-
-          if (flags.ghostTrustEarned && !flags.tankwartBargain) {
-            setDialogue({
-              text: 'Tankwart: "Ich sehe den Staub von 1982 an deinen Schuhen. Der Geist hat dich geschickt."',
-              options: [
-                { text: 'Wir brauchen deine Hilfe.', action: () => {
-                  setDialogue('Tankwart: "Für einen Freund des Geistes gibt es einen besonderen Rabatt in der Leere."');
-                  setFlag('tankwartBargain', true);
-                  increaseBandMood(20);
                 }}
               ]
             });
