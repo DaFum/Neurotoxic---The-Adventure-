@@ -18,6 +18,7 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Float, Text, MeshDistortMaterial, MeshWobbleMaterial, Sparkles, Stars } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
+import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 export function VoidStation() {
   const addToInventory = useStore((state) => state.addToInventory);
@@ -714,6 +715,8 @@ export function VoidStation() {
           });
         }}
       />
+
+      <SceneEnvironmentSetpieces variant="void_station" />
 
       <Player bounds={{ x: [-20, 20], z: [-20, 20] }} />
     </>

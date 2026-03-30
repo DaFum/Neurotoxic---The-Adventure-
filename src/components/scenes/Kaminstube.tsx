@@ -21,6 +21,7 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
+import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 export function Kaminstube() {
   const flags = useStore((state) => state.flags);
@@ -637,6 +638,10 @@ export function Kaminstube() {
           scale={1.2}
           onInteract={() => {
             if (hasItem('Röhre')) {
+              const state = useStore.getState();
+              if (!state.quests.find((q) => q.id === 'amp')) {
+                addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
+              }
               setFlag('ampFixed', true);
               completeQuest('amp');
               increaseBandMood(30);
@@ -707,6 +712,8 @@ export function Kaminstube() {
           }}
         />
       )}
+
+      <SceneEnvironmentSetpieces variant="kaminstube" />
 
       <Player bounds={{ x: [-14, 14], z: [-7, 7] }} />
       <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={20} blur={2} far={10} />

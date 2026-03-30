@@ -2,6 +2,9 @@
 
 *Aktualisiert für Phase 1-7 Erweiterungen (Maschinen-Seele, Frequenz 1982, Bassist-Quest, etc.)*
 
+*Update 30.03.2026 (Environment Pass): Alle Szenen-Modelle/Setpieces visuell erweitert (`SceneEnvironmentSetpieces.tsx`). Keine Änderungen an Dialogbäumen, Quest-Triggern, Flag-Namen, Item-Logik oder BandMood-Werten.*
+*Update 30.03.2026 (Quest/Dialog Fixes): `final` wird im Finale zuerst als Quest angelegt und dann abgeschlossen; `amp` in der Kaminstube wird beim Reparieren fehlertolerant nachgetragen; `repair_amp` ist im Proberaum in einem linearen Run abschließbar (zusätzlicher Lötkolben-Pickup); fehlende Flags (`frequenzCalibrated`, `inschriftDecoded`, `magnetbandPlayed`, `showedRiffToMatze`, `talkingAmpRepaired`, `tankwartMysticDone`) sind nun im Store initialisiert.*
+
 > **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx` oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `Proberaum.tsx`, `TourBus.tsx`, `Backstage.tsx`, `VoidStation.tsx`, `Kaminstube.tsx`, `Salzgitter.tsx`, `store.ts`.
 
 Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Einträge und deren Voraussetzungen (Traits, Skills, Items) aus allen Szenen zusammen.
@@ -97,6 +100,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Option (Trait: Mystic): "Ich höre deine wahre Stimme, Amp" (+20 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted` & `ampSentient`).
         * Option (Trait: Diplomat): "Du bist ein Bewusstsein" (+30 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
         * Option (Trait: Brutalist): "Du bist ein Werkzeug" (+10 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
+* **Lötkolben (Item):**
+    * *Interaktion:* Aufheben (Erhalt: Lötkolben). **Spawn in Proberaum und Backstage.**
 * **Schrottmetall (Item):**
     * *Interaktion:* Aufheben (Erhalt: Schrottmetall).
 * **Alte Batterie (Item):**
@@ -227,7 +232,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Stift (Item):**
     * *Interaktion:* Aufheben (Erhalt: Stift).
 * **Lötkolben (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Lötkolben).
+    * *Interaktion:* Aufheben (Erhalt: Lötkolben). **Alternative Fundstelle: Proberaum.**
 * **Ritual-Kreis:**
     * *Bandritual (Wenn mariusCalmed gesetzt & backstageRitualPerformed noch nicht):*
         * [Mystic]: Kosmisches Ritual (+35 BandMood, +5 Chaos, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
@@ -315,7 +320,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Ersatzröhre (Item):**
     * *Interaktion:* Aufheben (Erhalt: Röhre).
 * **Kaputter Amp:**
-    * *Item (Röhre):* Reparieren (+30 BandMood, Quest-Abschluss: `amp`).
+    * *Item (Röhre):* Reparieren (+30 BandMood, Quest-Abschluss: `amp`). **Falls `amp` noch nicht aktiv ist, wird die Quest beim Reparieren zuerst erzeugt und dann abgeschlossen.**
 * **Kaputter Drum-Computer:**
     * *Interaktion:* Betrachten (+10 BandMood).
 * **Crowd:**
@@ -387,7 +392,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Item (Signierte Setliste):* Übergeben (+25 BandMood bei Umarmung / +15 bei Abstand).
     * *Diplomat Andenken:* (+20 BandMood, setzt `gaveDiplomatSouvenir`).
 * **Tour Erfolgreich:**
-    * *Interaktion:* Finale (+50 BandMood, Quest-Abschluss: `final`).
+    * *Interaktion:* Finale (+50 BandMood, Quest-Abschluss: `final`; Quest wird beim Triggern zuerst angelegt und anschließend abgeschlossen).
 
 Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. Die Endsequenz "Das Finale" wertet diese aus.
 

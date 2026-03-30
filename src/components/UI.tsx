@@ -28,9 +28,10 @@
  * - No major errors found.
  */
 import { useStore } from '../store';
-import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Circle, Heart, Plus, Package, Zap, Activity, BookOpen } from 'lucide-react';
+import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { audio } from '../audio';
 
 export function UI() {
   const dialogue = useStore((state) => state.dialogue);
@@ -53,17 +54,68 @@ export function UI() {
   const [displayedText, setDisplayedText] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showLoreCodex, setShowLoreCodex] = useState(false);
+  const [showHudPanels, setShowHudPanels] = useState(() => (
+    typeof window === 'undefined' ? true : window.innerWidth >= 1280
+  ));
+  const [isCompactViewport, setIsCompactViewport] = useState(() => (
+    typeof window === 'undefined' ? false : window.innerWidth < 1280
+  ));
 
   const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.completed).map(q => q.id)), [quests]);
+  const openQuestCount = useMemo(() => quests.filter(q => !q.completed).length, [quests]);
   const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
   const loreCodexContainerRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
+  const sceneLabel = scene === 'proberaum'
+    ? 'PROBERAUM_01'
+    : scene === 'tourbus'
+      ? 'VAN_INTERIOR'
+      : scene === 'backstage'
+        ? 'BACKSTAGE_ZONE'
+        : scene === 'void_station'
+          ? 'VOID_STATION_440HZ'
+          : scene === 'kaminstube'
+            ? 'TANGERMUNDE_STUBE'
+            : 'SALZGITTER_RIFF';
 
   useEffect(() => {
     if (!isPaused) {
       setShowLoreCodex(false);
     }
   }, [isPaused]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(max-width: 1279px)');
+    const syncHudMode = (matches: boolean) => {
+      setIsCompactViewport(matches);
+      setShowHudPanels(!matches);
+    };
+
+    syncHudMode(mediaQuery.matches);
+
+    const handleViewportChange = (event: MediaQueryListEvent) => {
+      syncHudMode(event.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleViewportChange);
+    return () => {
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.key === 'h' || event.key === 'H') && scene !== 'menu') {
+        event.preventDefault();
+        setShowHudPanels((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [scene]);
 
   useEffect(() => {
     if (showLoreCodex) {
@@ -123,14 +175,14 @@ export function UI() {
     // Determine speed: urgency 1 (high) = fast, urgency 3 (low) = slow
     const baseDelay = dialogue.urgency === 1 ? 15 : dialogue.urgency === 3 ? 50 : 30;
     
-    const interval = setInterval(() => {
-      const char = dialogue.text[i];
-      setDisplayedText((prev) => prev + char);
-      
-      // Play typing sound for non-space characters
-      if (char !== ' ') {
-        import('../audio').then(({ audio }) => audio.playTypewriter());
-      }
+      const interval = setInterval(() => {
+        const char = dialogue.text[i];
+        setDisplayedText((prev) => prev + char);
+        
+        // Play typing sound for non-space characters
+        if (char !== ' ') {
+          audio.playTypewriter();
+        }
       
       i++;
       if (i >= dialogue.text.length) clearInterval(interval);
@@ -207,8 +259,29 @@ export function UI() {
         </div>
       )}
 
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 pointer-events-auto z-20 w-[min(560px,calc(100%-9rem))]">
+        <div className="bg-black/80 border border-toxic/30 px-3 py-2 backdrop-blur-sm">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[9px] md:text-[10px] font-mono uppercase tracking-wider">
+            <span className="text-toxic font-bold">{sceneLabel}</span>
+            <span className="text-zinc-400">Mood {bandMood}%</span>
+            <span className="text-zinc-400">Open Quests {openQuestCount}</span>
+            <span className="text-zinc-400">Inventory {inventory.length}</span>
+          </div>
+        </div>
+      </div>
+
+      <button
+        onClick={() => setShowHudPanels((prev) => !prev)}
+        className="absolute top-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20"
+        aria-label={showHudPanels ? 'Hide HUD panels' : 'Show HUD panels'}
+      >
+        {showHudPanels ? <EyeOff size={14} /> : <Eye size={14} />}
+        {isCompactViewport ? (showHudPanels ? 'HUD ON' : 'HUD OFF') : 'HUD'}
+      </button>
+
       {/* Top Bar */}
       <div className="flex justify-between items-start">
+        {showHudPanels && (
         <div className="flex flex-col gap-6">
           <div className="bg-black/90 p-5 brutal-border-toxic pointer-events-auto flex flex-col gap-3 animate-reveal">
             <div>
@@ -220,14 +293,7 @@ export function UI() {
               </p>
               <div className="mt-4 flex items-center gap-2 text-xs font-mono text-toxic/80 bg-toxic/5 px-2 py-1 border border-toxic/20">
                 <span className="animate-pulse">●</span>
-                LOCATION: {
-                  scene === 'proberaum' ? 'PROBERAUM_01' : 
-                  scene === 'tourbus' ? 'VAN_INTERIOR' :
-                  scene === 'backstage' ? 'BACKSTAGE_ZONE' :
-                  scene === 'void_station' ? 'VOID_STATION_440HZ' :
-                  scene === 'kaminstube' ? 'TANGERMÜNDE_STUBE' : 
-                  'SALZGITTER_RIFF'
-                }
+                LOCATION: {sceneLabel}
               </div>
             </div>
           </div>
@@ -308,8 +374,10 @@ export function UI() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Inventory & Quests */}
+        {showHudPanels && (
         <div className="flex flex-col gap-6 items-end">
           {/* Inventory */}
           <div className="bg-black/90 p-4 brutal-border pointer-events-auto flex flex-col items-end min-w-[240px] animate-reveal [animation-delay:200ms]">
@@ -369,12 +437,14 @@ export function UI() {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* Controls Hint */}
       <div className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none">
         Joystick / WASD = Bewegen<br/>
-        Tippen / Klick = Interagieren
+        Tippen / Klick / E = Interagieren<br/>
+        H = HUD ein/aus
       </div>
 
       {/* Touch-accessible Pause Button */}

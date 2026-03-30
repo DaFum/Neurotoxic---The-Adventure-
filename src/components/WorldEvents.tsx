@@ -9,25 +9,29 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { audio } from '../audio';
 
 export function WorldEvents() {
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);
+  const lastTempoRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Update music tempo based on mood
-    // 250ms (120 BPM) at 0 mood -> 150ms (200 BPM) at 100 mood
-    const newTempo = 250 - (bandMood * 1);
-    audio.setTempo(newTempo);
+    // Mood-driven tempo with clamping and step threshold to avoid jittery restarts.
+    const targetTempo = Math.round(Math.max(150, Math.min(250, 250 - bandMood)));
+    if (lastTempoRef.current === null || Math.abs(lastTempoRef.current - targetTempo) >= 3) {
+      audio.setTempo(targetTempo);
+      lastTempoRef.current = targetTempo;
+    }
 
-    // Occasional random camera shake if mood is high
+    // Occasional random camera shake if mood is high, stronger at higher mood.
     if (bandMood > 70) {
       const interval = setInterval(() => {
         if (Math.random() > 0.7) {
-          setCameraShake(0.3);
+          const intensity = 0.12 + ((bandMood - 70) / 30) * 0.28;
+          setCameraShake(Math.min(0.45, intensity));
         }
       }, 2000);
       return () => clearInterval(interval);
