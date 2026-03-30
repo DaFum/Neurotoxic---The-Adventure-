@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
@@ -334,17 +335,21 @@ export function Kaminstube() {
                   action: () => {
                     useStore.getState().setDialogue('Das Knistern ist kein Zufall. Es ist ein Code. Ein thermischer Algorithmus, der die Geschichte der ersten Industrial-Gigs hier speichert.');
                     useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
                     useStore.getState().completeQuest('forgotten_lore');
                     useStore.getState().increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 3);
                   }
                 },
-                { 
-                  text: 'Versuche, die Sprache zu deuten. [Diplomat]', 
+                {
+                  text: 'Versuche, die Sprache zu deuten. [Diplomat]',
                   requiredTrait: 'Diplomat',
                   action: () => {
                     useStore.getState().setDialogue('Du verstehst das Flüstern! Es erzählt von einem versteckten Archiv unter der Bühne, das die wahren Ursprünge des Industrial Metal enthält. Du hast die Lore entschlüsselt.');
                     useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
                     useStore.getState().completeQuest('forgotten_lore');
                     useStore.getState().increaseBandMood(20);
                   }
@@ -426,7 +431,7 @@ export function Kaminstube() {
           if (bandMood > 80 && !store.flags.wirtLegacy1982) {
             const knowsSecret = store.flags.askedAbout1982 || store.flags.ghostSecretRevealed;
             if (knowsSecret) {
-               const wirtOptions: any[] = [
+               const wirtOptions: DialogueOption[] = [
                   { text: 'Erzähl mir die ganze Geschichte von 1982.', action: () => {
                      useStore.getState().setDialogue({
                         text: 'Wirt: "Das ist gefährliches Wissen... Der Manager von damals, er wusste, worauf er sich einlässt."',
@@ -566,7 +571,7 @@ export function Kaminstube() {
              return;
           }
 
-          const options: any[] = [
+          const options: DialogueOption[] = [
               { text: 'Dann spiel im Takt der Hämmer. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
                 useStore.getState().setDialogue('Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"');
                 useStore.getState().setFlag('kaminstube_lars_talked', true);

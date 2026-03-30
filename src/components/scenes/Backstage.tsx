@@ -16,6 +16,7 @@
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Stars, Float, Text, Sparkles } from '@react-three/drei';
@@ -345,7 +346,7 @@ export function Backstage() {
           }
 
           if (store.flags.feedbackMonitorBackstageTalked) {
-            const options: any[] = [
+            const options: DialogueOption[] = [
               { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "BZZZT. Beeil dich. Das Rauschen wird lauter."') }
             ];
             if (!store.flags.feedbackMonitorBackstageQuestStarted) {
@@ -355,7 +356,7 @@ export function Backstage() {
                 useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
               }});
             }
-            if (store.flags.ampSentient) {
+            if (store.flags.ampSentient && !store.flags.feedbackMonitorBackstageQuestStarted) {
               options.unshift({ text: 'Der Amp hat mir von dir erzählt.', action: () => {
                 useStore.getState().setDialogue('Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."');
                 useStore.getState().increaseBandMood(25);
@@ -414,7 +415,7 @@ export function Backstage() {
             return;
           }
 
-          const options: any[] = [
+          const options: DialogueOption[] = [
             {
               text: 'Du bist ein Gott am Mikrofon. Vertrau dir. [Social 5]',
               requiredSkill: { name: 'social', level: 5 },
@@ -435,7 +436,6 @@ export function Backstage() {
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().setFlag('backstage_performer_speech', true);
-                useStore.getState().setFlag('mariusStageFright', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(30);
                 useStore.getState().increaseSkill('social', 3);
@@ -447,7 +447,6 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "...Du hast Recht. Zerstören. Einfach alles zerstören!"');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().setFlag('mariusStageFright', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(20);
                 useStore.getState().increaseSkill('chaos', 3);
@@ -460,7 +459,6 @@ export function Backstage() {
                 useStore.getState().setDialogue('Marius: "Die Frequenz... ich spüre sie. Ich bin nur das Gefäß. Die Musik spricht."');
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
-                useStore.getState().setFlag('mariusStageFright', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(25);
                 useStore.getState().increaseSkill('chaos', 3);
@@ -549,7 +547,7 @@ export function Backstage() {
               store.setDialogue('Lars: "VOLLGAS! Ich spüre die Farben der Musik!"');
             }
           } else if (hasTurbo) {
-            const options: any[] = [
+            const options: DialogueOption[] = [
               { text: 'Trink es auf Ex!', action: () => {
                 useStore.getState().setDialogue('Lars: "ICH BIN EIN BLITZ! ICH BIN DER DONNER! MEINE HÄNDE VIBRIEREN SO SCHNELL, DASS ICH DURCH WÄNDE GEHEN KANN!"');
                 useStore.getState().removeFromInventory('Turbo-Koffein');
@@ -594,14 +592,13 @@ export function Backstage() {
               options
             });
           } else if (store.hasItem('Energiedrink')) {
-            store.setDialogue('Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."');
+            const energyText = store.flags.larsRhythmPact
+              ? 'Lars: "JA! Der Treibstoff für unseren Pakt! Der Rhythmus explodiert in mir!"'
+              : 'Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."';
+            store.setDialogue(energyText);
             store.removeFromInventory('Energiedrink');
             store.setFlag('larsEnergized', true);
-            store.increaseBandMood(10);
-            if (store.flags.larsRhythmPact) {
-               store.increaseBandMood(15);
-               store.setDialogue('Lars: "JA! Der Treibstoff für unseren Pakt!"');
-            }
+            store.increaseBandMood(store.flags.larsRhythmPact ? 25 : 10);
           } else {
             store.setDialogue('Lars: "Ich bin total platt. Ohne Koffein geht hier gar nichts. Hast du was Stärkeres als Wasser?"');
           }
@@ -744,12 +741,6 @@ export function Backstage() {
             return;
           }
 
-          if (hasForbiddenRiff) {
-            store.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
-            store.increaseBandMood(15);
-            return;
-          }
-
           if (store.flags.mariusCalmed && !store.flags.backstageRitualPerformed) {
              store.setDialogue({
                 text: 'Manager: "Zeit für unser Ritual. Lasst uns die Energien bündeln."',
@@ -790,7 +781,10 @@ export function Backstage() {
              return;
           }
 
-          if (store.flags.backstageRitualPerformed) {
+          if (hasForbiddenRiff) {
+            store.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
+            store.increaseBandMood(15);
+          } else if (store.flags.backstageRitualPerformed) {
              store.setDialogue('Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.');
           } else {
              store.setDialogue('Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.');

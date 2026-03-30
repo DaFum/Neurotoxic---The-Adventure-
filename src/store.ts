@@ -161,7 +161,6 @@ const initialState = {
     ghostTrustEarned: false,
     tourbusBandMeeting: false,
     backstageRitualPerformed: false,
-    mariusStageFright: false,
     voidBassistSpoken: false,
     tankwartBargain: false,
     wirtLegacy1982: false,

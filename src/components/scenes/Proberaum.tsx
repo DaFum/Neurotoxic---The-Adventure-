@@ -16,6 +16,7 @@
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
@@ -400,6 +401,16 @@ export function Proberaum() {
                   setDialogue('Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."');
                   increaseBandMood(10);
                 }},
+                {
+                  text: 'Zeig mir, wie du die Crowd liest. [Performer]',
+                  requiredTrait: 'Performer',
+                  action: () => {
+                    setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
+                    useStore.getState().setFlag('matzeDeepTalk', true);
+                    useStore.getState().increaseBandMood(20);
+                    useStore.getState().increaseSkill('social', 3);
+                  }
+                },
                 { text: 'Erzähl mir von der Tour 1982.', action: () => {
                   setDialogue({
                     text: 'Matze: "1982... da war der Lärm noch rein. Wir haben in einer alten Gießerei gespielt. Der Bassist ist damals verschwunden, aber der Sound war legendär. Wir suchen ihn immer noch."',
@@ -416,16 +427,6 @@ export function Proberaum() {
                           useStore.getState().increaseBandMood(25);
                           useStore.getState().increaseSkill('chaos', 4);
                           useStore.getState().setFlag('matzeDeepTalk', true);
-                        }
-                      },
-                      {
-                        text: 'Zeig mir, wie du die Crowd liest. [Performer]',
-                        requiredTrait: 'Performer',
-                        action: () => {
-                          setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
-                          useStore.getState().setFlag('matzeDeepTalk', true);
-                          useStore.getState().increaseBandMood(20);
-                          useStore.getState().increaseSkill('social', 3);
                         }
                       },
                       { text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
@@ -937,7 +938,7 @@ export function Proberaum() {
               ]
             });
           } else if (flags.talkingAmpHeard) {
-            const ampOptions: any[] = [];
+            const ampOptions: DialogueOption[] = [];
             if (!flags.maschinen_seele_amp) {
               ampOptions.push({
                 text: 'Ich höre eine andere Stimme in dir. Wer ist da noch? [Mystic]',
@@ -1071,7 +1072,7 @@ export function Proberaum() {
               ]
             });
           } else {
-            const options: any[] = [];
+            const options: DialogueOption[] = [];
             if (!useStore.getState().flags.maschinen_seele_tr8080) {
               options.push({
                   text: 'Deine Seriennummer... du bist nicht von der Stange. [Technical 5]',

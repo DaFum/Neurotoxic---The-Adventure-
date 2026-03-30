@@ -12,6 +12,7 @@
  * - Error: Cannot find name 'addQuest'. Solution: Added addQuest to useStore destructuring.
  */
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Float, Text, MeshDistortMaterial, MeshWobbleMaterial, Sparkles, Stars } from '@react-three/drei';
@@ -280,7 +281,7 @@ export function VoidStation() {
 
             useStore.getState().setDialogue({
               text: 'Tankwart: "Ah, die Essenz des Nichts. Dunkle Materie ist der Treibstoff der Träume, die wir nie zu träumen wagten. Soll ich den Van mit 440Hz-Vibrationen oder 432Hz-Heilfrequenzen betanken?"',
-              options: options as any[]
+              options: options as DialogueOption[]
             });
           } else {
             setDialogue({
@@ -375,7 +376,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(25);
-                  useStore.getState().discoverLore('bassist_wahrheit');
+                  useStore.getState().discoverLore('bassist_truth');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('social', 3);
@@ -385,7 +386,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(50);
-                  useStore.getState().discoverLore('bassist_wahrheit');
+                  useStore.getState().discoverLore('bassist_truth');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('technical', 3);
@@ -395,7 +396,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(30);
-                  useStore.getState().discoverLore('bassist_wahrheit');
+                  useStore.getState().discoverLore('bassist_truth');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('chaos', 3);
@@ -405,7 +406,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(40);
-                  useStore.getState().discoverLore('bassist_wahrheit');
+                  useStore.getState().discoverLore('bassist_truth');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('chaos', 3);
@@ -538,7 +539,7 @@ export function VoidStation() {
 
             store.setDialogue({
               text: 'Marius\' Ego: "Ich bin das Zentrum des Universums! Ohne mich wäre dieser Gig nur ein Haufen rostiger Nägel. Warum sollte ich zurück in diesen winzigen Körper?"',
-              options: options as any[]
+              options: options as DialogueOption[]
             });
           }}
         />
