@@ -432,24 +432,21 @@ export function Kaminstube() {
                            { text: 'Ich bin vertrauenswürdig. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
                               useStore.getState().setDialogue('Wirt: "Na gut. Er machte einen Pakt mit der Void. Der Bassist war der Preis für den ultimativen Riff. Salzgitter war nur der Anfang. Passt auf euch auf."');
                               useStore.getState().setFlag('wirtLegacy1982', true);
-                              useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
-                              useStore.getState().completeQuest('wirt_legacy');
+                              useStore.getState().startAndFinishQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
                               useStore.getState().increaseBandMood(25);
                               useStore.getState().increaseSkill('social', 5);
                            }},
                            { text: 'Es ist wichtig für die Band. [Social 7]', requiredSkill: { name: 'social', level: 7 }, action: () => {
                               useStore.getState().setDialogue('Wirt: "Für die Band... okay. Der Manager verkaufte den Bassisten an die Leere, um den perfekten Industrial-Sound zu erschaffen. Begeht nicht den gleichen Fehler."');
                               useStore.getState().setFlag('wirtLegacy1982', true);
-                              useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
-                              useStore.getState().completeQuest('wirt_legacy');
+                              useStore.getState().startAndFinishQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
                               useStore.getState().increaseBandMood(20);
                               useStore.getState().increaseSkill('social', 3);
                            }},
                            { text: 'Die Wahrheit muss raus! [Chaos 5]', requiredSkill: { name: 'chaos', level: 5 }, action: () => {
                               useStore.getState().setDialogue('Wirt: "Schrei nicht so! Okay, okay. Der Manager hat den Bassisten geopfert. An die Frequenz! Zufrieden?! Jetzt geh spielen!"');
                               useStore.getState().setFlag('wirtLegacy1982', true);
-                              useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
-                              useStore.getState().completeQuest('wirt_legacy');
+                              useStore.getState().startAndFinishQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
                               useStore.getState().increaseBandMood(15);
                               useStore.getState().increaseSkill('chaos', 3);
                            }},
@@ -462,8 +459,7 @@ export function Kaminstube() {
                   wirtOptions.unshift({ text: 'Der Geist hat mich geschickt.', action: () => {
                      useStore.getState().setDialogue('Wirt: "Der Roadie?! Er ist noch da... dann weißt du es schon. Der Manager hat den Bassisten geopfert. Er hat einen Pakt mit der Void geschlossen. Passt auf, dass euch in Salzgitter nicht dasselbe passiert."');
                      useStore.getState().setFlag('wirtLegacy1982', true);
-                     useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
-                     useStore.getState().completeQuest('wirt_legacy');
+                     useStore.getState().startAndFinishQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
                      useStore.getState().increaseBandMood(30);
                   }});
                }

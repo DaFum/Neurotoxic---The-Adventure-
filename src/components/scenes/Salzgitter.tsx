@@ -30,18 +30,16 @@ import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 export function Salzgitter() {
   const setDialogue = useStore((state) => state.setDialogue);
   const setFlag = useStore((state) => state.setFlag);
-  const addQuest = useStore((state) => state.addQuest);
-  const completeQuest = useStore((state) => state.completeQuest);
+  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const flags = useStore((state) => state.flags);
 
   const startFanMovement = useCallback((dialogueText: string, moodIncrease: number) => {
     setDialogue(dialogueText);
     setFlag('fanMovement', true);
-    addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-    completeQuest('fan_movement');
+    startAndFinishQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
     increaseBandMood(moodIncrease);
-  }, [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood]);
+  }, [setDialogue, setFlag, startAndFinishQuest, increaseBandMood]);
 
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
@@ -594,8 +592,7 @@ export function Salzgitter() {
                    bandReady ? { text: 'Die Band ist vereint.', action: () => {
                       useStore.getState().setDialogue('Marius: "Wir sind eine Wand aus Lärm. Lasst uns die Welt niederreißen!"');
                       useStore.getState().setFlag('salzgitterBandUnited', true);
-                      useStore.getState().addQuest('unite_band', 'Vereinige die Band vor dem Finale in Salzgitter');
-                      useStore.getState().completeQuest('unite_band');
+                      useStore.getState().startAndFinishQuest('unite_band', 'Vereinige die Band vor dem Finale in Salzgitter');
                       useStore.getState().increaseBandMood(30);
                    }} : { text: 'Wir geben unser Bestes.', action: () => {
                       useStore.getState().setDialogue('Marius: "Ja, wir werden alles geben."');
@@ -720,7 +717,7 @@ export function Salzgitter() {
             }
 
             // Auto-restore via VoidStation contact only if player has no special items
-            if (store.flags.voidBassistSpoken && store.quests.find(q => q.id === 'bassist_mystery' && q.completed) && !store.hasItem('Bassist-Saite') && !store.hasItem('Resonanz-Kristall')) {
+            if (store.flags.voidBassistSpoken && store.quests.find(q => q.id === 'bassist_mystery' && q.status === 'completed') && !store.hasItem('Bassist-Saite') && !store.hasItem('Resonanz-Kristall')) {
                store.setDialogue('Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."');
                store.increaseBandMood(30);
                store.setFlag('bassist_restored', true);
@@ -851,8 +848,7 @@ export function Salzgitter() {
             store.setDialogue('Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.');
             return;
           }
-          store.addQuest('final', 'Spiele das Finale in Salzgitter');
-          store.completeQuest('final');
+          store.startAndFinishQuest('final', 'Spiele das Finale in Salzgitter');
           store.setFlag('salzgitter_finalized', true);
 
           // Calculate endings based on flags

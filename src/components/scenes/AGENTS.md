@@ -21,7 +21,15 @@
 - `requiredSkill` must be an object `{ name: 'skill', level: N }` — passing a string silently fails
 - `questDependencies` hides the option unless those quests are completed — ensure referenced quests exist
 
+## Quest API in Scenes
+
+- Scene-specific quests (objectives the player only learns about by entering the scene) should be registered on scene entry, not in `initialState`. If a persisted completion flag may already be true, branch to `startAndFinishQuest(id, text)` instead of blindly calling `addQuest(id, text)` so legacy saves are backfilled correctly.
+- Use `startAndFinishQuest(id, text)` for one-shot milestones (band meeting, bassist contact, wirt_legacy, etc.). It is safe to call even if the quest was previously registered as 'active' — it will transition it to 'completed'. No-op only if already completed or failed. A one-shot action may still set a separate flag in the same callback. Reserve `addQuest + completeQuest` for multi-step flows where the quest is opened earlier and resolved later.
+- Always call `completeQuest(id)` when a questline resolves, even if you also set a completion flag. Relying only on a flag causes quest-log drift (journal stays open, narrative says done).
+
 ## Gotchas
+
+- Flag names passed to `setFlag()` and `flagToSet.flag` must exist in the `Flag` union in `store.ts` — TypeScript enforces this. Add new flags to the union before using them.
 - Collected items must use conditional rendering: `{!hasItem('X') && <Interactable ... />}` — otherwise the item persists after pickup
 - Multiple interactables at the same position must be mutually exclusive via flags
 - `removeFromInventory()` is NOT automatic — explicitly call it when an item is consumed
