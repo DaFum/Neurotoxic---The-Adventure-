@@ -170,11 +170,12 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     velocity.z += touchInput.z;
 
     // Update facing direction from combined input
-    if (velocity.x < -0.1) setFacingRight(false);
-    else if (velocity.x > 0.1) setFacingRight(true);
+    // ⚡ Bolt Optimization: Only update state if value actually changed to prevent unnecessary re-renders in useFrame
+    if (velocity.x < -0.1 && facingRight) setFacingRight(false);
+    else if (velocity.x > 0.1 && !facingRight) setFacingRight(true);
 
     const moving = velocity.length() > 0;
-    setIsMoving(moving);
+    if (moving !== isMoving) setIsMoving(moving);
 
     if (moving) {
       velocity.normalize().multiplyScalar(speed);
