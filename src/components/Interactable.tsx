@@ -241,13 +241,14 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   });
 
   const handleInteract = () => {
-    if (inRange && !isPaused) {
+    const currentIsPaused = useStore.getState().isPaused;
+    if (inRangeRef.current && !currentIsPaused) {
       audio.playInteraction();
       setCameraShake(0.2);
       onInteract();
       setInteracted(true);
       setTimeout(() => setInteracted(false), 500);
-    } else if (!isPaused) {
+    } else if (!currentIsPaused) {
       useStore.getState().setDialogue('OUT_OF_RANGE: Move closer to target.');
     }
   };

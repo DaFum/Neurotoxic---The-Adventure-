@@ -318,9 +318,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *BandMood > 80:* Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
     * *Standard:* Erhalt: Bier.
 * **Ersatzröhre (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Röhre).
+    * *Interaktion:* Aufheben (Erhalt: Röhre). *Hinweis: Der Pickup wird versteckt, sobald die `amp` Quest abgeschlossen ist (oder `ampFixed` gesetzt ist).*
 * **Kaputter Amp:**
-    * *Item (Röhre):* Reparieren (+30 BandMood, Quest-Abschluss: `amp`, entfernt Röhre). **Falls `amp` noch nicht aktiv ist, wird die Quest beim Reparieren zuerst erzeugt und dann abgeschlossen.**
+    * *Item (Röhre):* Reparieren (+30 BandMood, Quest-Abschluss: `amp`, entfernt Röhre). **Falls `amp` noch nicht aktiv ist, wird die Quest beim Reparieren zuerst erzeugt und dann abgeschlossen.** *(Hinweis: Nach Abschluss der `amp` Quest bleibt der Ersatzröhre-Pickup versteckt).*
 * **Kaputter Drum-Computer:**
     * *Interaktion:* Betrachten (+10 BandMood, einmalig — Flag: `kaminstubeDrumLoreHeard`).
 * **Crowd:**
