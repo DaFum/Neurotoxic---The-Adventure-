@@ -156,6 +156,7 @@ const initialState = {
     gaveDiplomatSouvenir: false,
     matzeRiffWarning: false,
     larsRhythmPact: false,
+    gaveBeerToLars: false,
     mariusEgoStrategy: false,
     ampSentient: false,
     ghostTrustEarned: false,
@@ -178,7 +179,6 @@ const initialState = {
 
     { id: 'rhythm_pact', title: 'Der Rhythmus-Pakt', content: 'Lars und du habt einen Pakt geschlossen. Der Rhythmus ist kein Werkzeug — er ist ein Lebewesen. Wer ihn beherrscht, kontrolliert die Zeit selbst.', discovered: false },
     { id: 'ghost_legacy', title: 'Das Vermächtnis des Roadies', content: 'Der Geist war einst der beste Roadie der Welt. Er starb 1982, als der Bassist verschwand — verschluckt vom gleichen Feedback-Loop. Sein letzter Wunsch: dass die Band weiterlebt.', discovered: false },
-    { id: 'bassist_truth', title: 'Die Wahrheit des Bassisten', content: 'Der Bassist ist nicht verschwunden. Er wurde eins mit der Frequenz. In der Void Station existiert er als reine Schwingung — weder tot noch lebendig.', discovered: false },
     { id: 'kamin_prophecy', title: 'Prophezeiung des Kamins', content: 'Das Feuer flüstert: In Salzgitter wird die Grenze zwischen Musik und Realität brechen. Nur eine vereinte Band kann den Riss schließen.', discovered: false },
     { id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
     { id: 'bassist_wahrheit', title: 'Die Wahrheit über den Bassisten', content: 'Er wählte die Leere. Nicht aus Verzweiflung, sondern aus Liebe zum reinen Klang. Er ist der Grundton, auf dem alles aufbaut. Ohne ihn wäre NEUROTOXIC nur Lärm.', discovered: false },

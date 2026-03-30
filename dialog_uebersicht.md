@@ -60,7 +60,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Rhythmus-Pakt (Nachdem larsDrumPhilosophy gesetzt wurde):*
         * [Brutalist]: Aggressiver Pakt (+25 BandMood, +5 Chaos, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
         * [Diplomat]: Harmonischer Pakt (+20 BandMood, +5 Social, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
+        * *Item (Bier):* Bier geben (+20 BandMood, entfernt Bier, setzt `gaveBeerToLars`).
         * Standard: Bedenkzeit.
+    * *Nach Rhythmus-Pakt (`larsRhythmPact` gesetzt):*
+        * *Item (Bier):* Bier geben (+20 BandMood, entfernt Bier, setzt `gaveBeerToLars`).
+        * Standard: "Der Pakt steht." (kein Effekt).
 * **Marius (Sänger):**
     * *Nach Bier (Wie bereitest du dich auf Salzgitter vor?):*
         * (Trait: Performer): Bühnenpräsenz-Coaching (+15 BandMood, +3 Social, setzt `mariusEgoStrategy`).
@@ -70,7 +74,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * *Nach Erstkontakt (BandMood > 50):*
             * Zweig A (Trait: Diplomat): "Du bist der Frontmann" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
             * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos).
-            * Standard: "Bereit für den Gig?" (+10 BandMood).
+            * Standard: "Bereit für den Gig?" (kein Effekt).
     * *Ohne Bier:* Fordert Bier.
         * "Ich beeile mich" (kein Mood-Effekt).
         * "Trink doch Wasser" (-5 BandMood).
@@ -236,7 +240,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
     * *Item (Verbotenes Riff):* Resonanz (+15 BandMood).
-    * *Standard:* (+5 BandMood).
+    * *Standard:* (+5 BandMood, einmalig, Quest hinzugefügt: backstage_ritual).
 
 ---
 
@@ -272,10 +276,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Dunkle Materie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Dunkle Materie).
 * **Schwebender Bassist** *(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):*
-    * *Option (Skill: Social 8):* "Die Band vermisst dich" (+25 BandMood, +3 Social, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
-    * *Option (Skill: Technical 8):* "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
-    * *Option (Trait: Mystic):* "Ich höre deine Melodie" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
-    * *Option (Trait: Visionary):* "Ich sehe dich zwischen den Dimensionen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Option (Skill: Social 8):* "Die Band vermisst dich" (+25 BandMood, +3 Social, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).
+    * *Option (Skill: Technical 8):* "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).
+    * *Option (Trait: Mystic):* "Ich höre deine Melodie" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).
+    * *Option (Trait: Visionary):* "Ich sehe dich zwischen den Dimensionen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).
     * *Standard:* "Ich lass dich besser in Ruhe" (kein Mood-Effekt).
 * **Diplomaten-Interface:**
     * *Option (Trait: Diplomat):* Verhandeln (+30 BandMood, +5 Social, setzt `void_diplomat_negotiation`, **Lore:** `schaltpult_record`).

@@ -380,7 +380,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(25);
-                  useStore.getState().discoverLore('bassist_truth');
+                  useStore.getState().discoverLore('bassist_wahrheit');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('social', 3);
@@ -390,7 +390,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(50);
-                  useStore.getState().discoverLore('bassist_truth');
+                  useStore.getState().discoverLore('bassist_wahrheit');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('technical', 3);
@@ -400,7 +400,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(40);
-                  useStore.getState().discoverLore('bassist_truth');
+                  useStore.getState().discoverLore('bassist_wahrheit');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('chaos', 3);
@@ -410,7 +410,7 @@ export function VoidStation() {
                   useStore.getState().setFlag('bassist_contacted', true);
                   useStore.getState().setFlag('voidBassistSpoken', true);
                   useStore.getState().increaseBandMood(40);
-                  useStore.getState().discoverLore('bassist_truth');
+                  useStore.getState().discoverLore('bassist_wahrheit');
                   useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
                   useStore.getState().completeQuest('bassist_mystery');
                   useStore.getState().increaseSkill('chaos', 3);
