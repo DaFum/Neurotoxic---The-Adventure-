@@ -13,7 +13,10 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { audio } from '../audio';
 
-/** WorldEvents function. */
+/**
+ * React component that renders the WorldEvents UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function WorldEvents() {
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);

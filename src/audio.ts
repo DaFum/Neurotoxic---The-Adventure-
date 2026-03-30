@@ -18,8 +18,8 @@ class AudioEngine {
   currentAmbient: string | null = null;
   tempo = 250;
 
-  /** init method. */
-    init() {
+  /** Executes the init logic. */
+  init() {
     if (!this.ctx) {
       this.ctx = new AudioContext();
     }
@@ -28,8 +28,11 @@ class AudioEngine {
     }
   }
 
-  /** setTempo method. */
-    setTempo(newTempo: number) {
+  /**
+   * Executes the setTempo logic.
+   * @param newTempo - Required configuration parameter.
+   */
+  setTempo(newTempo: number) {
     this.tempo = newTempo;
     if (this.isPlayingMusic) {
       this.stopMusic();
@@ -37,8 +40,14 @@ class AudioEngine {
     }
   }
 
-  /** playTone method. */
-    playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
+  /**
+   * Executes the playTone logic.
+   * @param freq - Required configuration parameter.
+   * @param type - Required configuration parameter.
+   * @param duration - Required configuration parameter.
+   * @param vol - Required configuration parameter.
+   */
+  playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
@@ -56,15 +65,15 @@ class AudioEngine {
     osc.stop(this.ctx.currentTime + duration);
   }
 
-  /** playInteract method. */
-    playInteract() {
+  /** Executes the playInteract logic. */
+  playInteract() {
     this.init();
     this.playTone(440, 'square', 0.1, 0.05);
     setTimeout(() => this.playTone(880, 'square', 0.1, 0.05), 50);
   }
 
-  /** playPickup method. */
-    playPickup() {
+  /** Executes the playPickup logic. */
+  playPickup() {
     this.init();
     this.playTone(300, 'sawtooth', 0.1, 0.1);
     setTimeout(() => this.playTone(400, 'sawtooth', 0.1, 0.1), 100);
@@ -72,29 +81,32 @@ class AudioEngine {
     setTimeout(() => this.playTone(800, 'sawtooth', 0.3, 0.1), 300);
   }
 
-  /** playFootstep method. */
-    playFootstep() {
+  /** Executes the playFootstep logic. */
+  playFootstep() {
     this.init();
     // Low noise burst for footstep
     this.playTone(60 + Math.random() * 20, 'sine', 0.05, 0.02);
   }
 
-  /** playInteraction method. */
-    playInteraction() {
+  /** Executes the playInteraction logic. */
+  playInteraction() {
     this.init();
     // High-tech beep
     this.playTone(1200, 'sine', 0.05, 0.05);
     setTimeout(() => this.playTone(1600, 'sine', 0.05, 0.05), 50);
   }
 
-  /** playTypewriter method. */
-    playTypewriter() {
+  /** Executes the playTypewriter logic. */
+  playTypewriter() {
     this.init();
     this.playTone(600 + Math.random() * 200, 'sine', 0.02, 0.02);
   }
 
-  /** startAmbient method. */
-    startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter') {
+  /**
+   * Executes the startAmbient logic.
+   * @param type - Required configuration parameter.
+   */
+  startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter') {
     this.init();
     if (this.currentAmbient === type) return;
     this.stopAmbient();
@@ -146,8 +158,8 @@ class AudioEngine {
     }, type === 'kaminstube' ? 100 : 1000);
   }
 
-  /** stopAmbient method. */
-    stopAmbient() {
+  /** Executes the stopAmbient logic. */
+  stopAmbient() {
     if (this.ambientInterval) {
       clearInterval(this.ambientInterval);
       this.ambientInterval = null;
@@ -155,8 +167,8 @@ class AudioEngine {
     this.currentAmbient = null;
   }
 
-  /** startMusic method. */
-    startMusic() {
+  /** Executes the startMusic logic. */
+  startMusic() {
     this.init();
     if (this.isPlayingMusic) return;
     this.isPlayingMusic = true;
@@ -203,8 +215,8 @@ class AudioEngine {
     }, this.tempo); // Dynamic BPM
   }
 
-  /** stopMusic method. */
-    stopMusic() {
+  /** Executes the stopMusic logic. */
+  stopMusic() {
     this.isPlayingMusic = false;
     if (this.musicInterval) {
       clearInterval(this.musicInterval);
@@ -213,5 +225,5 @@ class AudioEngine {
   }
 }
 
-/** audio variable. */
+/** Exported variable representing the audio game logic. */
 export const audio = new AudioEngine();

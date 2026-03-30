@@ -33,7 +33,10 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { audio } from '../audio';
 
-/** UI function. */
+/**
+ * React component that renders the UI UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function UI() {
   const dialogue = useStore((state) => state.dialogue);
   const setDialogue = useStore((state) => state.setDialogue);

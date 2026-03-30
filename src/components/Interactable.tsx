@@ -29,7 +29,11 @@ interface InteractableProps {
   idleType?: 'headbang' | 'tap' | 'sway';
 }
 
-/** Interactable function. */
+/**
+ * React component that renders the Interactable UI element or 3D scene entity.
+ * @param props - Required configuration parameter.
+ * @returns Output from the function/method.
+ */
 export function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);

@@ -32,7 +32,10 @@ import { KeyboardInteractionProvider } from './KeyboardInteractionManager';
 
 const STORAGE_KEY = 'neurotoxic-game-storage';
 
-/** Game function. */
+/**
+ * React component that renders the Game UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function Game() {
   const scene = useStore((state) => state.scene);
   const trait = useStore((state) => state.trait);

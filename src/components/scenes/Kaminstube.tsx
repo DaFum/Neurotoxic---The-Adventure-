@@ -23,7 +23,10 @@ import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
-/** Kaminstube function. */
+/**
+ * React component that renders the Kaminstube UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function Kaminstube() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);

@@ -5,7 +5,10 @@ const BASE_R = 56;   // outer ring radius px
 const KNOB_R = 22;   // inner knob radius px
 const MAX = BASE_R - KNOB_R; // max knob travel px
 
-/** VirtualJoystick function. */
+/**
+ * React component that renders the VirtualJoystick UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function VirtualJoystick() {
   const [visible, setVisible] = useState(false);
   const baseRef = useRef<HTMLDivElement>(null);

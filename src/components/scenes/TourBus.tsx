@@ -23,7 +23,10 @@ import { useRef, useEffect } from 'react';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
-/** TourBus function. */
+/**
+ * React component that renders the TourBus UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);

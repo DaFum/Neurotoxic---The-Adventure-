@@ -22,7 +22,10 @@
 
 import { Game } from './components/Game';
 
-/** App function. */
+/**
+ * React component that renders the App UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export default function App() {
   return <Game />;
 }

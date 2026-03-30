@@ -6,7 +6,11 @@ interface SceneEnvironmentSetpiecesProps {
   variant: SceneVariant;
 }
 
-/** SceneEnvironmentSetpieces function. */
+/**
+ * React component that renders the SceneEnvironmentSetpieces UI element or 3D scene entity.
+ * @param props - Required configuration parameter.
+ * @returns Output from the function/method.
+ */
 export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpiecesProps) {
   switch (variant) {
     case 'proberaum':

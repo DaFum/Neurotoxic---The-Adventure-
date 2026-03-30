@@ -14,7 +14,11 @@ interface KeyboardInteractionContextValue {
 
 const KeyboardInteractionContext = createContext<KeyboardInteractionContextValue | null>(null);
 
-/** KeyboardInteractionProvider function. */
+/**
+ * React component that renders the KeyboardInteractionProvider UI element or 3D scene entity.
+ * @param props - Required configuration parameter.
+ * @returns Output from the function/method.
+ */
 export function KeyboardInteractionProvider({ children }: { children: ReactNode }) {
   const registryRef = useRef(new Map<string, () => InteractableInfo | null>());
 
@@ -54,7 +58,10 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
   );
 }
 
-/** useKeyboardInteraction function. */
+/**
+ * React hook providing state and logic for KeyboardInteraction.
+ * @returns Output from the function/method.
+ */
 export function useKeyboardInteraction() {
   const ctx = useContext(KeyboardInteractionContext);
   if (!ctx) throw new Error('useKeyboardInteraction must be used within KeyboardInteractionProvider');

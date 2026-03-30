@@ -28,7 +28,6 @@ from typing import Optional
 
 @dataclass
 class Issue:
-    """Represents a single validation issue found in a context file."""
     severity: str  # "error", "warning", "info"
     check: str
     message: str
@@ -38,7 +37,6 @@ class Issue:
 
 @dataclass
 class ValidationResult:
-    """Stores the aggregated results of validating a context file."""
     file_path: str
     word_count: int
     line_count: int
@@ -47,7 +45,6 @@ class ValidationResult:
     passed: bool = True
 
     def add(self, issue: Issue):
-        """Adds an issue to the validation result and updates the pass status."""
         self.issues.append(issue)
         if issue.severity == "error":
             self.passed = False
@@ -425,7 +422,6 @@ def format_json(result: ValidationResult) -> str:
 
 
 def main():
-    """Main entry point for the validation script."""
     parser = argparse.ArgumentParser(
         description="Validate AI agent context files (AGENTS.md, CLAUDE.md, etc.)"
     )

@@ -23,7 +23,10 @@ import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
-/** Proberaum function. */
+/**
+ * React component that renders the Proberaum UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function Proberaum() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);

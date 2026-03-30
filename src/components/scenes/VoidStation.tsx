@@ -20,7 +20,10 @@ import { Float, Text, MeshDistortMaterial, MeshWobbleMaterial, Sparkles, Stars }
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
-/** VoidStation function. */
+/**
+ * React component that renders the VoidStation UI element or 3D scene entity.
+ * @returns Output from the function/method.
+ */
 export function VoidStation() {
   const addToInventory = useStore((state) => state.addToInventory);
   const setDialogue = useStore((state) => state.setDialogue);

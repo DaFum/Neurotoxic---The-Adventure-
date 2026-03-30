@@ -24,7 +24,11 @@ interface PlayerProps {
   bounds?: { x: [number, number]; z: [number, number] };
 }
 
-/** Player function. */
+/**
+ * React component that renders the Player UI element or 3D scene entity.
+ * @param props - Required configuration parameter.
+ * @returns Output from the function/method.
+ */
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);
   const modelRef = useRef<THREE.Group>(null);
