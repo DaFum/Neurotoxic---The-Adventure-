@@ -322,7 +322,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Kaputter Amp:**
     * *Item (Röhre):* Reparieren (+30 BandMood, Quest-Abschluss: `amp`, entfernt Röhre). **Falls `amp` noch nicht aktiv ist, wird die Quest beim Reparieren zuerst erzeugt und dann abgeschlossen.**
 * **Kaputter Drum-Computer:**
-    * *Interaktion:* Betrachten (+10 BandMood).
+    * *Interaktion:* Betrachten (+10 BandMood, einmalig — Flag: `kaminstubeDrumLoreHeard`).
 * **Crowd:**
     * *Interaktion:* Zujubeln (+5 BandMood).
 
