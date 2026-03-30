@@ -290,16 +290,20 @@ export function VoidStation() {
                 : (flags.backstageRitualPerformed ? 'Tankwart: "Ich spüre die Energie eures Rituals. Ihr seid vorbereitet auf den Lärm. Was suchst du hier wirklich?"' : 'Tankwart: "Willkommen an der Station zwischen den Takten. Hier wird die Zeit gedehnt und der Schall zur Materie. Der Van benötigt Dunkle Materie, um die Realität zu durchbrechen. Was suchst du hier wirklich?"'),
               options: [
                 { text: 'Nur Treibstoff für den Gig.', action: () => setDialogue('Tankwart: "So pragmatisch. Sucht in den Ecken der Existenz, wo das Licht sich krümmt."') },
-                { text: 'Das ist doch alles Quatsch. Gib mir Sprit. [Cynic]', requiredTrait: 'Cynic', action: () => {
-                  setDialogue('Tankwart: "Quatsch? Schau dich um, Fleischsack. Du stehst in der 5. Dimension. Hier ist der Sprit."');
-                  increaseBandMood(15);
-                  useStore.getState().increaseSkill('chaos', 3);
-                }},
-                { text: 'Ich spiele für dich, Tankwart. [Performer]', requiredTrait: 'Performer', action: () => {
-                  setDialogue('Du legst eine kosmische Performance hin. Der Tankwart applaudiert lautlos. "Bravo. Die Leere liebt eine gute Show."');
-                  increaseBandMood(25);
-                  useStore.getState().increaseSkill('social', 5);
-                }},
+                ...(!flags.tankwartBargain ? [
+                  { text: 'Das ist doch alles Quatsch. Gib mir Sprit. [Cynic]', requiredTrait: 'Cynic' as const, action: () => {
+                    setDialogue('Tankwart: "Quatsch? Schau dich um, Fleischsack. Du stehst in der 5. Dimension. Hier ist der Sprit."');
+                    increaseBandMood(15);
+                    useStore.getState().increaseSkill('chaos', 3);
+                    setFlag('tankwartBargain', true);
+                  }},
+                  { text: 'Ich spiele für dich, Tankwart. [Performer]', requiredTrait: 'Performer' as const, action: () => {
+                    setDialogue('Du legst eine kosmische Performance hin. Der Tankwart applaudiert lautlos. "Bravo. Die Leere liebt eine gute Show."');
+                    increaseBandMood(25);
+                    useStore.getState().increaseSkill('social', 5);
+                    setFlag('tankwartBargain', true);
+                  }},
+                ] as DialogueOption[] : []),
                 { text: 'Die Antwort auf das ultimative Riff.', action: () => {
                   setDialogue('Tankwart: "Das Riff ist in dir... und in der Pfütze im Proberaum, die seit 1982 niemals getrocknet ist."');
                   increaseBandMood(5);
