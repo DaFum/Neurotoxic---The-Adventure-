@@ -170,6 +170,7 @@ const initialState = {
     larsRhythmPactClaimed: false,
     matzeRiffDialogueDone: false,
     matzePerformerTalk: false,
+    salzgitterMatzeWirtDone: false,
   },
 
 

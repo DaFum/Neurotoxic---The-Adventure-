@@ -397,15 +397,16 @@ export function Proberaum() {
                     useStore.getState().increaseSkill('social', 3);
                   }
                 }] as DialogueOption[] : []),
-                { text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
-                  requiredTrait: 'Cynic',
+                ...(!useStore.getState().flags.mariusEgoStrategy ? [{
+                  text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
+                  requiredTrait: 'Cynic' as const,
                   action: () => {
                     setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('chaos', 5);
                     useStore.getState().setFlag('mariusEgoStrategy', true);
                   }
-                },
+                }] as DialogueOption[] : []),
                 { text: 'Erzähl mir von der Tour 1982.', action: () => {
                   setDialogue({
                     text: 'Matze: "1982... da war der Lärm noch rein. Wir haben in einer alten Gießerei gespielt. Der Bassist ist damals verschwunden, aber der Sound war legendär. Wir suchen ihn immer noch."',

@@ -381,7 +381,7 @@ export function Salzgitter() {
             } else {
               store.setDialogue('Matze: "Manager, das Verbotene Riff... es brennt in meinen Fingern! Es ist schwer zu kontrollieren. Ich hoffe, ich zerreiße nicht die ganze Realität heute Abend!"');
             }
-          } else if (store.flags.matzeDeepTalk && store.flags.wirtLegacy1982) {
+          } else if (store.flags.matzeDeepTalk && store.flags.wirtLegacy1982 && !store.flags.salzgitterMatzeWirtDone) {
              store.setDialogue({
                 text: 'Matze: "Du hast die Wahrheit über 1982 herausgefunden, oder? Wir werden den Zyklus heute Nacht vollenden. Kein Manager wird geopfert, nur der reine Lärm bleibt."',
                 options: [
@@ -393,10 +393,12 @@ export function Salzgitter() {
                          useStore.getState().setDialogue('Matze: "Ich spüre es. Die Luft flirrt."');
                          useStore.getState().increaseBandMood(20);
                       }
+                      useStore.getState().setFlag('salzgitterMatzeWirtDone', true);
                    }},
                    { text: 'Wir brechen den Fluch.', action: () => {
                       useStore.getState().setDialogue('Matze: "Mit jedem Akkord ein Stück mehr. Für den Metal!"');
                       useStore.getState().increaseBandMood(20);
+                      useStore.getState().setFlag('salzgitterMatzeWirtDone', true);
                    }}
                 ]
              });
