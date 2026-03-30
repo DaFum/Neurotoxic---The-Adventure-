@@ -197,9 +197,11 @@ export interface Dialogue {
  * @property removeFromInventory - Removes an item ID from the inventory.
  * @property hasItem - Checks if the player has a specific item ID in their inventory.
  * @property combineItems - Attempts to combine two item IDs into a new item.
- * @property quests - A list of active and completed quests.
- * @property addQuest - Adds a new quest object to the quests array.
+ * @property quests - A list of active, completed, and failed quests.
+ * @property addQuest - Adds a quest if one with the same ID does not already exist (idempotent).
  * @property completeQuest - Marks a specific quest ID as completed.
+ * @property failQuest - Marks a specific quest ID as failed.
+ * @property startAndFinishQuest - Records a milestone as a completed quest entry in one step.
  * @property bandMood - The current mood of the band (0-100).
  * @property increaseBandMood - Increases or decreases the band mood.
  * @property loreEntries - The dictionary of all lore entries in the game.
@@ -236,6 +238,7 @@ interface GameState {
   addQuest: (id: string, text: string) => void;
   completeQuest: (id: string) => void;
   failQuest: (id: string) => void;
+  startAndFinishQuest: (id: string, text: string) => void;
   bandMood: number;
   increaseBandMood: (amount: number) => void;
   cameraShake: number;
@@ -383,16 +386,13 @@ const initialState = {
   ],
   playerPos: [0, 1, 0] as [number, number, number],
   isPaused: false,
+  // Only seed quests the player knows about from the very start of the game.
+  // Scene-specific quests are added by their respective scene components on discovery.
   quests: [
     { id: 'water', text: 'Wisch das Wasser im Proberaum auf', status: 'active' as QuestStatus },
     { id: 'beer', text: 'Besorg Marius ein kühles Bier', status: 'active' as QuestStatus },
     { id: 'keys', text: 'Finde die Autoschlüssel für den Van', status: 'active' as QuestStatus },
-    { id: 'setlist', text: 'Finde die Setliste im Backstage', status: 'active' as QuestStatus },
     { id: 'marius', text: 'Beruhige Marius vor dem Auftritt', status: 'active' as QuestStatus },
-    { id: 'void', text: 'Betanke den Van mit dunkler Materie', status: 'active' as QuestStatus },
-    { id: 'ego', text: 'Fange Marius entflohenes Ego ein', status: 'active' as QuestStatus },
-    { id: 'cosmic_echo', text: 'Untersuche das kosmische Echo in der Void Station', status: 'active' as QuestStatus },
-    { id: 'forgotten_lore', text: 'Entschlüssele die vergessene Lore in der Kaminstube', status: 'active' as QuestStatus },
   ],
   bandMood: 20,
   cameraShake: 0,
@@ -522,15 +522,20 @@ export const useStore = create<GameState>()(
         return { playerPos };
       }),
       setPaused: (isPaused) => set({ isPaused }),
-      addQuest: (id, text) => set((state) => ({
-        quests: [...state.quests.filter(q => q.id !== id), { id, text, status: 'active' as QuestStatus }]
-      })),
+      addQuest: (id, text) => set((state) => {
+        if (state.quests.some(q => q.id === id)) return state;
+        return { quests: [...state.quests, { id, text, status: 'active' as QuestStatus }] };
+      }),
       completeQuest: (id) => set((state) => ({
         quests: state.quests.map(q => q.id === id ? { ...q, status: 'completed' as QuestStatus } : q)
       })),
       failQuest: (id) => set((state) => ({
         quests: state.quests.map(q => q.id === id ? { ...q, status: 'failed' as QuestStatus } : q)
       })),
+      startAndFinishQuest: (id, text) => set((state) => {
+        if (state.quests.some(q => q.id === id)) return state;
+        return { quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }] };
+      }),
       increaseBandMood: (amount) => set((state) => ({
         bandMood: Math.max(0, Math.min(100, state.bandMood + amount))
       })),

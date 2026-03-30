@@ -11,7 +11,7 @@
  * #3: ERRORS & SOLUTIONS
  * - Error: Cannot find name 'addQuest'. Solution: Added addQuest to useStore destructuring.
  */
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useStore } from '../../store';
 import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
@@ -37,16 +37,24 @@ export function VoidStation() {
   const discoverLore = useStore((state) => state.discoverLore);
   const increaseSkill = useStore((state) => state.increaseSkill);
 
+  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
+
+  // Register scene-specific quests when the player enters VoidStation
+  useEffect(() => {
+    addQuest('void', 'Betanke den Van mit dunkler Materie');
+    addQuest('ego', 'Fange Marius\' entflohenes Ego ein');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const bassistActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical", skillIncrease: number, dialogueText: string) => {
     setDialogue(dialogueText);
     setFlag('bassist_contacted', true);
     setFlag('voidBassistSpoken', true);
     increaseBandMood(mood);
     discoverLore('bassist_wahrheit');
-    addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
-    completeQuest('bassist_mystery');
+    startAndFinishQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
     increaseSkill(skillName, skillIncrease);
-  }, [setDialogue, setFlag, increaseBandMood, discoverLore, addQuest, completeQuest, increaseSkill]);
+  }, [setDialogue, setFlag, increaseBandMood, discoverLore, startAndFinishQuest, increaseSkill]);
 
   return (
     <>

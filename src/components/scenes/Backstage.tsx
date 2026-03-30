@@ -43,24 +43,28 @@ export function Backstage() {
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // Register the setlist quest when the player first enters Backstage
+    addQuest('setlist', 'Finde die Setliste im Backstage');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);
         exitTimeoutRef.current = null;
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
 
   const ritualActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical"|null, skillIncrease: number, dialogueText: string) => {
     setDialogue(dialogueText);
     setFlag('backstageRitualPerformed', true);
-    addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-    completeQuest('backstage_ritual');
+    startAndFinishQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
     increaseBandMood(mood);
     if (skillName) {
       increaseSkill(skillName, skillIncrease);
     }
-  }, [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood, increaseSkill]);
+  }, [setDialogue, setFlag, startAndFinishQuest, increaseBandMood, increaseSkill]);
 
   return (
     <>
@@ -731,6 +735,7 @@ export function Backstage() {
                  { text: 'Vollende die Frequenz von 1982. [Mystic]', requiredTrait: 'Mystic', action: () => {
                    useStore.getState().setDialogue('Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!');
                    useStore.getState().setFlag('frequenz1982_complete', true);
+                   useStore.getState().completeQuest('frequenz_1982');
                    useStore.getState().discoverLore('frequenz_1982_decoded');
                    useStore.getState().increaseBandMood(50);
                    useStore.getState().removeFromInventory('Resonanz-Kristall');
@@ -739,6 +744,7 @@ export function Backstage() {
                    useStore.getState().setDialogue('Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
                    useStore.getState().removeFromInventory('Resonanz-Kristall');
                    useStore.getState().setFlag('frequenz1982_complete', true);
+                   useStore.getState().completeQuest('frequenz_1982');
                    useStore.getState().discoverLore('frequenz_1982_decoded');
                    useStore.getState().increaseBandMood(40);
                    useStore.getState().increaseSkill('chaos', 5);
@@ -759,6 +765,7 @@ export function Backstage() {
                    useStore.getState().setDialogue('Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
                    useStore.getState().removeFromInventory('Frequenzfragment');
                    useStore.getState().setFlag('frequenz1982_complete', true);
+                   useStore.getState().completeQuest('frequenz_1982');
                    useStore.getState().discoverLore('frequenz_1982_decoded');
                    useStore.getState().increaseBandMood(40);
                    useStore.getState().increaseSkill('chaos', 5);

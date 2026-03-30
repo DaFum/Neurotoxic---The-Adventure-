@@ -39,6 +39,7 @@ export function TourBus() {
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
+  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -463,8 +464,7 @@ export function TourBus() {
                   action: () => {
                     setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
                     useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
                     useStore.getState().increaseBandMood(30);
                   }
                 },
@@ -474,8 +474,7 @@ export function TourBus() {
                   action: () => {
                     setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
                     useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
                     useStore.getState().increaseBandMood(20);
                   }
                 },
@@ -485,16 +484,14 @@ export function TourBus() {
                   action: () => {
                     setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
                     useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
                     useStore.getState().increaseBandMood(25);
                   }
                 },
                 { text: 'Einfache Ansagen machen.', action: () => {
                     setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
                     useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().addQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().completeQuest('band_meeting');
+                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
                     useStore.getState().increaseBandMood(10);
                 }}
               ]

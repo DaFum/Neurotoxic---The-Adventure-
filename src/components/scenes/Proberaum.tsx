@@ -542,8 +542,7 @@ export function Proberaum() {
                             useStore.getState().increaseBandMood(25);
                             useStore.getState().increaseSkill('chaos', 5);
                             useStore.getState().setFlag('larsRhythmPact', true);
-                            useStore.getState().addQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
-                            useStore.getState().completeQuest('rhythm_pact');
+                            useStore.getState().startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
                             useStore.getState().discoverLore('rhythm_pact');
                           }
                         },
@@ -555,8 +554,7 @@ export function Proberaum() {
                             useStore.getState().increaseBandMood(20);
                             useStore.getState().increaseSkill('social', 5);
                             useStore.getState().setFlag('larsRhythmPact', true);
-                            useStore.getState().addQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
-                            useStore.getState().completeQuest('rhythm_pact');
+                            useStore.getState().startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
                             useStore.getState().discoverLore('rhythm_pact');
                           }
                         },
@@ -1091,6 +1089,7 @@ export function Proberaum() {
                   setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
                   addToInventory('Quanten-Kabel');
                   setFlag('drumMachineQuestCompleted', true);
+                  completeQuest('drum_machine');
                   increaseBandMood(25);
                   useStore.getState().increaseSkill('chaos', 10);
                 }},

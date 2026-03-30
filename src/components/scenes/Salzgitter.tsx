@@ -32,16 +32,16 @@ export function Salzgitter() {
   const setFlag = useStore((state) => state.setFlag);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
+  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const flags = useStore((state) => state.flags);
 
   const startFanMovement = useCallback((dialogueText: string, moodIncrease: number) => {
     setDialogue(dialogueText);
     setFlag('fanMovement', true);
-    addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-    completeQuest('fan_movement');
+    startAndFinishQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
     increaseBandMood(moodIncrease);
-  }, [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood]);
+  }, [setDialogue, setFlag, startAndFinishQuest, increaseBandMood]);
 
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
@@ -851,8 +851,7 @@ export function Salzgitter() {
             store.setDialogue('Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.');
             return;
           }
-          store.addQuest('final', 'Spiele das Finale in Salzgitter');
-          store.completeQuest('final');
+          store.startAndFinishQuest('final', 'Spiele das Finale in Salzgitter');
           store.setFlag('salzgitter_finalized', true);
 
           // Calculate endings based on flags
