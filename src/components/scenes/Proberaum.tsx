@@ -387,16 +387,16 @@ export function Proberaum() {
                   setDialogue('Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."');
                   increaseBandMood(10);
                 }},
-                {
+                ...(!useStore.getState().flags.matzePerformerTalk ? [{
                   text: 'Zeig mir, wie du die Crowd liest. [Performer]',
-                  requiredTrait: 'Performer',
+                  requiredTrait: 'Performer' as const,
                   action: () => {
                     setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
-                    useStore.getState().setFlag('matzeDeepTalk', true);
+                    useStore.getState().setFlag('matzePerformerTalk', true);
                     useStore.getState().increaseBandMood(20);
                     useStore.getState().increaseSkill('social', 3);
                   }
-                },
+                }] as DialogueOption[] : []),
                 { text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
                   requiredTrait: 'Cynic',
                   action: () => {
@@ -715,6 +715,7 @@ export function Proberaum() {
                               setDialogue('Marius: "WAS?! ...Nein, du hast recht. Ich muss wütender werden!"');
                               useStore.getState().increaseBandMood(10);
                               useStore.getState().increaseSkill('chaos', 3);
+                              useStore.getState().setFlag('mariusEgoStrategy', true);
                             }
                           },
                           {

@@ -211,7 +211,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Auf Ex: (+40 BandMood, setzt `larsVibrating`, `larsEnergized`).
         * Nur ein Schluck (Trait: Diplomat): (+30 BandMood, +3 Social, setzt `lars_paced`, `larsEnergized`).
         * Nur ein Schluck (Standard): (+20 BandMood, setzt `larsEnergized`).
-    * *Item (Energiedrink):* (+10 BandMood, setzt `larsEnergized`).
+    * *Item (Energiedrink):* (+10 BandMood, setzt `larsEnergized`). **Wenn `larsRhythmPact` gesetzt:** zusätzlich +25 BandMood (insgesamt +35).
     * *Wenn Lars Vibriert:*
         * (Skill: Chaos 5): "Chaos" (+20 BandMood, +3 Chaos, setzt `larsDrumPhilosophy`).
         * (Skill: Technical 5): "Metronom" (+10 BandMood, setzt `larsDrumPhilosophy`).
@@ -396,7 +396,8 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
         * (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
     * *Wenn `lars_paced`:* (+25 BandMood).
 * **Schwebender Bassist** *(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):*
-    * *Wenn voidBassistSpoken (und Quest abgeschlossen):* "Erinnert sich" (+30 BandMood, setzt `bassist_restored`).
+    * *Wenn `voidBassistSpoken` & `bassist_mystery` abgeschlossen & kein Bassist-Saite & kein Resonanz-Kristall im Inventar (Auto-Restore):* "Erinnert sich" (+30 BandMood, setzt `bassist_restored`).
+    * *Wenn `voidBassistSpoken` gesetzt (aber Auto-Restore-Bedingungen nicht erfüllt — z.B. Quest noch offen oder Spezialitem im Inventar):* Option "Du erinnerst dich an mich" (+20 BandMood, setzt **NICHT** `bassist_restored`).
     * *Item `Bassist-Saite` (Trait: Mystic):* "Gib ihm die Bassist-Saite aus dem Echo" (+40 BandMood, entfernt `Bassist-Saite`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
     * *Item `Resonanz-Kristall`:* "Nimm den Resonanz-Kristall. Vollende das Riff" (+30 BandMood, entfernt `Resonanz-Kristall`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
     * *Standard:* "Wir sehen uns auf der anderen Seite" (kein Mood-Effekt).

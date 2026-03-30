@@ -681,6 +681,46 @@ export function Backstage() {
           const hasPlasmaZunder = store.hasItem('Plasma-Zünder');
           const hasResonanz = store.hasItem('Resonanz-Kristall');
 
+          if (store.flags.mariusCalmed && !store.flags.backstageRitualPerformed) {
+             store.setDialogue({
+                text: 'Manager: "Zeit für unser Ritual. Lasst uns die Energien bündeln."',
+                options: [
+                   { text: 'Kosmisches Ritual. [Mystic]', requiredTrait: 'Mystic', action: () => {
+                      useStore.getState().setDialogue('Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(35);
+                      useStore.getState().increaseSkill('chaos', 5);
+                   }},
+                   { text: 'Showmanship Ritual. [Performer]', requiredTrait: 'Performer', action: () => {
+                      useStore.getState().setDialogue('Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(30);
+                      useStore.getState().increaseSkill('social', 5);
+                   }},
+                   { text: 'Frequenz-Anpassung. [Technician]', requiredTrait: 'Technician', action: () => {
+                      useStore.getState().setDialogue('Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(25);
+                      useStore.getState().increaseSkill('technical', 5);
+                   }},
+                   { text: 'Einfacher Gruppen-Chant.', action: () => {
+                      useStore.getState().setDialogue('Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"');
+                      useStore.getState().setFlag('backstageRitualPerformed', true);
+                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+                      useStore.getState().completeQuest('backstage_ritual');
+                      useStore.getState().increaseBandMood(15);
+                   }}
+                ]
+             });
+             return;
+          }
+
           if (store.flags.frequenz1982_complete) {
              store.setDialogue('Der Kreis leuchtet stetig im Takt von 1982. Die Realität hat hier einen Riss.');
              return;
@@ -742,46 +782,6 @@ export function Backstage() {
             return;
           }
 
-          if (store.flags.mariusCalmed && !store.flags.backstageRitualPerformed) {
-             store.setDialogue({
-                text: 'Manager: "Zeit für unser Ritual. Lasst uns die Energien bündeln."',
-                options: [
-                   { text: 'Kosmisches Ritual. [Mystic]', requiredTrait: 'Mystic', action: () => {
-                      useStore.getState().setDialogue('Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(35);
-                      useStore.getState().increaseSkill('chaos', 5);
-                   }},
-                   { text: 'Showmanship Ritual. [Performer]', requiredTrait: 'Performer', action: () => {
-                      useStore.getState().setDialogue('Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(30);
-                      useStore.getState().increaseSkill('social', 5);
-                   }},
-                   { text: 'Frequenz-Anpassung. [Technician]', requiredTrait: 'Technician', action: () => {
-                      useStore.getState().setDialogue('Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(25);
-                      useStore.getState().increaseSkill('technical', 5);
-                   }},
-                   { text: 'Einfacher Gruppen-Chant.', action: () => {
-                      useStore.getState().setDialogue('Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(15);
-                   }}
-                ]
-             });
-             return;
-          }
-
           if (hasForbiddenRiff) {
             store.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
             store.increaseBandMood(15);
@@ -789,9 +789,9 @@ export function Backstage() {
              store.setDialogue('Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.');
           } else {
              store.setDialogue('Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.');
-             store.increaseBandMood(5);
              if (!store.quests.find(q => q.id === 'backstage_ritual')) {
                store.addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+               store.increaseBandMood(5);
              }
           }
         }}

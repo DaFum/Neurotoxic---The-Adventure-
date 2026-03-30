@@ -169,6 +169,7 @@ const initialState = {
     fanMovement: false,
     larsRhythmPactClaimed: false,
     matzeRiffDialogueDone: false,
+    matzePerformerTalk: false,
   },
 
 
