@@ -156,6 +156,7 @@ const initialState = {
     gaveDiplomatSouvenir: false,
     matzeRiffWarning: false,
     larsRhythmPact: false,
+    gaveBeerToLars: false,
     mariusEgoStrategy: false,
     ampSentient: false,
     ghostTrustEarned: false,
