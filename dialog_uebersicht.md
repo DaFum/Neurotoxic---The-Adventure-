@@ -70,7 +70,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * *Nach Erstkontakt (BandMood > 50):*
             * Zweig A (Trait: Diplomat): "Du bist der Frontmann" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
             * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos).
-            * Standard: "Bereit für den Gig?" (+10 BandMood).
+            * Standard: "Bereit für den Gig?" (kein Effekt).
     * *Ohne Bier:* Fordert Bier.
         * "Ich beeile mich" (kein Mood-Effekt).
         * "Trink doch Wasser" (-5 BandMood).
@@ -236,7 +236,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
     * *Item (Verbotenes Riff):* Resonanz (+15 BandMood).
-    * *Standard:* (+5 BandMood).
+    * *Standard:* (+5 BandMood, einmalig, Quest hinzugefügt: backstage_ritual).
 
 ---
 
