@@ -201,7 +201,7 @@ export interface Dialogue {
  * @property addQuest - Adds a quest if one with the same ID does not already exist (idempotent).
  * @property completeQuest - Marks a specific quest ID as completed.
  * @property failQuest - Marks a specific quest ID as failed.
- * @property startAndFinishQuest - Records a milestone as a completed quest entry in one step.
+ * @property startAndFinishQuest - Records a milestone as completed in one step. If the quest is already 'active', transitions it to 'completed'. No-op if already completed or failed.
  * @property bandMood - The current mood of the band (0-100).
  * @property increaseBandMood - Increases or decreases the band mood.
  * @property loreEntries - The dictionary of all lore entries in the game.
@@ -533,7 +533,11 @@ export const useStore = create<GameState>()(
         quests: state.quests.map(q => q.id === id ? { ...q, status: 'failed' as QuestStatus } : q)
       })),
       startAndFinishQuest: (id, text) => set((state) => {
-        if (state.quests.some(q => q.id === id)) return state;
+        const existing = state.quests.find(q => q.id === id);
+        if (existing?.status === 'completed' || existing?.status === 'failed') return state;
+        if (existing?.status === 'active') {
+          return { quests: state.quests.map(q => q.id === id ? { ...q, status: 'completed' as QuestStatus } : q) };
+        }
         return { quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }] };
       }),
       increaseBandMood: (amount) => set((state) => ({
