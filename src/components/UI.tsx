@@ -75,7 +75,7 @@ export function UI() {
         : scene === 'void_station'
           ? 'VOID_STATION_440HZ'
           : scene === 'kaminstube'
-            ? 'TANGERMUNDE_STUBE'
+            ? 'TANGERMÜNDE_STUBE'
             : 'SALZGITTER_RIFF';
 
   useEffect(() => {

@@ -241,7 +241,8 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   });
 
   const handleInteract = () => {
-    const currentIsPaused = useStore.getState().isPaused;
+    const { isPaused: currentIsPaused, dialogue: currentDialogue } = useStore.getState();
+    if (currentDialogue) return;
     if (inRangeRef.current && !currentIsPaused) {
       audio.playInteraction();
       setCameraShake(0.2);
