@@ -10,7 +10,7 @@
 ### Quest API
 - `addQuest(id, text)` — no-op if any quest with that id already exists (active, completed, or failed). Never reopens a completed quest. For scene-entry objectives call it inside a mount `useEffect(() => { addQuest(...); }, [])`.
 - `startAndFinishQuest(id, text)` — records a milestone directly as completed in one step; idempotent. Use for one-shot events with no open phase (band meeting, fan movement, ritual, bassist contact, etc.).
-- `completeQuest(id)` — always call this alongside `setFlag('xCompleted', true)` when resolving a quest. Flags alone do not update the journal; using only a flag causes quest-log drift.
+- `completeQuest(id)` — call this when resolving a quest. If other gameplay logic explicitly depends on a completion flag (e.g. gating dialogue or item visibility), update that flag in the same action. Do not rely on a flag alone to update the journal, or quest-log drift will occur. When no external logic reads the flag, rely solely on the quest status — two truth sources for the same fact cause drift in the opposite direction.
 - `failQuest(id)` — marks a quest failed; appears with strikethrough in the journal.
 - Quest entries have `status: QuestStatus` (`'active' | 'completed' | 'failed'`) — not `completed: boolean`. Read with `q.status === 'completed'`, not `q.completed`.
 
