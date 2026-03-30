@@ -10,6 +10,6 @@
 **Learning:** Calling React state setters (e.g., `setFacingRight(true)`) unconditionally inside high-frequency loops like `useFrame` forces React to trigger bailout mechanisms or re-renders at 60fps, even if the value hasn't logically changed.
 **Action:** Always wrap `useState` setters in `useFrame` with strict equality checks (`if (newValue !== currentValue) setState(newValue)`) to prevent unnecessary reconciliation work and performance overhead.
 
-## $(date +%Y-%m-%d) - Zustand useFrame Throttling
+## 2024-05-20 - Zustand useFrame Throttling
 **Learning:** Updating continuous values like 3D positions in Zustand from `useFrame` will spam state subscribers and force component re-evaluations every frame during movement, even if the state reducer checks for shallow equality.
 **Action:** Throttle continuous updates by maintaining a `useRef` of the last sent value. Calculate the delta (e.g., squared distance) and only dispatch a state update when the threshold is exceeded.

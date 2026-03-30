@@ -37,12 +37,12 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const modelRef = useRef<THREE.Group>(null);
   const velocity = useRef(new THREE.Vector3()).current;
   const shakeOffset = useRef(new THREE.Vector3()).current;
-  const lastSentPosRef = useRef(new THREE.Vector3()).current;
   const [, get] = useKeyboardControls();
   const setPlayerPos = useStore((state) => state.setPlayerPos);
   const cameraShake = useStore((state) => state.cameraShake);
   const setCameraShake = useStore((state) => state.setCameraShake);
   const initialPos = useStore.getState().playerPos;
+  const lastSentPosRef = useRef(new THREE.Vector3(initialPos[0], initialPos[1], initialPos[2])).current;
   const [facingRight, setFacingRight] = useState(true);
   const [isMoving, setIsMoving] = useState(false);
   const footstepTimer = useRef(0);
@@ -218,6 +218,10 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
     // ~0.05 squared distance is about 0.22 units, small enough not to break interactions
     if (dx * dx + dy * dy + dz * dz > 0.05) {
+      setPlayerPos([clampedX, pos.y, clampedZ]);
+      lastSentPosRef.set(clampedX, pos.y, clampedZ);
+    } else if (!moving && (lastSentPosRef.x !== clampedX || lastSentPosRef.y !== pos.y || lastSentPosRef.z !== clampedZ)) {
+      // Fallback flush: always update to exact resting position when player stops moving
       setPlayerPos([clampedX, pos.y, clampedZ]);
       lastSentPosRef.set(clampedX, pos.y, clampedZ);
     }
