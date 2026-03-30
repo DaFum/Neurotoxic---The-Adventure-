@@ -64,7 +64,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Marius (Sänger):**
     * *Nach Bier (Wie bereitest du dich auf Salzgitter vor?):*
         * (Trait: Performer): Bühnenpräsenz-Coaching (+15 BandMood, +3 Social, setzt `mariusEgoStrategy`).
-        * (Trait: Cynic): "Du wirst auf der Bühne sterben" (+10 BandMood, +3 Chaos).
+        * (Trait: Cynic): "Du wirst auf der Bühne sterben" (+10 BandMood, +3 Chaos, setzt `mariusEgoStrategy`).
         * (Skill: Social 7): Ego-Management-Plan (+20 BandMood, setzt `mariusEgoStrategy`).
         * Standard: "Bleib einfach cool" (kein Effekt).
         * *Nach Erstkontakt (BandMood > 50):*
@@ -103,8 +103,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Item (Verbotenes Riff):* Maschine absorbiert das Riff.
         * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
 * **Feedback-Monitor:**
-    * *Wenn ampSentient gesetzt:* "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, startet Quest).
     * *Initial:* Fragt nach dem Quanten-Kabel (setzt `feedbackMonitorTalked`, Quest hinzugefügt: `feedback_monitor`).
+    * *Nach Erstkontakt (`feedbackMonitorTalked` gesetzt), wenn `ampSentient` gesetzt:* "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, startet Quest). **Option erscheint erst nach dem ersten Gespräch.**
     * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`, entfernt Quanten-Kabel).
 
 ---
@@ -121,7 +121,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * [Visionary]: "Ich sehe unseren Sieg" (+15 BandMood, Quest-Abschluss: `cable`).
         * [Technical 5]: "Soundcheck analysiert" (+20 BandMood, +3 Technical, Quest-Abschluss: `cable`).
         * [Social 5]: "Wir schaffen das zusammen" (+15 BandMood, +3 Social, Quest-Abschluss: `cable`).
-        * Standard: "Ein bisschen schon" oder "Lass uns die Bühne abreißen!" (+10 BandMood, Quest-Abschluss: `cable`).
+        * "Ein bisschen schon" (kein BandMood, Quest-Abschluss: `cable`).
+        * "Lass uns die Bühne abreißen!" (+10 BandMood, Quest-Abschluss: `cable`).
     * *Sabotage entdeckt & `marius_tourbus_doubt` gesetzt & kein Geständnis:*
         * [Social 5]: Matze gesteht Sabotage (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
         * [Brutalist]: Schweigend ertappt (-5 BandMood).

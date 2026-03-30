@@ -386,11 +386,11 @@ export function Salzgitter() {
                 text: 'Matze: "Du hast die Wahrheit über 1982 herausgefunden, oder? Wir werden den Zyklus heute Nacht vollenden. Kein Manager wird geopfert, nur der reine Lärm bleibt."',
                 options: [
                    { text: 'Die Frequenzen sind bereit. [Mystic]', requiredTrait: 'Mystic', action: () => {
-                      useStore.getState().setDialogue('Matze: "Ich spüre es. Die Luft flirrt."');
                       if (useStore.getState().flags.backstageRitualPerformed) {
-                         useStore.getState().increaseBandMood(40);
                          useStore.getState().setDialogue('Matze: "Unser Ritual hat die Frequenzen besiegelt. Wir sind unaufhaltsam!"');
+                         useStore.getState().increaseBandMood(40);
                       } else {
+                         useStore.getState().setDialogue('Matze: "Ich spüre es. Die Luft flirrt."');
                          useStore.getState().increaseBandMood(20);
                       }
                    }},
