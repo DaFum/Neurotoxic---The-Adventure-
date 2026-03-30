@@ -291,6 +291,7 @@ const initialState = {
     feedbackMonitorBackstageTalked: false,
     feedbackMonitorBackstageQuestStarted: false,
     feedbackMonitorBackstageQuestCompleted: false,
+    feedbackMonitorQuestStarted: false,
     ghostRecipeQuestStarted: false,
     ghostRecipeQuestCompleted: false,
     ampTherapyStarted: false,
@@ -523,7 +524,12 @@ export const useStore = create<GameState>()(
       }),
       setPaused: (isPaused) => set({ isPaused }),
       addQuest: (id, text) => set((state) => {
-        if (state.quests.some(q => q.id === id)) return state;
+        const existing = state.quests.find(q => q.id === id);
+        if (existing) {
+          // Update the display text while preserving the current status so that
+          // narrative corrections propagate to saves without reopening the quest.
+          return { quests: state.quests.map(q => q.id === id ? { ...q, text } : q) };
+        }
         return { quests: [...state.quests, { id, text, status: 'active' as QuestStatus }] };
       }),
       completeQuest: (id) => set((state) => ({
@@ -575,20 +581,24 @@ export const useStore = create<GameState>()(
           ? typedPersistedState.flags
           : {};
 
+        const normalizeQuestStatus = (status: unknown, completed: unknown): QuestStatus => {
+          if (status === 'active' || status === 'completed' || status === 'failed') return status;
+          return completed === true ? 'completed' : 'active';
+        };
+
         const mergedQuests = currentState.quests.map(q => {
           const persistedQuest = persistedQuests.find(pq => pq.id === q.id);
           if (!persistedQuest) return q;
           // Handle old saves (completed: boolean) and new saves (status: QuestStatus)
-          const pq = persistedQuest as unknown as { id: string; text: string; status?: QuestStatus; completed?: boolean };
-          const status: QuestStatus = pq.status ?? (pq.completed ? 'completed' : 'active');
-          return { ...q, status };
+          const pq = persistedQuest as unknown as { id: string; text: string; status?: unknown; completed?: unknown };
+          return { ...q, status: normalizeQuestStatus(pq.status, pq.completed) };
         });
 
         const dynamicQuests = persistedQuests
           .filter(pq => !currentState.quests.find(q => q.id === pq.id))
           .map(pq => {
-            const p = pq as unknown as { id: string; text: string; status?: QuestStatus; completed?: boolean };
-            return { id: p.id, text: p.text, status: (p.status ?? (p.completed ? 'completed' : 'active')) as QuestStatus };
+            const p = pq as unknown as { id: string; text: string; status?: unknown; completed?: unknown };
+            return { id: p.id, text: p.text, status: normalizeQuestStatus(p.status, p.completed) };
           });
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
@@ -613,7 +623,7 @@ export const useStore = create<GameState>()(
       },
       onRehydrateStorage: () => (state) => {
         if (state) {
-          if (!state.flags.legacyLoreMigrated || state.flags.feedbackMonitorQuestStarted) {
+          if (!state.flags.legacyLoreMigrated || state.flags.feedbackMonitorQuestStarted || state.quests.some(q => q.id === 'fix_cable')) {
             setTimeout(() => {
               useStore.setState((currentState) => {
                 const newEntries = [...currentState.loreEntries];
@@ -643,6 +653,9 @@ export const useStore = create<GameState>()(
                   newFlags.feedbackMonitorBackstageQuestStarted = true;
                   if (newFlags.feedbackMonitorQuestCompleted) {
                     newFlags.feedbackMonitorBackstageQuestCompleted = true;
+                    // Zero the legacy flag so Proberaum's own feedbackMonitorQuestCompleted
+                    // starts clean and doesn't inherit the Backstage completion state.
+                    newFlags.feedbackMonitorQuestCompleted = false;
                   }
                   // Zero out the migrated flag rather than deleting (required by typed Record<Flag, boolean>)
                   newFlags.feedbackMonitorQuestStarted = false;

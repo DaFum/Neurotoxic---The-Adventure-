@@ -1204,7 +1204,7 @@ export function Proberaum() {
           onInteract={() => {
             if (hasItem('Autoschlüssel')) {
               useStore.getState().setScene('tourbus');
-              addQuest('cable', 'Repariere Matzes Kabel im Tourbus');
+              addQuest('cable', 'Repariere Matzes Kabel mit Klebeband und defektem Kabel');
               setDialogue('Auf in den Tourbus! Nächster Halt: Tangermünde.');
             } else {
               setDialogue('Wir können noch nicht losfahren. Wo sind die Autoschlüssel für den Van?');
