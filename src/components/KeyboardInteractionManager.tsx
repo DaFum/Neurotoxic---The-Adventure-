@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
+import { useStore } from '../store';
 
 interface InteractableInfo {
   distance: number;
@@ -19,6 +20,9 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.key !== 'e' && event.key !== 'E') || event.repeat) return;
+
+      const { isPaused, dialogue } = useStore.getState();
+      if (isPaused || dialogue) return;
 
       let closest: InteractableInfo | null = null;
       for (const getInfo of registryRef.current.values()) {
