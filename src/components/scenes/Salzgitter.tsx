@@ -791,28 +791,24 @@ export function Salzgitter() {
             return;
           }
 
+          const startFanMovement = (dialogueText: string, moodIncrease: number) => {
+            store.setDialogue(dialogueText);
+            store.setFlag('fanMovement', true);
+            store.addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
+            store.completeQuest('fan_movement');
+            store.increaseBandMood(moodIncrease);
+          };
+
           const options: DialogueOption[] = [];
 
           options.push({ text: 'Folgt mir! [Performer]', requiredTrait: 'Performer', action: () => {
-              store.setDialogue('Du reißt die Arme hoch und beginnst einen Rhythmus. Der Fan stimmt ein, dann die Menge. Ein epischer Chor entsteht!');
-              store.setFlag('fanMovement', true);
-              store.addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-              store.completeQuest('fan_movement');
-              store.increaseBandMood(35);
+              startFanMovement('Du reißt die Arme hoch und beginnst einen Rhythmus. Der Fan stimmt ein, dann die Menge. Ein epischer Chor entsteht!', 35);
           }});
           options.push({ text: 'Lasst uns zusammen singen! [Social 8]', requiredSkill: { name: 'social', level: 8 }, action: () => {
-              store.setDialogue('Ein Chor aus hunderten Kehlen beginnt das Intro eures größten Hits zu singen. Die Energie ist greifbar!');
-              store.setFlag('fanMovement', true);
-              store.addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-              store.completeQuest('fan_movement');
-              store.increaseBandMood(30);
+              startFanMovement('Ein Chor aus hunderten Kehlen beginnt das Intro eures größten Hits zu singen. Die Energie ist greifbar!', 30);
           }});
           options.push({ text: 'Wir sind alle eins mit der Musik. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
-              store.setDialogue('Der Fan weint vor Ergriffenheit. "Ja... wir sind eins!" Er reicht die Botschaft an die Menge weiter.');
-              store.setFlag('fanMovement', true);
-              store.addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-              store.completeQuest('fan_movement');
-              store.increaseBandMood(25);
+              startFanMovement('Der Fan weint vor Ergriffenheit. "Ja... wir sind eins!" Er reicht die Botschaft an die Menge weiter.', 25);
           }});
 
           if (!store.flags.gaveDiplomatSouvenir) {

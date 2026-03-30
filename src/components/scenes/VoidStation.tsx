@@ -11,6 +11,7 @@
  * #3: ERRORS & SOLUTIONS
  * - Error: Cannot find name 'addQuest'. Solution: Added addQuest to useStore destructuring.
  */
+import { useCallback } from 'react';
 import { useStore } from '../../store';
 import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
@@ -29,17 +30,18 @@ export function VoidStation() {
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const hasItem = useStore((state) => state.hasItem);
   const discoverLore = useStore((state) => state.discoverLore);
+  const increaseSkill = useStore((state) => state.increaseSkill);
 
-  const bassistActionWrapper = (mood: number, skillName: "chaos"|"social"|"technical", skillIncrease: number, dialogueText: string) => {
-    useStore.getState().setDialogue(dialogueText);
-    useStore.getState().setFlag('bassist_contacted', true);
-    useStore.getState().setFlag('voidBassistSpoken', true);
-    useStore.getState().increaseBandMood(mood);
-    useStore.getState().discoverLore('bassist_wahrheit');
-    useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
-    useStore.getState().completeQuest('bassist_mystery');
-    useStore.getState().increaseSkill(skillName, skillIncrease);
-  };
+  const bassistActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical", skillIncrease: number, dialogueText: string) => {
+    setDialogue(dialogueText);
+    setFlag('bassist_contacted', true);
+    setFlag('voidBassistSpoken', true);
+    increaseBandMood(mood);
+    discoverLore('bassist_wahrheit');
+    addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
+    completeQuest('bassist_mystery');
+    increaseSkill(skillName, skillIncrease);
+  }, [setDialogue, setFlag, increaseBandMood, discoverLore, addQuest, completeQuest, increaseSkill]);
 
   return (
     <>
@@ -190,7 +192,7 @@ export function VoidStation() {
             return;
           }
 
-          if (trait === 'Mystic' && !flags.ghostTrustEarned) {
+          if (trait === 'Mystic') {
             setDialogue({
               text: 'Tankwart: "Deine Aura... sie schwingt in Frequenzen, die ich seit Äonen nicht mehr gespürt habe. Du bist ein Wanderer zwischen den Welten. Was suchst du in der Leere?"',
               options: [

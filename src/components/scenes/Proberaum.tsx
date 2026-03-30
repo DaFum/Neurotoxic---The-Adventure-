@@ -516,6 +516,7 @@ export function Proberaum() {
               return;
             }
             useStore.getState().setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
+            return;
           }
 
           if (currentFlags.larsDrumPhilosophy && !currentFlags.larsRhythmPact) {
@@ -574,6 +575,7 @@ export function Proberaum() {
                 { text: 'Ein andermal.', action: () => useStore.getState().setDialogue('Lars: "Dann trommle ich eben alleine weiter."') }
               ]
             });
+            return;
           }
 
           if (hasBeer && !currentFlags.gaveBeerToLars) {
