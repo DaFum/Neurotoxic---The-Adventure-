@@ -498,53 +498,22 @@ export function Proberaum() {
         onInteract={() => {
           const hasBeer = hasItem('Bier');
           
-          if (hasBeer && !flags.gaveBeerToLars) {
-            setDialogue({
-              text: 'Lars: "Ist das... ein kühles Blondes? Gib her, ich sterbe vor Durst!"',
-              options: [
-                { text: 'Hier, lass es dir schmecken.', action: () => {
-                  setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
-                  removeFromInventory('Bier');
-                  setFlag('gaveBeerToLars', true);
-                  increaseBandMood(20);
-                }},
-                { text: 'Was ist deine Drum-Philosophie?', action: () => {
-                  setDialogue({
-                    text: 'Lars: "Meine Philosophie? Schlag so hart zu, dass die Realität Risse bekommt. Jeder Schlag ist ein Schlag gegen die Stille. Willst du mehr wissen?"',
-                    options: [
-                      {
-                        text: 'Ja, lehre mich den Beat. [Chaos 3]',
-                        requiredSkill: { name: 'chaos', level: 3 },
-                        action: () => {
-                          setDialogue('Lars: "Der Beat kommt nicht aus den Armen, er kommt aus dem Zorn. Wenn du in Salzgitter spielst, denk an den Zorn der Maschinen. Du hast das Potenzial, Manager."');
-                          setFlag('larsDrumPhilosophy', true);
-                          increaseBandMood(20);
-                          useStore.getState().increaseSkill('chaos', 2);
-                        }
-                      },
-                      {
-                        text: 'Analysiere die Schlagkraft. [Technical 3]',
-                        requiredSkill: { name: 'technical', level: 3 },
-                        action: () => {
-                          setDialogue('Lars: "Exakt 120 Newton pro Schlag. Du hast ein Auge für die Mechanik. Das gefällt mir."');
-                          setFlag('larsDrumPhilosophy', true);
-                          increaseBandMood(15);
-                          useStore.getState().increaseSkill('technical', 2);
-                        }
-                      },
-                      { text: 'Klingt anstrengend.', action: () => {
-                        setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"');
-                      }}
-                    ]
-                  });
-                }},
-                { text: 'Das ist für Marius.', action: () => setDialogue('Lars: "Marius? Der hat doch schon genug Ego. Na gut, ich trommel weiter auf dem Trockenen."') }
-              ]
-            });
-            return;
-          }
-
           if (flags.larsDrumPhilosophy && flags.larsRhythmPact) {
+            if (hasBeer && !flags.gaveBeerToLars) {
+              setDialogue({
+                text: 'Lars: "Der Pakt steht. Wir sind das Skelett der Welt. Und... ist das ein kühles Blondes?"',
+                options: [
+                  { text: 'Hier, lass es dir schmecken.', action: () => {
+                    setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
+                    removeFromInventory('Bier');
+                    setFlag('gaveBeerToLars', true);
+                    increaseBandMood(20);
+                  }},
+                  { text: 'Das ist für jemand anderen.', action: () => setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."') }
+                ]
+              });
+              return;
+            }
             setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
             return;
           }
@@ -593,7 +562,62 @@ export function Proberaum() {
                     });
                   }
                 },
+                ...(hasBeer && !flags.gaveBeerToLars ? [{
+                  text: 'Hier, lass dir dieses kühle Blonde schmecken.',
+                  action: () => {
+                    setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
+                    removeFromInventory('Bier');
+                    setFlag('gaveBeerToLars', true);
+                    increaseBandMood(20);
+                  }
+                }] : []),
                 { text: 'Ein andermal.', action: () => setDialogue('Lars: "Dann trommle ich eben alleine weiter."') }
+              ]
+            });
+            return;
+          }
+
+          if (hasBeer && !flags.gaveBeerToLars) {
+            setDialogue({
+              text: 'Lars: "Ist das... ein kühles Blondes? Gib her, ich sterbe vor Durst!"',
+              options: [
+                { text: 'Hier, lass es dir schmecken.', action: () => {
+                  setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
+                  removeFromInventory('Bier');
+                  setFlag('gaveBeerToLars', true);
+                  increaseBandMood(20);
+                }},
+                { text: 'Was ist deine Drum-Philosophie?', action: () => {
+                  setDialogue({
+                    text: 'Lars: "Meine Philosophie? Schlag so hart zu, dass die Realität Risse bekommt. Jeder Schlag ist ein Schlag gegen die Stille. Willst du mehr wissen?"',
+                    options: [
+                      {
+                        text: 'Ja, lehre mich den Beat. [Chaos 3]',
+                        requiredSkill: { name: 'chaos', level: 3 },
+                        action: () => {
+                          setDialogue('Lars: "Der Beat kommt nicht aus den Armen, er kommt aus dem Zorn. Wenn du in Salzgitter spielst, denk an den Zorn der Maschinen. Du hast das Potenzial, Manager."');
+                          setFlag('larsDrumPhilosophy', true);
+                          increaseBandMood(20);
+                          useStore.getState().increaseSkill('chaos', 2);
+                        }
+                      },
+                      {
+                        text: 'Analysiere die Schlagkraft. [Technical 3]',
+                        requiredSkill: { name: 'technical', level: 3 },
+                        action: () => {
+                          setDialogue('Lars: "Exakt 120 Newton pro Schlag. Du hast ein Auge für die Mechanik. Das gefällt mir."');
+                          setFlag('larsDrumPhilosophy', true);
+                          increaseBandMood(15);
+                          useStore.getState().increaseSkill('technical', 2);
+                        }
+                      },
+                      { text: 'Klingt anstrengend.', action: () => {
+                        setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"');
+                      }}
+                    ]
+                  });
+                }},
+                { text: 'Das ist für Marius.', action: () => setDialogue('Lars: "Marius? Der hat doch schon genug Ego. Na gut, ich trommel weiter auf dem Trockenen."') }
               ]
             });
             return;
