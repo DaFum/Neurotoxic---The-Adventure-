@@ -36,6 +36,7 @@ export function Backstage() {
   const setFlag = useStore((state) => state.setFlag);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
+  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const increaseSkill = useStore((state) => state.increaseSkill);
   const hasItem = useStore((state) => state.hasItem);
@@ -43,15 +44,22 @@ export function Backstage() {
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Register the setlist quest when the player first enters Backstage
-    addQuest('setlist', 'Finde die Setliste im Backstage');
+    // Register the setlist quest when the player first enters Backstage.
+    // On legacy saves setlistFound may already be true — use startAndFinishQuest
+    // so the quest lands as 'completed' rather than stuck as 'active'.
+    const { flags } = useStore.getState();
+    if (flags.setlistFound) {
+      startAndFinishQuest('setlist', 'Finde die Setliste im Backstage');
+    } else {
+      addQuest('setlist', 'Finde die Setliste im Backstage');
+    }
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);
         exitTimeoutRef.current = null;
       }
     };
-  }, [addQuest]);
+  }, [addQuest, startAndFinishQuest]);
 
   const ritualActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical"|null, skillIncrease: number, dialogueText: string) => {
     setDialogue(dialogueText);

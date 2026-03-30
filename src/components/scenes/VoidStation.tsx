@@ -39,11 +39,22 @@ export function VoidStation() {
 
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
 
-  // Register scene-specific quests when the player enters VoidStation
+  // Register scene-specific quests when the player enters VoidStation.
+  // On legacy saves the completion flags may already be true — use startAndFinishQuest
+  // in that case so the quest lands as 'completed' rather than stuck as 'active'.
   useEffect(() => {
-    addQuest('void', 'Betanke den Van mit dunkler Materie');
-    addQuest('ego', 'Fange Marius\' entflohenes Ego ein');
-  }, [addQuest]);
+    const { flags } = useStore.getState();
+    if (flags.voidRefueled) {
+      startAndFinishQuest('void', 'Betanke den Van mit dunkler Materie');
+    } else {
+      addQuest('void', 'Betanke den Van mit dunkler Materie');
+    }
+    if (flags.egoContained) {
+      startAndFinishQuest('ego', 'Fange Marius\' entflohenes Ego ein');
+    } else {
+      addQuest('ego', 'Fange Marius\' entflohenes Ego ein');
+    }
+  }, [addQuest, startAndFinishQuest]);
 
   const bassistActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical", skillIncrease: number, dialogueText: string) => {
     setDialogue(dialogueText);

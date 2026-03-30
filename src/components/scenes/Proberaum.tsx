@@ -1089,6 +1089,10 @@ export function Proberaum() {
                   setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
                   addToInventory('Quanten-Kabel');
                   setFlag('drumMachineQuestCompleted', true);
+                  // addQuest is idempotent — safe to call even if the quest was already
+                  // registered via the !questStarted branch. Ensures the quest exists
+                  // before completing it when the player found the riff first.
+                  addQuest('drum_machine', 'Finde das Verbotene Riff für die TR-8080');
                   completeQuest('drum_machine');
                   increaseBandMood(25);
                   useStore.getState().increaseSkill('chaos', 10);
