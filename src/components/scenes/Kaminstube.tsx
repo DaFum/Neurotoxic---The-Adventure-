@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
+import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
@@ -291,22 +292,51 @@ export function Kaminstube() {
               text: 'Der Kamin flüstert in einer Sprache, die nach verbranntem Holz und alten Geheimnissen klingt. Er scheint etwas über die Geschichte der Kaminstube zu wissen.',
               options: [
                 {
-                  text: 'Analysiere die Frequenz des Flüsterns. [Technical 7]',
-                  requiredSkill: { name: 'technical', level: 7 },
+                  text: 'Ich fühle deine Wärme, alter Freund. [Mystic]',
+                  requiredTrait: 'Mystic',
                   action: () => {
-                    useStore.getState().setDialogue('Das Knistern ist kein Zufall. Es ist ein Code. Ein thermischer Algorithmus, der die Geschichte der ersten Industrial-Gigs hier speichert.');
+                    useStore.getState().setDialogue('Du verbindest dich mit der uralten Asche. Der Kamin flüstert von Salzgitter: "Dort wird die Grenze zwischen Musik und Realität brechen. Nur eine vereinte Band kann den Riss schließen."');
                     useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
                     useStore.getState().completeQuest('forgotten_lore');
                     useStore.getState().increaseBandMood(20);
+                  }
+                },
+                {
+                  text: 'Zwinge das Feuer zu sprechen! [Chaos 7]',
+                  requiredSkill: { name: 'chaos', level: 7 },
+                  action: () => {
+                    useStore.getState().setDialogue('Du schreist in die Flammen. Das Feuer lodert rot auf und faucht: "Salzgitter wird brennen! Nur Einigkeit rettet euch vor der Leere!"');
+                    useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
+                    useStore.getState().completeQuest('forgotten_lore');
+                    useStore.getState().increaseBandMood(10);
+                    useStore.getState().increaseSkill('chaos', 3);
+                  }
+                },
+                {
+                  text: 'Die Akustik dieses Kamins... [Technical 8]',
+                  requiredSkill: { name: 'technical', level: 8 },
+                  action: () => {
+                    useStore.getState().setDialogue('Du decodierst die Frequenzen des Knisterns. Eine Nachricht aus der Vergangenheit: "In Salzgitter wird die Grenze brechen. Vereint die Band."');
+                    useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
+                    useStore.getState().completeQuest('forgotten_lore');
+                    useStore.getState().increaseBandMood(15);
                     useStore.getState().increaseSkill('technical', 3);
                   }
                 },
-                { 
-                  text: 'Versuche, die Sprache zu deuten. [Diplomat]', 
+                {
+                  text: 'Versuche, die Sprache zu deuten. [Diplomat]',
                   requiredTrait: 'Diplomat',
                   action: () => {
                     useStore.getState().setDialogue('Du verstehst das Flüstern! Es erzählt von einem versteckten Archiv unter der Bühne, das die wahren Ursprünge des Industrial Metal enthält. Du hast die Lore entschlüsselt.');
                     useStore.getState().setFlag('forgotten_lore', true);
+                    useStore.getState().setFlag('kaminFeuerPact', true);
+                    useStore.getState().discoverLore('kamin_prophecy');
                     useStore.getState().completeQuest('forgotten_lore');
                     useStore.getState().increaseBandMood(20);
                   }
@@ -382,6 +412,61 @@ export function Kaminstube() {
               ]
             });
             return;
+          }
+
+
+          if (bandMood > 80 && !store.flags.wirtLegacy1982) {
+            const knowsSecret = store.flags.askedAbout1982 || store.flags.ghostSecretRevealed;
+            if (knowsSecret) {
+               const wirtOptions: DialogueOption[] = [
+                  { text: 'Erzähl mir die ganze Geschichte von 1982.', action: () => {
+                     useStore.getState().setDialogue({
+                        text: 'Wirt: "Das ist gefährliches Wissen... Der Manager von damals, er wusste, worauf er sich einlässt."',
+                        options: [
+                           { text: 'Ich bin vertrauenswürdig. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
+                              useStore.getState().setDialogue('Wirt: "Na gut. Er machte einen Pakt mit der Void. Der Bassist war der Preis für den ultimativen Riff. Salzgitter war nur der Anfang. Passt auf euch auf."');
+                              useStore.getState().setFlag('wirtLegacy1982', true);
+                              useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
+                              useStore.getState().completeQuest('wirt_legacy');
+                              useStore.getState().increaseBandMood(25);
+                              useStore.getState().increaseSkill('social', 5);
+                           }},
+                           { text: 'Es ist wichtig für die Band. [Social 7]', requiredSkill: { name: 'social', level: 7 }, action: () => {
+                              useStore.getState().setDialogue('Wirt: "Für die Band... okay. Der Manager verkaufte den Bassisten an die Leere, um den perfekten Industrial-Sound zu erschaffen. Begeht nicht den gleichen Fehler."');
+                              useStore.getState().setFlag('wirtLegacy1982', true);
+                              useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
+                              useStore.getState().completeQuest('wirt_legacy');
+                              useStore.getState().increaseBandMood(20);
+                              useStore.getState().increaseSkill('social', 3);
+                           }},
+                           { text: 'Die Wahrheit muss raus! [Chaos 5]', requiredSkill: { name: 'chaos', level: 5 }, action: () => {
+                              useStore.getState().setDialogue('Wirt: "Schrei nicht so! Okay, okay. Der Manager hat den Bassisten geopfert. An die Frequenz! Zufrieden?! Jetzt geh spielen!"');
+                              useStore.getState().setFlag('wirtLegacy1982', true);
+                              useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
+                              useStore.getState().completeQuest('wirt_legacy');
+                              useStore.getState().increaseBandMood(15);
+                              useStore.getState().increaseSkill('chaos', 3);
+                           }},
+                           { text: 'Lass gut sein.', action: () => useStore.getState().setDialogue('Wirt: "Besser ist das. Die Wände hier haben Ohren."') }
+                        ]
+                     });
+                  }}
+               ];
+               if (store.flags.ghostTrustEarned) {
+                  wirtOptions.unshift({ text: 'Der Geist hat mich geschickt.', action: () => {
+                     useStore.getState().setDialogue('Wirt: "Der Roadie?! Er ist noch da... dann weißt du es schon. Der Manager hat den Bassisten geopfert. Er hat einen Pakt mit der Void geschlossen. Passt auf, dass euch in Salzgitter nicht dasselbe passiert."');
+                     useStore.getState().setFlag('wirtLegacy1982', true);
+                     useStore.getState().addQuest('wirt_legacy', 'Erfahre die vollständige Geschichte von 1982 vom Wirt');
+                     useStore.getState().completeQuest('wirt_legacy');
+                     useStore.getState().increaseBandMood(30);
+                  }});
+               }
+               store.setDialogue({
+                  text: 'Wirt: "Ihr habt die Stimmung zum Kochen gebracht. Fast so wie die Jungs von 1982. Ihr erinnert mich so sehr an sie..."',
+                  options: wirtOptions
+               });
+               return;
+            }
           }
 
           if (bandMood > 80) {
@@ -473,9 +558,7 @@ export function Kaminstube() {
              return;
           }
 
-          store.setDialogue({
-            text: 'Lars: "Wusstest du, dass die Kaminstube früher eine echte Schmiede war? Der Rhythmus der Hämmer steckt noch in den Wänden. Ich spüre ihn!"',
-            options: [
+          const options: DialogueOption[] = [
               { text: 'Dann spiel im Takt der Hämmer. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
                 useStore.getState().setDialogue('Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"');
                 useStore.getState().setFlag('kaminstube_lars_talked', true);
@@ -492,7 +575,19 @@ export function Kaminstube() {
                 useStore.getState().setFlag('kaminstube_lars_talked', true);
                 useStore.getState().setDialogue('Lars: "Takt ist relativ. Aber okay, ich bemühe mich."');
               }}
-            ]
+          ];
+
+          if (store.flags.larsRhythmPact) {
+            options.unshift({ text: 'Dieser Ort hat einen eigenen Rhythmus.', action: () => {
+               useStore.getState().setDialogue('Lars: "Ja... der Pakt wird stärker. Ich spüre die Hämmer der alten Gießerei in mir schlagen. Wir sind bereit."');
+               useStore.getState().setFlag('kaminstube_lars_talked', true);
+               useStore.getState().increaseBandMood(10);
+            }});
+          }
+
+          store.setDialogue({
+            text: 'Lars: "Wusstest du, dass die Kaminstube früher eine echte Schmiede war? Der Rhythmus der Hämmer steckt noch in den Wänden. Ich spüre ihn!"',
+            options: options
           });
         }}
       />
@@ -508,7 +603,9 @@ export function Kaminstube() {
           if (!store.flags.ampFixed) {
             store.setDialogue('Marius: "Die Stille hier ist unerträglich. Sie erinnert mich an die Leere zwischen den Sternen. Wir müssen Lärm machen, Matze!"');
           } else {
-            if (store.flags.egoContained) {
+            if (store.flags.mariusEgoStrategy) {
+               store.setDialogue('Marius: "Unsere Strategie funktioniert. Ich fühle mich... geerdet. Das Ego ist fokussiert wie ein Laser."');
+            } else if (store.flags.egoContained) {
                store.setDialogue('Marius: "Mein Ego brennt in mir! Ich werde diese Menge verschlingen und als Lärm wieder ausspucken! Salzgitter wird unser Altar sein!"');
             } else {
                store.setDialogue('Marius: "Underground Metal Fest! Wir bringen euch den Sound der Maschinen und das Echo der Verzweiflung!"');

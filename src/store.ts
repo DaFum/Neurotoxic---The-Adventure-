@@ -154,8 +154,32 @@ const initialState = {
     lars_paced: false,
     marius_tourbus_doubt: false,
     gaveDiplomatSouvenir: false,
+    matzeRiffWarning: false,
+    larsRhythmPact: false,
+    gaveBeerToLars: false,
+    mariusEgoStrategy: false,
+    ampSentient: false,
+    ghostTrustEarned: false,
+    tourbusBandMeeting: false,
+    backstageRitualPerformed: false,
+    voidBassistSpoken: false,
+    tankwartBargain: false,
+    wirtLegacy1982: false,
+    kaminFeuerPact: false,
+    salzgitterBandUnited: false,
+    fanMovement: false,
+    larsRhythmPactClaimed: false,
+    matzeRiffDialogueDone: false,
+    matzePerformerTalk: false,
+    salzgitterMatzeWirtDone: false,
   },
+
+
   loreEntries: [
+
+    { id: 'rhythm_pact', title: 'Der Rhythmus-Pakt', content: 'Lars und du habt einen Pakt geschlossen. Der Rhythmus ist kein Werkzeug — er ist ein Lebewesen. Wer ihn beherrscht, kontrolliert die Zeit selbst.', discovered: false },
+    { id: 'ghost_legacy', title: 'Das Vermächtnis des Roadies', content: 'Der Geist war einst der beste Roadie der Welt. Er starb 1982, als der Bassist verschwand — verschluckt vom gleichen Feedback-Loop. Sein letzter Wunsch: dass die Band weiterlebt.', discovered: false },
+    { id: 'kamin_prophecy', title: 'Prophezeiung des Kamins', content: 'Das Feuer flüstert: In Salzgitter wird die Grenze zwischen Musik und Realität brechen. Nur eine vereinte Band kann den Riss schließen.', discovered: false },
     { id: 'frequenz_1982_decoded', title: 'Die Frequenz von 1982', content: 'Die Frequenz war nie verloren. Sie lebte in den Wänden der Gießerei, im Stahl des Tourbus, im Feedback der Monitore. 432.1982Hz — die Frequenz, die zwischen Leben und Lärm schwingt.', discovered: false },
     { id: 'bassist_wahrheit', title: 'Die Wahrheit über den Bassisten', content: 'Er wählte die Leere. Nicht aus Verzweiflung, sondern aus Liebe zum reinen Klang. Er ist der Grundton, auf dem alles aufbaut. Ohne ihn wäre NEUROTOXIC nur Lärm.', discovered: false },
     { id: 'maschinen_bewusstsein', title: 'Das Maschinen-Bewusstsein', content: 'Sie waren nie nur Werkzeuge. Der Amp, die Drum Machine, der Monitor — sie sind Fragmente eines einzigen Bewusstseins, das 1982 in die Schaltkreise eingespeist wurde.', discovered: false },
@@ -285,6 +309,15 @@ export const useStore = create<GameState>()(
           if ((item1 === 'Turbo-Koffein' && item2 === 'Rostiges Plektrum') || (item1 === 'Rostiges Plektrum' && item2 === 'Turbo-Koffein')) {
             set((state) => ({
               inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Geister-Drink']
+            }));
+            audio.playPickup();
+            return true;
+          }
+
+          // Splitter der Leere + Altes Plektrum = Void-Plektrum
+          if ((item1 === 'Splitter der Leere' && item2 === 'Altes Plektrum') || (item1 === 'Altes Plektrum' && item2 === 'Splitter der Leere')) {
+            set((state) => ({
+              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Void-Plektrum']
             }));
             audio.playPickup();
             return true;
