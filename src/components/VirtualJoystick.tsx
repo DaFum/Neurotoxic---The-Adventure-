@@ -6,8 +6,12 @@ const KNOB_R = 22;   // inner knob radius px
 const MAX = BASE_R - KNOB_R; // max knob travel px
 
 /**
- * React component that renders the VirtualJoystick UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * Renders a virtual joystick for touch or coarse-pointer devices.
+ * It handles pointer and touch events to capture user movement and updates
+ * the global `touchInput` state with normalized `x` and `z` values.
+ * Includes a 4px dead-zone to prevent unintended movement drift.
+ * Only appears on touch-capable devices.
+ * @returns A UI overlay for touch joystick controls, or null if hidden.
  */
 export function VirtualJoystick() {
   const [visible, setVisible] = useState(false);

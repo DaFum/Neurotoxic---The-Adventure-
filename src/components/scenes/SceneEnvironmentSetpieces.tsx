@@ -7,9 +7,11 @@ interface SceneEnvironmentSetpiecesProps {
 }
 
 /**
- * React component that renders the SceneEnvironmentSetpieces UI element or 3D scene entity.
- * @param props - Required configuration parameter.
- * @returns Output from the function/method.
+ * Renders decorative 3D environment setpieces for different scenes.
+ * It provides visually distinct background objects and lighting details that are specific to the active scene.
+ * @param props - The properties object containing the variant.
+ * @param props.variant - The scene identifier determining which setpieces to render (e.g., 'proberaum', 'tourbus', etc.).
+ * @returns A group containing scene-specific meshes and geometries, or null for unknown variants.
  */
 export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpiecesProps) {
   switch (variant) {
