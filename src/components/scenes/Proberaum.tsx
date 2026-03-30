@@ -496,43 +496,44 @@ export function Proberaum() {
         isBandMember={true}
         idleType="tap"
         onInteract={() => {
-          const hasBeer = hasItem('Bier');
+          const { flags: currentFlags, hasItem: currentHasItem } = useStore.getState();
+          const hasBeer = currentHasItem('Bier');
           
-          if (flags.larsDrumPhilosophy && flags.larsRhythmPact) {
-            if (hasBeer && !flags.gaveBeerToLars) {
+          if (currentFlags.larsDrumPhilosophy && currentFlags.larsRhythmPact) {
+            if (hasBeer && !currentFlags.gaveBeerToLars) {
               setDialogue({
                 text: 'Lars: "Der Pakt steht. Wir sind das Skelett der Welt. Und... ist das ein kühles Blondes?"',
                 options: [
                   { text: 'Hier, lass es dir schmecken.', action: () => {
-                    setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
-                    removeFromInventory('Bier');
-                    setFlag('gaveBeerToLars', true);
-                    increaseBandMood(20);
+                    useStore.getState().setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
+                    useStore.getState().removeFromInventory('Bier');
+                    useStore.getState().setFlag('gaveBeerToLars', true);
+                    useStore.getState().increaseBandMood(20);
                   }},
-                  { text: 'Das ist für jemand anderen.', action: () => setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."') }
+                  { text: 'Das ist für jemand anderen.', action: () => useStore.getState().setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."') }
                 ]
               });
               return;
             }
-            setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
+            useStore.getState().setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
             return;
           }
 
-          if (flags.larsDrumPhilosophy && !flags.larsRhythmPact) {
+          if (currentFlags.larsDrumPhilosophy && !currentFlags.larsRhythmPact) {
             setDialogue({
               text: 'Lars: "Du kennst jetzt meine Philosophie. Der Beat ist alles. Bist du bereit für den nächsten Schritt?"',
               options: [
                 {
                   text: 'Lass uns einen Rhythmus-Pakt schließen.',
                   action: () => {
-                    setDialogue({
+                    useStore.getState().setDialogue({
                       text: 'Lars: "Ein Pakt... das ist ernst. Wie soll unser Pakt klingen?"',
                       options: [
                         {
                           text: 'Aggressiv und unaufhaltsam. [Brutalist]',
                           requiredTrait: 'Brutalist',
                           action: () => {
-                            setDialogue('Lars: "JA! Wir werden die Zeit selbst zertrümmern!"');
+                            useStore.getState().setDialogue('Lars: "JA! Wir werden die Zeit selbst zertrümmern!"');
                             useStore.getState().increaseBandMood(25);
                             useStore.getState().increaseSkill('chaos', 5);
                             useStore.getState().setFlag('larsRhythmPact', true);
@@ -545,7 +546,7 @@ export function Proberaum() {
                           text: 'Harmonisch und präzise. [Diplomat]',
                           requiredTrait: 'Diplomat',
                           action: () => {
-                            setDialogue('Lars: "Ein perfektes Uhrwerk. Der Rhythmus wird uns leiten."');
+                            useStore.getState().setDialogue('Lars: "Ein perfektes Uhrwerk. Der Rhythmus wird uns leiten."');
                             useStore.getState().increaseBandMood(20);
                             useStore.getState().increaseSkill('social', 5);
                             useStore.getState().setFlag('larsRhythmPact', true);
@@ -556,48 +557,48 @@ export function Proberaum() {
                         },
                         {
                           text: 'Ich brauche Bedenkzeit.',
-                          action: () => setDialogue('Lars: "Der Beat wartet auf niemanden lange."')
+                          action: () => useStore.getState().setDialogue('Lars: "Der Beat wartet auf niemanden lange."')
                         }
                       ]
                     });
                   }
                 },
-                ...(hasBeer && !flags.gaveBeerToLars ? [{
+                ...(hasBeer && !currentFlags.gaveBeerToLars ? [{
                   text: 'Hier, lass dir dieses kühle Blonde schmecken.',
                   action: () => {
-                    setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
-                    removeFromInventory('Bier');
-                    setFlag('gaveBeerToLars', true);
-                    increaseBandMood(20);
+                    useStore.getState().setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
+                    useStore.getState().removeFromInventory('Bier');
+                    useStore.getState().setFlag('gaveBeerToLars', true);
+                    useStore.getState().increaseBandMood(20);
                   }
                 }] : []),
-                { text: 'Ein andermal.', action: () => setDialogue('Lars: "Dann trommle ich eben alleine weiter."') }
+                { text: 'Ein andermal.', action: () => useStore.getState().setDialogue('Lars: "Dann trommle ich eben alleine weiter."') }
               ]
             });
             return;
           }
 
-          if (hasBeer && !flags.gaveBeerToLars) {
+          if (hasBeer && !currentFlags.gaveBeerToLars) {
             setDialogue({
               text: 'Lars: "Ist das... ein kühles Blondes? Gib her, ich sterbe vor Durst!"',
               options: [
                 { text: 'Hier, lass es dir schmecken.', action: () => {
-                  setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
-                  removeFromInventory('Bier');
-                  setFlag('gaveBeerToLars', true);
-                  increaseBandMood(20);
+                  useStore.getState().setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
+                  useStore.getState().removeFromInventory('Bier');
+                  useStore.getState().setFlag('gaveBeerToLars', true);
+                  useStore.getState().increaseBandMood(20);
                 }},
                 { text: 'Was ist deine Drum-Philosophie?', action: () => {
-                  setDialogue({
+                  useStore.getState().setDialogue({
                     text: 'Lars: "Meine Philosophie? Schlag so hart zu, dass die Realität Risse bekommt. Jeder Schlag ist ein Schlag gegen die Stille. Willst du mehr wissen?"',
                     options: [
                       {
                         text: 'Ja, lehre mich den Beat. [Chaos 3]',
                         requiredSkill: { name: 'chaos', level: 3 },
                         action: () => {
-                          setDialogue('Lars: "Der Beat kommt nicht aus den Armen, er kommt aus dem Zorn. Wenn du in Salzgitter spielst, denk an den Zorn der Maschinen. Du hast das Potenzial, Manager."');
-                          setFlag('larsDrumPhilosophy', true);
-                          increaseBandMood(20);
+                          useStore.getState().setDialogue('Lars: "Der Beat kommt nicht aus den Armen, er kommt aus dem Zorn. Wenn du in Salzgitter spielst, denk an den Zorn der Maschinen. Du hast das Potenzial, Manager."');
+                          useStore.getState().setFlag('larsDrumPhilosophy', true);
+                          useStore.getState().increaseBandMood(20);
                           useStore.getState().increaseSkill('chaos', 2);
                         }
                       },
@@ -605,25 +606,25 @@ export function Proberaum() {
                         text: 'Analysiere die Schlagkraft. [Technical 3]',
                         requiredSkill: { name: 'technical', level: 3 },
                         action: () => {
-                          setDialogue('Lars: "Exakt 120 Newton pro Schlag. Du hast ein Auge für die Mechanik. Das gefällt mir."');
-                          setFlag('larsDrumPhilosophy', true);
-                          increaseBandMood(15);
+                          useStore.getState().setDialogue('Lars: "Exakt 120 Newton pro Schlag. Du hast ein Auge für die Mechanik. Das gefällt mir."');
+                          useStore.getState().setFlag('larsDrumPhilosophy', true);
+                          useStore.getState().increaseBandMood(15);
                           useStore.getState().increaseSkill('technical', 2);
                         }
                       },
                       { text: 'Klingt anstrengend.', action: () => {
-                        setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"');
+                        useStore.getState().setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"');
                       }}
                     ]
                   });
                 }},
-                { text: 'Das ist für Marius.', action: () => setDialogue('Lars: "Marius? Der hat doch schon genug Ego. Na gut, ich trommel weiter auf dem Trockenen."') }
+                { text: 'Das ist für Marius.', action: () => useStore.getState().setDialogue('Lars: "Marius? Der hat doch schon genug Ego. Na gut, ich trommel weiter auf dem Trockenen."') }
               ]
             });
             return;
           }
 
-          if (!hasItem('Mop')) {
+          if (!currentHasItem('Mop')) {
             setDialogue('Lars: "Ich hab hier irgendwo einen Wischmopp gesehen... Such mal danach!"');
           } else if (!flags.waterCleaned) {
             setDialogue('Lars: "Du hast den Mopp! Wisch die Pfütze in der Mitte auf!"');
