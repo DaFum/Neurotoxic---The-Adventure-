@@ -21,7 +21,7 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { Stars, Float, Text, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function Backstage() {
   const addToInventory = useStore((state) => state.addToInventory);
@@ -29,8 +29,10 @@ export function Backstage() {
   const setScene = useStore((state) => state.setScene);
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
+  const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
+  const increaseSkill = useStore((state) => state.increaseSkill);
   const hasItem = useStore((state) => state.hasItem);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const exitTimeoutRef = useRef<number | null>(null);
@@ -44,16 +46,16 @@ export function Backstage() {
     };
   }, []);
 
-  const ritualActionWrapper = (mood: number, skillName: "chaos"|"social"|"technical"|null, skillIncrease: number, dialogueText: string) => {
-    useStore.getState().setDialogue(dialogueText);
-    useStore.getState().setFlag('backstageRitualPerformed', true);
-    useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-    useStore.getState().completeQuest('backstage_ritual');
-    useStore.getState().increaseBandMood(mood);
+  const ritualActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical"|null, skillIncrease: number, dialogueText: string) => {
+    setDialogue(dialogueText);
+    setFlag('backstageRitualPerformed', true);
+    addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+    completeQuest('backstage_ritual');
+    increaseBandMood(mood);
     if (skillName) {
-      useStore.getState().increaseSkill(skillName, skillIncrease);
+      increaseSkill(skillName, skillIncrease);
     }
-  };
+  }, [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood, increaseSkill]);
 
   return (
     <>

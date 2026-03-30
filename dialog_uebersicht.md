@@ -189,7 +189,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Feedback-Monitor:**
     * *Erstkontakt ("Hallo?"):* Setzt `feedbackMonitorBackstageTalked` (+5 BandMood). Innerer Dialog zeigt "Wie kann ich helfen?" → setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`.
-    * *Nach Erstkontakt, Quest noch nicht gestartet:* "Wie kann ich dir helfen?" startet Quest `feedback_monitor_backstage` (setzt `feedbackMonitorBackstageQuestStarted`). **Verhindert permanente Quest-Blockade.**
+    * *Nach Erstkontakt (`feedbackMonitorBackstageTalked` gesetzt), wenn `ampSentient` gesetzt & Quest noch nicht gestartet:* Option "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`). **Diese Option hat Vorrang gegenüber "Wie kann ich dir helfen?".**
+    * *Nach Erstkontakt, Quest noch nicht gestartet (kein `ampSentient`):* "Wie kann ich dir helfen?" startet Quest `feedback_monitor_backstage` (setzt `feedbackMonitorBackstageQuestStarted`). **Verhindert permanente Quest-Blockade.**
     * *Quest gestartet, Item (Verstärker-Schaltplan):*
         * Zweig A (Skill: Technical 5): "Optimierte Frequenzen" (+30 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor_backstage`, setzt `feedbackMonitorBackstageQuestCompleted`).
         * Zweig B (Trait: Visionary): "Transzendente Frequenzen" (+40 BandMood, +5 Chaos, Quest-Abschluss: `feedback_monitor_backstage`, setzt `feedbackMonitorBackstageQuestCompleted`).
@@ -247,7 +248,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Kosmischer Tankwart:**
     * *Wenn ghostTrustEarned gesetzt:* "Wir spielen für ihn in Salzgitter." (+20 BandMood, setzt `tankwartBargain`).
-    * *Spezial (Trait: Mystic):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere).
+    * *Spezial (Trait: Mystic, einmalig — `tankwartMysticDone` noch nicht gesetzt):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere, setzt `tankwartMysticDone`). Wird vor `ghostTrustEarned`-Zweig geprüft, sofern `ghostTrustEarned` noch nicht gesetzt ist. **Setzt NICHT `tankwartPhilosophy`** — ermöglicht Mystic-Spielern auch nach diesem Dialog das Betanken des Vans.
     * *Fallback-Text:* Wenn `backstageRitualPerformed` gesetzt, reagiert der Tankwart mit einem ritualbewussten Begrüßungstext statt des Standard-Textes.
     * *Spezial (Trait: Cynic, einmalig):* "Das ist doch alles Quatsch. Gib mir Sprit." (+15 BandMood, +3 Chaos, setzt `tankwartBargain`).
     * *Spezial (Trait: Performer, einmalig):* "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social, setzt `tankwartBargain`).
