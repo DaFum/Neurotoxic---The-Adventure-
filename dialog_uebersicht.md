@@ -27,8 +27,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Vor dem Aufwischen:* Bittet darum, das Wasser aufzuwischen.
         * "Ich kümmere mich darum" (kein Mood-Effekt).
         * "Neues Genre?" (-5 BandMood).
-    * *Spezial (Trait: Cynic):* Option, die Tour als "schlechten Witz" zu bezeichnen (+20 BandMood, +5 Chaos).
-    * *Spezial (Trait: Performer):* "Zeig mir, wie du die Crowd liest." (+20 BandMood, +3 Social, setzt `matzeDeepTalk`).
+    * *Spezial (Trait: Cynic):* Option, die Tour als "schlechten Witz" zu bezeichnen (+20 BandMood, +5 Chaos, setzt `mariusEgoStrategy`).
+    * *Spezial (Trait: Performer):* "Zeig mir, wie du die Crowd liest." (+20 BandMood, +3 Social, setzt `matzePerformerTalk`). **Setzt NICHT `matzeDeepTalk`** — 1982-Unterdialog bleibt erreichbar.
     * *BandMood > 60 Bonus:* Matze ist hyped und will einen Power-Chord zeigen.
         * [Chaos 5]: Riss in der Wand (+15 BandMood, setzt `matzeRiffWarning`).
         * Standard: Aufheben für Salzgitter (setzt `matzeRiffWarning`).
