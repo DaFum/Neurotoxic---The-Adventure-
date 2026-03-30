@@ -2,7 +2,7 @@
 
 ## Store (`store.ts`)
 - `setScene()` always resets `playerPos` to `[0, 1, 0]` — every scene must work with this spawn point
-- `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the existing switch block
+- `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the `RECIPES` array defined above the store
 - `discoverLore()` is idempotent — calling it twice on the same ID is safe
 - Persistence uses a custom merge in `onRehydrateStorage` that preserves player progress when new quests/lore are added to code. Adding new initial quests or loreEntries won't wipe saved data.
 - Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. `scene`, `playerPos`, `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
