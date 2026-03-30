@@ -617,7 +617,7 @@ export function Kaminstube() {
       />
 
       {/* Items */}
-      {!hasItem('Röhre') && (
+      {!hasItem('Röhre') && !flags.ampFixed && (
         <Interactable
           position={[8, 0.5, 2]}
           emoji="🔌"
