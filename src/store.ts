@@ -446,36 +446,41 @@ export const useStore = create<GameState>()(
       },
       hasItem: (item) => get().inventory.includes(item),
       combineItems: (item1, item2) => {
+        const recipe = RECIPES.find(r =>
+          (item1 === r.ingredients[0] && item2 === r.ingredients[1]) ||
+          (item1 === r.ingredients[1] && item2 === r.ingredients[0])
+        );
+
+        if (!recipe) return false;
+
         const inv = get().inventory;
-        if (inv.includes(item1) && inv.includes(item2)) {
-          for (const recipe of RECIPES) {
-            if (
-              (item1 === recipe.ingredients[0] && item2 === recipe.ingredients[1]) ||
-              (item1 === recipe.ingredients[1] && item2 === recipe.ingredients[0])
-            ) {
-              set((state) => {
-                const newInventory = [...state.inventory];
-                const idx1 = newInventory.indexOf(item1);
-                const idx2 = newInventory.indexOf(item2);
+        const idx1 = inv.indexOf(item1);
+        const idx2 = inv.indexOf(item2, item1 === item2 ? idx1 + 1 : 0);
 
-                // Remove higher index first to avoid index shifting
-                const higher = Math.max(idx1, idx2);
-                const lower = Math.min(idx1, idx2);
-                newInventory.splice(higher, 1);
-                newInventory.splice(lower, 1);
-                newInventory.push(recipe.result);
+        // Ensure both ingredients exist (handles duplicate items correctly)
+        if (idx1 === -1 || idx2 === -1) return false;
 
-                return {
-                  inventory: newInventory,
-                  ...(recipe.flagToSet && { flags: { ...state.flags, [recipe.flagToSet]: true } })
-                };
-              });
-              audio.playPickup();
-              return true;
-            }
-          }
-        }
-        return false;
+        set((state) => {
+          const newInventory = [...state.inventory];
+          // Recalculate indices to ensure we are working with the latest state
+          const i1 = newInventory.indexOf(item1);
+          const i2 = newInventory.indexOf(item2, item1 === item2 ? i1 + 1 : 0);
+
+          const higher = Math.max(i1, i2);
+          const lower = Math.min(i1, i2);
+
+          newInventory.splice(higher, 1);
+          newInventory.splice(lower, 1);
+          newInventory.push(recipe.result);
+
+          return {
+            inventory: newInventory,
+            ...(recipe.flagToSet && { flags: { ...state.flags, [recipe.flagToSet]: true } })
+          };
+        });
+
+        audio.playPickup();
+        return true;
       },
       setFlag: (flag, value) => set((state) => ({ flags: { ...state.flags, [flag]: value } })),
       setPlayerPos: (playerPos) => set((state) => {
