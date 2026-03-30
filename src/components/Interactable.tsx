@@ -180,7 +180,7 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     const id = instanceIdRef.current;
     register(id, () => {
       if (!inRangeRef.current) return null;
-      return { distance: distanceRef.current, trigger: () => handleInteractRef.current() };
+      return { distance: distanceRef.current, trigger: handleInteractRef.current };
     });
     return () => unregister(id);
   }, [register, unregister]);
