@@ -37,6 +37,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const modelRef = useRef<THREE.Group>(null);
   const velocity = useRef(new THREE.Vector3()).current;
   const shakeOffset = useRef(new THREE.Vector3()).current;
+  const lastSentPosRef = useRef(new THREE.Vector3()).current;
   const [, get] = useKeyboardControls();
   const setPlayerPos = useStore((state) => state.setPlayerPos);
   const cameraShake = useStore((state) => state.cameraShake);
@@ -209,7 +210,17 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
       bodyRef.current.setTranslation({ x: clampedX, y: pos.y, z: clampedZ }, true);
     }
 
-    setPlayerPos([clampedX, pos.y, clampedZ]);
+    // ⚡ Bolt Optimization: Throttle Zustand state updates by applying a distance threshold.
+    // Zustand subscriptions can be expensive, so we only update playerPos when moving significantly.
+    const dx = clampedX - lastSentPosRef.x;
+    const dy = pos.y - lastSentPosRef.y;
+    const dz = clampedZ - lastSentPosRef.z;
+
+    // ~0.05 squared distance is about 0.22 units, small enough not to break interactions
+    if (dx * dx + dy * dy + dz * dz > 0.05) {
+      setPlayerPos([clampedX, pos.y, clampedZ]);
+      lastSentPosRef.set(clampedX, pos.y, clampedZ);
+    }
 
     // Camera follow with shake
     // Override the shakeOffset vector instead of creating a new one
