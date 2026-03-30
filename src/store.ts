@@ -167,6 +167,8 @@ const initialState = {
     kaminFeuerPact: false,
     salzgitterBandUnited: false,
     fanMovement: false,
+    larsRhythmPactClaimed: false,
+    matzeRiffDialogueDone: false,
   },
 
 

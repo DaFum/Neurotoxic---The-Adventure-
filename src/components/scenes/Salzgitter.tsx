@@ -316,7 +316,7 @@ export function Salzgitter() {
           const hasVoidPick = store.hasItem('Void-Plektrum');
           
           if (hasForbiddenRiff) {
-            if (hasVoidPick) {
+            if (hasVoidPick && !store.flags.matzeRiffDialogueDone) {
               store.setDialogue({
                 text: 'Matze: "Dieses Void-Plektrum... es pulsiert! Damit kann ich das Verbotene Riff in die 5. Dimension spielen. Das ist der ultimative Sound!"',
                 options: [
@@ -327,6 +327,7 @@ export function Salzgitter() {
                       useStore.getState().setDialogue('Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"');
                       useStore.getState().increaseBandMood(70);
                       useStore.getState().increaseSkill('chaos', 5);
+                      useStore.getState().setFlag('matzeRiffDialogueDone', true);
                     }
                   },
                   {
@@ -336,39 +337,44 @@ export function Salzgitter() {
                       useStore.getState().setDialogue('Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."');
                       useStore.getState().increaseBandMood(60);
                       useStore.getState().increaseSkill('technical', 5);
+                      useStore.getState().setFlag('matzeRiffDialogueDone', true);
                     }
                   },
                   { text: 'Viel Erfolg, Matze.', action: () => {
                     useStore.getState().setDialogue('Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."');
                     useStore.getState().increaseBandMood(20);
+                    useStore.getState().setFlag('matzeRiffDialogueDone', true);
                   }}
                 ]
               });
-            } else if (hasOldPick) {
+            } else if (hasOldPick && !store.flags.matzeRiffDialogueDone) {
               store.setDialogue({
                 text: 'Matze: "Manager, mit diesem Alten Plektrum... ich kann das Verbotene Riff bändigen! Es fühlt sich an, als würde ich die Blitze selbst kontrollieren. Wir werden Geschichte schreiben!"',
                 options: [
-                  { 
-                    text: 'Kanalisiere den Chaos-Faktor. [Chaos 10]', 
+                  {
+                    text: 'Kanalisiere den Chaos-Faktor. [Chaos 10]',
                     requiredSkill: { name: 'chaos', level: 10 },
                     action: () => {
                       useStore.getState().setDialogue('Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"');
                       useStore.getState().increaseBandMood(50);
                       useStore.getState().increaseSkill('chaos', 5);
+                      useStore.getState().setFlag('matzeRiffDialogueDone', true);
                     }
                   },
-                  { 
-                    text: 'Optimiere die Saitenspannung. [Technical 10]', 
+                  {
+                    text: 'Optimiere die Saitenspannung. [Technical 10]',
                     requiredSkill: { name: 'technical', level: 10 },
                     action: () => {
                       useStore.getState().setDialogue('Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."');
                       useStore.getState().increaseBandMood(40);
                       useStore.getState().increaseSkill('technical', 5);
+                      useStore.getState().setFlag('matzeRiffDialogueDone', true);
                     }
                   },
                   { text: 'Viel Erfolg, Matze.', action: () => {
                     useStore.getState().setDialogue('Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."');
                     useStore.getState().increaseBandMood(20);
+                    useStore.getState().setFlag('matzeRiffDialogueDone', true);
                   }}
                 ]
               });
@@ -398,8 +404,8 @@ export function Salzgitter() {
             store.setDialogue({
               text: 'Matze: "Ich hab über das nachgedacht, was du über den Lärm gesagt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"',
               options: [
-                { 
-                  text: 'Ich sehe die Muster. [Visionary]', 
+                {
+                  text: 'Ich sehe die Muster. [Visionary]',
                   requiredTrait: 'Visionary',
                   action: () => {
                     useStore.getState().setDialogue('Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."');
@@ -409,13 +415,23 @@ export function Salzgitter() {
                 },
                 { text: 'Lass uns spielen.', action: () => {
                   useStore.getState().setDialogue('Matze: "Ja. Der Stahl wartet."');
+                  useStore.getState().increaseBandMood(10);
                 }}
               ]
             });
-            store.increaseBandMood(10);
           } else if (store.flags.askedAbout1982) {
-            store.setDialogue('Matze: "Ich hab über das nachgedacht, was du über 1982 gefragt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"');
-            store.increaseBandMood(10);
+            store.setDialogue({
+              text: 'Matze: "Ich hab über das nachgedacht, was du über 1982 gefragt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"',
+              options: [
+                { text: 'Für alle, die nicht mehr da sind.', action: () => {
+                  useStore.getState().setDialogue('Matze: "Genau. Für den Lärm."');
+                  useStore.getState().increaseBandMood(10);
+                }},
+                { text: 'Lass uns spielen.', action: () => {
+                  useStore.getState().setDialogue('Matze: "Ja. Der Stahl wartet."');
+                }}
+              ]
+            });
           } else if (bandMood > 80) {
             store.setDialogue('Matze: "Ich hab noch nie so eine Energie gespürt! Salzgitter wird brennen!"');
           } else {
@@ -473,18 +489,20 @@ export function Salzgitter() {
              return;
           }
 
-          if (store.flags.larsRhythmPact) {
+          if (store.flags.larsRhythmPact && !store.flags.larsRhythmPactClaimed) {
              const options: DialogueOption[] = [];
              if (store.flags.larsVibrating) {
                 options.push({ text: 'Hyperpowered Lars!', action: () => {
                    useStore.getState().setDialogue('Lars: "DER RHYTHMUS IST IN MIR EXPLODIERT! DER PAKT WIRD DIE REALITÄT ZERFETZEN!"');
                    useStore.getState().increaseBandMood(50);
                    useStore.getState().increaseSkill('chaos', 5);
+                   useStore.getState().setFlag('larsRhythmPactClaimed', true);
                 }});
              } else {
                 options.push({ text: 'Lass uns die Realität zertrümmern.', action: () => {
                    useStore.getState().setDialogue('Lars: "Jeder Schlag ein Beben."');
                    useStore.getState().increaseBandMood(30);
+                   useStore.getState().setFlag('larsRhythmPactClaimed', true);
                 }});
              }
              store.setDialogue({

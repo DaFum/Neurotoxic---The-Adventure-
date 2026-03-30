@@ -300,20 +300,6 @@ export function Proberaum() {
             return;
           }
 
-          if (trait === 'Cynic') {
-            setDialogue({
-              text: 'Matze: "Hey Manager, hast du auch das Gefühl, dass diese ganze Tour nur ein schlechter Witz ist, der darauf wartet, erzählt zu werden?"',
-              options: [
-                { text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap.', action: () => {
-                  setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');
-                  increaseBandMood(20);
-                  useStore.getState().increaseSkill('chaos', 5);
-                }}
-              ]
-            });
-            return;
-          }
-
           if (hasTalisman) {
             setDialogue({
               text: 'Matze: "Ist das der Industrie-Talisman?! Ich spüre, wie die Saiten meiner Gitarre vor Ehrfurcht vibrieren. Du bist mehr als nur ein Manager."',
@@ -411,6 +397,14 @@ export function Proberaum() {
                     useStore.getState().increaseSkill('social', 3);
                   }
                 },
+                { text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
+                  requiredTrait: 'Cynic',
+                  action: () => {
+                    setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');
+                    increaseBandMood(20);
+                    useStore.getState().increaseSkill('chaos', 5);
+                  }
+                },
                 { text: 'Erzähl mir von der Tour 1982.', action: () => {
                   setDialogue({
                     text: 'Matze: "1982... da war der Lärm noch rein. Wir haben in einer alten Gießerei gespielt. Der Bassist ist damals verschwunden, aber der Sound war legendär. Wir suchen ihn immer noch."',
@@ -435,6 +429,7 @@ export function Proberaum() {
                           setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
                           useStore.getState().setFlag('frequenz1982_proberaum', true);
                           useStore.getState().setFlag('proberaum_brutalist_smash', true);
+                          useStore.getState().setFlag('bassist_clue_matze', true);
                           useStore.getState().addToInventory('Frequenzfragment');
                           useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
                           useStore.getState().increaseBandMood(10);
@@ -697,7 +692,7 @@ export function Proberaum() {
                 text: moodText,
                 options: [
 
-                  {
+                  ...(useStore.getState().flags.mariusEgoStrategy ? [] : [{
                     text: 'Wie bereitest du dich auf Salzgitter vor?',
                     action: () => {
                       setDialogue({
@@ -705,7 +700,7 @@ export function Proberaum() {
                         options: [
                           {
                             text: 'Ich coache deine Bühnenpräsenz. [Performer]',
-                            requiredTrait: 'Performer',
+                            requiredTrait: 'Performer' as const,
                             action: () => {
                               setDialogue('Marius: "Ah, von einem Meister lernen. Zeig mir, wie ich das Licht fange."');
                               useStore.getState().increaseBandMood(15);
@@ -715,7 +710,7 @@ export function Proberaum() {
                           },
                           {
                             text: 'Du wirst auf der Bühne sterben. [Cynic]',
-                            requiredTrait: 'Cynic',
+                            requiredTrait: 'Cynic' as const,
                             action: () => {
                               setDialogue('Marius: "WAS?! ...Nein, du hast recht. Ich muss wütender werden!"');
                               useStore.getState().increaseBandMood(10);
@@ -724,7 +719,7 @@ export function Proberaum() {
                           },
                           {
                             text: 'Hier ist ein Ego-Management-Plan. [Social 7]',
-                            requiredSkill: { name: 'social', level: 7 },
+                            requiredSkill: { name: 'social' as const, level: 7 },
                             action: () => {
                               setDialogue('Marius: "Ein... Plan? Ok, das könnte helfen, nicht die Kontrolle zu verlieren."');
                               useStore.getState().increaseBandMood(20);
@@ -735,7 +730,7 @@ export function Proberaum() {
                         ]
                       });
                     }
-                  },
+                  }] as DialogueOption[]),
                   {
                     text: 'Marius, wie geht es dir wirklich? [Diplomat]',
                     requiredTrait: 'Diplomat',

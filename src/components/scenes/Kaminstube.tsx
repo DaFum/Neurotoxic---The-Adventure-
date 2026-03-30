@@ -330,19 +330,6 @@ export function Kaminstube() {
                   }
                 },
                 {
-                  text: 'Analysiere die Frequenz des Flüsterns. [Technical 7]',
-                  requiredSkill: { name: 'technical', level: 7 },
-                  action: () => {
-                    useStore.getState().setDialogue('Das Knistern ist kein Zufall. Es ist ein Code. Ein thermischer Algorithmus, der die Geschichte der ersten Industrial-Gigs hier speichert.');
-                    useStore.getState().setFlag('forgotten_lore', true);
-                    useStore.getState().setFlag('kaminFeuerPact', true);
-                    useStore.getState().discoverLore('kamin_prophecy');
-                    useStore.getState().completeQuest('forgotten_lore');
-                    useStore.getState().increaseBandMood(20);
-                    useStore.getState().increaseSkill('technical', 3);
-                  }
-                },
-                {
                   text: 'Versuche, die Sprache zu deuten. [Diplomat]',
                   requiredTrait: 'Diplomat',
                   action: () => {
@@ -618,7 +605,6 @@ export function Kaminstube() {
           } else {
             if (store.flags.mariusEgoStrategy) {
                store.setDialogue('Marius: "Unsere Strategie funktioniert. Ich fühle mich... geerdet. Das Ego ist fokussiert wie ein Laser."');
-               useStore.getState().increaseBandMood(10);
             } else if (store.flags.egoContained) {
                store.setDialogue('Marius: "Mein Ego brennt in mir! Ich werde diese Menge verschlingen und als Lärm wieder ausspucken! Salzgitter wird unser Altar sein!"');
             } else {

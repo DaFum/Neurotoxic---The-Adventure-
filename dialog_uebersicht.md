@@ -17,7 +17,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
     * *Nach dem Aufwischen (Wasser aufgewischt):* Option "Erzähl mir von der Tour 1982." öffnet einen Unterdialog.
-        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (+20 BandMood, +3 Chaos, Erhalt: Frequenzfragment, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `frequenz1982_proberaum`, `matzeDeepTalk`).
+        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (+25 BandMood, +4 Chaos, Erhalt: Frequenzfragment, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `frequenz1982_proberaum`, `matzeDeepTalk`).
         * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (+10 BandMood, +3 Chaos, Erhalt: Frequenzfragment, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `frequenz1982_proberaum`, `proberaum_brutalist_smash`, `matzeDeepTalk`).
         * Zweig C (Trait: Visionary): "Ich sehe Muster im Lärm." (+30 BandMood, +5 Chaos, Lore: `matze_1982_truth`, setzt `matzeDeepTalk`).
         * Zweig D (Skill: Technical 5): Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
@@ -198,9 +198,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Optionen zur Beruhigung (Quest-Abschluss `marius` für jede, setzt `mariusCalmed`):*
         * *Bonus (Wenn mariusEgoStrategy gesetzt):* "Erinnerst du dich an unsere Strategie?" (+35 BandMood, +5 Social, setzt `mariusConfidenceBoost`).
         * (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, setzt `mariusConfidenceBoost`).
-        * (Trait: Performer): "Einziger Mensch auf der Bühne" (+30 BandMood, +3 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`, `mariusStageFright`).
-        * (Trait: Mystic): "Lass die Frequenz durch dich fließen" (+25 BandMood, +3 Chaos, setzt `mariusConfidenceBoost`, `mariusStageFright`).
-        * (Trait: Brutalist): "Angst ist Schwäche. Zerstöre sie" (+20 BandMood, +3 Chaos, setzt `mariusStageFright`). **Hinweis: setzt NICHT `mariusConfidenceBoost`.**
+        * (Trait: Performer): "Einziger Mensch auf der Bühne" (+30 BandMood, +3 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`).
+        * (Trait: Mystic): "Lass die Frequenz durch dich fließen" (+25 BandMood, +3 Chaos, setzt `mariusConfidenceBoost`).
+        * (Trait: Brutalist): "Angst ist Schwäche. Zerstöre sie" (+20 BandMood, +3 Chaos). **Hinweis: setzt NICHT `mariusConfidenceBoost`.**
         * (Flag `askedAbout1982` gesetzt): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`).
         * "Lego-Trick" (+10 BandMood).
 * **Lars (Energie-Mangel):**
@@ -271,7 +271,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Aufheben (Erhalt: Dunkle Materie).
 * **Schwebender Bassist** *(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):*
     * *Option (Skill: Social 8):* "Die Band vermisst dich" (+25 BandMood, +3 Social, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
-    * *Option (Skill: Technical 10):* "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
+    * *Option (Skill: Technical 8):* "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
     * *Option (Trait: Mystic):* "Ich höre deine Melodie" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
     * *Option (Trait: Visionary):* "Ich sehe dich zwischen den Dimensionen" (+40 BandMood, +3 Chaos, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_truth`).
     * *Standard:* "Ich lass dich besser in Ruhe" (kein Mood-Effekt).

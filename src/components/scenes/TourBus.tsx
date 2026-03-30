@@ -258,7 +258,7 @@ export function TourBus() {
           }
 
 
-          if (hasItem('Repariertes Kabel')) {
+          if (hasItem('Repariertes Kabel') && !useStore.getState().quests.find(q => q.id === 'cable' && q.completed)) {
             setDialogue({
               text: 'Matze: "Hast du Angst vor Salzgitter?"',
               options: [
@@ -636,41 +636,6 @@ export function TourBus() {
             return;
           }
 
-          if (flags.ghostRecipeQuestStarted && !hasGeisterDrink) {
-            setDialogue('Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."');
-            return;
-          }
-
-          if (flags.bassist_clue_matze && !flags.bassist_clue_ghost) {
-            setDialogue({
-              text: 'Geist: "Matze hat geredet? Er sollte besser schweigen über die Dinge, die er nicht versteht."',
-              options: [
-                {
-                  text: 'Matze hat mir vom Bassisten erzählt. Warst du dabei?',
-                  action: () => {
-                    setDialogue('Geist: "Dabei? Ich war derjenige, der sein Kabel eingesteckt hat. Das letzte Kabel, das er je brauchte. Die Frequenz... sie hat ihn einfach verschluckt."');
-                    useStore.getState().setFlag('bassist_clue_ghost', true);
-                    useStore.getState().increaseBandMood(15);
-                    useStore.getState().increaseSkill('social', 3);
-                  }
-                },
-                {
-                  text: 'Ich spüre seine Präsenz in deinem Echo. [Mystic]',
-                  requiredTrait: 'Mystic',
-                  action: () => {
-                    setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
-                    useStore.getState().addToInventory('Bassist-Saite');
-                    useStore.getState().setFlag('bassist_clue_ghost', true);
-                    useStore.getState().increaseBandMood(20);
-                  }
-                },
-                { text: 'Erzähl mir nichts.', action: () => setDialogue('Geist: "Der Lärm ist lauter als die Wahrheit."') }
-              ]
-            });
-            return;
-          }
-
-
           if (flags.ghostSecretRevealed && !flags.ghostTrustEarned) {
             setDialogue({
               text: 'Geist: "Du kennst jetzt mein Geheimnis. Warum bist du noch hier?"',
@@ -707,6 +672,40 @@ export function TourBus() {
 
           if (flags.ghostSecretRevealed) {
             setDialogue('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
+            return;
+          }
+
+          if (flags.ghostRecipeQuestStarted && !hasGeisterDrink) {
+            setDialogue('Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."');
+            return;
+          }
+
+          if (flags.bassist_clue_matze && !flags.bassist_clue_ghost) {
+            setDialogue({
+              text: 'Geist: "Matze hat geredet? Er sollte besser schweigen über die Dinge, die er nicht versteht."',
+              options: [
+                {
+                  text: 'Matze hat mir vom Bassisten erzählt. Warst du dabei?',
+                  action: () => {
+                    setDialogue('Geist: "Dabei? Ich war derjenige, der sein Kabel eingesteckt hat. Das letzte Kabel, das er je brauchte. Die Frequenz... sie hat ihn einfach verschluckt."');
+                    useStore.getState().setFlag('bassist_clue_ghost', true);
+                    useStore.getState().increaseBandMood(15);
+                    useStore.getState().increaseSkill('social', 3);
+                  }
+                },
+                {
+                  text: 'Ich spüre seine Präsenz in deinem Echo. [Mystic]',
+                  requiredTrait: 'Mystic',
+                  action: () => {
+                    setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
+                    useStore.getState().addToInventory('Bassist-Saite');
+                    useStore.getState().setFlag('bassist_clue_ghost', true);
+                    useStore.getState().increaseBandMood(20);
+                  }
+                },
+                { text: 'Erzähl mir nichts.', action: () => setDialogue('Geist: "Der Lärm ist lauter als die Wahrheit."') }
+              ]
+            });
             return;
           }
 

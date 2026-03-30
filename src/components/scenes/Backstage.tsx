@@ -493,6 +493,7 @@ export function Backstage() {
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(35);
+                useStore.getState().increaseSkill('social', 5);
               }
             });
           }
