@@ -110,7 +110,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Aufheben (Erhalt: Quanten-Kabel).
 * **TR-8080 Drum Machine:**
     * *Item (Verbotenes Riff):* Maschine absorbiert das Riff.
-        * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
+        * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel, Quest-Abschluss: `drum_machine`).
 * **Feedback-Monitor:**
     * *Initial:* Fragt nach dem Quanten-Kabel (setzt `feedbackMonitorTalked`, Quest hinzugefügt: `feedback_monitor`).
     * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`, entfernt Quanten-Kabel).
@@ -122,7 +122,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Matze:**
     * *Ohne Kabel (BandMood < 20):* Klagt über schlechte Laune (kein Mood-Effekt, kein Optionsmenü).
     * *Ohne Kabel (BandMood >= 20, kein Sabotage-Verdacht):*
-        * "Ich suche danach." (Quest hinzugefügt: `cable`).
+        * "Ich suche danach." (Quest hinzugefügt: `cable` "Repariere Matzes Kabel mit Klebeband und defektem Kabel").
         * "Das Kabel wurde nicht gebrochen, es wurde durchtrennt." [Technical 5] (+20 BandMood, +5 Technical, setzt `tourbus_sabotage_discovered`, Lore: `tourbus_saboteur`, Quest gestartet: `tourbus_saboteur`).
         * "Vielleicht Schicksal." (-5 BandMood).
     * *Mit Repariertem Kabel (Angst vor Salzgitter?):*
@@ -192,6 +192,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 ## 3. Backstage (Vor dem Gig)
 
+* **Szene-Eintritt:** Registriert die Quest "setlist" (Finde die Setliste im Backstage).
 * **Feedback-Monitor:**
     * *Erstkontakt ("Hallo?"):* Setzt `feedbackMonitorBackstageTalked` (+5 BandMood). Innerer Dialog zeigt "Wie kann ich helfen?" → setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`.
     * *Nach Erstkontakt (`feedbackMonitorBackstageTalked` gesetzt), wenn `ampSentient` gesetzt & Quest noch nicht gestartet:* Option "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`). **Diese Option hat Vorrang gegenüber "Wie kann ich dir helfen?".**
@@ -240,9 +241,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * [Technician]: Frequenz-Anpassung (+25 BandMood, +5 Technical, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
         * Standard: Einfacher Chant (+15 BandMood, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
     * *Mit Resonanz-Kristall + Blaupause:*
-        * (Trait: Mystic): Frequenz vollenden (+50 BandMood, entfernt `Resonanz-Kristall`, setzt `frequenz1982_complete`, Lore: `frequenz_1982_decoded`).
+        * (Trait: Mystic): Frequenz vollenden (+50 BandMood, entfernt `Resonanz-Kristall`, setzt `frequenz1982_complete`, Quest-Abschluss: `frequenz_1982`, Lore: `frequenz_1982_decoded`).
     * *Mit Frequenzfragment + Blaupause:*
-        * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`).
+        * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`, Quest-Abschluss: `frequenz_1982`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
     * *Item (Verbotenes Riff):* Resonanz (+15 BandMood).
     * *Standard:* (+5 BandMood, einmalig, Quest hinzugefügt: backstage_ritual).
