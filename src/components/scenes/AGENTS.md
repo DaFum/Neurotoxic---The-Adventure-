@@ -25,8 +25,9 @@
 - Collected items must use conditional rendering: `{!hasItem('X') && <Interactable ... />}` — otherwise the item persists after pickup
 - Multiple interactables at the same position must be mutually exclusive via flags
 - `removeFromInventory()` is NOT automatic — explicitly call it when an item is consumed
-- One-shot dialogue options must be **excluded from the options array** via a flag check before the `setDialogue()` call — guarding only the rewards inside `action` still shows the option on every interaction
+- One-shot dialogue options must be **excluded from the options array** via a flag check before the `setDialogue()` call — guarding only the rewards inside `action` still shows the option on every interaction. Concrete pattern: `...(!flags.done ? [{ text: '...', requiredTrait: 'Mystic' as const, action: () => { ...; setFlag('done', true); } }] as DialogueOption[] : [])`
+- Multiple `setDialogue()` calls within the same `action` callback: only the **last** call is visible — earlier calls are silently overwritten. Use a single conditional call instead
 - Scene names are case-sensitive: `'void_station'` not `'voidStation'`
-- Skill/mood increases must be inside `action` callbacks, not at component render level (would fire every frame)
+- Skill/mood increases must be inside option `action` callbacks — calling them in `onInteract` directly (outside any action) fires them on every interaction, not just once
 - Band member Interactables should have `position` Y >= 1 to avoid floor clipping
 - Quest IDs use snake_case: `'repair_amp'`, `'ghost_recipe'`, `'cosmic_echo'`
