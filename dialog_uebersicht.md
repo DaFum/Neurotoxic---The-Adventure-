@@ -211,7 +211,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Auf Ex: (+40 BandMood, setzt `larsVibrating`, `larsEnergized`).
         * Nur ein Schluck (Trait: Diplomat): (+30 BandMood, +3 Social, setzt `lars_paced`, `larsEnergized`).
         * Nur ein Schluck (Standard): (+20 BandMood, setzt `larsEnergized`).
-    * *Item (Energiedrink):* (+10 BandMood, setzt `larsEnergized`). **Wenn `larsRhythmPact` gesetzt:** zusätzlich +25 BandMood (insgesamt +35).
+    * *Item (Energiedrink):* (+10 BandMood, setzt `larsEnergized`). **Wenn `larsRhythmPact` gesetzt:** insgesamt +35 BandMood.
     * *Wenn Lars Vibriert:*
         * (Skill: Chaos 5): "Chaos" (+20 BandMood, +3 Chaos, setzt `larsDrumPhilosophy`).
         * (Skill: Technical 5): "Metronom" (+10 BandMood, setzt `larsDrumPhilosophy`).
@@ -244,8 +244,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Kosmischer Tankwart:**
     * *Wenn ghostTrustEarned gesetzt:* "Wir spielen für ihn in Salzgitter." (+20 BandMood, setzt `tankwartBargain`).
     * *Spezial (Trait: Mystic):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere).
-    * *Spezial (Trait: Cynic):* "Das ist doch alles Quatsch. Gib mir Sprit." (+15 BandMood, +3 Chaos).
-    * *Spezial (Trait: Performer):* "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social).
+    * *Fallback-Text:* Wenn `backstageRitualPerformed` gesetzt, reagiert der Tankwart mit einem ritualbewussten Begrüßungstext statt des Standard-Textes.
+    * *Spezial (Trait: Cynic, einmalig):* "Das ist doch alles Quatsch. Gib mir Sprit." (+15 BandMood, +3 Chaos, setzt `tankwartBargain`).
+    * *Spezial (Trait: Performer, einmalig):* "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social, setzt `tankwartBargain`).
     * *Item (Industrie-Talisman):* "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
     * *Item (Verbotenes Riff):* "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
     * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss: `void`) ODER 432Hz (+10 BandMood, Quest-Abschluss: `void`).

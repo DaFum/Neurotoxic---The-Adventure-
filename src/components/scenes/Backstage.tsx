@@ -599,7 +599,7 @@ export function Backstage() {
             store.setDialogue(energyText);
             store.removeFromInventory('Energiedrink');
             store.setFlag('larsEnergized', true);
-            store.increaseBandMood(store.flags.larsRhythmPact ? 25 : 10);
+            store.increaseBandMood(store.flags.larsRhythmPact ? 35 : 10);
           } else {
             store.setDialogue('Lars: "Ich bin total platt. Ohne Koffein geht hier gar nichts. Hast du was Stärkeres als Wasser?"');
           }

@@ -403,6 +403,7 @@ export function Proberaum() {
                     setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('chaos', 5);
+                    useStore.getState().setFlag('mariusEgoStrategy', true);
                   }
                 },
                 { text: 'Erzähl mir von der Tour 1982.', action: () => {
