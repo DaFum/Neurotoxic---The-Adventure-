@@ -6,7 +6,7 @@ const KNOB_R = 22;   // inner knob radius px
 const MAX = BASE_R - KNOB_R; // max knob travel px
 
 /**
- * Renders a virtual joystick for touch or coarse-pointer devices.
+ * Renders a virtual joystick and interact button for touch or coarse-pointer devices.
  * It handles pointer and touch events to capture user movement and updates
  * the global `touchInput` state with normalized `x` and `z` values.
  * Includes a 4px dead-zone to prevent unintended movement drift.

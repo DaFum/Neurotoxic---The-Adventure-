@@ -24,8 +24,8 @@ import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 /**
- * React component that renders the TourBus UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * Renders the 3D scene environment and logic for TourBus.
+ * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);

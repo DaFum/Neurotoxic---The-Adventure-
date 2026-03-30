@@ -33,8 +33,9 @@ import { KeyboardInteractionProvider } from './KeyboardInteractionManager';
 const STORAGE_KEY = 'neurotoxic-game-storage';
 
 /**
- * React component that renders the Game UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * The main 3D Game component that sets up the Canvas, physics engine, and scene routing.
+ * It handles the rendering of the active scene environment and the player character.
+ * @returns The 3D Canvas containing the active game world.
  */
 export function Game() {
   const scene = useStore((state) => state.scene);

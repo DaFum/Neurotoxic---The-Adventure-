@@ -10,6 +10,11 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
+/**
+ * A simple audio engine class for managing sound effects and ambient music
+ * in the game using the Web Audio API. It supports synthesized sounds,
+ * footsteps, interactions, ambient tracks, and basic music.
+ */
 class AudioEngine {
   ctx: AudioContext | null = null;
   musicInterval: number | null = null;
@@ -18,7 +23,10 @@ class AudioEngine {
   currentAmbient: string | null = null;
   tempo = 250;
 
-  /** Executes the init logic. */
+  /**
+   * Initializes the AudioContext if it hasn't been created yet.
+   * Resumes the context if it is in a suspended state.
+   */
   init() {
     if (!this.ctx) {
       this.ctx = new AudioContext();
@@ -29,8 +37,9 @@ class AudioEngine {
   }
 
   /**
-   * Executes the setTempo logic.
-   * @param newTempo - Required configuration parameter.
+   * Updates the global tempo for the music track.
+   * Restarts the music if it's currently playing to apply the new tempo immediately.
+   * @param newTempo - The new tempo in milliseconds per beat.
    */
   setTempo(newTempo: number) {
     this.tempo = newTempo;
@@ -41,11 +50,11 @@ class AudioEngine {
   }
 
   /**
-   * Executes the playTone logic.
-   * @param freq - Required configuration parameter.
-   * @param type - Required configuration parameter.
-   * @param duration - Required configuration parameter.
-   * @param vol - Required configuration parameter.
+   * Synthesizes and plays a basic tone using the Web Audio API.
+   * @param freq - The frequency of the tone in Hertz.
+   * @param type - The waveform shape of the oscillator (e.g., 'sine', 'square').
+   * @param duration - How long the tone should play in seconds.
+   * @param vol - The peak volume level of the tone.
    */
   playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
     if (!this.ctx) return;
@@ -65,14 +74,18 @@ class AudioEngine {
     osc.stop(this.ctx.currentTime + duration);
   }
 
-  /** Executes the playInteract logic. */
+  /**
+   * Plays a two-tone confirmation sound used for successful UI or world interactions.
+   */
   playInteract() {
     this.init();
     this.playTone(440, 'square', 0.1, 0.05);
     setTimeout(() => this.playTone(880, 'square', 0.1, 0.05), 50);
   }
 
-  /** Executes the playPickup logic. */
+  /**
+   * Plays an ascending arpeggio sound effect used when the player picks up an item.
+   */
   playPickup() {
     this.init();
     this.playTone(300, 'sawtooth', 0.1, 0.1);
@@ -81,14 +94,18 @@ class AudioEngine {
     setTimeout(() => this.playTone(800, 'sawtooth', 0.3, 0.1), 300);
   }
 
-  /** Executes the playFootstep logic. */
+  /**
+   * Plays a randomized low-frequency burst simulating a footstep sound.
+   */
   playFootstep() {
     this.init();
     // Low noise burst for footstep
     this.playTone(60 + Math.random() * 20, 'sine', 0.05, 0.02);
   }
 
-  /** Executes the playInteraction logic. */
+  /**
+   * Plays a high-tech double beep sound used for terminal or machine interactions.
+   */
   playInteraction() {
     this.init();
     // High-tech beep
@@ -96,15 +113,17 @@ class AudioEngine {
     setTimeout(() => this.playTone(1600, 'sine', 0.05, 0.05), 50);
   }
 
-  /** Executes the playTypewriter logic. */
+  /**
+   * Plays a short, randomized click sound simulating a typewriter keystroke for dialogue.
+   */
   playTypewriter() {
     this.init();
     this.playTone(600 + Math.random() * 200, 'sine', 0.02, 0.02);
   }
 
   /**
-   * Executes the startAmbient logic.
-   * @param type - Required configuration parameter.
+   * Starts a looping ambient background track specific to the given scene.
+   * @param type - The identifier of the scene to load ambient audio for.
    */
   startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter') {
     this.init();
@@ -158,7 +177,9 @@ class AudioEngine {
     }, type === 'kaminstube' ? 100 : 1000);
   }
 
-  /** Executes the stopAmbient logic. */
+  /**
+   * Stops the currently playing ambient background loop and clears the interval.
+   */
   stopAmbient() {
     if (this.ambientInterval) {
       clearInterval(this.ambientInterval);
@@ -167,7 +188,9 @@ class AudioEngine {
     this.currentAmbient = null;
   }
 
-  /** Executes the startMusic logic. */
+  /**
+   * Starts playing the main dynamic music track consisting of a bassline, kick drum, and snare.
+   */
   startMusic() {
     this.init();
     if (this.isPlayingMusic) return;
@@ -215,7 +238,9 @@ class AudioEngine {
     }, this.tempo); // Dynamic BPM
   }
 
-  /** Executes the stopMusic logic. */
+  /**
+   * Stops the currently playing music track and clears the interval.
+   */
   stopMusic() {
     this.isPlayingMusic = false;
     if (this.musicInterval) {
@@ -225,5 +250,8 @@ class AudioEngine {
   }
 }
 
-/** Exported variable representing the audio game logic. */
+/**
+ * A singleton instance of the AudioEngine used throughout the application
+ * to trigger sound effects and control ambient noise or music.
+ */
 export const audio = new AudioEngine();

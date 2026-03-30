@@ -25,9 +25,12 @@ interface PlayerProps {
 }
 
 /**
- * React component that renders the Player UI element or 3D scene entity.
- * @param props - Required configuration parameter.
- * @returns Output from the function/method.
+ * Renders the player character within the physics world and handles movement logic.
+ * Reads input from the keyboard (via zustand store) and touch joystick to apply velocity.
+ * Also manages camera following and camera shake effects.
+ * @param props - Component properties.
+ * @param props.bounds - The soft clamping boundaries for the player in the current scene.
+ * @returns A 3D RigidBody containing the player's mesh, sprites, and colliders.
  */
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);

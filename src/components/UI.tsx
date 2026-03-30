@@ -34,8 +34,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { audio } from '../audio';
 
 /**
- * React component that renders the UI UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * Renders the 2D overlay user interface for the game.
+ * Manages dialogue boxes, inventory screens, trait selection, lore menu, and notifications.
+ * @returns A 2D DOM tree overlaying the 3D canvas.
  */
 export function UI() {
   const dialogue = useStore((state) => state.dialogue);

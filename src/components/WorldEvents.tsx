@@ -14,8 +14,9 @@ import { useStore } from '../store';
 import { audio } from '../audio';
 
 /**
- * React component that renders the WorldEvents UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * A headless component that manages global background events and timers.
+ * Handles tasks like periodically ticking down the band's mood over time.
+ * @returns Null, as this component only performs side effects.
  */
 export function WorldEvents() {
   const bandMood = useStore((state) => state.bandMood);

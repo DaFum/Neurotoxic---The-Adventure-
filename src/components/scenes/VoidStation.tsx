@@ -21,8 +21,8 @@ import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 /**
- * React component that renders the VoidStation UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * Renders the 3D scene environment and logic for VoidStation.
+ * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function VoidStation() {
   const addToInventory = useStore((state) => state.addToInventory);

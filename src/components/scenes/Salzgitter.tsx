@@ -24,8 +24,8 @@ import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 /**
- * React component that renders the Salzgitter UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * Renders the 3D scene environment and logic for Salzgitter.
+ * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function Salzgitter() {
   const setDialogue = useStore((state) => state.setDialogue);

@@ -4,14 +4,17 @@ import { audio } from './audio';
 
 type Scene = 'menu' | 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
 
-/** Data structure defining the shape of Trait objects. */
+/**
+ * Defines the possible personality traits a player can select.
+ * Traits influence dialogue options and interactions.
+ */
 export type Trait = 'Visionary' | 'Technician' | 'Brutalist' | 'Diplomat' | 'Mystic' | 'Performer' | 'Cynic';
 
 /**
  * Represents the player's current skill levels.
- * @property technical Level of technical aptitude (e.g., repairing, hacking).
- * @property social Level of social influence (e.g., charisma, persuasion).
- * @property chaos Level of unpredictability (e.g., breaking things, causing a scene).
+ * @property technical - Level of technical aptitude (e.g., repairing, hacking).
+ * @property social - Level of social influence (e.g., charisma, persuasion).
+ * @property chaos - Level of unpredictability (e.g., breaking things).
  */
 export interface Skills {
   technical: number;
@@ -20,11 +23,11 @@ export interface Skills {
 }
 
 /**
- * Represents a lore entry discovered by the player.
- * @property id The unique identifier for the lore entry.
- * @property title The title displayed in the lore menu.
- * @property content The main text content of the lore entry.
- * @property discovered Whether the player has found this lore entry yet.
+ * Represents a lore entry discovered by the player in the game world.
+ * @property id - The unique identifier for the lore entry.
+ * @property title - The title displayed in the lore menu.
+ * @property content - The main text content of the lore entry.
+ * @property discovered - Whether the player has found this lore entry yet.
  */
 export interface LoreEntry {
   id: string;
@@ -35,16 +38,16 @@ export interface LoreEntry {
 
 /**
  * Represents an option presented to the player during dialogue.
- * @property text The text displayed for the option.
- * @property action An optional callback function to execute when selected.
- * @property nextDialogue The next dialogue to display after this option.
- * @property questToAdd An optional quest to add upon selection.
- * @property questToComplete An optional quest ID to mark as complete.
- * @property flagToSet An optional flag to set (name and value).
- * @property requiredSkill An optional skill requirement to enable the option.
- * @property requiredTrait An optional trait requirement to enable the option.
- * @property questDependencies An optional list of quest IDs that must be completed.
- * @property closeOnSelect Whether the dialogue should close after selecting this option.
+ * @property text - The text displayed for the option.
+ * @property action - An optional callback function to execute when selected.
+ * @property nextDialogue - The next dialogue to display after this option.
+ * @property questToAdd - An optional quest to add upon selection.
+ * @property questToComplete - An optional quest ID to mark as complete.
+ * @property flagToSet - An optional flag to set (name and value).
+ * @property requiredSkill - An optional skill requirement to enable the option.
+ * @property requiredTrait - An optional trait requirement to enable the option.
+ * @property questDependencies - An optional list of quest IDs that must be completed.
+ * @property closeOnSelect - Whether the dialogue should close after selecting this option.
  */
 export interface DialogueOption {
   text: string;
@@ -59,12 +62,6 @@ export interface DialogueOption {
   closeOnSelect?: boolean;
 }
 
-/**
- * Represents a dialogue box in the game.
- * @property text The dialogue text to display.
- * @property options An optional array of dialogue choices for the player.
- * @property urgency Defines visual intensity (e.g. 1=normal, 2=loud, 3=screaming).
- */
 interface Dialogue {
   text: string;
   options?: DialogueOption[];
@@ -73,33 +70,36 @@ interface Dialogue {
 
 /**
  * Global application state for the game, managed by Zustand.
- * @property scene The currently active scene.
- * @property setScene Updates the current scene.
- * @property trait The player's selected trait.
- * @property setTrait Sets the player's trait.
- * @property skills The player's current skill levels.
- * @property increaseSkill Increases a specific skill by an amount.
- * @property dialogue The currently active dialogue object, or null if inactive.
- * @property setDialogue Sets or clears the active dialogue.
- * @property flags A record of boolean flags tracking game progress.
- * @property setFlag Sets a specific game flag to a boolean value.
- * @property inventory A list of item IDs currently held by the player.
- * @property addToInventory Adds an item ID to the inventory.
- * @property removeFromInventory Removes an item ID from the inventory.
- * @property hasItem Checks if the player has a specific item ID in their inventory.
- * @property combineItems Attempts to combine two item IDs into a new item.
- * @property activeQuests A list of currently active quest IDs.
- * @property completedQuests A list of completed quest IDs.
- * @property addQuest Adds a quest to the active quests list.
- * @property completeQuest Moves a quest from active to completed.
- * @property bandMood The current mood of the band (0-100).
- * @property updateBandMood Adjusts the band mood by a specific amount.
- * @property lore The dictionary of all lore entries in the game.
- * @property discoverLore Marks a specific lore entry ID as discovered.
- * @property showInventory Whether the inventory UI is currently visible.
- * @property setShowInventory Sets the visibility of the inventory UI.
- * @property joystickVisible Whether the virtual joystick is visible (for touch devices).
- * @property setJoystickVisible Sets the visibility of the virtual joystick.
+ * Tracks everything from player skills and inventory to active quests and current scene.
+ * @property scene - The currently active scene identifier.
+ * @property setScene - Updates the current scene.
+ * @property trait - The player's selected personality trait.
+ * @property setTrait - Sets the player's trait.
+ * @property skills - The player's current skill levels.
+ * @property increaseSkill - Increases a specific skill by an amount.
+ * @property dialogue - The currently active dialogue object, or null if inactive.
+ * @property setDialogue - Sets or clears the active dialogue.
+ * @property flags - A record of boolean flags tracking game progress.
+ * @property setFlag - Sets a specific game flag to a boolean value.
+ * @property inventory - A list of item IDs currently held by the player.
+ * @property addToInventory - Adds an item ID to the inventory.
+ * @property removeFromInventory - Removes an item ID from the inventory.
+ * @property hasItem - Checks if the player has a specific item ID in their inventory.
+ * @property combineItems - Attempts to combine two item IDs into a new item.
+ * @property quests - A list of active and completed quests.
+ * @property addQuest - Adds a new quest object to the quests array.
+ * @property completeQuest - Marks a specific quest ID as completed.
+ * @property bandMood - The current mood of the band (0-100).
+ * @property increaseBandMood - Increases or decreases the band mood.
+ * @property loreEntries - The dictionary of all lore entries in the game.
+ * @property discoverLore - Marks a specific lore entry ID as discovered.
+ * @property playerPos - The player's 3D coordinates [x, y, z].
+ * @property setPlayerPos - Updates the player's coordinates.
+ * @property isPaused - Indicates whether the game logic is paused.
+ * @property setPaused - Sets the pause state.
+ * @property cameraShake - The intensity of the camera shake effect.
+ * @property setCameraShake - Updates the camera shake intensity.
+ * @property resetGame - Resets the entire game state to defaults.
  */
 interface GameState {
   scene: Scene;
@@ -287,25 +287,9 @@ const initialState = {
 };
 
 /**
- * #1: UPDATES
- * - Integrated "Talking Amp's Existential Crisis" quest in Proberaum.
- * - Integrated "Ghostly Roadie's Lost Recipe" quest in TourBus.
- * - Added Geister-Drink item combination.
- * - Added Rostiges Plektrum item.
- * - Added cosmic_echo and forgotten_lore quest flags and quests.
- * - Added trait-exclusive interaction flags (proberaumPosterVisionary, tourbusAmpTechnician).
- * - Expanded Trait system: Added 'Mystic', 'Performer', 'Cynic'.
- * 
- * #2: NEXT STEPS & IDEAS
- * - Expand questlines with branching outcomes.
- * - Refine NPC dialogue and lore.
- * - Introduce scene-specific quests for remaining scenes.
- * - Integrate character traits/skills deeper into dialogue.
- * 
- * #3: ERRORS & SOLUTIONS
- * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
+ * The Zustand hook for accessing and mutating the global game state.
+ * Automatically persists the state to localStorage.
  */
-
 export const useStore = create<GameState>()(
   persist(
     (set, get) => ({

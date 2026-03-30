@@ -25,8 +25,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 /**
- * React component that renders the Backstage UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * Renders the 3D scene environment and logic for Backstage.
+ * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function Backstage() {
   const addToInventory = useStore((state) => state.addToInventory);

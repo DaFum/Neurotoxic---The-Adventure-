@@ -23,8 +23,9 @@
 import { Game } from './components/Game';
 
 /**
- * React component that renders the App UI element or 3D scene entity.
- * @returns Output from the function/method.
+ * The root component of the application.
+ * Composes the 3D Game view, 2D UI overlay, Virtual Joystick, and Interaction Managers.
+ * @returns The full application element tree.
  */
 export default function App() {
   return <Game />;
