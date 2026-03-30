@@ -72,7 +72,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Skill: Social 7): Ego-Management-Plan (+20 BandMood, setzt `mariusEgoStrategy`).
         * Standard: "Bleib einfach cool" (kein Effekt).
         * *Nach Erstkontakt (BandMood > 50):*
-            * Zweig A (Trait: Diplomat): "Du bist der Frontmann" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
+            * Zweig A (Trait: Diplomat): "Marius, wie geht es dir wirklich? [Diplomat]" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
             * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos).
             * Standard: "Bereit für den Gig?" (kein Effekt).
     * *Ohne Bier:* Fordert Bier.
@@ -108,7 +108,6 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
 * **Feedback-Monitor:**
     * *Initial:* Fragt nach dem Quanten-Kabel (setzt `feedbackMonitorTalked`, Quest hinzugefügt: `feedback_monitor`).
-    * *Nach Erstkontakt (`feedbackMonitorTalked` gesetzt), wenn `ampSentient` gesetzt:* "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, startet Quest). **Option erscheint erst nach dem ersten Gespräch.**
     * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`, entfernt Quanten-Kabel).
 
 ---
@@ -255,6 +254,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Item (Industrie-Talisman):* "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
     * *Item (Verbotenes Riff):* "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
     * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss: `void`) ODER 432Hz (+10 BandMood, Quest-Abschluss: `void`).
+        * *Spezial (Trait: Mystic, Item: Resonanz-Kristall):* "Betanke ihn mit der Frequenz des Resonanz-Kristalls." (+40 BandMood, setzt `tankwart_fuel_quest_started`, Quest-Abschluss: `void`, entfernt Dunkle Materie).
     * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Auf das Echo ansprechen (+15 BandMood, **Lore:** `cosmic_echo_decoded`, setzt `tankwartPhilosophy`).
     * *Standard-Dialog:*
         * "Nur Treibstoff" (kein Mood-Effekt).

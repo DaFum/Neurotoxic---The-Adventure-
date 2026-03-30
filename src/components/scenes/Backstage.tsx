@@ -33,8 +33,6 @@ export function Backstage() {
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const hasItem = useStore((state) => state.hasItem);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
-  const skills = useStore((state) => state.skills);
-  const trait = useStore((state) => state.trait);
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -45,6 +43,17 @@ export function Backstage() {
       }
     };
   }, []);
+
+  const ritualActionWrapper = (mood: number, skillName: "chaos"|"social"|"technical"|null, skillIncrease: number, dialogueText: string) => {
+    useStore.getState().setDialogue(dialogueText);
+    useStore.getState().setFlag('backstageRitualPerformed', true);
+    useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+    useStore.getState().completeQuest('backstage_ritual');
+    useStore.getState().increaseBandMood(mood);
+    if (skillName) {
+      useStore.getState().increaseSkill(skillName, skillIncrease);
+    }
+  };
 
   return (
     <>
@@ -349,18 +358,17 @@ export function Backstage() {
             const options: DialogueOption[] = [
               { text: 'Noch nicht.', action: () => useStore.getState().setDialogue('Monitor: "BZZZT. Beeil dich. Das Rauschen wird lauter."') }
             ];
-            if (!store.flags.feedbackMonitorBackstageQuestStarted) {
-              options.unshift({ text: 'Wie kann ich dir helfen?', action: () => {
-                useStore.getState().setDialogue('Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."');
-                useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
-                useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
-              }});
-            }
             if (store.flags.ampSentient && !store.flags.feedbackMonitorBackstageQuestStarted) {
               options.unshift({ text: 'Der Amp hat mir von dir erzählt.', action: () => {
                 useStore.getState().setDialogue('Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."');
                 useStore.getState().increaseBandMood(25);
                 useStore.getState().increaseSkill('technical', 5);
+                useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
+                useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
+              }});
+            } else if (!store.flags.feedbackMonitorBackstageQuestStarted) {
+              options.unshift({ text: 'Wie kann ich dir helfen?', action: () => {
+                useStore.getState().setDialogue('Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."');
                 useStore.getState().setFlag('feedbackMonitorBackstageQuestStarted', true);
                 useStore.getState().addQuest('feedback_monitor_backstage', 'Finde den Verstärker-Schaltplan für den Feedback-Monitor');
               }});
@@ -686,35 +694,16 @@ export function Backstage() {
                 text: 'Manager: "Zeit für unser Ritual. Lasst uns die Energien bündeln."',
                 options: [
                    { text: 'Kosmisches Ritual. [Mystic]', requiredTrait: 'Mystic', action: () => {
-                      useStore.getState().setDialogue('Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(35);
-                      useStore.getState().increaseSkill('chaos', 5);
+                      ritualActionWrapper(35, 'chaos', 5, 'Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.');
                    }},
                    { text: 'Showmanship Ritual. [Performer]', requiredTrait: 'Performer', action: () => {
-                      useStore.getState().setDialogue('Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(30);
-                      useStore.getState().increaseSkill('social', 5);
+                      ritualActionWrapper(30, 'social', 5, 'Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!');
                    }},
                    { text: 'Frequenz-Anpassung. [Technician]', requiredTrait: 'Technician', action: () => {
-                      useStore.getState().setDialogue('Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(25);
-                      useStore.getState().increaseSkill('technical', 5);
+                      ritualActionWrapper(25, 'technical', 5, 'Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.');
                    }},
                    { text: 'Einfacher Gruppen-Chant.', action: () => {
-                      useStore.getState().setDialogue('Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"');
-                      useStore.getState().setFlag('backstageRitualPerformed', true);
-                      useStore.getState().addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
-                      useStore.getState().completeQuest('backstage_ritual');
-                      useStore.getState().increaseBandMood(15);
+                      ritualActionWrapper(15, null, 0, 'Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"');
                    }}
                 ]
              });

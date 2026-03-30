@@ -30,6 +30,17 @@ export function VoidStation() {
   const hasItem = useStore((state) => state.hasItem);
   const discoverLore = useStore((state) => state.discoverLore);
 
+  const bassistActionWrapper = (mood: number, skillName: "chaos"|"social"|"technical", skillIncrease: number, dialogueText: string) => {
+    useStore.getState().setDialogue(dialogueText);
+    useStore.getState().setFlag('bassist_contacted', true);
+    useStore.getState().setFlag('voidBassistSpoken', true);
+    useStore.getState().increaseBandMood(mood);
+    useStore.getState().discoverLore('bassist_wahrheit');
+    useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
+    useStore.getState().completeQuest('bassist_mystery');
+    useStore.getState().increaseSkill(skillName, skillIncrease);
+  };
+
   return (
     <>
       <color attach="background" args={['#1a2340']} />
@@ -179,7 +190,7 @@ export function VoidStation() {
             return;
           }
 
-          if (trait === 'Mystic') {
+          if (trait === 'Mystic' && !flags.ghostTrustEarned) {
             setDialogue({
               text: 'Tankwart: "Deine Aura... sie schwingt in Frequenzen, die ich seit Äonen nicht mehr gespürt habe. Du bist ein Wanderer zwischen den Welten. Was suchst du in der Leere?"',
               options: [
@@ -250,7 +261,7 @@ export function VoidStation() {
               : 'Tankwart: "Die Leere ist gesättigt. Eure Reise durch den Lärm kann fortgesetzt werden. Vergesst nicht: Stille ist der Feind."');
           } else if (hasItem('Dunkle Materie')) {
             const hasKristall = useStore.getState().hasItem('Resonanz-Kristall');
-            const options = [
+            const options: DialogueOption[] = [
               { text: '440Hz - Standard Industrial Power.', action: () => {
                 useStore.getState().setDialogue('Tankwart: "Eine solide Wahl. Der Lärm wird mächtig sein und die Wände der Realität einreißen."');
                 useStore.getState().removeFromInventory('Dunkle Materie');
@@ -268,7 +279,7 @@ export function VoidStation() {
             ];
 
             if (hasKristall) {
-              const mysticOption: any = { text: 'Betanke ihn mit der Frequenz des Resonanz-Kristalls. [Mystic]', requiredTrait: 'Mystic', action: () => {
+              const mysticOption: DialogueOption = { text: 'Betanke ihn mit der Frequenz des Resonanz-Kristalls. [Mystic]', requiredTrait: 'Mystic', action: () => {
                 useStore.getState().setDialogue('Tankwart: "Die Frequenz von 1982... Du hast sie gefunden! Der Van wird nicht fahren, er wird DURCH die Realität schneiden. Salzgitter wird niemals wieder dasselbe sein."');
                 useStore.getState().removeFromInventory('Dunkle Materie');
                 useStore.getState().setFlag('voidRefueled', true);
@@ -376,44 +387,16 @@ export function VoidStation() {
               text: 'Eine geisterhafte Gestalt zupft an einem vier-saitigen Instrument aus purer Energie. Bassist: "Die Frequenz... sie ist hier so laut. Ich kann nicht zurück."',
               options: [
                 { text: 'Die Band vermisst dich. [Social 8]', requiredSkill: { name: 'social', level: 8 }, action: () => {
-                  useStore.getState().setDialogue('Bassist: "Sie vermissen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."');
-                  useStore.getState().setFlag('bassist_contacted', true);
-                  useStore.getState().setFlag('voidBassistSpoken', true);
-                  useStore.getState().increaseBandMood(25);
-                  useStore.getState().discoverLore('bassist_wahrheit');
-                  useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
-                  useStore.getState().completeQuest('bassist_mystery');
-                  useStore.getState().increaseSkill('social', 3);
+                  bassistActionWrapper(25, 'social', 3, 'Bassist: "Sie vermissen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."');
                 }},
                 { text: 'Ich kann deine Frequenz messen. [Technical 8]', requiredSkill: { name: 'technical', level: 8 }, action: () => {
-                  useStore.getState().setDialogue('Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"');
-                  useStore.getState().setFlag('bassist_contacted', true);
-                  useStore.getState().setFlag('voidBassistSpoken', true);
-                  useStore.getState().increaseBandMood(50);
-                  useStore.getState().discoverLore('bassist_wahrheit');
-                  useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
-                  useStore.getState().completeQuest('bassist_mystery');
-                  useStore.getState().increaseSkill('technical', 3);
+                  bassistActionWrapper(50, 'technical', 3, 'Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"');
                 }},
                 { text: 'Ich höre deine Melodie. [Mystic]', requiredTrait: 'Mystic', action: () => {
-                  useStore.getState().setDialogue('Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."');
-                  useStore.getState().setFlag('bassist_contacted', true);
-                  useStore.getState().setFlag('voidBassistSpoken', true);
-                  useStore.getState().increaseBandMood(40);
-                  useStore.getState().discoverLore('bassist_wahrheit');
-                  useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
-                  useStore.getState().completeQuest('bassist_mystery');
-                  useStore.getState().increaseSkill('chaos', 3);
+                  bassistActionWrapper(40, 'chaos', 3, 'Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."');
                 }},
                 { text: 'Ich sehe dich zwischen den Dimensionen. [Visionary]', requiredTrait: 'Visionary', action: () => {
-                  useStore.getState().setDialogue('Bassist: "Du siehst das ganze Bild... Ich bin nicht verloren, ich bin das Fundament. Ich werde den Gig in Salzgitter stützen."');
-                  useStore.getState().setFlag('bassist_contacted', true);
-                  useStore.getState().setFlag('voidBassistSpoken', true);
-                  useStore.getState().increaseBandMood(40);
-                  useStore.getState().discoverLore('bassist_wahrheit');
-                  useStore.getState().addQuest('bassist_mystery', 'Erforsche das Geheimnis des schwebenden Bassisten');
-                  useStore.getState().completeQuest('bassist_mystery');
-                  useStore.getState().increaseSkill('chaos', 3);
+                  bassistActionWrapper(40, 'chaos', 3, 'Bassist: "Du siehst das ganze Bild... Ich bin nicht verloren, ich bin das Fundament. Ich werde den Gig in Salzgitter stützen."');
                 }},
                 { text: 'Ich lass dich besser in Ruhe.', action: () => {
                   useStore.getState().setDialogue('Bassist: "Die Frequenzen... so viele Frequenzen..."');

@@ -387,7 +387,7 @@ export function Proberaum() {
                   setDialogue('Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."');
                   increaseBandMood(10);
                 }},
-                ...(!useStore.getState().flags.matzePerformerTalk ? [{
+                ...(!currentState.flags.matzePerformerTalk ? [{
                   text: 'Zeig mir, wie du die Crowd liest. [Performer]',
                   requiredTrait: 'Performer' as const,
                   action: () => {
@@ -397,7 +397,7 @@ export function Proberaum() {
                     useStore.getState().increaseSkill('social', 3);
                   }
                 }] as DialogueOption[] : []),
-                ...(!useStore.getState().flags.mariusEgoStrategy ? [{
+                ...(!currentState.flags.mariusEgoStrategy ? [{
                   text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
                   requiredTrait: 'Cynic' as const,
                   action: () => {
@@ -516,7 +516,6 @@ export function Proberaum() {
               return;
             }
             useStore.getState().setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
-            return;
           }
 
           if (currentFlags.larsDrumPhilosophy && !currentFlags.larsRhythmPact) {
@@ -575,7 +574,6 @@ export function Proberaum() {
                 { text: 'Ein andermal.', action: () => useStore.getState().setDialogue('Lars: "Dann trommle ich eben alleine weiter."') }
               ]
             });
-            return;
           }
 
           if (hasBeer && !currentFlags.gaveBeerToLars) {
