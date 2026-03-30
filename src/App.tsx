@@ -22,6 +22,11 @@
 
 import { Game } from './components/Game';
 
+/**
+ * The root component of the application.
+ * Composes the 3D Game view, 2D UI overlay, Virtual Joystick, and Interaction Managers.
+ * @returns The full application element tree.
+ */
 export default function App() {
   return <Game />;
 }

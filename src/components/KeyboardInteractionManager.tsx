@@ -14,6 +14,13 @@ interface KeyboardInteractionContextValue {
 
 const KeyboardInteractionContext = createContext<KeyboardInteractionContextValue | null>(null);
 
+/**
+ * KeyboardInteractionProvider manages keyboard interactions for registered interactable elements.
+ * It listens for the 'E' key and triggers the closest interactable component within range.
+ * @param props - The props for the provider component.
+ * @param props.children - Child components that may use the keyboard interaction context.
+ * @returns The Context Provider that wraps the child components.
+ */
 export function KeyboardInteractionProvider({ children }: { children: ReactNode }) {
   const registryRef = useRef(new Map<string, () => InteractableInfo | null>());
 
@@ -53,6 +60,12 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
   );
 }
 
+/**
+ * Provides access to the keyboard interaction registry.
+ * It allows components to register or unregister interactable elements.
+ * @returns An object with `register` and `unregister` methods.
+ * @throws {Error} Throws if called outside of a KeyboardInteractionProvider.
+ */
 export function useKeyboardInteraction() {
   const ctx = useContext(KeyboardInteractionContext);
   if (!ctx) throw new Error('useKeyboardInteraction must be used within KeyboardInteractionProvider');

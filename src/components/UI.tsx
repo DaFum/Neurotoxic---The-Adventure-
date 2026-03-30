@@ -33,6 +33,11 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { audio } from '../audio';
 
+/**
+ * Renders the 2D overlay user interface for the game.
+ * Manages dialogue boxes, inventory screens, trait selection, lore menu, and notifications.
+ * @returns A 2D DOM tree overlaying the 3D canvas.
+ */
 export function UI() {
   const dialogue = useStore((state) => state.dialogue);
   const setDialogue = useStore((state) => state.setDialogue);

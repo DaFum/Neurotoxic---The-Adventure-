@@ -29,6 +29,20 @@ interface InteractableProps {
   idleType?: 'headbang' | 'tap' | 'sway';
 }
 
+/**
+ * A reusable component that makes a 3D object in the world interactable by the player.
+ * It tracks the player's distance, displays a prompt when in range, and triggers a callback
+ * when the interaction key/button is pressed.
+ * @param props - The properties object.
+ * @param props.position - The 3D coordinates [x,y,z] where the interactable is located.
+ * @param props.emoji - The text or emoji to display floating above the interactable.
+ * @param props.name - The descriptive name shown in the UI prompt.
+ * @param props.onInteract - The callback function executed when the player interacts.
+ * @param props.scale - Optional scale multiplier for the 3D model.
+ * @param props.isBandMember - Optional flag indicating if this is a band member (enables idle animations).
+ * @param props.idleType - The type of idle animation to play if it is a band member.
+ * @returns A 3D group containing the collision mesh and visual label.
+ */
 export function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);

@@ -13,6 +13,11 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { audio } from '../audio';
 
+/**
+ * A headless component that manages global background events and timers.
+ * Handles tasks like periodically ticking down the band's mood over time.
+ * @returns Null, as this component only performs side effects.
+ */
 export function WorldEvents() {
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);

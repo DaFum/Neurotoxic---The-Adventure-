@@ -24,6 +24,10 @@ import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
+/**
+ * Renders the 3D scene environment and logic for Backstage.
+ * @returns The 3D group containing scene interactables, NPCs, and boundaries.
+ */
 export function Backstage() {
   const addToInventory = useStore((state) => state.addToInventory);
   const setDialogue = useStore((state) => state.setDialogue);

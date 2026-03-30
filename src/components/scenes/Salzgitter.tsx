@@ -23,6 +23,10 @@ import { ContactShadows } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
+/**
+ * Renders the 3D scene environment and logic for Salzgitter.
+ * @returns The 3D group containing scene interactables, NPCs, and boundaries.
+ */
 export function Salzgitter() {
   const setDialogue = useStore((state) => state.setDialogue);
   const setFlag = useStore((state) => state.setFlag);

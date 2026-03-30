@@ -23,6 +23,10 @@ import { useRef, useEffect } from 'react';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
+/**
+ * Renders the 3D scene environment and logic for TourBus.
+ * @returns The 3D group containing scene interactables, NPCs, and boundaries.
+ */
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
