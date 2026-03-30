@@ -64,7 +64,6 @@ export function UI() {
     typeof window === 'undefined' ? false : window.innerWidth < 1280
   ));
 
-  const completedQuestIds = useMemo(() => new Set(quests.filter(q => q.status === 'completed').map(q => q.id)), [quests]);
   const openQuestCount = useMemo(() => quests.filter(q => q.status === 'active').length, [quests]);
   const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
   const loreCodexContainerRef = useRef<HTMLDivElement>(null);

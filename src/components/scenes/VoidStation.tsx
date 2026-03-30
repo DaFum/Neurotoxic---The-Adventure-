@@ -43,8 +43,7 @@ export function VoidStation() {
   useEffect(() => {
     addQuest('void', 'Betanke den Van mit dunkler Materie');
     addQuest('ego', 'Fange Marius\' entflohenes Ego ein');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [addQuest]);
 
   const bassistActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical", skillIncrease: number, dialogueText: string) => {
     setDialogue(dialogueText);

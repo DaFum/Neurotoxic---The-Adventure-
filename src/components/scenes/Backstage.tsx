@@ -51,20 +51,21 @@ export function Backstage() {
         exitTimeoutRef.current = null;
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
+  }, [addQuest]);
 
   const ritualActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical"|null, skillIncrease: number, dialogueText: string) => {
     setDialogue(dialogueText);
     setFlag('backstageRitualPerformed', true);
-    startAndFinishQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+    // addQuest is idempotent; completeQuest then transitions the quest regardless of
+    // whether it was already registered as 'active' (via the ritual-circle discovery path)
+    // or not yet registered at all.
+    addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+    completeQuest('backstage_ritual');
     increaseBandMood(mood);
     if (skillName) {
       increaseSkill(skillName, skillIncrease);
     }
-  }, [setDialogue, setFlag, startAndFinishQuest, increaseBandMood, increaseSkill]);
+  }, [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood, increaseSkill]);
 
   return (
     <>
