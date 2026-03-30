@@ -21,11 +21,13 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
+import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 export function Kaminstube() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
+  const removeFromInventory = useStore((state) => state.removeFromInventory);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
@@ -615,7 +617,7 @@ export function Kaminstube() {
       />
 
       {/* Items */}
-      {!hasItem('Röhre') && (
+      {!hasItem('Röhre') && !flags.ampFixed && (
         <Interactable
           position={[8, 0.5, 2]}
           emoji="🔌"
@@ -637,6 +639,11 @@ export function Kaminstube() {
           scale={1.2}
           onInteract={() => {
             if (hasItem('Röhre')) {
+              const state = useStore.getState();
+              if (!state.quests.find((q) => q.id === 'amp')) {
+                addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
+              }
+              removeFromInventory('Röhre');
               setFlag('ampFixed', true);
               completeQuest('amp');
               increaseBandMood(30);
@@ -654,8 +661,12 @@ export function Kaminstube() {
         emoji="🎹"
         name="Kaputter Drum-Computer"
         onInteract={() => {
-          setDialogue('Ein alter TR-808, der aussieht, als wäre er in einem Hochofen geschmolzen. Er gibt nur noch ein rhythmisches Klacken von sich, das seltsam beruhigend wirkt. Lars: "Das ist das Herzstück der ersten NEUROTOXIC-Platte. Er ist gestorben, als wir versuchten, ihn an ein Atomkraftwerk anzuschließen."');
-          increaseBandMood(10);
+          const store = useStore.getState();
+          store.setDialogue('Ein alter TR-808, der aussieht, als wäre er in einem Hochofen geschmolzen. Er gibt nur noch ein rhythmisches Klacken von sich, das seltsam beruhigend wirkt. Lars: "Das ist das Herzstück der ersten NEUROTOXIC-Platte. Er ist gestorben, als wir versuchten, ihn an ein Atomkraftwerk anzuschließen."');
+          if (!store.flags.kaminstubeDrumLoreHeard) {
+            store.increaseBandMood(10);
+            store.setFlag('kaminstubeDrumLoreHeard', true);
+          }
         }}
       />
 
@@ -707,6 +718,8 @@ export function Kaminstube() {
           }}
         />
       )}
+
+      <SceneEnvironmentSetpieces variant="kaminstube" />
 
       <Player bounds={{ x: [-14, 14], z: [-7, 7] }} />
       <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={20} blur={2} far={10} />

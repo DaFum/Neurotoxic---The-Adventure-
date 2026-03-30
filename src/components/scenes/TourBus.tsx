@@ -21,6 +21,7 @@ import { Player } from '../Player';
 import { Sparkles, Float, Text } from '@react-three/drei';
 import { useRef, useEffect } from 'react';
 import { RigidBody } from '@react-three/rapier';
+import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
@@ -892,6 +893,8 @@ export function TourBus() {
           NEUROTOXIC TOUR 2026
         </Text>
       </Float>
+
+      <SceneEnvironmentSetpieces variant="tourbus" />
 
       <Player bounds={{ x: [-5.2, 5.2], z: [-4.6, 4.6] }} />
     </>

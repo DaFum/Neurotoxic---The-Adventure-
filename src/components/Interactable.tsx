@@ -17,6 +17,7 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
+import { useKeyboardInteraction } from './KeyboardInteractionManager';
 
 interface InteractableProps {
   position: [number, number, number];
@@ -32,14 +33,19 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);
   const labelSpriteRef = useRef<THREE.Sprite>(null);
+  const instanceIdRef = useRef(`interactable-${Math.random().toString(36).slice(2, 10)}`);
+  const handleInteractRef = useRef<() => void>(() => {});
   const emojiTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
+  const distanceRef = useRef(Infinity);
+  const inRangeRef = useRef(false);
   const [hovered, setHovered] = useState(false);
   const [inRange, setInRange] = useState(false);
   const [interacted, setInteracted] = useState(false);
+  const { register, unregister } = useKeyboardInteraction();
   const isPaused = useStore((state) => state.isPaused);
   const bandMood = useStore((state) => state.bandMood);
   const setCameraShake = useStore((state) => state.setCameraShake);
@@ -131,7 +137,7 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
 
     ctx.fillStyle = inRange ? '#b3b3b3' : '#8b0000';
     ctx.font = '600 22px "JetBrains Mono", monospace';
-    ctx.fillText(inRange ? '[ CLICK TO INTERACT ]' : '[ MOVE CLOSER ]', canvas.width / 2, 90);
+    ctx.fillText(inRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', canvas.width / 2, 90);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -170,6 +176,15 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     };
   }, []);
 
+  useEffect(() => {
+    const id = instanceIdRef.current;
+    register(id, () => {
+      if (!inRangeRef.current) return null;
+      return { distance: distanceRef.current, trigger: handleInteractRef.current };
+    });
+    return () => unregister(id);
+  }, [register, unregister]);
+
   useFrame((state, delta) => {
     if (isPaused) return;
 
@@ -181,6 +196,8 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
 
     const dist = playerPosVector.distanceTo(targetPosVector);
     const inRangeNow = dist < 4.0;
+    distanceRef.current = dist;
+    inRangeRef.current = inRangeNow;
     setInRange((prev) => (prev === inRangeNow ? prev : inRangeNow));
 
     if (ref.current) {
@@ -224,16 +241,19 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   });
 
   const handleInteract = () => {
-    if (inRange && !isPaused) {
+    const { isPaused: currentIsPaused, dialogue: currentDialogue } = useStore.getState();
+    if (currentDialogue) return;
+    if (inRangeRef.current && !currentIsPaused) {
       audio.playInteraction();
       setCameraShake(0.2);
       onInteract();
       setInteracted(true);
       setTimeout(() => setInteracted(false), 500);
-    } else if (!isPaused) {
+    } else if (!currentIsPaused) {
       useStore.getState().setDialogue('OUT_OF_RANGE: Move closer to target.');
     }
   };
+  handleInteractRef.current = handleInteract;
 
   const handleDomInteract = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
@@ -284,9 +304,20 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
         >
           <spriteMaterial map={emojiTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
         </sprite>
-        {hovered && (
-          <sprite ref={labelSpriteRef} position={[0, 1.35 * scale, 0]} scale={[2.8 * scale, 0.7 * scale, 1]} renderOrder={31}>
-            <spriteMaterial map={labelTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
+        {(hovered || inRange) && (
+          <sprite
+            ref={labelSpriteRef}
+            position={[0, 1.35 * scale, 0]}
+            scale={[hovered ? 2.8 * scale : 2.55 * scale, hovered ? 0.7 * scale : 0.64 * scale, 1]}
+            renderOrder={31}
+          >
+            <spriteMaterial
+              map={labelTextureRef.current ?? undefined}
+              transparent
+              opacity={hovered ? 1 : 0.9}
+              depthWrite={false}
+              depthTest={false}
+            />
           </sprite>
         )}
       </group>

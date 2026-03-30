@@ -22,6 +22,7 @@ import { Player } from '../Player';
 import { Stars, Float, Text, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
+import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 export function Backstage() {
   const addToInventory = useStore((state) => state.addToInventory);
@@ -820,6 +821,8 @@ export function Backstage() {
           }
         }}
       />
+
+      <SceneEnvironmentSetpieces variant="backstage" />
 
       <Player bounds={{ x: [-14, 14], z: [-9, 9] }} />
     </>

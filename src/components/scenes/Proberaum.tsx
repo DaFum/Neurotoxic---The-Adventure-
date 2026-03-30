@@ -21,6 +21,7 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
+import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 export function Proberaum() {
   const flags = useStore((state) => state.flags);
@@ -1006,6 +1007,19 @@ export function Proberaum() {
         />
       )}
 
+      {!hasItem('Lötkolben') && (
+        <Interactable
+          position={[8, 0.5, -1]}
+          emoji="🛠️"
+          name="Lötkolben"
+          scale={0.6}
+          onInteract={() => {
+            addToInventory('Lötkolben');
+            setDialogue('Ein alter Lötkolben. Nicht sicher, aber effektiv.');
+          }}
+        />
+      )}
+
       {!hasItem('Schrottmetall') && (
         <Interactable
           position={[10, 0.5, -2]}
@@ -1186,6 +1200,8 @@ export function Proberaum() {
           }}
         />
       )}
+
+      <SceneEnvironmentSetpieces variant="proberaum" />
 
       <Player bounds={{ x: [-14, 14], z: [-7, 7] }} />
       <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={20} blur={2} far={10} />

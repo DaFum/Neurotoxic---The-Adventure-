@@ -21,6 +21,7 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
+import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 
 export function Salzgitter() {
   const setDialogue = useStore((state) => state.setDialogue);
@@ -846,6 +847,7 @@ export function Salzgitter() {
             store.setDialogue('Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.');
             return;
           }
+          store.addQuest('final', 'Spiele das Finale in Salzgitter');
           store.completeQuest('final');
           store.setFlag('salzgitter_finalized', true);
 
@@ -886,6 +888,8 @@ export function Salzgitter() {
           }
         }}
       />
+
+      <SceneEnvironmentSetpieces variant="salzgitter" />
 
 
       <Player bounds={{ x: [-18, 18], z: [-9, 9] }} />
