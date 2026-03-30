@@ -12,7 +12,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
@@ -24,10 +24,19 @@ import { RigidBody } from '@react-three/rapier';
 
 export function Salzgitter() {
   const setDialogue = useStore((state) => state.setDialogue);
+  const setFlag = useStore((state) => state.setFlag);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const flags = useStore((state) => state.flags);
+
+  const startFanMovement = useCallback((dialogueText: string, moodIncrease: number) => {
+    setDialogue(dialogueText);
+    setFlag('fanMovement', true);
+    addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
+    completeQuest('fan_movement');
+    increaseBandMood(moodIncrease);
+  }, [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood]);
 
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
@@ -794,25 +803,13 @@ export function Salzgitter() {
           const options: DialogueOption[] = [];
 
           options.push({ text: 'Folgt mir! [Performer]', requiredTrait: 'Performer', action: () => {
-              useStore.getState().setDialogue('Du reißt die Arme hoch und beginnst einen Rhythmus. Der Fan stimmt ein, dann die Menge. Ein epischer Chor entsteht!');
-              useStore.getState().setFlag('fanMovement', true);
-              useStore.getState().addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-              useStore.getState().completeQuest('fan_movement');
-              useStore.getState().increaseBandMood(35);
+              startFanMovement('Du reißt die Arme hoch und beginnst einen Rhythmus. Der Fan stimmt ein, dann die Menge. Ein epischer Chor entsteht!', 35);
           }});
           options.push({ text: 'Lasst uns zusammen singen! [Social 8]', requiredSkill: { name: 'social', level: 8 }, action: () => {
-              useStore.getState().setDialogue('Ein Chor aus hunderten Kehlen beginnt das Intro eures größten Hits zu singen. Die Energie ist greifbar!');
-              useStore.getState().setFlag('fanMovement', true);
-              useStore.getState().addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-              useStore.getState().completeQuest('fan_movement');
-              useStore.getState().increaseBandMood(30);
+              startFanMovement('Ein Chor aus hunderten Kehlen beginnt das Intro eures größten Hits zu singen. Die Energie ist greifbar!', 30);
           }});
           options.push({ text: 'Wir sind alle eins mit der Musik. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
-              useStore.getState().setDialogue('Der Fan weint vor Ergriffenheit. "Ja... wir sind eins!" Er reicht die Botschaft an die Menge weiter.');
-              useStore.getState().setFlag('fanMovement', true);
-              useStore.getState().addQuest('fan_movement', 'Starte eine Fan-Bewegung beim Konzert');
-              useStore.getState().completeQuest('fan_movement');
-              useStore.getState().increaseBandMood(25);
+              startFanMovement('Der Fan weint vor Ergriffenheit. "Ja... wir sind eins!" Er reicht die Botschaft an die Menge weiter.', 25);
           }});
 
           if (!store.flags.gaveDiplomatSouvenir) {

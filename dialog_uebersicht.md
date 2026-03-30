@@ -72,7 +72,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Skill: Social 7): Ego-Management-Plan (+20 BandMood, setzt `mariusEgoStrategy`).
         * Standard: "Bleib einfach cool" (kein Effekt).
         * *Nach Erstkontakt (BandMood > 50):*
-            * Zweig A (Trait: Diplomat): "Du bist der Frontmann" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
+            * Zweig A (Trait: Diplomat): "Marius, wie geht es dir wirklich? [Diplomat]" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
             * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos).
             * Standard: "Bereit für den Gig?" (kein Effekt).
     * *Ohne Bier:* Fordert Bier.
@@ -108,7 +108,6 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Zweig: "Schaltkreise füttern" (+25 BandMood, +10 Chaos, Erhalt: Quanten-Kabel).
 * **Feedback-Monitor:**
     * *Initial:* Fragt nach dem Quanten-Kabel (setzt `feedbackMonitorTalked`, Quest hinzugefügt: `feedback_monitor`).
-    * *Nach Erstkontakt (`feedbackMonitorTalked` gesetzt), wenn `ampSentient` gesetzt:* "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, startet Quest). **Option erscheint erst nach dem ersten Gespräch.**
     * *Quest (Item: Quanten-Kabel):* Kabel übergeben (+20 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor`, entfernt Quanten-Kabel).
 
 ---
@@ -190,7 +189,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Feedback-Monitor:**
     * *Erstkontakt ("Hallo?"):* Setzt `feedbackMonitorBackstageTalked` (+5 BandMood). Innerer Dialog zeigt "Wie kann ich helfen?" → setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`.
-    * *Nach Erstkontakt, Quest noch nicht gestartet:* "Wie kann ich dir helfen?" startet Quest `feedback_monitor_backstage` (setzt `feedbackMonitorBackstageQuestStarted`). **Verhindert permanente Quest-Blockade.**
+    * *Nach Erstkontakt (`feedbackMonitorBackstageTalked` gesetzt), wenn `ampSentient` gesetzt & Quest noch nicht gestartet:* Option "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`). **Diese Option hat Vorrang gegenüber "Wie kann ich dir helfen?".**
+    * *Nach Erstkontakt, Quest noch nicht gestartet (kein `ampSentient`):* "Wie kann ich dir helfen?" startet Quest `feedback_monitor_backstage` (setzt `feedbackMonitorBackstageQuestStarted`). **Verhindert permanente Quest-Blockade.**
     * *Quest gestartet, Item (Verstärker-Schaltplan):*
         * Zweig A (Skill: Technical 5): "Optimierte Frequenzen" (+30 BandMood, +5 Technical, Quest-Abschluss: `feedback_monitor_backstage`, setzt `feedbackMonitorBackstageQuestCompleted`).
         * Zweig B (Trait: Visionary): "Transzendente Frequenzen" (+40 BandMood, +5 Chaos, Quest-Abschluss: `feedback_monitor_backstage`, setzt `feedbackMonitorBackstageQuestCompleted`).
@@ -248,13 +248,14 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Kosmischer Tankwart:**
     * *Wenn ghostTrustEarned gesetzt:* "Wir spielen für ihn in Salzgitter." (+20 BandMood, setzt `tankwartBargain`).
-    * *Spezial (Trait: Mystic):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere).
+    * *Spezial (Trait: Mystic, einmalig — `tankwartMysticDone` noch nicht gesetzt):* "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere, setzt `tankwartMysticDone`). Wird vor `ghostTrustEarned`-Zweig geprüft, sofern `ghostTrustEarned` noch nicht gesetzt ist. **Setzt NICHT `tankwartPhilosophy`** — ermöglicht Mystic-Spielern auch nach diesem Dialog das Betanken des Vans.
     * *Fallback-Text:* Wenn `backstageRitualPerformed` gesetzt, reagiert der Tankwart mit einem ritualbewussten Begrüßungstext statt des Standard-Textes.
     * *Spezial (Trait: Cynic, einmalig):* "Das ist doch alles Quatsch. Gib mir Sprit." (+15 BandMood, +3 Chaos, setzt `tankwartBargain`).
     * *Spezial (Trait: Performer, einmalig):* "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social, setzt `tankwartBargain`).
     * *Item (Industrie-Talisman):* "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
     * *Item (Verbotenes Riff):* "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
     * *Item (Dunkle Materie):* Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss: `void`) ODER 432Hz (+10 BandMood, Quest-Abschluss: `void`).
+        * *Spezial (Trait: Mystic, Item: Resonanz-Kristall):* "Betanke ihn mit der Frequenz des Resonanz-Kristalls." (+40 BandMood, setzt `tankwart_fuel_quest_started`, Quest-Abschluss: `void`, entfernt Dunkle Materie).
     * *Quest-Abhängigkeit (cosmic_echo abgeschlossen):* Auf das Echo ansprechen (+15 BandMood, **Lore:** `cosmic_echo_decoded`, setzt `tankwartPhilosophy`).
     * *Standard-Dialog:*
         * "Nur Treibstoff" (kein Mood-Effekt).

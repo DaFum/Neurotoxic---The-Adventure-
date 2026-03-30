@@ -387,7 +387,7 @@ export function Proberaum() {
                   setDialogue('Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."');
                   increaseBandMood(10);
                 }},
-                ...(!useStore.getState().flags.matzePerformerTalk ? [{
+                ...(!currentState.flags.matzePerformerTalk ? [{
                   text: 'Zeig mir, wie du die Crowd liest. [Performer]',
                   requiredTrait: 'Performer' as const,
                   action: () => {
@@ -397,7 +397,7 @@ export function Proberaum() {
                     useStore.getState().increaseSkill('social', 3);
                   }
                 }] as DialogueOption[] : []),
-                ...(!useStore.getState().flags.mariusEgoStrategy ? [{
+                ...(!currentState.flags.mariusEgoStrategy ? [{
                   text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
                   requiredTrait: 'Cynic' as const,
                   action: () => {
