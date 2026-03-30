@@ -60,7 +60,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Rhythmus-Pakt (Nachdem larsDrumPhilosophy gesetzt wurde):*
         * [Brutalist]: Aggressiver Pakt (+25 BandMood, +5 Chaos, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
         * [Diplomat]: Harmonischer Pakt (+20 BandMood, +5 Social, Quest `rhythm_pact`, Lore `rhythm_pact`, setzt `larsRhythmPact`).
+        * *Item (Bier):* Bier geben (+20 BandMood, entfernt Bier, setzt `gaveBeerToLars`).
         * Standard: Bedenkzeit.
+    * *Nach Rhythmus-Pakt (`larsRhythmPact` gesetzt):*
+        * *Item (Bier):* Bier geben (+20 BandMood, entfernt Bier, setzt `gaveBeerToLars`).
+        * Standard: "Der Pakt steht." (kein Effekt).
 * **Marius (Sänger):**
     * *Nach Bier (Wie bereitest du dich auf Salzgitter vor?):*
         * (Trait: Performer): Bühnenpräsenz-Coaching (+15 BandMood, +3 Social, setzt `mariusEgoStrategy`).
