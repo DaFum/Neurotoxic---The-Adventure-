@@ -1,7 +1,7 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, when, say } from '../shared/helpers';
 
-export function buildProberaumMariusDialogue(): Dialogue {
+export function buildProberaumMariusDialogue(): Dialogue | string {
   const store = game();
   const { flags, bandMood, hasItem, trait, skills } = store;
 

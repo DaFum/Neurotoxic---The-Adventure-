@@ -1,7 +1,7 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, say } from '../shared/helpers';
 
-export function buildProberaumWallCracksDialogue(): Dialogue {
+export function buildProberaumWallCracksDialogue(): Dialogue | string {
   return {
     text: 'Risse in der Wand. Sie bilden ein Muster, das an Schallwellen erinnert.',
     options: [
@@ -49,7 +49,7 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
   };
 }
 
-export function buildProberaumPuddleDialogue(): Dialogue {
+export function buildProberaumPuddleDialogue(): Dialogue | string {
   const store = game();
   if (store.hasItem('Mop')) {
     store.setFlag('waterCleaned', true);
@@ -61,7 +61,7 @@ export function buildProberaumPuddleDialogue(): Dialogue {
   }
 }
 
-export function buildProberaumAmpDialogue(): Dialogue {
+export function buildProberaumAmpDialogue(): Dialogue | string {
   const store = game();
   const { flags, hasItem } = store;
 
@@ -185,7 +185,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
   }
 }
 
-export function buildProberaumDrumMachineDialogue(): Dialogue {
+export function buildProberaumDrumMachineDialogue(): Dialogue | string {
   const store = game();
   const { flags, hasItem } = store;
 
@@ -266,7 +266,7 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
   }
 }
 
-export function buildProberaumMonitorDialogue(): Dialogue {
+export function buildProberaumMonitorDialogue(): Dialogue | string {
   const store = game();
   const { flags, hasItem } = store;
 

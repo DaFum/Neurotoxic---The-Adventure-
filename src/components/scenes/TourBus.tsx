@@ -18,6 +18,14 @@
 import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
+import {
+  buildTourbusMatzeDialogue,
+  buildTourbusMariusDialogue,
+  buildTourbusAmpDialogue,
+  buildTourbusHiddenStashDialogue,
+  buildTourbusGhostDialogue,
+  buildTourbusBandMeetingDialogue
+} from '../../dialogues/tourbus';
 import { Sparkles, Float, Text } from '@react-three/drei';
 import { useRef, useEffect } from 'react';
 import { RigidBody } from '@react-three/rapier';
@@ -260,131 +268,7 @@ export function TourBus() {
         name="Matze"
         idleType="sway"
         onInteract={() => {
-          if (bandMood < 20 && !hasItem('Repariertes Kabel') && !flags.tourbus_sabotage_discovered) {
-            setDialogue('Matze: "Lass mich in Ruhe. Dieses kaputte Kabel ist das Ende der Band."');
-            return;
-          }
-
-
-          if (hasItem('Repariertes Kabel') && !useStore.getState().quests.find(q => q.id === 'cable' && q.status === 'completed')) {
-            setDialogue({
-              text: 'Matze: "Hast du Angst vor Salzgitter?"',
-              options: [
-                {
-                  text: 'Ich sehe unseren Sieg. [Visionary]',
-                  requiredTrait: 'Visionary',
-                  consumeItems: ['Repariertes Kabel'],
-                  action: () => {
-                    setDialogue('Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen." (Kabel übergeben)');
-                    increaseBandMood(15);
-                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
-                  }
-                },
-                {
-                  text: 'Ich habe den Soundcheck analysiert. [Technical 5]',
-                  requiredSkill: { name: 'technical', level: 5 },
-                  consumeItems: ['Repariertes Kabel'],
-                  action: () => {
-                    setDialogue('Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält." (Kabel übergeben)');
-                    increaseBandMood(20);
-                    useStore.getState().increaseSkill('technical', 3);
-                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
-                  }
-                },
-                {
-                  text: 'Wir schaffen das zusammen. [Social 5]',
-                  requiredSkill: { name: 'social', level: 5 },
-                  consumeItems: ['Repariertes Kabel'],
-                  action: () => {
-                    setDialogue('Matze: "Zusammen... ja. Wir sind eine verdammte Einheit." (Kabel übergeben)');
-                    increaseBandMood(15);
-                    useStore.getState().increaseSkill('social', 3);
-                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
-                  }
-                },
-                {
-                  text: 'Ein bisschen schon.',
-                  consumeItems: ['Repariertes Kabel'],
-                  action: () => {
-                    setDialogue('Matze: "Gut. Angst hält uns wach." (Kabel übergeben)');
-                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
-                }},
-                {
-                  text: 'Lass uns die Bühne abreißen!',
-                  consumeItems: ['Repariertes Kabel'],
-                  action: () => {
-                    increaseBandMood(10);
-                    setDialogue('Matze: "Das ist die richtige Einstellung!" (Kabel übergeben)');
-                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
-                }}
-              ]
-            });
-            return;
-          }
-
-
-          if (flags.tourbus_sabotage_discovered && !flags.tourbus_matze_confession) {
-            if (flags.marius_tourbus_doubt) {
-              setDialogue({
-                text: 'Matze: "Das zerschnittene Kabel... okay, ich geb\'s ja zu. Irgendwas stimmt nicht."',
-                options: [
-                  {
-                    text: 'Matze, ich glaube Marius zweifelt an der Band. [Social 5]',
-                    requiredSkill: { name: 'social', level: 5 },
-                    action: () => {
-                      setDialogue('Matze: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..."');
-                      useStore.getState().setFlag('tourbus_matze_confession', true);
-                      useStore.getState().completeQuest('tourbus_saboteur');
-                      useStore.getState().increaseBandMood(10);
-                      useStore.getState().increaseSkill('social', 3);
-                    }
-                  },
-                  {
-                    text: 'Wer auch immer das war, kriegt eine Abreibung. [Brutalist]',
-                    requiredTrait: 'Brutalist',
-                    action: () => {
-                      setDialogue('Matze schaut ertappt weg und schweigt schuldbewusst.');
-                      useStore.getState().increaseBandMood(-5);
-                    }
-                  },
-                  { text: 'Wir finden den Schuldigen.', action: () => setDialogue('Matze: "Ja... genau. Wir suchen weiter."') }
-                ]
-              });
-            } else {
-              setDialogue('Matze: "Wer würde uns absichtlich sabotieren? Wir müssen Beweise finden."');
-            }
-            return;
-          }
-
-          if (bandMood < 30) {
-            setDialogue('Matze: "Alter, ich hab so schlechte Laune. Die Tour fängt ja super an... und mein Kabel ist auch noch im Eimer."');
-          } else {
-            setDialogue({
-              text: 'Matze: "Geht schon. Aber mein Kabel ist im Eimer. Hast du Klebeband?"',
-              options: [
-                { text: 'Ich suche danach.', action: () => {
-                    setDialogue('Matze: "Beeil dich, ohne Kabel kein Metal."');
-                    addQuest('cable', 'Repariere Matzes Kabel mit Klebeband und defektem Kabel');
-                }},
-                {
-                  text: 'Das Kabel wurde nicht gebrochen, es wurde durchtrennt. [Technical 5]',
-                  requiredSkill: { name: 'technical', level: 5 },
-                  action: () => {
-                    setDialogue('Matze: "Was?! Wer würde uns so sabotieren?!" Er sieht sehr geschockt aus.');
-                    useStore.getState().setFlag('tourbus_sabotage_discovered', true);
-                    useStore.getState().discoverLore('tourbus_saboteur');
-                    useStore.getState().increaseBandMood(20);
-                    useStore.getState().increaseSkill('technical', 5);
-                    useStore.getState().addQuest('tourbus_saboteur', 'Finde heraus, wer das Kabel sabotiert hat');
-                  }
-                },
-                { text: 'Vielleicht ist es Schicksal.', action: () => {
-                  setDialogue('Matze: "Schicksal? Das ist Sabotage! Such das Tape!"');
-                  increaseBandMood(-5);
-                }}
-              ]
-            });
-          }
+          useStore.getState().setDialogue(buildTourbusMatzeDialogue());
         }}
       />
 
@@ -394,68 +278,7 @@ export function TourBus() {
         name="Marius"
         idleType="headbang"
         onInteract={() => {
-          const hasEgo = hasItem('Marius Ego');
-          if (hasEgo) {
-            setDialogue({
-              text: 'Marius: "Ist das... mein Ego? Es fühlt sich so... klein an in deiner Tasche."',
-              options: [
-                { text: 'Es ist jetzt sicher.', action: () => {
-                  setDialogue('Marius: "Danke. Ich fühle mich wieder... vollständig. Und hungrig."');
-                  increaseBandMood(20);
-                }},
-                { text: 'Ich behalte es als Pfand.', action: () => {
-                  setDialogue('Marius: "Du bist grausam, Manager. Aber irgendwie respektiere ich das."');
-                  increaseBandMood(-10);
-                }}
-              ]
-            });
-          } else {
-            if (bandMood < 30) {
-              setFlag('marius_tourbus_doubt', true);
-              setDialogue({
-                text: 'Marius: "Ich bin ein Betrug. Ohne mein Ego bin ich nur ein Typ, der in ein Mikrofon schreit."',
-                options: [
-                  {
-                    text: 'Du brauchst kein Ego, um zu schreien. Zeig es ihnen! [Social 7]',
-                    requiredSkill: { name: 'social', level: 7 },
-                    action: () => {
-                      setDialogue('Marius: "Vielleicht... hast du recht. Die Kaminstube wird brennen!"');
-                      useStore.getState().increaseBandMood(10);
-                    }
-                  },
-                  {
-                    text: 'Die Band braucht dich, Marius. Bleib fokussiert. [Diplomat]',
-                    requiredTrait: 'Diplomat',
-                    action: () => {
-                      setDialogue('Marius: "Ich werde sie nicht im Stich lassen. Danke, Manager."');
-                      useStore.getState().increaseBandMood(15);
-                    }
-                  },
-                  { text: 'Dann hör auf zu jammern.', action: () => setDialogue('Marius: "Du verstehst mich nicht..."') }
-                ]
-              });
-            } else {
-              const moodText = bandMood > 60
-                ? 'Marius: "Die Energie im Bus ist fantastisch! Tangermünde wird beben!"'
-                : 'Marius: "Nächster Halt: Tangermünde! Bist du bereit für die Kaminstube?"';
-              setDialogue({
-                text: moodText,
-                options: [
-                  {
-                    text: 'Marius, dein Charisma funktioniert auch ohne Ego. [Performer]',
-                    requiredTrait: 'Performer',
-                    action: () => {
-                      setDialogue('Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"');
-                      useStore.getState().setFlag('marius_tourbus_doubt', false);
-                      useStore.getState().increaseBandMood(15);
-                      useStore.getState().increaseSkill('social', 3);
-                    }
-                  },
-                  { text: 'Wir sind auf dem Weg.', action: () => setDialogue('Marius: "Lass uns fahren."') }
-                ]
-              });
-            }
-          }
+          useStore.getState().setDialogue(buildTourbusMariusDialogue());
         }}
       />
 
@@ -467,47 +290,7 @@ export function TourBus() {
           emoji="📢"
           name="Band-Besprechung"
           onInteract={() => {
-            setDialogue({
-              text: 'Manager: "Zeit für eine kurze Band-Besprechung in der Mitte des Busses."',
-              options: [
-                {
-                  text: 'Vermittle zwischen den Spannungen. [Diplomat]',
-                  requiredTrait: 'Diplomat',
-                  action: () => {
-                    setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
-                    useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().increaseBandMood(30);
-                  }
-                },
-                {
-                  text: 'Reißt euch zusammen! [Brutalist]',
-                  requiredTrait: 'Brutalist',
-                  action: () => {
-                    setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
-                    useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().increaseBandMood(20);
-                  }
-                },
-                {
-                  text: 'Motivationsrede halten. [Performer]',
-                  requiredTrait: 'Performer',
-                  action: () => {
-                    setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
-                    useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().increaseBandMood(25);
-                  }
-                },
-                { text: 'Einfache Ansagen machen.', action: () => {
-                    setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
-                    useStore.getState().setFlag('tourbusBandMeeting', true);
-                    useStore.getState().startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
-                    useStore.getState().increaseBandMood(10);
-                }}
-              ]
-            });
+            useStore.getState().setDialogue(buildTourbusBandMeetingDialogue());
           }}
         />
       )}
@@ -519,22 +302,7 @@ export function TourBus() {
           emoji="🎛️"
           name="Defekter Verstärker"
           onInteract={() => {
-            const trait = useStore.getState().trait;
-            if (trait === 'Technician') {
-              setDialogue({
-                text: 'Ein alter Röhrenverstärker, der nur noch brummt. Als Techniker siehst du sofort das Problem: Eine kalte Lötstelle an der Vorstufe.',
-                options: [
-                  { text: 'Repariere ihn schnell.', action: () => {
-                    setDialogue('Mit geübten Handgriffen lötest du die Verbindung nach. Der Verstärker klingt jetzt klarer als je zuvor!');
-                    setFlag('tourbusAmpTechnician', true);
-                    increaseBandMood(20);
-                    useStore.getState().increaseSkill('technical', 10);
-                  }}
-                ]
-              });
-            } else {
-              setDialogue('Ein alter Röhrenverstärker. Er brummt nervtötend, aber du hast keine Ahnung, wie man das repariert.');
-            }
+            useStore.getState().setDialogue(buildTourbusAmpDialogue());
           }}
         />
       )}

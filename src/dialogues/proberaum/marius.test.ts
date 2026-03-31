@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from '../../store';
 import { buildProberaumMariusDialogue } from './marius';
-import { setupTestState, getOptionTexts } from '../shared/test-helpers';
+import { setupTestState, getOptionTexts, getDialogueText } from '../shared/test-helpers';
 
 describe('buildProberaumMariusDialogue', () => {
   beforeEach(() => setupTestState());
 
   it('prompts for beer when missing', () => {
     const dialogue = buildProberaumMariusDialogue();
-    expect(dialogue.text).toContain('Ohne ein kühles Bier kann ich nicht singen');
+    expect(getDialogueText(dialogue)).toContain('Ohne ein kühles Bier kann ich nicht singen');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2); // 'Ich beeile mich' and 'Trink doch Wasser'
   });
@@ -16,7 +16,7 @@ describe('buildProberaumMariusDialogue', () => {
   it('shows beer handover option when player has beer', () => {
     useStore.getState().addToInventory('Bier');
     const dialogue = buildProberaumMariusDialogue();
-    expect(dialogue.text).toContain('Ohne ein kühles Bier kann ich nicht singen');
+    expect(getDialogueText(dialogue)).toContain('Ohne ein kühles Bier kann ich nicht singen');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(3);
     expect(options).toContain('Hier ist dein Bier.');
@@ -34,14 +34,14 @@ describe('buildProberaumMariusDialogue', () => {
   it('returns plain text when beer is given but bandMood is low', () => {
     setupTestState({ flags: { ...useStore.getState().flags, gaveBeerToMarius: true }, bandMood: 40 });
     const dialogue = buildProberaumMariusDialogue();
-    expect(dialogue.text).toContain('Prost!');
-    expect(dialogue.options).toBeUndefined();
+    expect(getDialogueText(dialogue)).toContain('Prost!');
+    expect(getOptionTexts(dialogue)).toHaveLength(0);
   });
 
   it('returns menu options when beer is given and bandMood is high', () => {
     setupTestState({ flags: { ...useStore.getState().flags, gaveBeerToMarius: true }, bandMood: 60 });
     const dialogue = buildProberaumMariusDialogue();
-    expect(dialogue.text).toContain('Prost!');
+    expect(getDialogueText(dialogue)).toContain('Prost!');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2); // Prep question and default
     expect(options).toContain('Wie bereitest du dich auf Salzgitter vor?');

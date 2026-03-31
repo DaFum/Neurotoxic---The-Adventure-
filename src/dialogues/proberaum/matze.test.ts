@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from '../../store';
 import { buildProberaumMatzeDialogue } from './matze';
-import { setupTestState, getOptionTexts } from '../shared/test-helpers';
+import { setupTestState, getOptionTexts, getDialogueText } from '../shared/test-helpers';
 
 describe('buildProberaumMatzeDialogue', () => {
   beforeEach(() => setupTestState());
@@ -12,15 +12,15 @@ describe('buildProberaumMatzeDialogue', () => {
     });
 
     const dialogue = buildProberaumMatzeDialogue();
-    expect(dialogue.text).toContain('Der Lärm... er ist die einzige Wahrheit.');
-    expect(dialogue.options).toBeUndefined();
+    expect(getDialogueText(dialogue)).toContain('Der Lärm... er ist die einzige Wahrheit.');
+    expect(getOptionTexts(dialogue)).toHaveLength(0);
   });
 
   it('returns Talisman dialogue when player has Industrie-Talisman', () => {
     useStore.getState().addToInventory('Industrie-Talisman');
     const dialogue = buildProberaumMatzeDialogue();
 
-    expect(dialogue.text).toContain('Ist das der Industrie-Talisman?!');
+    expect(getDialogueText(dialogue)).toContain('Ist das der Industrie-Talisman?!');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2);
     expect(options).toContain('Es ist für die Band.');
@@ -31,14 +31,14 @@ describe('buildProberaumMatzeDialogue', () => {
     useStore.getState().addToInventory('Verbotenes Riff');
     const dialogue = buildProberaumMatzeDialogue();
 
-    expect(dialogue.text).toContain('Hast du etwa das Verbotene Riff gefunden?!');
+    expect(getDialogueText(dialogue)).toContain('Hast du etwa das Verbotene Riff gefunden?!');
     expect(getOptionTexts(dialogue)).toContain('Ja, es vibriert in meinem Rucksack.');
   });
 
   it('returns water dialogue when water is not cleaned', () => {
     const dialogue = buildProberaumMatzeDialogue();
 
-    expect(dialogue.text).toContain('Verdammt, der Proberaum ist geflutet!');
+    expect(getDialogueText(dialogue)).toContain('Verdammt, der Proberaum ist geflutet!');
     const options = getOptionTexts(dialogue);
     expect(options).toContain('Ich kümmere mich darum.');
     expect(options).toContain('Vielleicht ist es ein Zeichen für ein neues Genre?');
@@ -51,7 +51,7 @@ describe('buildProberaumMatzeDialogue', () => {
     });
 
     const dialogue = buildProberaumMatzeDialogue();
-    expect(dialogue.text).toContain('Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?');
+    expect(getDialogueText(dialogue)).toContain('Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2);
     expect(options[0]).toContain('Lass hören!');
@@ -65,7 +65,7 @@ describe('buildProberaumMatzeDialogue', () => {
     });
 
     const dialogue = buildProberaumMatzeDialogue();
-    expect(dialogue.text).toContain('Alter, ich fühl mich wie ein junger Gott!');
+    expect(getDialogueText(dialogue)).toContain('Alter, ich fühl mich wie ein junger Gott!');
 
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(5);
