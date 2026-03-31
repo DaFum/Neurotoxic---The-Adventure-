@@ -192,7 +192,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 ## 3. Backstage (Vor dem Gig)
 
-* **Szene-Eintritt:** Registriert die Quest "setlist" (Finde die Setliste im Backstage).
+* **Szene-Eintritt:** Registriert die Quest `setlist` (Finde die Setliste im Backstage).
 * **Feedback-Monitor:**
     * *Erstkontakt ("Hallo?"):* Setzt `feedbackMonitorBackstageTalked` (+5 BandMood). Innerer Dialog zeigt "Wie kann ich helfen?" → setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`.
     * *Nach Erstkontakt (`feedbackMonitorBackstageTalked` gesetzt), wenn `ampSentient` gesetzt & Quest noch nicht gestartet:* Option "Der Amp hat mir von dir erzählt" (+25 BandMood, +5 Technical, setzt `feedbackMonitorBackstageQuestStarted`, Quest hinzugefügt: `feedback_monitor_backstage`). **Diese Option hat Vorrang gegenüber "Wie kann ich dir helfen?".**
@@ -242,8 +242,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Standard: Einfacher Chant (+15 BandMood, Quest `backstage_ritual`, setzt `backstageRitualPerformed`).
     * *Mit Resonanz-Kristall + Blaupause:*
         * (Trait: Mystic): Frequenz vollenden (+50 BandMood, entfernt `Resonanz-Kristall`, setzt `frequenz1982_complete`, Quest-Abschluss: `frequenz_1982`, Lore: `frequenz_1982_decoded`).
+        * (Trait: Brutalist): Kristall zerschmettern (+40 BandMood, +5 Chaos, entfernt `Resonanz-Kristall`, setzt `frequenz1982_complete`, Quest-Abschluss: `frequenz_1982`, Lore: `frequenz_1982_decoded`).
     * *Mit Frequenzfragment + Blaupause:*
-        * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, Item verloren, setzt `frequenz1982_complete`, Quest-Abschluss: `frequenz_1982`).
+        * (Trait: Brutalist): Fragment zerschmettern (+40 BandMood, +5 Chaos, entfernt `Frequenzfragment`, setzt `frequenz1982_complete`, Quest-Abschluss: `frequenz_1982`, Lore: `frequenz_1982_decoded`).
     * *Item (Plasma-Zünder):* Anzünden (+30 BandMood).
     * *Item (Verbotenes Riff):* Resonanz (+15 BandMood).
     * *Standard:* (+5 BandMood, einmalig, Quest hinzugefügt: backstage_ritual).
