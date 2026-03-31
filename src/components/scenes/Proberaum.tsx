@@ -19,8 +19,16 @@ import { useStore } from '../../store';
 import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
-import { buildProberaumMatzeDialogue } from '../../dialogues/proberaum/matze';
-import { buildProberaumLarsDialogue } from '../../dialogues/proberaum/lars';
+import {
+  buildProberaumMatzeDialogue,
+  buildProberaumLarsDialogue,
+  buildProberaumMariusDialogue,
+  buildProberaumWallCracksDialogue,
+  buildProberaumPuddleDialogue,
+  buildProberaumAmpDialogue,
+  buildProberaumDrumMachineDialogue,
+  buildProberaumMonitorDialogue
+} from '../../dialogues/proberaum';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
@@ -332,123 +340,7 @@ export function Proberaum() {
         isBandMember={true}
         idleType="sway"
         onInteract={() => {
-          if (!flags.gaveBeerToMarius) {
-            setDialogue({
-              text: 'Marius: "Ohne ein kühles Bier kann ich nicht singen. Besorg mir eins!"',
-              options: [
-                ...(useStore.getState().hasItem('Bier') ? [{
-                  text: 'Hier ist dein Bier.',
-                  consumeItems: ['Bier'],
-                  action: () => {
-                    useStore.getState().completeQuestWithFlag('beer', 'gaveBeerToMarius');
-                    useStore.getState().increaseBandMood(15);
-                    setDialogue('Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"');
-                  }
-                }] : []),
-                { text: 'Ich beeile mich.', action: () => setDialogue('Marius: "Gut. Meine Stimmbänder fühlen sich an wie Schleifpapier."') },
-                { text: 'Trink doch Wasser.', action: () => {
-                  setDialogue('Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"');
-                  increaseBandMood(-5);
-                }},
-                ...(!flags.mariusVisionShared && useStore.getState().trait === 'Visionary' ? [{
-                  id: 'marius_vision_shared',
-                  text: 'Ich verstehe deine Vision. [Visionary]', 
-                  action: () => {
-                    setDialogue('Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."');
-                    useStore.getState().setFlag('mariusVisionShared', true);
-                    increaseBandMood(20);
-                    useStore.getState().increaseSkill('social', 3);
-                  }
-                }] : []),
-                ...(!flags.mariusCalmedDown && useStore.getState().skills.social >= 5 ? [{
-                  id: 'marius_calmed_down',
-                  text: 'Beruhige dich, Star. [Social 5]', 
-                  action: () => {
-                    setDialogue('Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."');
-                    useStore.getState().setFlag('mariusCalmedDown', true);
-                    increaseBandMood(15);
-                    useStore.getState().increaseSkill('social', 2);
-                  }
-                }] : [])
-              ]
-            });
-          } else {
-            const moodText = bandMood > 80
-              ? 'Marius: "Ich fühle die Energie! Wir werden die Welt in Schutt und Asche legen!"'
-              : 'Marius: "Prost! Die Riff Night in Salzgitter wird legendär!"';
-            if (bandMood > 50) {
-              setDialogue({
-                text: moodText,
-                options: [
-
-                  ...(useStore.getState().flags.mariusEgoStrategy ? [] : [{
-                    text: 'Wie bereitest du dich auf Salzgitter vor?',
-                    action: () => {
-                      setDialogue({
-                        text: 'Marius: "Ich meditiere über meine Großartigkeit. Was schlägst du vor?"',
-                        options: [
-                          {
-                            text: 'Ich coache deine Bühnenpräsenz. [Performer]',
-                            requiredTrait: 'Performer' as const,
-                            action: () => {
-                              setDialogue('Marius: "Ah, von einem Meister lernen. Zeig mir, wie ich das Licht fange."');
-                              useStore.getState().increaseBandMood(15);
-                              useStore.getState().increaseSkill('social', 3);
-                              useStore.getState().setFlag('mariusEgoStrategy', true);
-                            }
-                          },
-                          {
-                            text: 'Du wirst auf der Bühne sterben. [Cynic]',
-                            requiredTrait: 'Cynic' as const,
-                            action: () => {
-                              setDialogue('Marius: "WAS?! ...Nein, du hast recht. Ich muss wütender werden!"');
-                              useStore.getState().increaseBandMood(10);
-                              useStore.getState().increaseSkill('chaos', 3);
-                              useStore.getState().setFlag('mariusEgoStrategy', true);
-                            }
-                          },
-                          {
-                            text: 'Hier ist ein Ego-Management-Plan. [Social 7]',
-                            requiredSkill: { name: 'social' as const, level: 7 },
-                            action: () => {
-                              setDialogue('Marius: "Ein... Plan? Ok, das könnte helfen, nicht die Kontrolle zu verlieren."');
-                              useStore.getState().increaseBandMood(20);
-                              useStore.getState().setFlag('mariusEgoStrategy', true);
-                            }
-                          },
-                          { text: 'Bleib einfach cool.', action: () => setDialogue('Marius: "Ich bin immer cool."') }
-                        ]
-                      });
-                    }
-                  }] as DialogueOption[]),
-                  ...(!flags.mariusSelfDoubtRevealed && useStore.getState().trait === 'Diplomat' ? [{
-                    id: 'marius_self_doubt',
-                    text: 'Marius, wie geht es dir wirklich? [Diplomat]',
-                    action: () => {
-                      setDialogue('Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."');
-                      useStore.getState().setFlag('mariusSelfDoubtRevealed', true);
-                      useStore.getState().setFlag('marius_tourbus_doubt', true);
-                      useStore.getState().increaseBandMood(15);
-                      useStore.getState().increaseSkill('social', 3);
-                    }
-                  }] : []),
-                  ...(!flags.mariusEgoComplimented && useStore.getState().trait === 'Cynic' ? [{
-                    id: 'marius_ego_cynic',
-                    text: 'Dein Ego ist groß genug für zwei Dimensionen. [Cynic]',
-                    action: () => {
-                      setDialogue('Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"');
-                      useStore.getState().setFlag('mariusEgoComplimented', true);
-                      useStore.getState().increaseBandMood(5);
-                      useStore.getState().increaseSkill('chaos', 2);
-                    }
-                  }] : []),
-                  { text: 'Bereit für den Gig?', action: () => setDialogue('Marius: "Immer!"') }
-                ]
-              });
-            } else {
-              setDialogue(moodText);
-            }
-          }
+          useStore.getState().setDialogue(buildProberaumMariusDialogue());
         }}
       />
 
@@ -459,48 +351,7 @@ export function Proberaum() {
           emoji="🔍"
           name="Risse in der Wand"
           onInteract={() => {
-            setDialogue({
-              text: 'Risse in der Wand. Sie bilden ein Muster, das an Schallwellen erinnert.',
-              options: [
-                {
-                  text: 'Die Risse... sie sind eine Partitur! [Visionary]',
-                  requiredTrait: 'Visionary',
-                  action: () => {
-                    const store = useStore.getState();
-                    if (!store.quests.find(q => q.id === 'frequenz_1982')) {
-                      store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                    }
-                    const pickedUpFragment = store.addToInventory('Frequenzfragment');
-                    if (pickedUpFragment) {
-                      store.increaseBandMood(15, 'frequenz1982_proberaum_visionary');
-                      store.setFlag('frequenz1982_proberaum', true);
-                      setDialogue('Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.');
-                    } else {
-                      setDialogue('Du entschlüsselst die Wand, aber dein Inventar ist für weitere Frequenzfragmente bereits am Limit.');
-                    }
-                  }
-                },
-                {
-                  text: 'Die Resonanzfrequenz liegt bei exakt 432.1982 Hz. [Technical 8]',
-                  requiredSkill: { name: 'technical', level: 8 },
-                  action: () => {
-                    const store = useStore.getState();
-                    if (!store.quests.find(q => q.id === 'frequenz_1982')) {
-                      store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                    }
-                    const pickedUpFragment = store.addToInventory('Frequenzfragment');
-                    if (pickedUpFragment) {
-                      store.increaseBandMood(15, 'frequenz1982_proberaum_technical');
-                      store.setFlag('frequenz1982_proberaum', true);
-                      setDialogue('Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.');
-                    } else {
-                      setDialogue('Die Wand vibriert, aber du kannst kein weiteres Frequenzfragment mehr aufnehmen.');
-                    }
-                  }
-                },
-                { text: 'Interessantes Muster.', action: () => setDialogue('Einfach nur Risse. Aber sie sehen laut aus.') }
-              ]
-            });
+            useStore.getState().setDialogue(buildProberaumWallCracksDialogue());
           }}
         />
       )}
@@ -554,14 +405,7 @@ export function Proberaum() {
           name="Mysteriöse Pfütze"
           scale={1.5}
           onInteract={() => {
-            if (hasItem('Mop')) {
-              setFlag('waterCleaned', true);
-              completeQuest('water');
-              increaseBandMood(20);
-              setDialogue('Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.');
-            } else {
-              setDialogue('Das ist eine riesige Pfütze. Sie scheint aus dem Nichts zu kommen und vibriert im Takt eines vergessenen Drum-Computers.');
-            }
+            useStore.getState().setDialogue(buildProberaumPuddleDialogue());
           }}
         />
       )}
@@ -572,98 +416,7 @@ export function Proberaum() {
         emoji="🔊"
         name="Sprechender Amp"
         onInteract={() => {
-          if (flags.ampTherapyCompleted) {
-            setDialogue('Amp: "Ich fühle mich... besser. Die 5. Dimension ist gar nicht so schlimm, wenn man jemanden zum Reden hat."');
-            return;
-          }
-          if (flags.ampTherapyStarted) {
-            setDialogue({
-              text: 'Amp: "Hast du über meine Existenz nachgedacht? Bin ich nur ein Werkzeug oder ein Bewusstsein?"',
-              options: [
-
-                { text: 'Ich höre deine wahre Stimme, Amp. Du bist ein leuchtendes Wesen. [Mystic]', requiredTrait: 'Mystic', action: () => {
-                    setDialogue('Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"');
-                    setFlag('ampTherapyCompleted', true);
-                    setFlag('ampSentient', true);
-                    completeQuest('amp_therapy');
-                    increaseBandMood(20);
-                }},
-                { text: 'Du bist ein Bewusstsein. [Diplomat]', requiredTrait: 'Diplomat', action: () => {
-                    setDialogue('Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."');
-                    setFlag('ampTherapyCompleted', true);
-                    completeQuest('amp_therapy');
-                    increaseBandMood(30);
-                }},
-                { text: 'Du bist ein Werkzeug. [Brutalist]', requiredTrait: 'Brutalist', action: () => {
-                    setDialogue('Amp: "So kalt... aber vielleicht hast du recht. Ich bin nur hier, um zu schreien."');
-                    setFlag('ampTherapyCompleted', true);
-                    completeQuest('amp_therapy');
-                    increaseBandMood(10);
-                }},
-                { text: 'Ich weiß es nicht.', action: () => setDialogue('Amp: "Dann such weiter. Die Antwort liegt im Feedback."') }
-              ]
-            });
-            return;
-          }
-          if (flags.talkingAmpRepaired) {
-            setDialogue({
-              text: 'Amp: "Manager... danke für die Reparatur. Aber jetzt, wo ich wieder klar denken kann, frage ich mich... warum bin ich hier?"',
-              options: [
-                { text: 'Lass uns über deine Existenz reden.', action: () => {
-                    setDialogue('Amp: "Du würdest mir zuhören? Das würde mir viel bedeuten."');
-                    setFlag('ampTherapyStarted', true);
-                    addQuest('amp_therapy', 'Führe eine Therapie-Sitzung mit dem sprechenden Amp durch');
-                }},
-                { text: 'Nicht jetzt.', action: () => setDialogue('Amp: "Verstehe. Das Rauschen kehrt zurück..."') }
-              ]
-            });
-          } else if (!flags.talkingAmpHeard) {
-            setDialogue('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
-            setFlag('talkingAmpHeard', true);
-            addQuest('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
-            increaseBandMood(2);
-          } else {
-            const ampOptions: DialogueOption[] = [];
-            if (!flags.maschinen_seele_amp) {
-              ampOptions.push({
-                text: 'Ich höre eine andere Stimme in dir. Wer ist da noch? [Mystic]',
-                requiredTrait: 'Mystic',
-                action: () => {
-                  setDialogue('Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."');
-                  useStore.getState().setFlag('maschinen_seele_amp', true);
-                  useStore.getState().increaseBandMood(10);
-                  useStore.getState().increaseSkill('chaos', 2);
-                  if (!useStore.getState().quests.find(q => q.id === 'maschinen_seele')) {
-                    useStore.getState().addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
-                  }
-                }
-              });
-            }
-            if (hasItem('Lötkolben') && hasItem('Schrottmetall')) {
-              ampOptions.push({
-                text: 'Repariere den Amp.', action: () => {
-                    setDialogue('Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."');
-                    setFlag('talkingAmpRepaired', true);
-                    if (!useStore.getState().quests.find(q => q.id === 'repair_amp')) {
-                      useStore.getState().addQuest('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
-                    }
-                    completeQuest('repair_amp');
-                    useStore.getState().removeFromInventory('Lötkolben');
-                    useStore.getState().removeFromInventory('Schrottmetall');
-                    increaseBandMood(20);
-                    useStore.getState().increaseSkill('technical', 5);
-                }
-              });
-            }
-            ampOptions.push({ text: 'Ich suche weiter.', action: () => setDialogue('Amp: "Beeil dich..."') });
-
-            setDialogue({
-              text: hasItem('Lötkolben') && hasItem('Schrottmetall')
-                ? 'Amp: "Du hast die Werkzeuge... kannst du meine Schaltkreise neu verlöten?"'
-                : 'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
-              options: ampOptions
-            });
-          }
+          useStore.getState().setDialogue(buildProberaumAmpDialogue());
         }}
       />
 
@@ -741,121 +494,18 @@ export function Proberaum() {
         emoji="🎛️"
         name="TR-8080 Drum Machine"
         onInteract={() => {
-          const hasRiff = hasItem('Verbotenes Riff');
-          const questStarted = flags.drumMachineQuestStarted;
-          const questCompleted = flags.drumMachineQuestCompleted;
-
-          if (questCompleted) {
-            setDialogue('TR-8080: "BOOM-TCHAK-BOOM. Mein Geist ist eins mit dem Riff. Danke, Fleischsack."');
-            return;
-          }
-
-          if (hasRiff) {
-            setDialogue({
-              text: 'TR-8080: "DIESE FREQUENZ! Es ist das Verbotene Riff! Mein analoges Herz schlägt im Takt der Vernichtung. Darf ich es... absorbieren?"',
-              options: [
-                { text: 'Ja, füttere deine Schaltkreise.', action: () => {
-                  const receivedCable = addToInventory('Quanten-Kabel');
-                  if (receivedCable) {
-                    setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
-                  } else {
-                    setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Dein Inventarlimit blockiert weitere Quanten-Kabel. Der Beat gehört trotzdem dir."');
-                  }
-                  // completeQuestWithFlag is idempotent and safely auto-registers if missing (thanks to earlier fix or handles it gracefully)
-                  useStore.getState().completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
-                  increaseBandMood(25);
-                  useStore.getState().increaseSkill('chaos', 10);
-                }},
-                { text: 'Nein, das ist zu gefährlich.', action: () => {
-                  setDialogue('TR-8080: "Feigling. Dein Rhythmus ist schwach. Komm wieder, wenn du bereit für die Transzendenz bist."');
-                }}
-              ]
-            });
-            return;
-          }
-
-          if (!questStarted) {
-            setDialogue({
-              text: 'TR-8080: "Manager... ich spüre eine Leere in meinen Kondensatoren. Mir fehlt die ultimative Schwingung. Findest du sie für mich?"',
-              options: [
-                { text: 'Was suchst du?', action: () => {
-                  setDialogue('TR-8080: "Das Verbotene Riff. Es soll irgendwo in diesem Gebäude versteckt sein. Bring es mir, und ich zeige dir den wahren Beat."');
-                  useStore.getState().startQuestWithFlag('drum_machine', 'Finde das Verbotene Riff für die TR-8080', 'drumMachineQuestStarted');
-                }},
-                { text: 'Ich hab keine Zeit für Maschinen-Probleme.', action: () => {
-                  setDialogue('TR-8080: "Dann bleib in deiner 3-dimensionalen Begrenztheit. Pff."');
-                }}
-              ]
-            });
-          } else {
-            const options: DialogueOption[] = [];
-            if (!useStore.getState().flags.maschinen_seele_tr8080) {
-              options.push({
-                  text: 'Deine Seriennummer... du bist nicht von der Stange. [Technical 5]',
-                  requiredSkill: { name: 'technical', level: 5 },
-                  action: () => {
-                    setDialogue('TR-8080: "Korrekt. Ich wurde 1982 aus dem Amp eines Bassisten gelötet. Wir teilen eine Seele."');
-                    useStore.getState().setFlag('maschinen_seele_tr8080', true);
-                    useStore.getState().increaseBandMood(10);
-                    useStore.getState().increaseSkill('technical', 3);
-                  }
-              });
-            }
-            options.push({ text: 'Schon gut, ich gehe.', action: () => setDialogue('TR-8080: "BZZT."') });
-
-            setDialogue({
-              text: 'TR-8080: "Hast du das Riff? Nein? Dann stör mich nicht beim Selbst-Oszillieren."',
-              options
-            });
-          }
+          useStore.getState().setDialogue(buildProberaumDrumMachineDialogue());
         }}
       />
 
       {/* Absurd NPC: Talking Feedback Monitor */}
-      {!flags.feedbackMonitorTalked && (
+      {!flags.feedbackMonitorQuestCompleted && (
         <Interactable
           position={[-6, 0.5, 5]}
           emoji="🎚️"
           name="Feedback-Monitor"
           onInteract={() => {
-            setDialogue({
-              text: 'Monitor: "Manager... ich bin überlastet. Meine Schaltkreise sind mit dem Rauschen der Ewigkeit gefüllt. Kannst du mir helfen, mich zu entladen?"',
-              options: [
-                { text: 'Wie kann ich helfen?', action: () => {
-                  setDialogue('Monitor: "Finde das Quanten-Kabel. Es ist irgendwo im Proberaum versteckt. Wenn du es mir bringst, werde ich dir die Frequenzen der Zukunft offenbaren."');
-                  useStore.getState().startQuestWithFlag('feedback_monitor', 'Finde das Quanten-Kabel für den Feedback Monitor', 'feedbackMonitorTalked');
-                }},
-                { text: 'Nicht jetzt.', action: () => {
-                  setDialogue('Monitor: "Das Rauschen... es wird lauter..."');
-                }}
-              ]
-            });
-          }}
-        />
-      )}
-
-      {flags.feedbackMonitorTalked && !flags.feedbackMonitorQuestCompleted && (
-        <Interactable
-          position={[-6, 0.5, 5]}
-          emoji="🎚️"
-          name="Feedback-Monitor"
-          onInteract={() => {
-            if (hasItem('Quanten-Kabel')) {
-              setDialogue({
-                text: 'Monitor: "Das Quanten-Kabel! Meine Frequenzen... sie stabilisieren sich! Hier, nimm dieses Wissen über die 5. Dimension."',
-                options: [
-                  { text: 'Danke!', action: () => {
-                    removeFromInventory('Quanten-Kabel');
-                    useStore.getState().completeQuestWithFlag('feedback_monitor', 'feedbackMonitorQuestCompleted', true, 'Finde das Quanten-Kabel für den Feedback Monitor');
-                    increaseBandMood(20);
-                    useStore.getState().increaseSkill('technical', 5);
-                    setDialogue('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
-                  }}
-                ]
-              });
-            } else {
-              setDialogue('Monitor: "Das Rauschen... hast du das Quanten-Kabel gefunden?"');
-            }
+            useStore.getState().setDialogue(buildProberaumMonitorDialogue());
           }}
         />
       )}
