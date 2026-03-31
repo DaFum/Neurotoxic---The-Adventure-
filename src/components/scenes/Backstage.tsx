@@ -348,24 +348,21 @@ export function Backstage() {
               options: [
                 { text: 'Optimierte Frequenzen. [Technical 5]', requiredSkill: { name: 'technical', level: 5 }, action: () => {
                     useStore.getState().setDialogue('Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."');
-                    useStore.getState().setFlag('feedbackMonitorBackstageQuestCompleted', true);
-                    useStore.getState().completeQuest('feedback_monitor_backstage');
+                    useStore.getState().completeQuestWithFlag('feedback_monitor_backstage', 'feedbackMonitorBackstageQuestCompleted', true, 'Untersuche den kranken Monitor im Backstage');
                     useStore.getState().increaseBandMood(30);
                     useStore.getState().increaseSkill('technical', 5);
                     useStore.getState().removeFromInventory('Verstärker-Schaltplan');
                 }},
                 { text: 'Transzendente Frequenzen. [Visionary]', requiredTrait: 'Visionary', action: () => {
                     useStore.getState().setDialogue('Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."');
-                    useStore.getState().setFlag('feedbackMonitorBackstageQuestCompleted', true);
-                    useStore.getState().completeQuest('feedback_monitor_backstage');
+                    useStore.getState().completeQuestWithFlag('feedback_monitor_backstage', 'feedbackMonitorBackstageQuestCompleted', true, 'Untersuche den kranken Monitor im Backstage');
                     useStore.getState().increaseBandMood(40);
                     useStore.getState().increaseSkill('chaos', 5);
                     useStore.getState().removeFromInventory('Verstärker-Schaltplan');
                 }},
                 { text: 'Standard-Frequenzen.', action: () => {
                     useStore.getState().setDialogue('Monitor: "BZZZT. Okay, das reicht für einen Standard-Gig."');
-                    useStore.getState().setFlag('feedbackMonitorBackstageQuestCompleted', true);
-                    useStore.getState().completeQuest('feedback_monitor_backstage');
+                    useStore.getState().completeQuestWithFlag('feedback_monitor_backstage', 'feedbackMonitorBackstageQuestCompleted', true, 'Untersuche den kranken Monitor im Backstage');
                     useStore.getState().increaseBandMood(15);
                     useStore.getState().removeFromInventory('Verstärker-Schaltplan');
                 }}

@@ -13,8 +13,8 @@ Das Spiel läuft im Browser. Erkunde Szenen, rede mit NPCs, sammle Items und lö
 Voraussetzung: [Node.js](https://nodejs.org/) (v18+)
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 Der Dev-Server startet auf `http://localhost:3000`.
@@ -22,8 +22,8 @@ Der Dev-Server startet auf `http://localhost:3000`.
 ## Build
 
 ```bash
-npm run build    # Erstellt einen Production-Build in dist/
-npm run preview  # Vorschau des Builds
+pnpm run build    # Erstellt einen Production-Build in dist/
+pnpm run preview  # Vorschau des Builds
 ```
 
 ## Tech-Stack

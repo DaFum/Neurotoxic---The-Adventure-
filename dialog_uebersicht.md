@@ -75,20 +75,21 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Skill: Social 7): Ego-Management-Plan (+20 BandMood, setzt `mariusEgoStrategy`).
         * Standard: "Bleib einfach cool" (kein Effekt).
         * *Nach Erstkontakt (BandMood > 50):*
-            * Zweig A (Trait: Diplomat): "Marius, wie geht es dir wirklich? [Diplomat]" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
-            * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos).
+            * Zweig A (Trait: Diplomat): "Marius, wie geht es dir wirklich? [Diplomat]" (+15 BandMood, +3 Social, setzt `mariusSelfDoubtRevealed` UND `marius_tourbus_doubt`). Option verschwindet danach (forbiddenFlags).
+            * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos, setzt `mariusEgoComplimented`). Option verschwindet danach (forbiddenFlags).
             * Standard: "Bereit für den Gig?" (kein Effekt).
     * *Ohne Bier:* Fordert Bier.
+        * (Item: Bier) "Hier ist dein Bier": Konsumiert Item 'Bier' (+15 BandMood, beendet Quest `beer` und setzt `gaveBeerToMarius`).
         * "Ich beeile mich" (kein Mood-Effekt).
         * "Trink doch Wasser" (-5 BandMood).
-        * (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social).
-        * (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social).
+        * (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social, setzt `mariusVisionShared`). Option verschwindet danach (forbiddenFlags).
+        * (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social, setzt `mariusCalmedDown`). Option verschwindet danach (forbiddenFlags).
 * **Wischmopp (Item):**
     * *Interaktion:* Aufheben (Erhalt: Mop).
 * **Autoschlüssel (Item):**
     * *Interaktion:* Aufheben (+10 BandMood, Quest-Abschluss: `keys`, Erhalt: Autoschlüssel).
 * **Kühles Bier (Item):**
-    * *Interaktion:* Aufheben (+15 BandMood, Quest-Abschluss: `beer`, Erhalt: Bier).
+    * *Interaktion:* Aufheben (Erhalt: Bier, setzt `beerPickedUp`). *Spawnt neu, solange Marius kein Bier hat und keins im Inventar ist, um Deadlocks durch Lars zu verhindern.*
 * **Mysteriöse Pfütze:**
     * *Interaktion (Item: Mop):* Aufwischen (+20 BandMood, Quest-Abschluss: `water`).
 * **Sprechender Amp (Existenzielle Krise):**
@@ -126,19 +127,21 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * "Das Kabel wurde nicht gebrochen, es wurde durchtrennt." [Technical 5] (+20 BandMood, +5 Technical, setzt `tourbus_sabotage_discovered`, Lore: `tourbus_saboteur`, Quest gestartet: `tourbus_saboteur`).
         * "Vielleicht Schicksal." (-5 BandMood).
     * *Mit Repariertem Kabel (Angst vor Salzgitter?):*
-        * [Visionary]: "Ich sehe unseren Sieg" (+15 BandMood, Quest-Abschluss: `cable`).
-        * [Technical 5]: "Soundcheck analysiert" (+20 BandMood, +3 Technical, Quest-Abschluss: `cable`).
-        * [Social 5]: "Wir schaffen das zusammen" (+15 BandMood, +3 Social, Quest-Abschluss: `cable`).
-        * "Ein bisschen schon" (kein BandMood, Quest-Abschluss: `cable`).
-        * "Lass uns die Bühne abreißen!" (+10 BandMood, Quest-Abschluss: `cable`).
-    * *Sabotage entdeckt & `marius_tourbus_doubt` gesetzt & kein Geständnis:*
+        *(Alle Abschlussoptionen konsumieren "Repariertes Kabel", beenden Quest `cable` und setzen Flag `cableFixed`)*
+        * [Visionary]: "Ich sehe unseren Sieg" (+15 BandMood).
+        * [Technical 5]: "Soundcheck analysiert" (+20 BandMood, +3 Technical).
+        * [Social 5]: "Wir schaffen das zusammen" (+15 BandMood, +3 Social).
+        * "Ein bisschen schon" (kein BandMood).
+        * "Lass uns die Bühne abreißen!" (+10 BandMood).
+    * *Sabotage entdeckt & `marius_tourbus_doubt` (Marius-Zweifel) gesetzt & kein Geständnis:*
         * [Social 5]: Matze gesteht Sabotage (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
         * [Brutalist]: Schweigend ertappt (-5 BandMood).
-* **Band-Besprechung (Mitte des Busses, nachdem Sabotage entdeckt wurde):**
-    * (Trait: Diplomat): Vermitteln (+30 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
-    * (Trait: Brutalist): Zusammenreißen (+20 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
-    * (Trait: Performer): Motivationsrede (+25 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
-    * Standard: Einfache Ansagen (+10 BandMood, Quest `band_meeting`, setzt `tourbusBandMeeting`).
+* **Band-Besprechung (Mitte des Busses, nachdem Sabotage entdeckt wurde, einmalig):**
+    * *Startet und beendet Quest `band_meeting`, setzt Flag `tourbusBandMeeting`:*
+    * (Trait: Diplomat): Vermitteln (+30 BandMood).
+    * (Trait: Brutalist): Zusammenreißen (+20 BandMood).
+    * (Trait: Performer): Motivationsrede (+25 BandMood).
+    * Standard: Einfache Ansagen (+10 BandMood).
 * **Marius:**
     * *Item (Marius Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
     * *BandMood < 30 (kein Ego):* Nervenzusammenbruch — Anzeige des Dialogs setzt automatisch `marius_tourbus_doubt: true`.
@@ -148,45 +151,48 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *BandMood >= 30 (kein Ego):*
         * [Performer]: Baut Selbstbewusstsein auf (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt: false`).
         * Standard: kein Effekt.
-* **Defekter Verstärker (Trait: Technician):**
-    * *Spezial-Option:* Lötstelle reparieren (+20 BandMood, +10 Technical).
+* **Defekter Verstärker (Trait: Technician, einmalig):**
+    * *Spezial-Option:* Lötstelle reparieren (+20 BandMood, +10 Technical, setzt `tourbusAmpTechnician`).
 * **Klebeband (Item):**
     * *Interaktion:* Aufheben (Erhalt: Klebeband).
 * **Defektes Kabel (Item):**
     * *Interaktion:* Aufheben (Erhalt: Defektes Kabel).
-* **Kaffee (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Kaffee).
-* **Energiedrink (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Energiedrink).
-* **Bier-Vorrat (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Bier).
+* **Kaffee (Item, einmalig):**
+    * *Interaktion:* Aufheben (Erhalt: Kaffee, setzt `tourbusCoffeeCollected`).
+* **Energiedrink (Item, einmalig):**
+    * *Interaktion:* Aufheben (Erhalt: Energiedrink, setzt `tourbusEnergyDrinkCollected`).
+* **Bier-Vorrat (Item, einmalig):**
+    * *Interaktion:* Aufheben (Erhalt: Bier, setzt `tourbusBeerCollected`).
 * **Vergessenes Notizbuch:**
     * *Interaktion:* Lesen (+5 BandMood).
-* **Rostiges Plektrum (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum).
+* **Rostiges Plektrum (Item, einmalig):**
+    * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum, setzt `rostigesPlektrumCollected`).
 * **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
     * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` bereits aktiv** (+10 BandMood, Erhalt: Frequenzfragment, setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar.
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Geist eines Roadies:**
-    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe`.
-    * *Nach Drink (Item: Geister-Drink):* Rezept-Quest (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, entfernt Geister-Drink).
-    * *bassist_clue_matze gesetzt & bassist_clue_ghost noch nicht gesetzt:*
-        * Standard: "Matze hat geredet? Ich war dabei." (+15 BandMood, +3 Social, setzt `bassist_clue_ghost`).
-        * [Mystic]: "Ich spüre seine Präsenz." (+20 BandMood, setzt `bassist_clue_ghost`, Erhalt: Bassist-Saite).
-    * *1982-Follow-up (Flag `askedAbout1982` gesetzt):*
+    * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe` (setzt Flag `ghostRecipeQuestStarted`).
+    * *Aktive Rezept-Quest (Erinnerung, wenn Geister-Drink fehlt):* Zeigt direkten Reminder-Text ohne Auswahlmenü ("Hast du den Geister-Drink schon gemixt?"). *(Priorisiert über Lore-Text)*
+    * *Aktive Rezept-Quest (Hat Geister-Drink):* Rezept-Quest abschließen (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, setzt `ghostRecipeQuestCompleted`, entfernt Geister-Drink). *(Priorisiert über Lore-Text)*
+    * *1982-Follow-up (Flag `askedAbout1982` gesetzt & `ghostSecretRevealed` nicht gesetzt):*
         * [Visionary]: "Erzähl mir alles." (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
         * [Technical 7]: "Anomalie analysieren." (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
         * [Social 5]: "Geist beruhigen." (+20 BandMood, +3 Social, setzt `ghostSecretRevealed`, Lore: `roadie_bassist`).
         * Standard: "Erzähl mir alles." (+20 BandMood, setzt `ghostSecretRevealed`).
         * "Vielleicht später." (kein Mood-Effekt).
-    * *Vertrauens-Pfad (Wenn ghostSecretRevealed & askedAbout1982 gesetzt):*
-        * [Mystic]: "Ich will dir wirklich helfen" (+25 BandMood, Quest `ghost_trust`, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
-        * [Social 7]: "Erzähl mir deine Geschichte" (+20 BandMood, Quest `ghost_trust`, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
-        * Standard: "Nur aus Neugier".
+    * *bassist_clue_matze gesetzt & bassist_clue_ghost noch nicht gesetzt:*
+        * Standard: "Matze hat geredet? Ich war dabei." (+15 BandMood, +3 Social, setzt `bassist_clue_ghost`).
+        * [Mystic]: "Ich spüre seine Präsenz." (+20 BandMood, setzt `bassist_clue_ghost`, Erhalt: Bassist-Saite).
+    * *Vertrauens-Pfad (Wenn ghostSecretRevealed gesetzt & ghostTrustEarned noch nicht):*
+        * [Mystic]: "Ich will dir wirklich helfen" (+25 BandMood, Quest `ghost_trust` start+finish, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
+        * [Social 7]: "Erzähl mir deine Geschichte" (+20 BandMood, Quest `ghost_trust` start+finish, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
+        * Standard: "Nur aus Neugier" (kein Effekt).
     * *Spezial-Items:*
         * *Item (Industrie-Talisman):* Wahrheit (+20 BandMood, setzt `ghostSecretRevealed`) ODER Begraben (+5 BandMood).
         * *Item (Verbotenes Riff):* "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
+* **Ausgang:**
+    * *Interaktion:* Nur möglich, wenn "Repariertes Kabel" übergeben oder noch im Inventar ist (Matze hat ein Kabel). Wechselt zur Szene "backstage".
 
 ---
 

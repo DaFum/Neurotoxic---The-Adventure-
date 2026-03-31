@@ -57,6 +57,8 @@ export function UI() {
   const [displayedText, setDisplayedText] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showLoreCodex, setShowLoreCodex] = useState(false);
+  const [isResolving, setIsResolving] = useState(false);
+  const isResolvingRef = useRef(false);
   const [showHudPanels, setShowHudPanels] = useState(() => (
     typeof window === 'undefined' ? true : window.innerWidth >= 1280
   ));
@@ -167,6 +169,9 @@ export function UI() {
   };
 
   useEffect(() => {
+    isResolvingRef.current = false;
+    setIsResolving(false);
+
     if (!dialogue) {
       setDisplayedText('');
       return;
@@ -192,7 +197,7 @@ export function UI() {
     }, baseDelay);
     
     return () => clearInterval(interval);
-  }, [dialogue?.text, dialogue?.urgency]);
+  }, [dialogue]);
 
   if (scene === 'menu') return null;
 
@@ -604,15 +609,24 @@ export function UI() {
                       const skillReq = option.requiredSkill;
                       const traitReq = option.requiredTrait;
                       const questDeps = option.questDependencies;
+                      const requiredItems = option.requiredItems;
+                      const requiredFlags = option.requiredFlags;
+                      const forbiddenFlags = option.forbiddenFlags;
                       const isLocked = !canSelectOption(option);
 
                       return (
                         <button
-                          key={idx}
-                          disabled={isLocked}
-                          onClick={() => executeDialogueOption(option)}
+                          key={option.id || idx}
+                          disabled={isLocked || isResolving}
+                          onClick={() => {
+                            if (isResolvingRef.current) return;
+                            isResolvingRef.current = true;
+                            setIsResolving(true);
+                            executeDialogueOption(option);
+                            // isResolving is reset in the dialogue useEffect
+                          }}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
-                            isLocked 
+                            isLocked || isResolving
                             ? 'bg-zinc-900/50 border-zinc-800 text-zinc-600 cursor-not-allowed grayscale' 
                             : 'bg-zinc-900 hover:bg-toxic text-zinc-400 hover:text-black border-zinc-800 hover:border-toxic'
                           }`}
@@ -622,14 +636,28 @@ export function UI() {
                             {isLocked && <X size={14} className="text-blood" />}
                           </div>
                           
-                          {(skillReq || traitReq || questDeps) && (
+                          {(skillReq || traitReq || questDeps || requiredItems || requiredFlags || forbiddenFlags) && (
                             <div className={`text-[8px] mt-1 font-mono ${isLocked ? 'text-blood' : 'text-toxic/60 group-hover:text-black/60'}`}>
                               {skillReq && `[ REQ: ${skillReq.name.toUpperCase()} ${skillReq.level} ] `}
                               {traitReq && `[ REQ: ${traitReq.toUpperCase()} ] `}
-                              {questDeps && questDeps.map(qid => {
-                                const questTitle = quests.find(q => q.id === qid)?.text || qid;
-                                return <span key={qid}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
+                              {questDeps && questDeps.map((dep, depIdx) => {
+                                if (typeof dep === 'string') {
+                                  const questTitle = quests.find(q => q.id === dep)?.text || dep;
+                                  return <span key={`dep-${depIdx}`}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
+                                } else {
+                                  const questTitle = quests.find(q => q.id === dep.id)?.text || dep.id;
+                                  return <span key={`dep-${depIdx}`}>[ REQ: QUEST {dep.status.toUpperCase()}: {questTitle} ] </span>
+                                }
                               })}
+                              {requiredItems && requiredItems.map((item, itemIdx) => (
+                                <span key={`req-item-${itemIdx}`}>[ REQ: ITEM: {item.toUpperCase()} ] </span>
+                              ))}
+                              {requiredFlags && requiredFlags.map((flag, flagIdx) => (
+                                <span key={`req-flag-${flagIdx}`}>[ REQ: FLAG: {flag.toUpperCase()} ] </span>
+                              ))}
+                              {forbiddenFlags && forbiddenFlags.map((flag, flagIdx) => (
+                                <span key={`forbid-flag-${flagIdx}`}>[ BLOCKED BY: FLAG: {flag.toUpperCase()} ] </span>
+                              ))}
                             </div>
                           )}
                         </button>

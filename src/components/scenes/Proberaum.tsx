@@ -683,33 +683,44 @@ export function Proberaum() {
         isBandMember={true}
         idleType="sway"
         onInteract={() => {
-          if (!flags.gotBeer) {
+          if (!flags.gaveBeerToMarius) {
             setDialogue({
               text: 'Marius: "Ohne ein kühles Bier kann ich nicht singen. Besorg mir eins!"',
               options: [
+                ...(useStore.getState().hasItem('Bier') ? [{
+                  text: 'Hier ist dein Bier.',
+                  consumeItems: ['Bier'],
+                  action: () => {
+                    useStore.getState().completeQuestWithFlag('beer', 'gaveBeerToMarius');
+                    useStore.getState().increaseBandMood(15);
+                    setDialogue('Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"');
+                  }
+                }] : []),
                 { text: 'Ich beeile mich.', action: () => setDialogue('Marius: "Gut. Meine Stimmbänder fühlen sich an wie Schleifpapier."') },
                 { text: 'Trink doch Wasser.', action: () => {
                   setDialogue('Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"');
                   increaseBandMood(-5);
                 }},
-                { 
+                ...(!flags.mariusVisionShared && useStore.getState().trait === 'Visionary' ? [{
+                  id: 'marius_vision_shared',
                   text: 'Ich verstehe deine Vision. [Visionary]', 
-                  requiredTrait: 'Visionary',
                   action: () => {
                     setDialogue('Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."');
+                    useStore.getState().setFlag('mariusVisionShared', true);
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('social', 3);
                   }
-                },
-                { 
+                }] : []),
+                ...(!flags.mariusCalmedDown && useStore.getState().skills.social >= 5 ? [{
+                  id: 'marius_calmed_down',
                   text: 'Beruhige dich, Star. [Social 5]', 
-                  requiredSkill: { name: 'social', level: 5 },
                   action: () => {
                     setDialogue('Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."');
+                    useStore.getState().setFlag('mariusCalmedDown', true);
                     increaseBandMood(15);
                     useStore.getState().increaseSkill('social', 2);
                   }
-                }
+                }] : [])
               ]
             });
           } else {
@@ -761,25 +772,27 @@ export function Proberaum() {
                       });
                     }
                   }] as DialogueOption[]),
-                  {
+                  ...(!flags.mariusSelfDoubtRevealed && useStore.getState().trait === 'Diplomat' ? [{
+                    id: 'marius_self_doubt',
                     text: 'Marius, wie geht es dir wirklich? [Diplomat]',
-                    requiredTrait: 'Diplomat',
                     action: () => {
                       setDialogue('Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."');
+                      useStore.getState().setFlag('mariusSelfDoubtRevealed', true);
                       useStore.getState().setFlag('marius_tourbus_doubt', true);
                       useStore.getState().increaseBandMood(15);
                       useStore.getState().increaseSkill('social', 3);
                     }
-                  },
-                  {
+                  }] : []),
+                  ...(!flags.mariusEgoComplimented && useStore.getState().trait === 'Cynic' ? [{
+                    id: 'marius_ego_cynic',
                     text: 'Dein Ego ist groß genug für zwei Dimensionen. [Cynic]',
-                    requiredTrait: 'Cynic',
                     action: () => {
                       setDialogue('Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"');
+                      useStore.getState().setFlag('mariusEgoComplimented', true);
                       useStore.getState().increaseBandMood(5);
                       useStore.getState().increaseSkill('chaos', 2);
                     }
-                  },
+                  }] : []),
                   { text: 'Bereit für den Gig?', action: () => setDialogue('Marius: "Immer!"') }
                 ]
               });
@@ -861,17 +874,14 @@ export function Proberaum() {
         />
       )}
 
-      {!flags.gotBeer && (
+      {!flags.gaveBeerToMarius && !hasItem('Bier') && (
         <Interactable
           position={[8, 0.5, -5]}
           emoji="🍺"
           name="Kühles Bier"
           scale={0.6}
           onInteract={() => {
-            setFlag('gotBeer', true);
             addToInventory('Bier');
-            completeQuest('beer');
-            increaseBandMood(15);
             setDialogue('Ein kühles Bier für Marius!');
           }}
         />
@@ -1088,12 +1098,8 @@ export function Proberaum() {
                 { text: 'Ja, füttere deine Schaltkreise.', action: () => {
                   setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
                   addToInventory('Quanten-Kabel');
-                  setFlag('drumMachineQuestCompleted', true);
-                  // addQuest is idempotent — safe to call even if the quest was already
-                  // registered via the !questStarted branch. Ensures the quest exists
-                  // before completing it when the player found the riff first.
-                  addQuest('drum_machine', 'Finde das Verbotene Riff für die TR-8080');
-                  completeQuest('drum_machine');
+                  // completeQuestWithFlag is idempotent and safely auto-registers if missing (thanks to earlier fix or handles it gracefully)
+                  useStore.getState().completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
                   increaseBandMood(25);
                   useStore.getState().increaseSkill('chaos', 10);
                 }},
@@ -1111,8 +1117,7 @@ export function Proberaum() {
               options: [
                 { text: 'Was suchst du?', action: () => {
                   setDialogue('TR-8080: "Das Verbotene Riff. Es soll irgendwo in diesem Gebäude versteckt sein. Bring es mir, und ich zeige dir den wahren Beat."');
-                  setFlag('drumMachineQuestStarted', true);
-                  addQuest('drum_machine', 'Finde das Verbotene Riff für die TR-8080');
+                  useStore.getState().startQuestWithFlag('drum_machine', 'Finde das Verbotene Riff für die TR-8080', 'drumMachineQuestStarted');
                 }},
                 { text: 'Ich hab keine Zeit für Maschinen-Probleme.', action: () => {
                   setDialogue('TR-8080: "Dann bleib in deiner 3-dimensionalen Begrenztheit. Pff."');
@@ -1155,8 +1160,7 @@ export function Proberaum() {
               options: [
                 { text: 'Wie kann ich helfen?', action: () => {
                   setDialogue('Monitor: "Finde das Quanten-Kabel. Es ist irgendwo im Proberaum versteckt. Wenn du es mir bringst, werde ich dir die Frequenzen der Zukunft offenbaren."');
-                  setFlag('feedbackMonitorTalked', true);
-                  addQuest('feedback_monitor', 'Finde das Quanten-Kabel für den Feedback Monitor');
+                  useStore.getState().startQuestWithFlag('feedback_monitor', 'Finde das Quanten-Kabel für den Feedback Monitor', 'feedbackMonitorTalked');
                 }},
                 { text: 'Nicht jetzt.', action: () => {
                   setDialogue('Monitor: "Das Rauschen... es wird lauter..."');
@@ -1179,8 +1183,7 @@ export function Proberaum() {
                 options: [
                   { text: 'Danke!', action: () => {
                     removeFromInventory('Quanten-Kabel');
-                    setFlag('feedbackMonitorQuestCompleted', true);
-                    completeQuest('feedback_monitor');
+                    useStore.getState().completeQuestWithFlag('feedback_monitor', 'feedbackMonitorQuestCompleted', true, 'Finde das Quanten-Kabel für den Feedback Monitor');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 5);
                     setDialogue('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
@@ -1195,7 +1198,7 @@ export function Proberaum() {
       )}
 
       {/* Exit */}
-      {flags.waterCleaned && flags.gotBeer && (
+      {flags.waterCleaned && flags.gaveBeerToMarius && (
         <Interactable
           position={[0, 1, -6]}
           emoji="🚪"

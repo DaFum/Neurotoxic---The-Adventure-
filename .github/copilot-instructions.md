@@ -1,7 +1,7 @@
 # Neurotoxic — Agent Instructions
 
 ## Critical Commands
-- Lint: `npm run lint` (runs `tsc --noEmit` only — no eslint/prettier)
+- Lint: `pnpm run lint` (runs `tsc --noEmit` only — no eslint/prettier)
 
 ## Architecture Constraints
 - `@/` alias resolves to project root, not `src/` — configured in both vite.config.ts and tsconfig.json
@@ -15,8 +15,8 @@
 
 ## Store
 - `setScene()` always resets `playerPos` to `[0, 1, 0]` — every scene must work with this spawn point
-- `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the existing switch block
-- Only these fields persist to localStorage: `scene`, `inventory`, `flags`, `playerPos`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
+- `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the `RECIPES` array in `src/store.ts`
+-- Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. `scene`, `playerPos`, `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
 
 ## Scene Conventions
 - Floor: `<RigidBody type="fixed">` at `position={[0, -0.1, 0]}` with `rotation={[-Math.PI / 2, 0, 0]}`

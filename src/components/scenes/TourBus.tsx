@@ -271,39 +271,49 @@ export function TourBus() {
                 {
                   text: 'Ich sehe unseren Sieg. [Visionary]',
                   requiredTrait: 'Visionary',
+                  consumeItems: ['Repariertes Kabel'],
                   action: () => {
-                    setDialogue('Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen."');
+                    setDialogue('Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen." (Kabel übergeben)');
                     increaseBandMood(15);
-                    completeQuest('cable');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                   }
                 },
                 {
                   text: 'Ich habe den Soundcheck analysiert. [Technical 5]',
                   requiredSkill: { name: 'technical', level: 5 },
+                  consumeItems: ['Repariertes Kabel'],
                   action: () => {
-                    setDialogue('Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält."');
+                    setDialogue('Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält." (Kabel übergeben)');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 3);
-                    completeQuest('cable');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                   }
                 },
                 {
                   text: 'Wir schaffen das zusammen. [Social 5]',
                   requiredSkill: { name: 'social', level: 5 },
+                  consumeItems: ['Repariertes Kabel'],
                   action: () => {
-                    setDialogue('Matze: "Zusammen... ja. Wir sind eine verdammte Einheit."');
+                    setDialogue('Matze: "Zusammen... ja. Wir sind eine verdammte Einheit." (Kabel übergeben)');
                     increaseBandMood(15);
                     useStore.getState().increaseSkill('social', 3);
-                    completeQuest('cable');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                   }
                 },
-                { text: 'Ein bisschen schon.', action: () => {
-                    setDialogue('Matze: "Gut. Angst hält uns wach."');
-                    completeQuest('cable');
+                {
+                  text: 'Ein bisschen schon.',
+                  consumeItems: ['Repariertes Kabel'],
+                  action: () => {
+                    setDialogue('Matze: "Gut. Angst hält uns wach." (Kabel übergeben)');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                 }},
-                { text: 'Lass uns die Bühne abreißen!', action: () => {
+                {
+                  text: 'Lass uns die Bühne abreißen!',
+                  consumeItems: ['Repariertes Kabel'],
+                  action: () => {
                     increaseBandMood(10);
-                    completeQuest('cable');
+                    setDialogue('Matze: "Das ist die richtige Einstellung!" (Kabel übergeben)');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                 }}
               ]
             });
@@ -552,35 +562,40 @@ export function TourBus() {
         />
       )}
 
-      <Interactable
-        position={[0, 0.5, -3]}
-        emoji="☕"
-        name="Kaffee"
-        onInteract={() => {
-          addToInventory('Kaffee');
-          setDialogue('Ein Becher schwarzer Kaffee. So schwarz wie die Seele eines Drummers nach einem 4-Stunden-Gig.');
-        }}
-      />
+      {!flags.tourbusCoffeeCollected && !hasItem('Kaffee') && (
+        <Interactable
+          position={[0, 0.5, -3]}
+          emoji="☕"
+          name="Kaffee"
+          onInteract={() => {
+            addToInventory('Kaffee');
+            setFlag('tourbusCoffeeCollected', true);
+            setDialogue('Ein Becher schwarzer Kaffee. So schwarz wie die Seele eines Drummers nach einem 4-Stunden-Gig.');
+          }}
+        />
+      )}
 
-      {!hasItem('Energiedrink') && !hasItem('Turbo-Koffein') && !hasItem('Geister-Drink') && !(flags.ghostRecipeQuestCompleted && flags.larsEnergized) && (
+      {!flags.tourbusEnergyDrinkCollected && !hasItem('Energiedrink') && (
         <Interactable
           position={[-1, 0.5, -3]}
           emoji="🥤"
           name="Energiedrink"
           onInteract={() => {
             addToInventory('Energiedrink');
+            setFlag('tourbusEnergyDrinkCollected', true);
             setDialogue('Ein "Liquid Thunder" Energiedrink. Enthält genug Taurin, um ein kleines Kraftwerk zu betreiben.');
           }}
         />
       )}
 
-      {!hasItem('Bier') && (
+      {!flags.tourbusBeerCollected && !hasItem('Bier') && (
         <Interactable
           position={[2, 0.5, 3]}
           emoji="🍺"
           name="Bier-Vorrat"
           onInteract={() => {
             addToInventory('Bier');
+            setFlag('tourbusBeerCollected', true);
             setDialogue('Ein kühles Bier aus dem Bus-Kühlschrank. Das offizielle Schmiermittel für den Industrial-Motor.');
           }}
         />
@@ -597,7 +612,7 @@ export function TourBus() {
         }}
       />
 
-      {!hasItem('Rostiges Plektrum') && (
+      {!flags.rostigesPlektrumCollected && (
         <Interactable
           position={[-2, 0.5, 0]}
           emoji="🎸"
@@ -605,6 +620,7 @@ export function TourBus() {
           scale={0.5}
           onInteract={() => {
             addToInventory('Rostiges Plektrum');
+            setFlag('rostigesPlektrumCollected', true);
             setDialogue('Ein rostiges Plektrum. Es scheint aus einer Zeit zu stammen, in der Metal noch aus reinem Eisen geschmiedet wurde.');
           }}
         />
@@ -626,8 +642,7 @@ export function TourBus() {
               options: [
                 { text: 'Prost!', action: () => {
                     removeFromInventory('Geister-Drink');
-                    setFlag('ghostRecipeQuestCompleted', true);
-                    completeQuest('ghost_recipe');
+                    useStore.getState().completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
                     increaseBandMood(40);
                     useStore.getState().increaseSkill('social', 5);
                     setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
@@ -672,13 +687,13 @@ export function TourBus() {
             return;
           }
 
-          if (flags.ghostSecretRevealed) {
-            setDialogue('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
+          if (flags.ghostRecipeQuestStarted && !hasGeisterDrink) {
+            setDialogue('Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."');
             return;
           }
 
-          if (flags.ghostRecipeQuestStarted && !hasGeisterDrink) {
-            setDialogue('Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."');
+          if (flags.ghostSecretRevealed) {
+            setDialogue('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
             return;
           }
 
@@ -809,8 +824,7 @@ export function TourBus() {
                 }},
                 { text: 'Kann ich dir irgendwie helfen?', action: () => {
                     setDialogue('Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."');
-                    setFlag('ghostRecipeQuestStarted', true);
-                    addQuest('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies');
+                    useStore.getState().startQuestWithFlag('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies', 'ghostRecipeQuestStarted');
                     increaseBandMood(5);
                 }}
               ]
@@ -870,7 +884,7 @@ export function TourBus() {
         emoji="🚐"
         name="Zum Auftritt"
         onInteract={() => {
-          if (hasItem('Repariertes Kabel')) {
+          if (hasItem('Repariertes Kabel') || flags.cableFixed) {
             setDialogue('Auf gehts zum Gig! Nächster Halt: Backstage.');
             exitTimeoutRef.current = window.setTimeout(() => setScene('backstage'), 1000);
           } else {

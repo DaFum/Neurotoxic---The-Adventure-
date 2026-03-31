@@ -327,13 +327,13 @@ export function VoidStation() {
               options: [
                 { text: 'Nur Treibstoff für den Gig.', action: () => setDialogue('Tankwart: "So pragmatisch. Sucht in den Ecken der Existenz, wo das Licht sich krümmt."') },
                 ...(!flags.tankwartBargain ? [
-                  { text: 'Das ist doch alles Quatsch. Gib mir Sprit. [Cynic]', requiredTrait: 'Cynic' as const, action: () => {
+                  { id: 'tankwart_cynic', text: 'Das ist doch alles Quatsch. Gib mir Sprit. [Cynic]', requiredTrait: 'Cynic' as const, action: () => {
                     setDialogue('Tankwart: "Quatsch? Schau dich um, Fleischsack. Du stehst in der 5. Dimension. Hier ist der Sprit."');
                     increaseBandMood(15);
                     useStore.getState().increaseSkill('chaos', 3);
                     setFlag('tankwartBargain', true);
                   }},
-                  { text: 'Ich spiele für dich, Tankwart. [Performer]', requiredTrait: 'Performer' as const, action: () => {
+                  { id: 'tankwart_performer', text: 'Ich spiele für dich, Tankwart. [Performer]', requiredTrait: 'Performer' as const, action: () => {
                     setDialogue('Du legst eine kosmische Performance hin. Der Tankwart applaudiert lautlos. "Bravo. Die Leere liebt eine gute Show."');
                     increaseBandMood(25);
                     useStore.getState().increaseSkill('social', 5);
