@@ -173,9 +173,14 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     }
 
     // Subscribe to playerPos changes directly to avoid re-renders
+    let prevPos = initialPos;
     const unsubscribe = useStore.subscribe(
       (state) => {
         const newPos = state.playerPos;
+        // Optimization: only process if the playerPos array reference changed
+        if (newPos === prevPos) return;
+        prevPos = newPos;
+
         if (!bodyRef.current) return;
         try {
           const cur = bodyRef.current.translation();
