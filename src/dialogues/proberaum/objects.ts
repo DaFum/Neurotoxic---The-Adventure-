@@ -50,14 +50,7 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
 }
 
 export function buildProberaumPuddleDialogue(): Dialogue {
-  const store = game();
-  if (store.hasItem('Mop')) {
-    store.completeQuestWithFlag('water', 'waterCleaned');
-    store.increaseBandMood(20);
-    return say('Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.');
-  } else {
-    return say('Das ist eine riesige Pfütze. Sie scheint aus dem Nichts zu kommen und vibriert im Takt eines vergessenen Drum-Computers.');
-  }
+  return say('Das ist eine riesige Pfütze. Sie scheint aus dem Nichts zu kommen und vibriert im Takt eines vergessenen Drum-Computers.');
 }
 
 export function buildProberaumAmpDialogue(): Dialogue {
@@ -130,8 +123,6 @@ export function buildProberaumAmpDialogue(): Dialogue {
       ]
     };
   } else if (!flags.talkingAmpHeard) {
-    store.startQuestWithFlag('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall', 'talkingAmpHeard');
-    store.increaseBandMood(2);
     return say('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
   } else {
     const ampOptions: DialogueOption[] = [];
@@ -202,7 +193,7 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
               currentStore.increaseBandMood(25);
               currentStore.increaseSkill('chaos', 10);
             } else {
-              currentStore.setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Mach erst Platz in deinem Inventar, dann kann ich dir das Quanten-Kabel geben."');
+              currentStore.setDialogue('TR-8080: "Mach erst Platz in deinem Inventar, dann kann ich dir das Quanten-Kabel geben."');
             }
           }
         },

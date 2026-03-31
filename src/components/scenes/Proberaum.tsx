@@ -405,7 +405,14 @@ export function Proberaum() {
           name="Mysteriöse Pfütze"
           scale={1.5}
           onInteract={() => {
-            useStore.getState().setDialogue(buildProberaumPuddleDialogue());
+            const store = useStore.getState();
+            if (store.hasItem('Mop')) {
+              store.completeQuestWithFlag('water', 'waterCleaned');
+              store.increaseBandMood(20);
+              store.setDialogue('Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.');
+            } else {
+              store.setDialogue(buildProberaumPuddleDialogue());
+            }
           }}
         />
       )}
@@ -416,7 +423,12 @@ export function Proberaum() {
         emoji="🔊"
         name="Sprechender Amp"
         onInteract={() => {
-          useStore.getState().setDialogue(buildProberaumAmpDialogue());
+          const store = useStore.getState();
+          if (!store.flags.talkingAmpHeard) {
+            store.startQuestWithFlag('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall', 'talkingAmpHeard');
+            store.increaseBandMood(2);
+          }
+          store.setDialogue(buildProberaumAmpDialogue());
         }}
       />
 
