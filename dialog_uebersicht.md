@@ -75,20 +75,21 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Skill: Social 7): Ego-Management-Plan (+20 BandMood, setzt `mariusEgoStrategy`).
         * Standard: "Bleib einfach cool" (kein Effekt).
         * *Nach Erstkontakt (BandMood > 50):*
-            * Zweig A (Trait: Diplomat): "Marius, wie geht es dir wirklich? [Diplomat]" (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt`).
-            * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos).
+            * Zweig A (Trait: Diplomat): "Marius, wie geht es dir wirklich? [Diplomat]" (+15 BandMood, +3 Social, setzt `mariusSelfDoubtRevealed` UND `marius_tourbus_doubt`). Option verschwindet danach (forbiddenFlags).
+            * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos, setzt `mariusEgoComplimented`). Option verschwindet danach (forbiddenFlags).
             * Standard: "Bereit für den Gig?" (kein Effekt).
     * *Ohne Bier:* Fordert Bier.
+        * (Item: Bier) "Hier ist dein Bier": Konsumiert Item 'Bier' (+15 BandMood, beendet Quest `beer` und setzt `gaveBeerToMarius`).
         * "Ich beeile mich" (kein Mood-Effekt).
         * "Trink doch Wasser" (-5 BandMood).
-        * (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social).
-        * (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social).
+        * (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social, setzt `mariusVisionShared`). Option verschwindet danach (forbiddenFlags).
+        * (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social, setzt `mariusCalmedDown`). Option verschwindet danach (forbiddenFlags).
 * **Wischmopp (Item):**
     * *Interaktion:* Aufheben (Erhalt: Mop).
 * **Autoschlüssel (Item):**
     * *Interaktion:* Aufheben (+10 BandMood, Quest-Abschluss: `keys`, Erhalt: Autoschlüssel).
 * **Kühles Bier (Item):**
-    * *Interaktion:* Aufheben (+15 BandMood, Quest-Abschluss: `beer`, Erhalt: Bier).
+    * *Interaktion:* Aufheben (Erhalt: Bier, setzt `beerPickedUp`). *Spawnt neu, solange Marius kein Bier hat und keins im Inventar ist, um Deadlocks durch Lars zu verhindern.*
 * **Mysteriöse Pfütze:**
     * *Interaktion (Item: Mop):* Aufwischen (+20 BandMood, Quest-Abschluss: `water`).
 * **Sprechender Amp (Existenzielle Krise):**

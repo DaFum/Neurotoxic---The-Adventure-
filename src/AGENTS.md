@@ -10,9 +10,11 @@
 ### Quest API
 
 - `addQuest(id, text)` — if a quest with that id already exists, updates its display text while preserving its current status. Never reopens a completed quest. For scene-entry objectives call it inside a mount `useEffect(() => { addQuest(...); }, [])`.
+- `startQuestWithFlag(id, text, flag, flagValue?)` — atomic helper that adds/updates a quest and sets a boolean flag in one step, guaranteeing they stay in sync. Upserts the quest to `active`.
 - `startAndFinishQuest(id, text)` — records a milestone as completed in one step. If the quest already exists as 'active', transitions it to 'completed'. No-op if already completed or failed. Safe to call regardless of whether the quest was previously registered. Use for one-shot events (band meeting, fan movement, bassist contact, etc.).
-- `completeQuest(id)` — call this when resolving a quest. If other gameplay logic explicitly depends on a completion flag (e.g. gating dialogue or item visibility), update that flag in the same action. Do not rely on a flag alone to update the journal, or quest-log drift will occur. When no external logic reads the flag, rely solely on the quest status — two truth sources for the same fact cause drift in the opposite direction.
-- `failQuest(id)` — marks a quest failed; appears with strikethrough in the journal.
+- `completeQuest(id, text?)` — call this when resolving a quest. If the quest is not registered, it will auto-register and complete it if `text` is provided, otherwise it logs a development warning and returns unmodified state.
+- `completeQuestWithFlag(id, flag, flagValue?, text?)` — atomic helper that completes a quest and sets a boolean flag in one step. Accepts optional `text` to auto-register missing quests.
+- `failQuest(id, text?)` — marks a quest failed; appears with strikethrough in the journal. Works identically to `completeQuest` regarding unregistered quests.
 - Quest entries have `status: QuestStatus` (`'active' | 'completed' | 'failed'`) — not `completed: boolean`. Read with `q.status === 'completed'`, not `q.completed`.
 
 ### Flags
@@ -22,8 +24,8 @@
 
 ### Dialogue Engine (`dialogueEngine.ts`)
 
-- `executeDialogueOption(option)` — runs the full pipeline (requirement check → action → flag/quest effects → navigation). Used by UI; do not replicate this logic in scene callbacks.
-- `canSelectOption(option)` — pure requirement check (trait / skill / quest deps); returns bool. Used by UI to compute locked state.
+- `executeDialogueOption(option)` — runs the full pipeline. The strict execution order is: 1) requirement check 2) consume items (`option.consumeItems`) 3) apply declarative flag/quest effects 4) execute custom `action()` 5) navigation (`nextDialogue`). This ensures `action()` callbacks always read the up-to-date post-consumption state.
+- `canSelectOption(option)` — pure requirement check evaluating traits, skills, `questDependencies`, `requiredFlags`, `forbiddenFlags`, and `requiredItems` (which correctly handles multiple quantities based on the current inventory state). Returns bool. Used by UI to compute locked state.
 
 ## Audio (`audio.ts`)
 - All sound methods call `init()` internally — no need to initialize AudioContext before playing

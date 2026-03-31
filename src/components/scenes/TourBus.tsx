@@ -641,7 +641,7 @@ export function TourBus() {
               options: [
                 { text: 'Prost!', action: () => {
                     removeFromInventory('Geister-Drink');
-                    useStore.getState().completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted');
+                    useStore.getState().completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
                     increaseBandMood(40);
                     useStore.getState().increaseSkill('social', 5);
                     setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
@@ -883,7 +883,7 @@ export function TourBus() {
         emoji="🚐"
         name="Zum Auftritt"
         onInteract={() => {
-          if (hasItem('Repariertes Kabel')) {
+          if (hasItem('Repariertes Kabel') || flags.cableFixed) {
             setDialogue('Auf gehts zum Gig! Nächster Halt: Backstage.');
             exitTimeoutRef.current = window.setTimeout(() => setScene('backstage'), 1000);
           } else {

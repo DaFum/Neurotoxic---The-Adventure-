@@ -781,6 +781,7 @@ export function Proberaum() {
                     action: () => {
                       setDialogue('Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."');
                       useStore.getState().setFlag('mariusSelfDoubtRevealed', true);
+                      useStore.getState().setFlag('marius_tourbus_doubt', true);
                       useStore.getState().increaseBandMood(15);
                       useStore.getState().increaseSkill('social', 3);
                     }
@@ -877,7 +878,7 @@ export function Proberaum() {
         />
       )}
 
-      {!flags.beerPickedUp && (
+      {!flags.gaveBeerToMarius && !hasItem('Bier') && (
         <Interactable
           position={[8, 0.5, -5]}
           emoji="🍺"
