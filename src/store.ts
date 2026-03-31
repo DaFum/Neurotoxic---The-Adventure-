@@ -431,11 +431,12 @@ interface Recipe {
   ingredients: [string, string];
   result: string;
   flagToSet?: keyof typeof initialState.flags;
+  questToComplete?: string;
 }
 
 const RECIPES: Recipe[] = [
   { ingredients: ['Defektes Kabel', 'Klebeband'], result: 'Repariertes Kabel', flagToSet: 'cableFixed' },
-  { ingredients: ['Setliste', 'Stift'], result: 'Signierte Setliste' },
+  { ingredients: ['Setliste', 'Stift'], result: 'Signierte Setliste', questToComplete: 'get_setlist_signed' },
   { ingredients: ['Energiedrink', 'Kaffee'], result: 'Turbo-Koffein' },
   { ingredients: ['Schrottmetall', 'Lötkolben'], result: 'Industrie-Talisman' },
   { ingredients: ['Batterie', 'Lötkolben'], result: 'Plasma-Zünder' },
@@ -570,6 +571,7 @@ export const useStore = create<GameState>()(
           };
         });
 
+        if (recipe.questToComplete) get().completeQuest(recipe.questToComplete);
         audio.playPickup();
         return true;
       },
