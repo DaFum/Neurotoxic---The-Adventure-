@@ -1,0 +1,32 @@
+{
+  "eval_id": 0,
+  "eval_name": "quest-completion-bug",
+  "prompt": "The 'Signierte Setliste' recipe works but the quest 'get_setlist_signed' never completes after combining the items. I think the flag is set but the quest stays active in the journal. Can you fix this?",
+  "assertions": [
+    {
+      "id": "identifies-missing-completeQuest",
+      "text": "Correctly identifies the missing completeQuest() or completeQuestWithFlag() call as the root cause",
+      "type": "qualitative"
+    },
+    {
+      "id": "uses-correct-quest-api",
+      "text": "Proposed fix uses the actual Quest API (completeQuest, completeQuestWithFlag, or startAndFinishQuest) — not a fabricated method",
+      "type": "qualitative"
+    },
+    {
+      "id": "includes-unit-test",
+      "text": "Includes a unit test that validates the fix",
+      "type": "qualitative"
+    },
+    {
+      "id": "correct-import-path",
+      "text": "Uses @/src/store (not @/store) for imports",
+      "type": "keyword_check"
+    },
+    {
+      "id": "no-fictional-references",
+      "text": "Does NOT reference Pixi, i18n, game-balancing-assistant, audio-debugger-ambient-vs-gig, or other non-existent tools/systems",
+      "type": "keyword_absence"
+    }
+  ]
+}

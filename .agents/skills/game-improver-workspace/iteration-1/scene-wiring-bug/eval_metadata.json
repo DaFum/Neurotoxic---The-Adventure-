@@ -1,0 +1,32 @@
+{
+  "eval_id": 2,
+  "eval_name": "scene-wiring-bug",
+  "prompt": "I added a new scene called 'keller' but when I switch to it the player just falls through the floor and there's no ambient music. The scene file exists but something's not wired up right.",
+  "assertions": [
+    {
+      "id": "references-scene-checklist",
+      "text": "References or walks through the 5-step scene addition checklist (or equivalent systematic check)",
+      "type": "qualitative"
+    },
+    {
+      "id": "identifies-missing-floor",
+      "text": "Identifies the missing floor RigidBody (type='fixed' at [0, -0.1, 0]) as the cause of falling through",
+      "type": "qualitative"
+    },
+    {
+      "id": "identifies-missing-ambient",
+      "text": "Identifies the missing ambient track handling in audio.ts startAmbient() as the cause of no music",
+      "type": "qualitative"
+    },
+    {
+      "id": "checks-scene-union-and-game-wiring",
+      "text": "Checks whether 'keller' was added to the Scene union type in store.ts and wired in Game.tsx",
+      "type": "qualitative"
+    },
+    {
+      "id": "no-fictional-conventions",
+      "text": "Does NOT reference Pixi, i18n, or non-existent specialist skills in the diagnosis",
+      "type": "keyword_absence"
+    }
+  ]
+}

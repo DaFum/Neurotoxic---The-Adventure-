@@ -1,0 +1,26 @@
+{
+  "skill_name": "game-improver",
+  "evals": [
+    {
+      "id": 0,
+      "name": "quest-completion-bug",
+      "prompt": "The 'Signierte Setliste' recipe works but the quest 'get_setlist_signed' never completes after combining the items. I think the flag is set but the quest stays active in the journal. Can you fix this?",
+      "expected_output": "A diagnosis identifying the missing completeQuest() call, a code fix using completeQuestWithFlag or explicit completeQuest, and a unit test. Should NOT introduce Pixi, i18n, or reference non-existent specialist skills.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "new-crafting-recipe",
+      "prompt": "Add a new crafting recipe: combining 'Rostiges Plektrum' with 'Klebeband' should produce 'Repariertes Plektrum'. Also add a dialogue option in Proberaum where Matze mentions this combo if the player has both items.",
+      "expected_output": "A recipe added to the RECIPES array, a dialogue option in Proberaum with proper requiredItems check, correct import path (@/src/store), and an update note for dialog_uebersicht.md. Should NOT use wrong import paths or fabricated store fields.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "scene-wiring-bug",
+      "prompt": "I added a new scene called 'keller' but when I switch to it the player just falls through the floor and there's no ambient music. The scene file exists but something's not wired up right.",
+      "expected_output": "A diagnosis walking through the 5-step scene checklist, identifying which steps were missed (floor RigidBody, ambient track, Scene union type, Game.tsx wiring). Should reference actual conventions, not fictional ones.",
+      "files": []
+    }
+  ]
+}

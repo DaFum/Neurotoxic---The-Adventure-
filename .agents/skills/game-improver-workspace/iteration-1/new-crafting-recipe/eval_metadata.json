@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "eval_name": "new-crafting-recipe",
+  "prompt": "Add a new crafting recipe: combining 'Rostiges Plektrum' with 'Klebeband' should produce 'Repariertes Plektrum'. Also add a dialogue option in Proberaum where Matze mentions this combo if the player has both items.",
+  "assertions": [
+    {
+      "id": "recipe-in-RECIPES-array",
+      "text": "Adds the recipe to the RECIPES array in src/store.ts (not some other location)",
+      "type": "qualitative"
+    },
+    {
+      "id": "dialogue-uses-requiredItems",
+      "text": "Dialogue option uses requiredItems (or equivalent item check) to gate on having both items",
+      "type": "qualitative"
+    },
+    {
+      "id": "mentions-dialog-uebersicht-update",
+      "text": "Mentions that dialog_uebersicht.md needs to be updated with the new dialogue and recipe",
+      "type": "qualitative"
+    },
+    {
+      "id": "correct-import-path",
+      "text": "Uses @/src/store (not @/store) for imports",
+      "type": "keyword_check"
+    },
+    {
+      "id": "includes-unit-test",
+      "text": "Includes a unit test for the new crafting recipe",
+      "type": "qualitative"
+    },
+    {
+      "id": "no-fictional-references",
+      "text": "Does NOT reference Pixi, i18n, state.player.money, or other non-existent fields/systems",
+      "type": "keyword_absence"
+    }
+  ]
+}
