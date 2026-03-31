@@ -437,7 +437,7 @@ export function Proberaum() {
                           const pickedUpFragment = store.addToInventory('Frequenzfragment');
                           store.setFlag('bassist_clue_matze', true);
                           store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                          store.increaseBandMood(25);
+                          store.increaseBandMood(25, 'matze_1982_mystic_proberaum');
                           store.increaseSkill('chaos', 4);
                           store.setFlag('matzeDeepTalk', true);
                           if (pickedUpFragment) {
@@ -456,7 +456,7 @@ export function Proberaum() {
                           store.setFlag('proberaum_brutalist_smash', true);
                           store.setFlag('bassist_clue_matze', true);
                           store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                          store.increaseBandMood(10);
+                          store.increaseBandMood(10, 'matze_1982_brutalist_proberaum');
                           store.increaseSkill('chaos', 3);
                           store.setFlag('matzeDeepTalk', true);
                           if (pickedUpFragment) {
