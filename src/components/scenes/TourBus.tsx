@@ -271,39 +271,49 @@ export function TourBus() {
                 {
                   text: 'Ich sehe unseren Sieg. [Visionary]',
                   requiredTrait: 'Visionary',
+                  consumeItems: ['Repariertes Kabel'],
                   action: () => {
-                    setDialogue('Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen."');
+                    setDialogue('Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen." (Kabel übergeben)');
                     increaseBandMood(15);
-                    completeQuest('cable');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                   }
                 },
                 {
                   text: 'Ich habe den Soundcheck analysiert. [Technical 5]',
                   requiredSkill: { name: 'technical', level: 5 },
+                  consumeItems: ['Repariertes Kabel'],
                   action: () => {
-                    setDialogue('Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält."');
+                    setDialogue('Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält." (Kabel übergeben)');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 3);
-                    completeQuest('cable');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                   }
                 },
                 {
                   text: 'Wir schaffen das zusammen. [Social 5]',
                   requiredSkill: { name: 'social', level: 5 },
+                  consumeItems: ['Repariertes Kabel'],
                   action: () => {
-                    setDialogue('Matze: "Zusammen... ja. Wir sind eine verdammte Einheit."');
+                    setDialogue('Matze: "Zusammen... ja. Wir sind eine verdammte Einheit." (Kabel übergeben)');
                     increaseBandMood(15);
                     useStore.getState().increaseSkill('social', 3);
-                    completeQuest('cable');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                   }
                 },
-                { text: 'Ein bisschen schon.', action: () => {
-                    setDialogue('Matze: "Gut. Angst hält uns wach."');
-                    completeQuest('cable');
+                {
+                  text: 'Ein bisschen schon.',
+                  consumeItems: ['Repariertes Kabel'],
+                  action: () => {
+                    setDialogue('Matze: "Gut. Angst hält uns wach." (Kabel übergeben)');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                 }},
-                { text: 'Lass uns die Bühne abreißen!', action: () => {
+                {
+                  text: 'Lass uns die Bühne abreißen!',
+                  consumeItems: ['Repariertes Kabel'],
+                  action: () => {
                     increaseBandMood(10);
-                    completeQuest('cable');
+                    setDialogue('Matze: "Das ist die richtige Einstellung!" (Kabel übergeben)');
+                    useStore.getState().completeQuestWithFlag('cable', 'cableFixed');
                 }}
               ]
             });
@@ -552,35 +562,40 @@ export function TourBus() {
         />
       )}
 
-      <Interactable
-        position={[0, 0.5, -3]}
-        emoji="☕"
-        name="Kaffee"
-        onInteract={() => {
-          addToInventory('Kaffee');
-          setDialogue('Ein Becher schwarzer Kaffee. So schwarz wie die Seele eines Drummers nach einem 4-Stunden-Gig.');
-        }}
-      />
+      {!flags.tourbusCoffeeCollected && (
+        <Interactable
+          position={[0, 0.5, -3]}
+          emoji="☕"
+          name="Kaffee"
+          onInteract={() => {
+            addToInventory('Kaffee');
+            setFlag('tourbusCoffeeCollected', true);
+            setDialogue('Ein Becher schwarzer Kaffee. So schwarz wie die Seele eines Drummers nach einem 4-Stunden-Gig.');
+          }}
+        />
+      )}
 
-      {!hasItem('Energiedrink') && !hasItem('Turbo-Koffein') && !hasItem('Geister-Drink') && !(flags.ghostRecipeQuestCompleted && flags.larsEnergized) && (
+      {!flags.tourbusEnergyDrinkCollected && (
         <Interactable
           position={[-1, 0.5, -3]}
           emoji="🥤"
           name="Energiedrink"
           onInteract={() => {
             addToInventory('Energiedrink');
+            setFlag('tourbusEnergyDrinkCollected', true);
             setDialogue('Ein "Liquid Thunder" Energiedrink. Enthält genug Taurin, um ein kleines Kraftwerk zu betreiben.');
           }}
         />
       )}
 
-      {!hasItem('Bier') && (
+      {!flags.tourbusBeerCollected && (
         <Interactable
           position={[2, 0.5, 3]}
           emoji="🍺"
           name="Bier-Vorrat"
           onInteract={() => {
             addToInventory('Bier');
+            setFlag('tourbusBeerCollected', true);
             setDialogue('Ein kühles Bier aus dem Bus-Kühlschrank. Das offizielle Schmiermittel für den Industrial-Motor.');
           }}
         />

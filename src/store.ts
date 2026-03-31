@@ -16,7 +16,7 @@ export type QuestStatus = 'active' | 'completed' | 'failed';
 export type Flag =
   | 'waterCleaned'
   | 'ampFixed'
-  | 'gotBeer'
+  | 'beerPickedUp'
   | 'cableFixed'
   | 'setlistFound'
   | 'mariusCalmed'
@@ -98,6 +98,14 @@ export type Flag =
   | 'matzeRiffWarning'
   | 'larsRhythmPact'
   | 'gaveBeerToLars'
+  | 'gaveBeerToMarius'
+  | 'mariusSelfDoubtRevealed'
+  | 'mariusEgoComplimented'
+  | 'mariusVisionShared'
+  | 'mariusCalmedDown'
+  | 'tourbusCoffeeCollected'
+  | 'tourbusEnergyDrinkCollected'
+  | 'tourbusBeerCollected'
   | 'mariusEgoStrategy'
   | 'ampSentient'
   | 'ghostTrustEarned'
@@ -268,7 +276,7 @@ const initialState = {
   flags: {
     waterCleaned: false,
     ampFixed: false,
-    gotBeer: false,
+    beerPickedUp: false,
     cableFixed: false,
     setlistFound: false,
     mariusCalmed: false,
@@ -350,6 +358,14 @@ const initialState = {
     matzeRiffWarning: false,
     larsRhythmPact: false,
     gaveBeerToLars: false,
+    gaveBeerToMarius: false,
+    mariusSelfDoubtRevealed: false,
+    mariusEgoComplimented: false,
+    mariusVisionShared: false,
+    mariusCalmedDown: false,
+    tourbusCoffeeCollected: false,
+    tourbusEnergyDrinkCollected: false,
+    tourbusBeerCollected: false,
     mariusEgoStrategy: false,
     ampSentient: false,
     ghostTrustEarned: false,

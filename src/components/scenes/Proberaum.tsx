@@ -683,10 +683,19 @@ export function Proberaum() {
         isBandMember={true}
         idleType="sway"
         onInteract={() => {
-          if (!flags.gotBeer) {
+          if (!flags.gaveBeerToMarius) {
             setDialogue({
               text: 'Marius: "Ohne ein kühles Bier kann ich nicht singen. Besorg mir eins!"',
               options: [
+                ...(useStore.getState().hasItem('Bier') ? [{
+                  text: 'Hier ist dein Bier.',
+                  consumeItems: ['Bier'],
+                  action: () => {
+                    useStore.getState().completeQuestWithFlag('beer', 'gaveBeerToMarius');
+                    useStore.getState().increaseBandMood(15);
+                    setDialogue('Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"');
+                  }
+                }] : []),
                 { text: 'Ich beeile mich.', action: () => setDialogue('Marius: "Gut. Meine Stimmbänder fühlen sich an wie Schleifpapier."') },
                 { text: 'Trink doch Wasser.', action: () => {
                   setDialogue('Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"');
@@ -695,8 +704,10 @@ export function Proberaum() {
                 { 
                   text: 'Ich verstehe deine Vision. [Visionary]', 
                   requiredTrait: 'Visionary',
+                  forbiddenFlags: ['mariusVisionShared'],
                   action: () => {
                     setDialogue('Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."');
+                    useStore.getState().setFlag('mariusVisionShared', true);
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('social', 3);
                   }
@@ -704,8 +715,10 @@ export function Proberaum() {
                 { 
                   text: 'Beruhige dich, Star. [Social 5]', 
                   requiredSkill: { name: 'social', level: 5 },
+                  forbiddenFlags: ['mariusCalmedDown'],
                   action: () => {
                     setDialogue('Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."');
+                    useStore.getState().setFlag('mariusCalmedDown', true);
                     increaseBandMood(15);
                     useStore.getState().increaseSkill('social', 2);
                   }
@@ -764,9 +777,10 @@ export function Proberaum() {
                   {
                     text: 'Marius, wie geht es dir wirklich? [Diplomat]',
                     requiredTrait: 'Diplomat',
+                    forbiddenFlags: ['mariusSelfDoubtRevealed'],
                     action: () => {
                       setDialogue('Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."');
-                      useStore.getState().setFlag('marius_tourbus_doubt', true);
+                      useStore.getState().setFlag('mariusSelfDoubtRevealed', true);
                       useStore.getState().increaseBandMood(15);
                       useStore.getState().increaseSkill('social', 3);
                     }
@@ -774,8 +788,10 @@ export function Proberaum() {
                   {
                     text: 'Dein Ego ist groß genug für zwei Dimensionen. [Cynic]',
                     requiredTrait: 'Cynic',
+                    forbiddenFlags: ['mariusEgoComplimented'],
                     action: () => {
                       setDialogue('Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"');
+                      useStore.getState().setFlag('mariusEgoComplimented', true);
                       useStore.getState().increaseBandMood(5);
                       useStore.getState().increaseSkill('chaos', 2);
                     }
@@ -861,17 +877,15 @@ export function Proberaum() {
         />
       )}
 
-      {!flags.gotBeer && (
+      {!flags.beerPickedUp && (
         <Interactable
           position={[8, 0.5, -5]}
           emoji="🍺"
           name="Kühles Bier"
           scale={0.6}
           onInteract={() => {
-            setFlag('gotBeer', true);
+            setFlag('beerPickedUp', true);
             addToInventory('Bier');
-            completeQuest('beer');
-            increaseBandMood(15);
             setDialogue('Ein kühles Bier für Marius!');
           }}
         />
@@ -1188,7 +1202,7 @@ export function Proberaum() {
       )}
 
       {/* Exit */}
-      {flags.waterCleaned && flags.gotBeer && (
+      {flags.waterCleaned && flags.gaveBeerToMarius && (
         <Interactable
           position={[0, 1, -6]}
           emoji="🚪"
