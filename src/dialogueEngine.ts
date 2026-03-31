@@ -8,7 +8,7 @@ import type { DialogueOption } from './store';
  * Used by the UI to determine disabled/locked state without executing side-effects.
  */
 export function canSelectOption(option: DialogueOption): boolean {
-  const { trait, skills, quests } = useStore.getState();
+  const { trait, skills, quests, flags, inventory } = useStore.getState();
 
   if (option.requiredTrait && trait !== option.requiredTrait) return false;
 
@@ -18,10 +18,36 @@ export function canSelectOption(option: DialogueOption): boolean {
   }
 
   if (option.questDependencies) {
-    const completedIds = new Set(
-      quests.filter(q => q.status === 'completed').map(q => q.id)
-    );
-    if (!option.questDependencies.every(id => completedIds.has(id))) return false;
+    for (const dep of option.questDependencies) {
+      if (typeof dep === 'string') {
+        const q = quests.find(q => q.id === dep);
+        if (!q || q.status !== 'completed') return false;
+      } else {
+        const q = quests.find(q => q.id === dep.id);
+        if (!q || q.status !== dep.status) return false;
+      }
+    }
+  }
+
+  if (option.requiredFlags && !option.requiredFlags.every(flag => flags[flag] === true)) {
+    return false;
+  }
+
+  if (option.forbiddenFlags && option.forbiddenFlags.some(flag => flags[flag] === true)) {
+    return false;
+  }
+
+  if (option.requiredItems) {
+    // Inventory needs to support multiple of the same item if `requiredItems` specifies duplicates
+    const counts: Record<string, number> = {};
+    for (const item of inventory) counts[item] = (counts[item] || 0) + 1;
+
+    const requiredCounts: Record<string, number> = {};
+    for (const item of option.requiredItems) requiredCounts[item] = (requiredCounts[item] || 0) + 1;
+
+    for (const [item, needed] of Object.entries(requiredCounts)) {
+      if ((counts[item] || 0) < needed) return false;
+    }
   }
 
   return true;
@@ -38,27 +64,39 @@ export function canSelectOption(option: DialogueOption): boolean {
 export function executeDialogueOption(option: DialogueOption): boolean {
   if (!canSelectOption(option)) return false;
 
+  const storeState = useStore.getState();
+
+  // 1. Consume items
+  if (option.consumeItems) {
+    option.consumeItems.forEach(item => {
+      useStore.getState().removeFromInventory(item);
+    });
+  }
+
+  // 2. Apply declarative state effects BEFORE action runs
+  // This allows the action to rely on updated flags/quests.
+  if (option.flagToSet) storeState.setFlag(option.flagToSet.flag, option.flagToSet.value);
+  if (option.questToAdd) storeState.addQuest(option.questToAdd.id, option.questToAdd.text);
+  if (option.questToComplete) storeState.completeQuest(option.questToComplete);
+  if (option.questToFail) storeState.failQuest(option.questToFail);
+
   // Snapshot dialogue state before action so we can detect action-driven navigation
   const preActionDialogue = useStore.getState().dialogue;
 
-  // Custom action runs first — it may call setDialogue() internally
+  // 3. Custom action logic
   option.action?.();
 
-  // Declarative effects are applied after action (quest/flag changes never redirect dialogue)
-  const { setFlag, addQuest, completeQuest, failQuest, setDialogue } = useStore.getState();
-
-  if (option.flagToSet) setFlag(option.flagToSet.flag, option.flagToSet.value);
-  if (option.questToAdd) addQuest(option.questToAdd.id, option.questToAdd.text);
-  if (option.questToComplete) completeQuest(option.questToComplete);
-  if (option.questToFail) failQuest(option.questToFail);
-
-  // Navigation: nextDialogue wins; otherwise auto-close unless action already redirected
   const postActionDialogue = useStore.getState().dialogue;
 
+  if (option.nextDialogue && option.action && preActionDialogue !== postActionDialogue) {
+    console.warn('executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. nextDialogue will overwrite the action\'s dialogue change.');
+  }
+
+  // 4. Navigation: nextDialogue wins; otherwise auto-close unless action already redirected
   if (option.nextDialogue) {
-    setDialogue(option.nextDialogue);
+    useStore.getState().setDialogue(option.nextDialogue);
   } else if (option.closeOnSelect !== false && preActionDialogue === postActionDialogue) {
-    setDialogue(null);
+    useStore.getState().setDialogue(null);
   }
 
   return true;

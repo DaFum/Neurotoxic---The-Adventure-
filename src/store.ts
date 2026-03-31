@@ -169,8 +169,13 @@ export interface DialogueOption {
   flagToSet?: { flag: Flag; value: boolean };
   requiredSkill?: { name: keyof Skills; level: number };
   requiredTrait?: Trait;
-  questDependencies?: string[];
+  questDependencies?: (string | { id: string; status: QuestStatus })[];
   closeOnSelect?: boolean;
+  requiredFlags?: Flag[];
+  forbiddenFlags?: Flag[];
+  requiredItems?: string[];
+  consumeItems?: string[];
+  id?: string;
 }
 
 export interface Dialogue {
@@ -451,6 +456,7 @@ export const useStore = create<GameState>()(
             newInventory.splice(index, 1);
             return { inventory: newInventory };
           }
+          console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
           return state;
         });
       },
@@ -509,6 +515,9 @@ export const useStore = create<GameState>()(
       addQuest: (id, text) => set((state) => {
         const existing = state.quests.find(q => q.id === id);
         if (existing) {
+          if (existing.text !== text) {
+             console.warn(`Attempted to add existing quest with a different text. id: ${id}, oldText: "${existing.text}", newText: "${text}"`);
+          }
           // Update the display text while preserving the current status so that
           // narrative corrections propagate to saves without reopening the quest.
           return { quests: state.quests.map(q => q.id === id ? { ...q, text } : q) };

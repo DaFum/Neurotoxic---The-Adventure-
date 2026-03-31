@@ -609,7 +609,7 @@ export function UI() {
 
                       return (
                         <button
-                          key={idx}
+                          key={option.id || idx}
                           disabled={isLocked || isResolving}
                           onClick={() => {
                             if (isResolving) return;
@@ -632,9 +632,14 @@ export function UI() {
                             <div className={`text-[8px] mt-1 font-mono ${isLocked ? 'text-blood' : 'text-toxic/60 group-hover:text-black/60'}`}>
                               {skillReq && `[ REQ: ${skillReq.name.toUpperCase()} ${skillReq.level} ] `}
                               {traitReq && `[ REQ: ${traitReq.toUpperCase()} ] `}
-                              {questDeps && questDeps.map(qid => {
-                                const questTitle = quests.find(q => q.id === qid)?.text || qid;
-                                return <span key={qid}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
+                              {questDeps && questDeps.map((dep, depIdx) => {
+                                if (typeof dep === 'string') {
+                                  const questTitle = quests.find(q => q.id === dep)?.text || dep;
+                                  return <span key={`dep-${depIdx}`}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
+                                } else {
+                                  const questTitle = quests.find(q => q.id === dep.id)?.text || dep.id;
+                                  return <span key={`dep-${depIdx}`}>[ REQ: QUEST {dep.status.toUpperCase()}: {questTitle} ] </span>
+                                }
                               })}
                             </div>
                           )}
