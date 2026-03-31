@@ -6,11 +6,11 @@ Real patterns for state changes in `src/store.ts`. The store uses Zustand with a
 
 ```
 inventory: string[]                    # Held items
-flags: Record<Flag, boolean>           # Boolean progress flags (100+)
+flags: Record<Flag, boolean>           # 123 boolean progress flags
 quests: { id, text, status }[]         # Quest log (status: 'active' | 'completed' | 'failed')
 bandMood: number                       # 0-100, affects music tempo and camera shake
 loreEntries: LoreEntry[]               # Discovered lore
-trait: Trait | null                    # Player's chosen trait
+trait: Trait | null                     # Player's chosen trait
 skills: { technical, social, chaos }   # Numeric skill levels
 scene: Scene                           # Current scene (not persisted)
 playerPos: [x, y, z]                   # Player position (not persisted)
@@ -37,7 +37,7 @@ Test pattern:
 
 ```ts
 import { describe, it, expect } from 'vitest'
-import { useStore } from './store'  // relative import — test files use './store', not '@/src/store'
+import { useStore } from '@/src/store'
 
 describe('resetBandMood', () => {
   it('resets bandMood to 50', () => {
@@ -50,35 +50,25 @@ describe('resetBandMood', () => {
 
 ## Adding a Crafting Recipe
 
-Recipes live in the `RECIPES` array defined above `useStore`. The Recipe type uses an `ingredients` tuple — **not** `item1`/`item2`.
+Recipes live in the `RECIPES` array defined above `useStore`. `combineItems()` checks both orderings automatically.
 
 ```ts
-// Recipe interface (from store.ts):
-// interface Recipe {
-//   ingredients: [string, string];
-//   result: string;
-//   flagToSet?: keyof typeof initialState.flags;  // optional: set a flag on craft
-// }
-
-// Add to RECIPES array — use the ingredients tuple:
-{ ingredients: ['Neues Teil A', 'Neues Teil B'], result: 'Kombination' },
-
-// With a flag set on craft:
-{ ingredients: ['Defektes Kabel', 'Klebeband'], result: 'Repariertes Kabel', flagToSet: 'cableFixed' },
+// Add to RECIPES array
+{ item1: 'Neues Teil A', item2: 'Neues Teil B', result: 'Kombination' },
 ```
 
-`combineItems()` checks both orderings automatically. It removes both inputs and adds the result — no separate `removeFromInventory()` needed for recipes.
+Both `combineItems('Neues Teil A', 'Neues Teil B')` and the reverse will work. `combineItems` removes both inputs and adds the result — no separate `removeFromInventory()` needed for recipes.
 
-Current recipes (for reference — read `src/store.ts` for the authoritative list):
+Existing recipes (for reference):
 ```
-'Defektes Kabel'     + 'Klebeband'         -> 'Repariertes Kabel'      (flagToSet: 'cableFixed')
-'Setliste'           + 'Stift'             -> 'Signierte Setliste'
-'Energiedrink'       + 'Kaffee'            -> 'Turbo-Koffein'
-'Schrottmetall'      + 'Lötkolben'         -> 'Industrie-Talisman'
-'Batterie'           + 'Lötkolben'         -> 'Plasma-Zünder'
-'Turbo-Koffein'      + 'Rostiges Plektrum' -> 'Geister-Drink'
-'Splitter der Leere' + 'Altes Plektrum'    -> 'Void-Plektrum'
-'Frequenzfragment'   + 'Splitter der Leere'-> 'Resonanz-Kristall'
+'Defektes Kabel' + 'Klebeband' -> 'Repariertes Kabel'
+'Setliste' + 'Stift' -> 'Signierte Setliste'
+'Energiedrink' + 'Kaffee' -> 'Turbo-Koffein'
+'Schrottmetall' + 'Lotkolben' -> 'Industrie-Talisman'
+'Batterie' + 'Lotkolben' -> 'Plasma-Zunder'
+'Turbo-Koffein' + 'Rostiges Plektrum' -> 'Geister-Drink'
+'Splitter der Leere' + 'Altes Plektrum' -> 'Void-Plektrum'
+'Frequenzfragment' + 'Splitter der Leere' -> 'Resonanz-Kristall'
 ```
 
 ## Adding a New Flag
@@ -103,7 +93,7 @@ action: () => { setFlag('new_flag_name', true) }
 The quest API is idempotent — safe to call multiple times.
 
 ```ts
-// Register on scene mount (scene-entry quests only)
+// Register on scene mount
 useEffect(() => {
   addQuest('quest_id', 'Quest description')
 }, [])
@@ -116,47 +106,11 @@ action: () => {
 // One-shot milestone (no prior registration needed)
 startAndFinishQuest('milestone_id', 'Milestone text')
 
-// Atomic quest start + flag in one call
+// Atomic quest + flag in one call
 startQuestWithFlag('quest_id', 'Quest text', 'associated_flag')
-
-// Complete without a flag (quest was registered elsewhere)
-completeQuest('quest_id')
 ```
 
 Key: quest `status` is `'active' | 'completed' | 'failed'` — check with `q.status === 'completed'`, not `q.completed`.
-
-## BandMood
-
-Always use `increaseBandMood(delta)` for increments — it clamps to [0, 100] automatically.
-Direct `set({ bandMood: value })` calls do **not** clamp and can produce invalid state.
-
-```ts
-// Safe — clamps automatically
-increaseBandMood(15)
-increaseBandMood(-10)
-
-// Unsafe — no clamping, can go out of range
-set({ bandMood: state.bandMood + 200 })  // ❌ will exceed 100
-```
-
-## Stale Closure Pattern
-
-`onInteract` callbacks close over render-time values. If a callback reads from
-destructured store state, it may see stale values after state updates.
-
-```ts
-// ❌ Stale — flags captured at render time, won't reflect updates
-const { flags } = useStore.getState()
-onInteract={() => {
-  if (flags.questDone) { ... }  // may be stale
-}}
-
-// ✅ Fresh — reads latest state at call time
-onInteract={() => {
-  const { flags } = useStore.getState()
-  if (flags.questDone) { ... }
-}}
-```
 
 ## Modifying Persisted State
 
@@ -185,7 +139,7 @@ set(state => ({
   )
 }))
 
-// Clamp number (when not using increaseBandMood)
+// Clamp number
 set(state => ({
   ...state,
   bandMood: Math.max(0, Math.min(100, state.bandMood + delta))
