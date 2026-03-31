@@ -364,8 +364,9 @@ export function UI() {
 
       <button
         onClick={() => setShowHudPanels((prev) => !prev)}
-        className="absolute top-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20"
-        aria-label={showHudPanels ? 'Hide HUD panels' : 'Show HUD panels'}
+        className="absolute top-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        aria-label="Toggle HUD panels"
+        aria-pressed={showHudPanels}
       >
         {showHudPanels ? <EyeOff size={14} /> : <Eye size={14} />}
         {isCompactViewport ? (showHudPanels ? 'HUD ON' : 'HUD OFF') : 'HUD'}
@@ -694,8 +695,9 @@ export function UI() {
       {/* Touch-accessible Pause Button */}
       <button
         onClick={() => setPaused(!isPaused)}
-        className="absolute bottom-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto"
-        aria-label="Pause"
+        className="absolute bottom-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        aria-label="Toggle pause menu"
+        aria-pressed={isPaused}
         style={{ touchAction: 'none' }}
       >
         ⏸
