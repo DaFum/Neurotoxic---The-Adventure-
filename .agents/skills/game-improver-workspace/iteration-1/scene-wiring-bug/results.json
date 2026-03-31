@@ -1,0 +1,33 @@
+{
+  "eval_id": 2,
+  "eval_name": "scene-wiring-bug",
+  "score": 1.0,
+  "assertion_results": [
+    {
+      "id": "references-scene-checklist",
+      "passed": true,
+      "notes": "All 5 checklist steps walked through: Keller.tsx scene file, Scene union, Game.tsx wiring, audio.ts startAmbient(), and dialog_uebersicht.md."
+    },
+    {
+      "id": "identifies-missing-floor",
+      "passed": true,
+      "notes": "Missing floor RigidBody correctly identified and created with type='fixed' at position [0, -0.1, 0], fixing the fall-through issue."
+    },
+    {
+      "id": "identifies-missing-ambient",
+      "passed": true,
+      "notes": "'keller' added to startAmbient() union type and a keller else-if branch added in the audio loop, fixing the missing ambient music."
+    },
+    {
+      "id": "checks-scene-union-and-game-wiring",
+      "passed": true,
+      "notes": "'keller' added to Scene union type in store.ts and wired in Game.tsx with the correct import and conditional render."
+    },
+    {
+      "id": "no-fictional-conventions",
+      "passed": true,
+      "notes": "No references to Pixi, i18n, or non-existent specialist skills in the diagnosis or implementation."
+    }
+  ],
+  "summary": "All 5 assertions passed. The implementation systematically followed the scene checklist, correctly diagnosed both the missing floor RigidBody and missing ambient track, verified Scene union and Game.tsx wiring, and avoided fictional conventions."
+}

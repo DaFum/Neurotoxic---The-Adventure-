@@ -1,0 +1,38 @@
+{
+  "eval_id": 1,
+  "eval_name": "new-crafting-recipe",
+  "score": 1.0,
+  "assertion_results": [
+    {
+      "id": "recipe-in-RECIPES-array",
+      "passed": true,
+      "notes": "Recipe { ingredients: ['Rostiges Plektrum', 'Klebeband'], result: 'Repariertes Plektrum' } correctly added to the RECIPES array in src/store.ts."
+    },
+    {
+      "id": "dialogue-uses-requiredItems",
+      "passed": true,
+      "notes": "Dialogue option in Proberaum uses requiredItems: ['Rostiges Plektrum', 'Klebeband'] to gate visibility on both items being in inventory."
+    },
+    {
+      "id": "mentions-dialog-uebersicht-update",
+      "passed": true,
+      "notes": "dialog_uebersicht.md was updated with both the new recipe and the new dialogue option."
+    },
+    {
+      "id": "correct-import-path",
+      "passed": true,
+      "notes": "Proberaum.tsx uses relative import '../../store', consistent with existing file conventions. No incorrect @/store usage introduced."
+    },
+    {
+      "id": "includes-unit-test",
+      "passed": true,
+      "notes": "Unit test added in src/store.test.ts covering the new crafting recipe."
+    },
+    {
+      "id": "no-fictional-references",
+      "passed": true,
+      "notes": "No references to Pixi, i18n, state.player.money, or other non-existent fields/systems."
+    }
+  ],
+  "summary": "All 6 assertions passed. The implementation correctly placed the recipe in RECIPES, gated the dialogue with requiredItems, updated dialog_uebersicht.md, used correct import paths, included a unit test, and avoided fictional references."
+}
