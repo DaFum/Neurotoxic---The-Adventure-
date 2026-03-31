@@ -227,7 +227,7 @@ export interface Dialogue {
  * @property setCameraShake - Updates the camera shake intensity.
  * @property resetGame - Resets the entire game state to defaults.
  */
-interface GameState {
+export interface GameState {
   scene: Scene;
   setScene: (scene: Scene) => void;
   trait: Trait | null;
