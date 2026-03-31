@@ -450,7 +450,7 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "Ein Gott... ja. Ein Gott des Lärms! Danke, Manager. Ich werde sie alle in Grund und Boden schreien!"');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
+                useStore.getState().startAndFinishQuest('marius', 'Beruhige Marius vor dem Auftritt');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().increaseBandMood(30);
                 useStore.getState().increaseSkill('social', 3);
@@ -462,7 +462,7 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "Nur ich und das Mikrofon... Keine Erwartungen, nur reiner Ausdruck. Das ist brillant!"');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
+                useStore.getState().startAndFinishQuest('marius', 'Beruhige Marius vor dem Auftritt');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().setFlag('backstage_performer_speech', true);
                 useStore.getState().increaseBandMood(30);
@@ -475,7 +475,7 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "...Du hast Recht. Zerstören. Einfach alles zerstören!"');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
+                useStore.getState().startAndFinishQuest('marius', 'Beruhige Marius vor dem Auftritt');
                 useStore.getState().increaseBandMood(20);
                 useStore.getState().increaseSkill('chaos', 3);
               }
@@ -486,7 +486,7 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "Die Frequenz... ich spüre sie. Ich bin nur das Gefäß. Die Musik spricht."');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
+                useStore.getState().startAndFinishQuest('marius', 'Beruhige Marius vor dem Auftritt');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().increaseBandMood(25);
                 useStore.getState().increaseSkill('chaos', 3);
@@ -495,14 +495,14 @@ export function Backstage() {
             { text: 'Stell dir einfach vor, sie wären alle aus Lego.', action: () => {
               useStore.getState().setDialogue('Marius: "Lego? Das macht es irgendwie... schmerzhafter? Aber okay, ich versuchs."');
               useStore.getState().setFlag('mariusCalmed', true);
-              useStore.getState().completeQuest('marius');
+              useStore.getState().startAndFinishQuest('marius', 'Beruhige Marius vor dem Auftritt');
               useStore.getState().increaseBandMood(10);
             }},
             { text: 'Denk an den Gig 1982. Wir haben Schlimmeres überlebt.', action: () => {
               if (useStore.getState().flags.askedAbout1982) {
                 useStore.getState().setDialogue('Marius: "1982... ja. Als die Gießerei bebte. Wenn wir das überlebt haben, ist Tangermünde ein Kinderspiel."');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
+                useStore.getState().startAndFinishQuest('marius', 'Beruhige Marius vor dem Auftritt');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().increaseBandMood(25);
               } else {
@@ -518,7 +518,7 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "Die Strategie... ja! Ego-Management aktiviert! Ich habe die absolute Kontrolle!"');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
+                useStore.getState().startAndFinishQuest('marius', 'Beruhige Marius vor dem Auftritt');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().increaseBandMood(35);
                 useStore.getState().increaseSkill('social', 5);
