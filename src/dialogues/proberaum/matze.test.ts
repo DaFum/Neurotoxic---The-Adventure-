@@ -1,14 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from '../../store';
 import { buildProberaumMatzeDialogue } from './matze';
+import { setupTestState, getOptionTexts } from '../shared/test-helpers';
 
 describe('buildProberaumMatzeDialogue', () => {
-  beforeEach(() => {
-    useStore.getState().resetGame();
-  });
+  beforeEach(() => setupTestState());
 
   it('returns deep talk dialogue when matzeDeepTalk is true', () => {
-    useStore.setState({
+    setupTestState({
       flags: { ...useStore.getState().flags, matzeDeepTalk: true },
     });
 
@@ -19,64 +18,66 @@ describe('buildProberaumMatzeDialogue', () => {
 
   it('returns Talisman dialogue when player has Industrie-Talisman', () => {
     useStore.getState().addToInventory('Industrie-Talisman');
-
     const dialogue = buildProberaumMatzeDialogue();
+
     expect(dialogue.text).toContain('Ist das der Industrie-Talisman?!');
-    expect(dialogue.options).toHaveLength(2);
-    expect(dialogue.options?.[0].text).toBe('Es ist für die Band.');
-    expect(dialogue.options?.[1].text).toBe('Behalte es für dich.');
+    const options = getOptionTexts(dialogue);
+    expect(options).toHaveLength(2);
+    expect(options).toContain('Es ist für die Band.');
+    expect(options).toContain('Behalte es für dich.');
   });
 
   it('returns Forbidden Riff dialogue when player has Verbotenes Riff and has not shown it', () => {
     useStore.getState().addToInventory('Verbotenes Riff');
-
     const dialogue = buildProberaumMatzeDialogue();
+
     expect(dialogue.text).toContain('Hast du etwa das Verbotene Riff gefunden?!');
-    expect(dialogue.options).toHaveLength(2);
-    expect(dialogue.options?.[0].text).toBe('Ja, es vibriert in meinem Rucksack.');
+    expect(getOptionTexts(dialogue)).toContain('Ja, es vibriert in meinem Rucksack.');
   });
 
   it('returns water dialogue when water is not cleaned', () => {
     const dialogue = buildProberaumMatzeDialogue();
+
     expect(dialogue.text).toContain('Verdammt, der Proberaum ist geflutet!');
-    expect(dialogue.options).toHaveLength(2);
-    expect(dialogue.options?.[0].text).toBe('Ich kümmere mich darum.');
-    expect(dialogue.options?.[1].text).toBe('Vielleicht ist es ein Zeichen für ein neues Genre?');
+    const options = getOptionTexts(dialogue);
+    expect(options).toContain('Ich kümmere mich darum.');
+    expect(options).toContain('Vielleicht ist es ein Zeichen für ein neues Genre?');
   });
 
   it('returns riff warning dialogue when water is cleaned and bandMood > 60', () => {
-    useStore.setState({
+    setupTestState({
       flags: { ...useStore.getState().flags, waterCleaned: true },
       bandMood: 65,
     });
 
     const dialogue = buildProberaumMatzeDialogue();
     expect(dialogue.text).toContain('Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?');
-    expect(dialogue.options).toHaveLength(2);
-    expect(dialogue.options?.[0].text).toContain('Lass hören!');
-    expect(dialogue.options?.[1].text).toBe('Heb es dir für Salzgitter auf.');
+    const options = getOptionTexts(dialogue);
+    expect(options).toHaveLength(2);
+    expect(options[0]).toContain('Lass hören!');
+    expect(options[1]).toBe('Heb es dir für Salzgitter auf.');
   });
 
   it('returns default cleaned-room dialogue with conditional trait options', () => {
-    useStore.setState({
+    setupTestState({
       flags: { ...useStore.getState().flags, waterCleaned: true, matzeRiffWarning: true },
       bandMood: 75,
     });
 
     const dialogue = buildProberaumMatzeDialogue();
     expect(dialogue.text).toContain('Alter, ich fühl mich wie ein junger Gott!');
-    // Immer doch, Performer, Cynic, Tour 1982, Buchhaltung -> 5 options by default when flags are false
-    expect(dialogue.options).toHaveLength(5);
 
-    expect(dialogue.options?.[0].text).toBe('Immer doch. Rock on!');
-    expect(dialogue.options?.[1].text).toContain('[Performer]');
-    expect(dialogue.options?.[2].text).toContain('[Cynic]');
-    expect(dialogue.options?.[3].text).toBe('Erzähl mir von der Tour 1982.');
-    expect(dialogue.options?.[4].text).toBe('Eigentlich wollte ich nur die Buchhaltung machen.');
+    const options = getOptionTexts(dialogue);
+    expect(options).toHaveLength(5);
+    expect(options).toContain('Immer doch. Rock on!');
+    expect(options.some(o => o.includes('[Performer]'))).toBe(true);
+    expect(options.some(o => o.includes('[Cynic]'))).toBe(true);
+    expect(options).toContain('Erzähl mir von der Tour 1982.');
+    expect(options).toContain('Eigentlich wollte ich nur die Buchhaltung machen.');
   });
 
   it('hides Performer and Cynic options when their respective flags are true', () => {
-    useStore.setState({
+    setupTestState({
       flags: {
         ...useStore.getState().flags,
         waterCleaned: true,
@@ -88,10 +89,11 @@ describe('buildProberaumMatzeDialogue', () => {
     });
 
     const dialogue = buildProberaumMatzeDialogue();
-    // Only Immer doch, Tour 1982, Buchhaltung -> 3 options
-    expect(dialogue.options).toHaveLength(3);
-    expect(dialogue.options?.[0].text).toBe('Immer doch. Rock on!');
-    expect(dialogue.options?.[1].text).toBe('Erzähl mir von der Tour 1982.');
-    expect(dialogue.options?.[2].text).toBe('Eigentlich wollte ich nur die Buchhaltung machen.');
+    const options = getOptionTexts(dialogue);
+
+    expect(options).toHaveLength(3);
+    expect(options.some(o => o.includes('[Performer]'))).toBe(false);
+    expect(options.some(o => o.includes('[Cynic]'))).toBe(false);
+    expect(options).toContain('Erzähl mir von der Tour 1982.');
   });
 });

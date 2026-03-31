@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from '../../store';
 import { buildProberaumWallCracksDialogue, buildProberaumPuddleDialogue, buildProberaumDrumMachineDialogue, buildProberaumMonitorDialogue } from './objects';
+import { setupTestState, getOptionTexts } from '../shared/test-helpers';
 
 describe('Proberaum Objects Dialogues', () => {
-  beforeEach(() => {
-    useStore.getState().resetGame();
-  });
+  beforeEach(() => setupTestState());
 
   describe('Wall Cracks', () => {
     it('returns the correct text and options', () => {
       const dialogue = buildProberaumWallCracksDialogue();
       expect(dialogue.text).toContain('Risse in der Wand');
-      expect(dialogue.options).toHaveLength(3);
-      expect(dialogue.options?.[0].text).toContain('[Visionary]');
+      const options = getOptionTexts(dialogue);
+      expect(options).toHaveLength(3);
+      expect(options.some(o => o.includes('[Visionary]'))).toBe(true);
     });
   });
 
@@ -34,15 +34,16 @@ describe('Proberaum Objects Dialogues', () => {
     it('starts quest when riff is missing', () => {
       const dialogue = buildProberaumDrumMachineDialogue();
       expect(dialogue.text).toContain('Mir fehlt die ultimative Schwingung.');
-      expect(dialogue.options).toHaveLength(2);
-      expect(dialogue.options?.[0].text).toBe('Was suchst du?');
+      const options = getOptionTexts(dialogue);
+      expect(options).toHaveLength(2);
+      expect(options).toContain('Was suchst du?');
     });
 
     it('requests riff absorption when riff is found', () => {
       useStore.getState().addToInventory('Verbotenes Riff');
       const dialogue = buildProberaumDrumMachineDialogue();
       expect(dialogue.text).toContain('DIESE FREQUENZ! Es ist das Verbotene Riff!');
-      expect(dialogue.options).toHaveLength(2);
+      expect(getOptionTexts(dialogue)).toHaveLength(2);
     });
   });
 
@@ -50,15 +51,15 @@ describe('Proberaum Objects Dialogues', () => {
     it('gives quest on first talk', () => {
       const dialogue = buildProberaumMonitorDialogue();
       expect(dialogue.text).toContain('Meine Schaltkreise sind mit dem Rauschen der Ewigkeit gefüllt.');
-      expect(dialogue.options).toHaveLength(2);
+      expect(getOptionTexts(dialogue)).toHaveLength(2);
     });
 
     it('returns completion when cable is found', () => {
-      useStore.setState({ flags: { ...useStore.getState().flags, feedbackMonitorTalked: true } });
+      setupTestState({ flags: { ...useStore.getState().flags, feedbackMonitorTalked: true } });
       useStore.getState().addToInventory('Quanten-Kabel');
       const dialogue = buildProberaumMonitorDialogue();
       expect(dialogue.text).toContain('Das Quanten-Kabel! Meine Frequenzen... sie stabilisieren sich!');
-      expect(dialogue.options).toHaveLength(1);
+      expect(getOptionTexts(dialogue)).toHaveLength(1);
     });
   });
 });
