@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { audio } from './audio';
 
-type Scene = 'menu' | 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
+type Scene = 'menu' | 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter' | 'keller';
 
 /**
  * Status of a quest in the player's log.

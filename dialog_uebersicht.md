@@ -449,7 +449,16 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
 
 ---
 
-## 7. Crafting & Items (Zustand Store)
+## 7. Keller (Der Keller)
+
+* **Beschreibung:** Ein feuchter Keller unter dem Venue. Gedämpftes blaues Licht, alte Holzkisten.
+* **Ambient-Sound:** Tiefer Keller-Brumm (35–40 Hz Sinus) mit gelegentlichem Tropfen-Ping (~15% Chance pro Tick).
+* **Interaktionsobjekte:**
+    * *Alte Holzkiste:* "Eine alte Holzkiste. Der Geruch von feuchtem Karton und vergessenen Setlisten." (kein Mood-Effekt, kein Item).
+* **Spieler-Bounds:** X: [-9, 9], Z: [-5, 5].
+* **Spawn-Position:** [0, 1, 0] (Standard).
+
+## 8. Crafting & Items (Zustand Store)
 
 * **Resonanz-Kristall:** Entsteht durch die Kombination von `Frequenzfragment` und `Splitter der Leere`.
 * **Geister-Drink:** Entsteht durch die Kombination von `Turbo-Koffein` und `Rostiges Plektrum`. (Erforderlich für Ghost Roadie Quest).
