@@ -106,6 +106,10 @@ export function buildProberaumMariusDialogue(): Dialogue {
                   {
                     text: 'Bleib einfach cool.',
                     action: () => game().setDialogue('Marius: "Ich bin immer cool."')
+                  },
+                  {
+                    text: 'Zurück.',
+                    action: () => game().setDialogue(buildProberaumMariusDialogue())
                   }
                 ]
               });

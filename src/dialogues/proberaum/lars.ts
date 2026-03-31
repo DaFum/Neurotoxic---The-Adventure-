@@ -71,6 +71,10 @@ export function buildProberaumLarsDialogue(): Dialogue {
                 {
                   text: 'Ich brauche Bedenkzeit.',
                   action: () => game().setDialogue('Lars: "Der Beat wartet auf niemanden lange."')
+                },
+                {
+                  text: 'Zurück.',
+                  action: () => game().setDialogue(buildProberaumLarsDialogue())
                 }
               ]
             });
@@ -139,6 +143,10 @@ export function buildProberaumLarsDialogue(): Dialogue {
                 {
                   text: 'Klingt anstrengend.',
                   action: () => game().setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"')
+                },
+                {
+                  text: 'Zurück.',
+                  action: () => game().setDialogue(buildProberaumLarsDialogue())
                 }
               ]
             });

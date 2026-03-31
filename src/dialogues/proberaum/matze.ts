@@ -234,6 +234,10 @@ export function buildProberaumMatzeDialogue(): Dialogue {
                   currentStore.setFlag('bassist_clue_matze', true);
                   currentStore.increaseBandMood(10);
                 }
+              },
+              {
+                text: 'Zurück.',
+                action: () => game().setDialogue(buildProberaumMatzeDialogue())
               }
             ]
           });

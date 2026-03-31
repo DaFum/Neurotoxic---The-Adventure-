@@ -424,11 +424,12 @@ export function Proberaum() {
         name="Sprechender Amp"
         onInteract={() => {
           const store = useStore.getState();
-          if (!store.flags.talkingAmpHeard) {
+          const isFirstContact = !store.flags.talkingAmpHeard;
+          store.setDialogue(buildProberaumAmpDialogue());
+          if (isFirstContact) {
             store.startQuestWithFlag('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall', 'talkingAmpHeard');
             store.increaseBandMood(2);
           }
-          store.setDialogue(buildProberaumAmpDialogue());
         }}
       />
 

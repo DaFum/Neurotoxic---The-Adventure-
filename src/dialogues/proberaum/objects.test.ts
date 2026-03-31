@@ -17,16 +17,10 @@ describe('Proberaum Objects Dialogues', () => {
   });
 
   describe('Puddle', () => {
-    it('returns default text when no mop', () => {
+    it('returns static text regardless of inventory (mop logic lives in Proberaum.tsx onInteract)', () => {
       const dialogue = buildProberaumPuddleDialogue();
       expect(dialogue.text).toContain('Das ist eine riesige Pfütze.');
       expect(dialogue.options).toBeUndefined();
-    });
-
-    it('returns completion text when mop is present', () => {
-      useStore.getState().addToInventory('Mop');
-      const dialogue = buildProberaumPuddleDialogue();
-      expect(dialogue.text).toContain('Du hast das Wasser aufgewischt!');
     });
   });
 
