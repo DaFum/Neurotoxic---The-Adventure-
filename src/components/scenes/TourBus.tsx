@@ -848,7 +848,7 @@ export function TourBus() {
                   text: 'Untersuche das Fach genauer. [Technical 3]',
                   requiredSkill: { name: 'technical', level: 3 },
                   action: () => {
-                    const hasQuest = useStore.getState().quests.find(q => q.id === 'frequenz_1982');
+                    const hasQuest = useStore.getState().quests.find(q => q.id === 'frequenz_1982' && q.status === 'active');
                     const hasFoundHere = useStore.getState().flags.frequenz1982_tourbus;
                     if (hasQuest && !hasFoundHere) {
                       const store = useStore.getState();

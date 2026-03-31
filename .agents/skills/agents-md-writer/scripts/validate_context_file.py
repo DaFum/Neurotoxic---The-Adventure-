@@ -141,28 +141,40 @@ def count_words(text: str) -> int:
     return len(text.split())
 
 
-def get_sections(lines: list[str]) -> dict[str, tuple[int, int]]:
-    """Map section headers to their line ranges."""
-    sections = {}
-    current_header = None
-    current_start = 0
+def strip_fenced_blocks(lines: list[str]) -> list[str]:
+    """Return lines with content inside fenced code blocks replaced by blank lines to preserve indexing."""
+    result = []
     in_fence = False
     fence_char = None
     fence_length = 0
-    for i, line in enumerate(lines):
+    for line in lines:
         stripped = line.strip()
         if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
             in_fence = True
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
+            result.append("") # Replace opening fence
             continue
         elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
+            result.append("") # Replace closing fence
             continue
 
         if in_fence:
-            continue
+            result.append("") # Replace content inside fence
+        else:
+            result.append(line)
 
+    return result
+
+
+def get_sections(lines: list[str]) -> dict[str, tuple[int, int]]:
+    """Map section headers to their line ranges."""
+    sections = {}
+    current_header = None
+    current_start = 0
+    for i, line in enumerate(lines):
+        stripped = line.strip()
         if stripped.startswith('#'):
             if current_header:
                 sections[current_header] = (current_start, i)
@@ -176,44 +188,13 @@ def get_sections(lines: list[str]) -> dict[str, tuple[int, int]]:
 def find_empty_sections(lines: list[str]) -> list[tuple[int, str]]:
     """Find sections with no content between header and next header."""
     empty = []
-    in_fence = False
-    fence_char = None
-    fence_length = 0
     for i, line in enumerate(lines):
         stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            continue
-
-        if in_fence:
-            continue
-
         if stripped.startswith('#'):
             # Look ahead for content (skip blank lines)
             has_content = False
-            ahead_in_fence = False
-            ahead_fence_char = None
-            ahead_fence_length = 0
             for j in range(i + 1, len(lines)):
                 ahead_stripped = lines[j].strip()
-                if not ahead_in_fence and (ahead_stripped.startswith('```') or ahead_stripped.startswith('~~~')):
-                    ahead_in_fence = True
-                    ahead_fence_char = ahead_stripped[0]
-                    ahead_fence_length = len(ahead_stripped) - len(ahead_stripped.lstrip(ahead_fence_char))
-                    has_content = True # A fence is content
-                    break
-                elif ahead_in_fence and ahead_stripped.startswith(ahead_fence_char * ahead_fence_length) and not ahead_stripped.strip(ahead_fence_char).strip():
-                    ahead_in_fence = False
-                    continue
-
-                if ahead_in_fence:
-                    continue
-
                 if ahead_stripped.startswith('#'):
                     break  # Hit next header
                 if ahead_stripped and not ahead_stripped.startswith('<!--'):
@@ -224,7 +205,7 @@ def find_empty_sections(lines: list[str]) -> list[tuple[int, str]]:
     return empty
 
 
-def check_readme_duplication(content: str, readme_path: str) -> list[Issue]:
+def check_readme_duplication(unfenced_lines: list[str], readme_path: str) -> list[Issue]:
     """Check for content duplicated from README."""
     issues = []
     try:
@@ -234,16 +215,18 @@ def check_readme_duplication(content: str, readme_path: str) -> list[Issue]:
 
     # Extract meaningful sentences from README (>6 words)
     readme_sentences = set()
-    for line in readme.split('\n'):
-        line = line.strip()
-        if len(line.split()) > 6 and not line.startswith('#') and not line.startswith('```'):
+    readme_unfenced = strip_fenced_blocks(readme.split('\n'))
+
+    for line in readme_unfenced:
+        stripped = line.strip()
+        if len(stripped.split()) > 6 and not stripped.startswith('#'):
             # Normalize whitespace
-            normalized = ' '.join(line.lower().split())
+            normalized = ' '.join(stripped.lower().split())
             readme_sentences.add(normalized)
 
-    for i, line in enumerate(content.split('\n')):
+    for i, line in enumerate(unfenced_lines):
         stripped = line.strip()
-        if len(stripped.split()) > 6 and not stripped.startswith('#') and not stripped.startswith('```'):
+        if len(stripped.split()) > 6 and not stripped.startswith('#'):
             normalized = ' '.join(stripped.lower().split())
             if normalized in readme_sentences:
                 issues.append(Issue(
@@ -265,18 +248,19 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
     # Strip frontmatter for analysis
     body = content
     frontmatter_count = 0
-    if content.startswith('---'):
-        end = content.find('---', 3)
-        if end != -1:
-            frontmatter_content = content[:end + 3]
-            after_fm = content[end + 3:]
-            stripped_count = len(after_fm) - len(after_fm.lstrip('\n'))
-            frontmatter_count = frontmatter_content.count('\n') + stripped_count
-            body = content[end + 3:].lstrip('\n')
+    fm_match = re.match(r'^---\n.*?\n---', content, flags=re.DOTALL)
+    if fm_match:
+        end = fm_match.end()
+        frontmatter_content = content[:end]
+        after_fm = content[end:]
+        stripped_count = len(after_fm) - len(after_fm.lstrip('\n'))
+        frontmatter_count = frontmatter_content.count('\n') + stripped_count
+        body = content[end:].lstrip('\n')
 
     body_lines = body.split('\n')
+    unfenced_lines = strip_fenced_blocks(body_lines)
     word_count = count_words(body)
-    sections = get_sections(body_lines)
+    sections = get_sections(unfenced_lines)
 
     result = ValidationResult(
         file_path=str(path),
@@ -286,23 +270,8 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
     )
 
     # --- Check 1: Codebase overviews ---
-    in_fence = False
-    fence_char = None
-    fence_length = 0
-    for i, line in enumerate(body_lines):
-        stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            continue
-
-        if in_fence:
-            continue
-
+    for i, line in enumerate(unfenced_lines):
+        if not line: continue
         for pattern in CODEBASE_OVERVIEW_HEADERS:
             if re.match(pattern, line):
                 result.add(Issue(
@@ -315,21 +284,8 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
 
     # --- Check 2: Directory listings ---
     listing_streak = 0
-    in_fence = False
-    fence_char = None
-    fence_length = 0
-    for i, line in enumerate(body_lines):
-        stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            continue
-
-        if in_fence:
+    for i, line in enumerate(unfenced_lines):
+        if not line:
             listing_streak = 0
             continue
 
@@ -353,23 +309,8 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
             listing_streak = 0
 
     # --- Check 3: Generic coding advice ---
-    in_fence = False
-    fence_char = None
-    fence_length = 0
-    for i, line in enumerate(body_lines):
-        stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            continue
-
-        if in_fence:
-            continue
-
+    for i, line in enumerate(unfenced_lines):
+        if not line: continue
         for pattern in GENERIC_ADVICE_PATTERNS:
             if re.search(pattern, line):
                 result.add(Issue(
@@ -382,25 +323,10 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
                 break  # One match per line is enough
 
     # --- Check 4: Technology descriptions ---
-    in_fence = False
-    fence_char = None
-    fence_length = 0
-    for i, line in enumerate(body_lines):
-        stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            continue
-
-        if in_fence:
-            continue
-
-        # Skip if inside a code block
-        if line.strip().startswith('```') or line.strip().startswith('`'):
+    for i, line in enumerate(unfenced_lines):
+        if not line: continue
+        # Skip if inside a code block (inline)
+        if line.strip().startswith('`'):
             continue
         for pattern in TECH_DESCRIPTION_PATTERNS:
             if re.search(pattern, line):
@@ -430,23 +356,8 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
         ))
 
     # --- Check 6: Vague instructions ---
-    in_fence = False
-    fence_char = None
-    fence_length = 0
-    for i, line in enumerate(body_lines):
-        stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            continue
-
-        if in_fence:
-            continue
-
+    for i, line in enumerate(unfenced_lines):
+        if not line: continue
         for pattern in VAGUE_INSTRUCTION_PATTERNS:
             if re.search(pattern, line):
                 result.add(Issue(
@@ -459,23 +370,8 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
                 break
 
     # --- Check 7: Discoverable commands ---
-    in_fence = False
-    fence_char = None
-    fence_length = 0
-    for i, line in enumerate(body_lines):
-        stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            continue
-
-        if in_fence:
-            continue
-
+    for i, line in enumerate(unfenced_lines):
+        if not line: continue
         for pattern in DISCOVERABLE_COMMANDS:
             if re.match(pattern, line):
                 result.add(Issue(
@@ -488,7 +384,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
                 break
 
     # --- Check 8: Empty sections ---
-    for line_num, header in find_empty_sections(body_lines):
+    for line_num, header in find_empty_sections(unfenced_lines):
         result.add(Issue(
             severity="info",
             check="empty_section",
@@ -499,7 +395,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
 
     # --- Check 9: README duplication ---
     if readme_path:
-        for issue in check_readme_duplication(body, readme_path):
+        for issue in check_readme_duplication(unfenced_lines, readme_path):
             if issue.line is not None:
                 issue.line += frontmatter_count
             result.add(issue)
