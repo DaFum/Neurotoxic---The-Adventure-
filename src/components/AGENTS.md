@@ -3,18 +3,18 @@
 ## Interactable
 - Interaction range is hardcoded to 4.0 units — not configurable per instance
 - `isBandMember={true}` enables mood-scaled idle animations (`idleType`: "headbang" | "tap" | "sway")
-- `onInteract` callbacks should use `useStore.getState()` for reading state (not top-level destructured values), because closures capture stale state
+- For branching `onInteract` logic, prefer `useStore.getState()` reads inside the callback so checks/actions use the latest store snapshot
 
 ## Player
 - Bounds are soft clamps (not physics colliders) — player slides against them, not bounces
-- Initial position is set once on mount from store. Changing spawn mid-scene requires `bodyRef.current.setTranslation()`
+- Player position in physics is kept in sync with `store.playerPos` (teleports/scene resets propagate via the sync effect)
 - Camera follows with 0.1 lerp factor — intentionally sluggish
 
 ## Game
-- `AnimatePresence key={scene}` causes ALL scene content to fully remount on scene change — cleanup `setTimeout`/`setInterval` in scenes
+- Scene components unmount/remount on scene change; scene-owned `setTimeout`/`setInterval` must always be cleaned up
 - Physics pauses entirely when `isPaused` is true — affects all bodies, not selective
 - Trait selection sets skills via `getState()` before scene transition. Order: trait -> skills -> music -> scene
 
 ## WorldEvents
 - Camera shake only triggers randomly when `bandMood > 70`
-- Music tempo formula: `250 - bandMood` ms per step — mood above 250 causes negative tempo (undefined behavior)
+- Music tempo target is clamped to `150..250` ms (`Math.max(150, Math.min(250, 250 - bandMood))`) and only updates when the delta is >= 3ms to reduce jittery restarts

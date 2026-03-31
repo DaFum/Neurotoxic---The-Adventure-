@@ -11,7 +11,7 @@
  * #3: ERRORS & SOLUTIONS
  * - Error: Cannot find name 'addQuest'. Solution: Added addQuest to useStore destructuring.
  */
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useStore } from '../../store';
 import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
@@ -26,6 +26,7 @@ import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
  */
 export function VoidStation() {
   const addToInventory = useStore((state) => state.addToInventory);
+  const canPickupItem = useStore((state) => state.canPickupItem);
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
   const flags = useStore((state) => state.flags);
@@ -34,8 +35,10 @@ export function VoidStation() {
   const completeQuest = useStore((state) => state.completeQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const hasItem = useStore((state) => state.hasItem);
+  const inventory = useStore((state) => state.inventory);
   const discoverLore = useStore((state) => state.discoverLore);
   const increaseSkill = useStore((state) => state.increaseSkill);
+  const exitTimeoutRef = useRef<number | null>(null);
 
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
 
@@ -55,6 +58,15 @@ export function VoidStation() {
       addQuest('ego', 'Fange Marius\' entflohenes Ego ein');
     }
   }, [addQuest, startAndFinishQuest]);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const bassistActionWrapper = useCallback((mood: number, skillName: "chaos"|"social"|"technical", skillIncrease: number, dialogueText: string) => {
     setDialogue(dialogueText);
@@ -558,7 +570,7 @@ export function VoidStation() {
       )}
 
       {/* Item: Liquid Darkness */}
-      {!hasItem('Dunkle Materie') && (
+      {canPickupItem('Dunkle Materie') && !inventory.includes('Dunkle Materie') && (
         <Interactable
           position={[-5, 0, 5]}
           emoji="🌑"
@@ -578,7 +590,13 @@ export function VoidStation() {
         onInteract={() => {
           if (flags.voidRefueled) {
             setDialogue('Das Portal stabilisiert sich. Nächster Halt: Die Kaminstube... oder was davon übrig ist.');
-            setScene('kaminstube');
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+            }
+            exitTimeoutRef.current = window.setTimeout(() => {
+              if (useStore.getState().scene === 'void_station') setScene('kaminstube');
+              exitTimeoutRef.current = null;
+            }, 1000);
           } else {
             setDialogue('Das Portal ist instabil. Wir brauchen den Treibstoff!');
           }

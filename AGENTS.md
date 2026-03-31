@@ -1,18 +1,14 @@
 # Neurotoxic — Agent Instructions
 
 ## Critical Commands
-- Lint: `pnpm run lint` (runs `tsc --noEmit` only — no eslint/prettier)
+- Lint: `pnpm run lint` (TypeScript only; no ESLint/Prettier gate)
 
 ## Architecture Constraints
-- `@/` alias resolves to project root, not `src/` — configured in both [vite.config.ts](vite.config.ts) and [tsconfig.json](tsconfig.json)
-- Adding new scenes requires **5 steps** — see checklist in [src/components/scenes/AGENTS.md](src/components/scenes/AGENTS.md)
+- `@/` resolves to project root (`./`), not `src/`; keep alias config in [vite.config.ts](vite.config.ts) and [tsconfig.json](tsconfig.json) aligned.
+- New scenes require all five integration steps listed in [src/components/scenes/AGENTS.md](src/components/scenes/AGENTS.md) (scene file, `Scene` union, `Game.tsx` switch, audio ambient switch, dialogue overview update).
 
 ## Gotchas
-- `@tailwindcss/vite` is the Tailwind build plugin — do not replace with the standard `tailwindcss` package or add PostCSS config
-- All physics bodies (`@react-three/rapier`) must live inside scene components — declaring them outside the `<Physics>` provider silently fails
-- [dialog_uebersicht.md](dialog_uebersicht.md) documents all dialogue trees, quest triggers, item interactions, and BandMood metrics. Keep it in sync when modifying [src/components/scenes/](src/components/scenes/) or [src/store.ts](src/store.ts)
-- Three.js types come from `three` package itself (no separate `@types/three`) — if type errors appear for `THREE.*`, check the `three` version, not missing type packages
-
-## Skills
-
-- `create-skills`: Generate a reusable `SKILL.md` draft from a conversation, PR, or code change. See [.agents/skills/create-skills/SKILL.md](.agents/skills/create-skills/SKILL.md).
+- Tailwind is integrated via `@tailwindcss/vite`; do not replace it with a PostCSS-based Tailwind setup.
+- All `@react-three/rapier` bodies must be declared inside scene components (under `<Physics>`); defining them outside fails silently.
+- Keep [dialog_uebersicht.md](dialog_uebersicht.md) in sync when editing dialogue, quests, item interactions, or BandMood logic in [src/components/scenes/](src/components/scenes/) and [src/store.ts](src/store.ts).
+- Three.js typings come from `three`; fix `THREE.*` type issues by checking/updating `three`, not by adding `@types/three`.

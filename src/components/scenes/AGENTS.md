@@ -6,6 +6,7 @@
 3. Import and add to scene switch in `src/components/Game.tsx`
 4. Add ambient track in `audio.ts` `startAmbient()` switch
 5. Update `dialog_uebersicht.md` with all dialogue trees
+6. If the scene needs shared decorative environment props, add/update its `variant` in `src/components/scenes/SceneEnvironmentSetpieces.tsx` and render `<SceneEnvironmentSetpieces variant="..." />` in the scene.
 
 ## Required Structure
 - Floor: `<RigidBody type="fixed">` at `position={[0, -0.1, 0]}` with `rotation={[-Math.PI / 2, 0, 0]}`
@@ -25,12 +26,13 @@
 
 - Scene-specific quests (objectives the player only learns about by entering the scene) should be registered on scene entry, not in `initialState`. If a persisted completion flag may already be true, branch to `startAndFinishQuest(id, text)` instead of blindly calling `addQuest(id, text)` so legacy saves are backfilled correctly.
 - Use `startAndFinishQuest(id, text)` for one-shot milestones (band meeting, bassist contact, wirt_legacy, etc.). It is safe to call even if the quest was previously registered as 'active' — it will transition it to 'completed'. No-op only if already completed or failed. A one-shot action may still set a separate flag in the same callback. Reserve `addQuest + completeQuest` for multi-step flows where the quest is opened earlier and resolved later.
-- Always call `completeQuest(id)` when a questline resolves, even if you also set a completion flag. Relying only on a flag causes quest-log drift (journal stays open, narrative says done).
+- For quest + flag transitions, prefer `startQuestWithFlag(...)` and `completeQuestWithFlag(...)` so both states stay in sync atomically.
+- Always complete resolved questlines via `completeQuest(...)` or `completeQuestWithFlag(...)`. Relying only on a flag causes quest-log drift (journal stays open, narrative says done).
 
 ## Gotchas
 
 - Flag names passed to `setFlag()` and `flagToSet.flag` must exist in the `Flag` union in `store.ts` — TypeScript enforces this. Add new flags to the union before using them.
-- Collected items must use conditional rendering: `{!hasItem('X') && <Interactable ... />}` — otherwise the item persists after pickup
+- Collected items must use conditional rendering **and inventory subscription** (e.g. `const inventory = useStore((s) => s.inventory)` with `!inventory.includes('X')`) — relying only on `hasItem()` in JSX conditions can miss re-renders and leave pickups visible after collection
 - Multiple interactables at the same position must be mutually exclusive via flags
 - `removeFromInventory()` is NOT automatic — explicitly call it when an item is consumed
 - One-shot dialogue options must be **excluded from the options array** via a flag check before the `setDialogue()` call — guarding only the rewards inside `action` still shows the option on every interaction. Concrete pattern: `...(!flags.done ? [{ text: '...', requiredTrait: 'Mystic' as const, action: () => { ...; setFlag('done', true); } }] as DialogueOption[] : [])`
@@ -38,4 +40,4 @@
 - Scene names are case-sensitive: `'void_station'` not `'voidStation'`
 - Skill/mood increases must be inside option `action` callbacks — calling them in `onInteract` directly (outside any action) fires them on every interaction, not just once
 - Band member Interactables should have `position` Y >= 1 to avoid floor clipping
-- Quest IDs use snake_case: `'repair_amp'`, `'ghost_recipe'`, `'cosmic_echo'`
+- Quest IDs should be lowercase; use snake_case for multi-word IDs (examples: `'repair_amp'`, `'ghost_recipe'`, `'cosmic_echo'`; single-word IDs like `'void'` or `'setlist'` are valid)

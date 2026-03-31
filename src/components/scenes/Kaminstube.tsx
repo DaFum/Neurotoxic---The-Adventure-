@@ -12,7 +12,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
@@ -31,16 +31,28 @@ export function Kaminstube() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
+  const canPickupItem = useStore((state) => state.canPickupItem);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
+  const inventory = useStore((state) => state.inventory);
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
 
   const pointLightRef = useRef<THREE.PointLight>(null);
   const dirLightRef = useRef<THREE.DirectionalLight>(null);
   const tRef = useRef(0);
+  const exitTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   useFrame((state, delta) => {
     if (flags.ampFixed) {
@@ -494,8 +506,12 @@ export function Kaminstube() {
                   if (useStore.getState().hasItem('Bier')) {
                     useStore.getState().setDialogue('Wirt: "Du hast doch schon eins! Trink das erst mal aus."');
                   } else {
-                    useStore.getState().setDialogue('Wirt: "Klar, hier. Das offizielle Schmiermittel für den Industrial-Motor."');
-                    useStore.getState().addToInventory('Bier');
+                    const pickedUpBeer = useStore.getState().addToInventory('Bier');
+                    if (pickedUpBeer) {
+                      useStore.getState().setDialogue('Wirt: "Klar, hier. Das offizielle Schmiermittel für den Industrial-Motor."');
+                    } else {
+                      useStore.getState().setDialogue('Wirt: "Heute ist Schluss mit Freibier. Ich geb dir keins mehr."');
+                    }
                   }
                 }},
                 { text: 'Wer bist du?', action: () => useStore.getState().setDialogue('Wirt: "Ich bin der Hüter der Stille, die nach dem Knall kommt. Und ich zapfe das beste Bier der Region."') }
@@ -617,7 +633,7 @@ export function Kaminstube() {
       />
 
       {/* Items */}
-      {!hasItem('Röhre') && !flags.ampFixed && (
+      {canPickupItem('Röhre') && !inventory.includes('Röhre') && !flags.ampFixed && (
         <Interactable
           position={[8, 0.5, 2]}
           emoji="🔌"
@@ -713,8 +729,17 @@ export function Kaminstube() {
           name="Tourbus (Nach Salzgitter)"
           scale={1.5}
           onInteract={() => {
-            useStore.getState().setScene('salzgitter');
             setDialogue('Auf zur SZaturday 3 Riff Night in Salzgitter!');
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+            }
+            exitTimeoutRef.current = window.setTimeout(() => {
+              const store = useStore.getState();
+              if (store.scene === 'kaminstube') {
+                store.setScene('salzgitter');
+              }
+              exitTimeoutRef.current = null;
+            }, 1000);
           }}
         />
       )}
