@@ -51,6 +51,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Social 3):* Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
             * *Unterzweig (Standard):* "Interessante Geschichte" (+10 BandMood, setzt `askedAbout1982` und `bassist_clue_matze` — wichtig für Geist-Dialoge im TourBus und Backstage sowie für die Bassist-Questline).
         * Zweig C: "Buchhaltung" (-2 BandMood).
+        * Zweig D *(Items: Rostiges Plektrum + Klebeband, einmalig)*: "Ich hab ein rostiges Plektrum und Klebeband hier…" → Matze erklärt, die beiden Teile zusammenzukleben (Hinweis auf Rezept **Rostiges Plektrum + Klebeband → Repariertes Plektrum**, setzt `matzeHintedRepairPlektrum`; kein BandMood-Effekt).
 * **Lars (Drummer):**
     * *Nach Rettung:*
         * Zweig A (Trait: Performer): "Bühne braucht dich" (+20 BandMood, +5 Social).
@@ -452,4 +453,5 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
 
 * **Resonanz-Kristall:** Entsteht durch die Kombination von `Frequenzfragment` und `Splitter der Leere`.
 * **Geister-Drink:** Entsteht durch die Kombination von `Turbo-Koffein` und `Rostiges Plektrum`. (Erforderlich für Ghost Roadie Quest).
+* **Repariertes Plektrum:** Entsteht durch die Kombination von `Rostiges Plektrum` und `Klebeband`. Matze gibt im Proberaum einen Hinweis darauf (Option erscheint wenn beide Items im Inventar; einmalig, setzt `matzeHintedRepairPlektrum`).
 * **Void-Plektrum:** Entsteht durch die Kombination von `Splitter der Leere` und `Altes Plektrum`.

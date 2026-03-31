@@ -78,6 +78,20 @@ describe('useStore', () => {
       expect(quest?.status).toBe('completed');
     });
 
+    it('should craft Repariertes Plektrum from Rostiges Plektrum and Klebeband', () => {
+      const state = useStore.getState();
+      state.addToInventory('Rostiges Plektrum');
+      state.addToInventory('Klebeband');
+
+      const result = state.combineItems('Rostiges Plektrum', 'Klebeband');
+
+      const newState = useStore.getState();
+      expect(result).toBe(true);
+      expect(newState.inventory).toContain('Repariertes Plektrum');
+      expect(newState.inventory).not.toContain('Rostiges Plektrum');
+      expect(newState.inventory).not.toContain('Klebeband');
+    });
+
     it('should fail gracefully if ingredients do not match', () => {
       const state = useStore.getState();
       state.addToInventory('Turbo-Koffein');

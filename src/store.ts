@@ -120,7 +120,8 @@ export type Flag =
   | 'matzeRiffDialogueDone'
   | 'matzePerformerTalk'
   | 'salzgitterMatzeWirtDone'
-  | 'rostigesPlektrumCollected';
+  | 'rostigesPlektrumCollected'
+  | 'matzeHintedRepairPlektrum';
 
 /**
  * Defines the possible personality traits a player can select.
@@ -385,6 +386,7 @@ const initialState = {
     matzePerformerTalk: false,
     salzgitterMatzeWirtDone: false,
     rostigesPlektrumCollected: false,
+    matzeHintedRepairPlektrum: false,
   },
 
 
@@ -441,6 +443,7 @@ const RECIPES: Recipe[] = [
   { ingredients: ['Schrottmetall', 'Lötkolben'], result: 'Industrie-Talisman' },
   { ingredients: ['Batterie', 'Lötkolben'], result: 'Plasma-Zünder' },
   { ingredients: ['Turbo-Koffein', 'Rostiges Plektrum'], result: 'Geister-Drink' },
+  { ingredients: ['Rostiges Plektrum', 'Klebeband'], result: 'Repariertes Plektrum' },
   { ingredients: ['Splitter der Leere', 'Altes Plektrum'], result: 'Void-Plektrum' },
   { ingredients: ['Frequenzfragment', 'Splitter der Leere'], result: 'Resonanz-Kristall' },
 ];
