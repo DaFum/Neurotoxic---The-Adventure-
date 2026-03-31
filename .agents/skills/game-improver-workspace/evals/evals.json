@@ -6,21 +6,155 @@
       "name": "quest-completion-bug",
       "prompt": "The 'Signierte Setliste' recipe works but the quest 'get_setlist_signed' never completes after combining the items. I think the flag is set but the quest stays active in the journal. Can you fix this?",
       "expected_output": "A diagnosis identifying the missing completeQuest() call, a code fix using completeQuestWithFlag or explicit completeQuest, and a unit test. Should NOT introduce Pixi, i18n, or reference non-existent specialist skills.",
-      "files": []
+      "files": [],
+      "assertions": [
+        {
+          "id": "identifies-missing-completeQuest",
+          "text": "Correctly identifies the missing completeQuest() or completeQuestWithFlag() call as the root cause",
+          "type": "qualitative"
+        },
+        {
+          "id": "uses-correct-quest-api",
+          "text": "Proposed fix uses the actual Quest API (completeQuest, completeQuestWithFlag, or startAndFinishQuest) — not a fabricated method",
+          "type": "qualitative"
+        },
+        {
+          "id": "includes-unit-test",
+          "text": "Includes a unit test that validates the fix",
+          "type": "qualitative"
+        },
+        {
+          "id": "correct-import-path",
+          "text": "Uses @/src/store (not @/store) for imports",
+          "type": "keyword_check"
+        },
+        {
+          "id": "no-fictional-references",
+          "text": "Does NOT reference Pixi, i18n, game-balancing-assistant, audio-debugger-ambient-vs-gig, or other non-existent tools/systems",
+          "type": "keyword_absence"
+        }
+      ]
     },
     {
       "id": 1,
       "name": "new-crafting-recipe",
       "prompt": "Add a new crafting recipe: combining 'Rostiges Plektrum' with 'Klebeband' should produce 'Repariertes Plektrum'. Also add a dialogue option in Proberaum where Matze mentions this combo if the player has both items.",
       "expected_output": "A recipe added to the RECIPES array, a dialogue option in Proberaum with proper requiredItems check, correct import path (@/src/store), and an update note for dialog_uebersicht.md. Should NOT use wrong import paths or fabricated store fields.",
-      "files": []
+      "files": [],
+      "assertions": [
+        {
+          "id": "recipe-in-RECIPES-array",
+          "text": "Adds the recipe to the RECIPES array in src/store.ts (not some other location)",
+          "type": "qualitative"
+        },
+        {
+          "id": "recipe-uses-ingredients-tuple",
+          "text": "Recipe uses 'ingredients: [string, string]' field syntax, NOT 'item1'/'item2' fields",
+          "type": "qualitative"
+        },
+        {
+          "id": "dialogue-uses-requiredItems",
+          "text": "Dialogue option uses requiredItems (or equivalent item check) to gate on having both items",
+          "type": "qualitative"
+        },
+        {
+          "id": "mentions-dialog-uebersicht-update",
+          "text": "Mentions that dialog_uebersicht.md needs to be updated with the new dialogue and recipe",
+          "type": "qualitative"
+        },
+        {
+          "id": "includes-unit-test",
+          "text": "Includes a unit test for the new crafting recipe",
+          "type": "qualitative"
+        },
+        {
+          "id": "no-fictional-references",
+          "text": "Does NOT reference Pixi, i18n, state.player.money, or other non-existent fields/systems",
+          "type": "keyword_absence"
+        }
+      ]
     },
     {
       "id": 2,
       "name": "scene-wiring-bug",
       "prompt": "I added a new scene called 'keller' but when I switch to it the player just falls through the floor and there's no ambient music. The scene file exists but something's not wired up right.",
-      "expected_output": "A diagnosis walking through the 5-step scene checklist, identifying which steps were missed (floor RigidBody, ambient track, Scene union type, Game.tsx wiring). Should reference actual conventions, not fictional ones.",
-      "files": []
+      "expected_output": "A diagnosis walking through the 6-step scene checklist, identifying which steps were missed (floor RigidBody, ambient track, Scene union type, Game.tsx wiring). Should reference actual conventions, not fictional ones.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "references-scene-checklist",
+          "text": "References or walks through the scene addition checklist (or equivalent systematic check)",
+          "type": "qualitative"
+        },
+        {
+          "id": "identifies-missing-floor",
+          "text": "Identifies the missing floor RigidBody (type='fixed' at [0, -0.1, 0]) as the cause of falling through",
+          "type": "qualitative"
+        },
+        {
+          "id": "identifies-missing-ambient",
+          "text": "Identifies the missing ambient track handling in audio.ts startAmbient() as the cause of no music",
+          "type": "qualitative"
+        },
+        {
+          "id": "checks-scene-union-and-game-wiring",
+          "text": "Checks whether 'keller' was added to the Scene union type in store.ts and wired in Game.tsx",
+          "type": "qualitative"
+        },
+        {
+          "id": "no-fictional-conventions",
+          "text": "Does NOT reference Pixi, i18n, or non-existent specialist skills in the diagnosis",
+          "type": "keyword_absence"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "stale-closure-bug",
+      "prompt": "When the player interacts with the Wirt NPC in Kaminstube, the dialogue sometimes shows the wrong branch — it keeps showing the first-time greeting even though the player has already talked to him before. The flag 'wirtLegacy1982' is definitely being set. What's going wrong?",
+      "expected_output": "Diagnosis identifying stale closure capture in onInteract — the callback reads 'flags' from component render scope instead of useStore.getState(). Fix shows using useStore.getState() inside the callback. Should NOT suggest re-rendering tricks or external state managers.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "identifies-stale-closure",
+          "text": "Identifies stale closure capture as the root cause — the onInteract callback reads flags from render scope rather than useStore.getState()",
+          "type": "qualitative"
+        },
+        {
+          "id": "fix-uses-getState",
+          "text": "Proposed fix uses useStore.getState() inside the onInteract callback to read current flag values",
+          "type": "qualitative"
+        },
+        {
+          "id": "no-fictional-references",
+          "text": "Does NOT suggest Pixi, i18n, external Redux, or other non-existent systems",
+          "type": "keyword_absence"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "bandmood-overflow-bug",
+      "prompt": "I added a new interaction where the player earns +80 BandMood for finding a legendary guitar pick. But now when it triggers, the bandMood goes above 100 and the camera shake and music effects go haywire. How do I fix this so BandMood stays in range?",
+      "expected_output": "Identifies that direct set() calls don't clamp; recommends using increaseBandMood() which clamps automatically, or adding Math.max/min clamping. Should NOT recommend clamping in the UI layer or adding a watcher.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "identifies-unclamped-set",
+          "text": "Identifies that the bug is caused by a direct set() or manual addition bypassing the clamp, not a UI issue",
+          "type": "qualitative"
+        },
+        {
+          "id": "recommends-increaseBandMood",
+          "text": "Recommends using increaseBandMood() (which clamps) or explicitly clamping in the mutator with Math.max(0, Math.min(100, ...))",
+          "type": "qualitative"
+        },
+        {
+          "id": "no-fictional-references",
+          "text": "Does NOT suggest Pixi, i18n, or external state managers",
+          "type": "keyword_absence"
+        }
+      ]
     }
   ]
 }

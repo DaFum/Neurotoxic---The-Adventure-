@@ -5,38 +5,12 @@ Repeatable patterns for common changes in Neurotoxic.
 ## Bug Fix
 
 1. **Reproduce**: Write a failing test in `src/store.test.ts` or `src/dialogueEngine.test.ts`
-2. **Locate**: Grep for the relevant function/item name to find the actual code path
-3. **Read**: Open the implementation and read it — understand what it actually does
-4. **Identify**: Name the exact gap (missing call, wrong field, wrong condition)
-5. **Fix**: Make the minimal change. If state bug: fix the mutator. If scene bug: fix the handler.
-6. **Test**: Failing test now passes, full suite still green
-7. **Verify**: `pnpm run lint && pnpm run test && pnpm run build`
+2. **Locate**: Identify the source of truth — usually `src/store.ts`, a scene file, or `src/audio.ts`
+3. **Fix**: Make the minimal change. If state bug: fix the mutator. If scene bug: fix the handler.
+4. **Test**: Failing test now passes, full suite still green
+5. **Verify**: `pnpm run lint && pnpm run test && pnpm run build`
 
 Commit: `fix(scope): short description`
-
-## New Crafting Recipe
-
-1. Read `src/store.ts` — find the `RECIPES` array and the `Recipe` interface (uses `ingredients: [string, string]`, not `item1`/`item2`)
-2. Add the recipe to the `RECIPES` array
-3. If gating a dialogue hint on having both items, use `requiredItems` on the `DialogueOption`
-4. Add/update a unit test in `src/store.test.ts`
-5. Update `dialog_uebersicht.md` with the new recipe and any dialogue changes
-
-## New Scene
-
-Follow all 6 steps — missing any one causes silent or broken behavior:
-
-1. Create `src/components/scenes/YourScene.tsx`
-   - Include `<RigidBody type="fixed" position={[0, -0.1, 0]}>` floor with `rotation={[-Math.PI / 2, 0, 0]}`
-   - Include `<Player bounds={{ x: [min, max], z: [min, max] }} />`
-   - Clean up any `setTimeout`/`setInterval` in `useEffect` returns
-2. Add scene name to `Scene` union type in `src/store.ts` (lowercase, underscores)
-3. Import and add to scene switch in `src/components/Game.tsx` inside the `<Physics>` block
-4. Add `'your_scene'` to `startAmbient()` union type **and** the ambient loop switch in `src/audio.ts`
-5. Update `dialog_uebersicht.md` with all dialogue trees, quest triggers, items, and BandMood deltas
-6. If the scene uses shared décor, add a variant to `SceneEnvironmentSetpieces.tsx`
-
-Verify: `pnpm run lint && pnpm run test && pnpm run build`, then manually load the scene and confirm floor, player spawn, and ambient audio work.
 
 ## New Feature
 
@@ -100,12 +74,10 @@ pnpm run build         # Production build
 Code-level checks:
 - [ ] No direct state mutation (use `set()` with spread)
 - [ ] New mutators added to `useStore` when state behavior changes
-- [ ] Numbers clamped (bandMood via `increaseBandMood()`, not manual `set()`)
+- [ ] Numbers clamped (bandMood in [0, 100])
 - [ ] `dialog_uebersicht.md` updated if dialogue/quests/items changed
 - [ ] Timers and listeners cleaned up on unmount
-- [ ] New flags added to `Flag` union and `initialState.flags` before use
-- [ ] Recipe uses `ingredients: [string, string]` (not `item1`/`item2`)
-- [ ] `onInteract` callbacks read state via `useStore.getState()` (not stale closure)
+- [ ] New flags added to `Flag` union before use
 
 ## Repro Template (for issues/PRs)
 
