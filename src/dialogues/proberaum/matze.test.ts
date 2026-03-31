@@ -83,7 +83,7 @@ describe('buildProberaumMatzeDialogue', () => {
         waterCleaned: true,
         matzeRiffWarning: true,
         matzePerformerTalk: true,
-        mariusEgoStrategy: true,
+        matzeCynicOneShot: true,
       },
       bandMood: 75,
     });

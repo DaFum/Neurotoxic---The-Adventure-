@@ -135,7 +135,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           currentStore.increaseSkill('social', 3);
         }
       } as DialogueOption),
-      ...when(!flags.mariusEgoStrategy, {
+      ...when(!flags.matzeCynicOneShot, {
         text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
         requiredTrait: 'Cynic' as const,
         action: () => {
@@ -143,7 +143,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           currentStore.setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');
           currentStore.increaseBandMood(20);
           currentStore.increaseSkill('chaos', 5);
-          currentStore.setFlag('mariusEgoStrategy', true);
+          currentStore.setFlag('matzeCynicOneShot', true);
         }
       } as DialogueOption),
       {
@@ -162,8 +162,8 @@ export function buildProberaumMatzeDialogue(): Dialogue {
                   currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
                   currentStore.increaseBandMood(25, 'matze_frequenz1982');
                   currentStore.increaseSkill('chaos', 4);
-                  currentStore.setFlag('matzeDeepTalk', true);
                   if (pickedUpFragment) {
+                    currentStore.setFlag('matzeDeepTalk', true);
                     currentStore.setFlag('frequenz1982_proberaum', true);
                     currentStore.setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
                   } else {
@@ -182,8 +182,8 @@ export function buildProberaumMatzeDialogue(): Dialogue {
                   currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
                   currentStore.increaseBandMood(10, 'matze_frequenz1982');
                   currentStore.increaseSkill('chaos', 3);
-                  currentStore.setFlag('matzeDeepTalk', true);
                   if (pickedUpFragment) {
+                    currentStore.setFlag('matzeDeepTalk', true);
                     currentStore.setFlag('frequenz1982_proberaum', true);
                     currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
                   } else {

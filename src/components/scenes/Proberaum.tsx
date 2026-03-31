@@ -412,6 +412,7 @@ export function Proberaum() {
               store.setDialogue('Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.');
             } else {
               store.setDialogue(buildProberaumPuddleDialogue());
+              store.startQuestWithFlag('water', 'Wische die Wasserlache im Proberaum auf', 'waterCleaned', false);
             }
           }}
         />

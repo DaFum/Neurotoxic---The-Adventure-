@@ -64,6 +64,7 @@ export type Flag =
   | 'frequenz1982_tourbus'
   | 'frequenz1982_backstage'
   | 'frequenz1982_complete'
+  | 'matzeCynicOneShot'
   | 'bassist_clue_matze'
   | 'bassist_clue_ghost'
   | 'bassist_clue_wirt'
@@ -328,6 +329,7 @@ const initialState = {
     frequenz1982_tourbus: false,
     frequenz1982_backstage: false,
     frequenz1982_complete: false,
+    matzeCynicOneShot: false,
     bassist_clue_matze: false,
     bassist_clue_ghost: false,
     bassist_clue_wirt: false,

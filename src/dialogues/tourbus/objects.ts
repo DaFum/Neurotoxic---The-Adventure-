@@ -3,7 +3,11 @@ import { game, say } from '../shared/helpers';
 
 export function buildTourbusAmpDialogue(): Dialogue | string {
   const store = game();
-  const { trait } = store;
+  const { trait, flags } = store;
+
+  if (flags.tourbusAmpTechnician) {
+    return say('Du hast den Röhrenverstärker bereits repariert. Er klingt jetzt klar und deutlich.');
+  }
 
   if (trait === 'Technician') {
     return {
@@ -13,10 +17,12 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
           text: 'Repariere ihn schnell.',
           action: () => {
             const currentStore = game();
+            if (!currentStore.flags.tourbusAmpTechnician) {
+              currentStore.setFlag('tourbusAmpTechnician', true);
+              currentStore.increaseBandMood(20);
+              currentStore.increaseSkill('technical', 10);
+            }
             currentStore.setDialogue('Mit geübten Handgriffen lötest du die Verbindung nach. Der Verstärker klingt jetzt klarer als je zuvor!');
-            currentStore.setFlag('tourbusAmpTechnician', true);
-            currentStore.increaseBandMood(20);
-            currentStore.increaseSkill('technical', 10);
           }
         }
       ]
@@ -27,23 +33,35 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
 }
 
 export function buildTourbusHiddenStashDialogue(): Dialogue | string {
+  const options: import('../../store').DialogueOption[] = [];
+  if (!game().flags.tourbusHiddenStashTaken) {
+    options.push({
+      text: 'Notiz einstecken.',
+      action: () => {
+        const currentStore = game();
+        if (!currentStore.flags.tourbusHiddenStashTaken) {
+          const pickedUp = currentStore.addToInventory('Geheime Notiz');
+          if (pickedUp) {
+            currentStore.increaseSkill('social', 2);
+            currentStore.setFlag('tourbusHiddenStashTaken', true);
+            currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
+          } else {
+            currentStore.setDialogue('Du kannst die Notiz gerade nicht aufnehmen.');
+          }
+        } else {
+          currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
+        }
+      }
+    });
+  }
+  options.push({
+    text: 'Die Notiz ignorieren.',
+    action: () => game().setDialogue('Du entscheidest dich, dass manche Geheimnisse besser unberührt bleiben.')
+  });
+
   return {
     text: 'Ein kleines Geheimfach in der Wandverkleidung. Du findest eine Notiz in Matzes Handschrift: "Sie dürfen nicht nach Salzgitter. Die Frequenz wird ihn aufwecken."',
-    options: [
-      {
-        text: 'Notiz einstecken.',
-        action: () => {
-          const currentStore = game();
-          currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
-          currentStore.addToInventory('Geheime Notiz');
-          currentStore.increaseSkill('social', 2);
-        }
-      },
-      {
-        text: 'Die Notiz ignorieren.',
-        action: () => game().setDialogue('Du entscheidest dich, dass manche Geheimnisse besser unberührt bleiben.')
-      }
-    ]
+    options
   };
 }
 
@@ -271,6 +289,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
 }
 
 export function buildTourbusBandMeetingDialogue(): Dialogue | string {
+  if (game().flags.tourbusBandMeeting) {
+    return say('Die Bandbesprechung hat bereits stattgefunden.');
+  }
   return {
     text: 'Manager: "Zeit für eine kurze Band-Besprechung in der Mitte des Busses."',
     options: [

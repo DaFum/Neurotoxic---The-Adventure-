@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from '../../store';
 import { buildProberaumMariusDialogue } from './marius';
 import { setupTestState, getOptionTexts } from '../shared/test-helpers';
+import { executeDialogueOption } from '../../dialogueEngine';
 
 describe('buildProberaumMariusDialogue', () => {
   beforeEach(() => setupTestState());
@@ -15,11 +16,24 @@ describe('buildProberaumMariusDialogue', () => {
 
   it('shows beer handover option when player has beer', () => {
     useStore.getState().addToInventory('Bier');
+    useStore.getState().addQuest('marius', 'Bringe Marius ein Bier');
     const dialogue = buildProberaumMariusDialogue();
     expect(dialogue.text).toContain('Ohne ein kühles Bier kann ich nicht singen');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(3);
     expect(options).toContain('Hier ist dein Bier.');
+
+    const beerOption = dialogue.options?.find(o => o.text === 'Hier ist dein Bier.');
+    if (beerOption) {
+      executeDialogueOption(beerOption);
+      const state = useStore.getState();
+      expect(state.inventory).not.toContain('Bier');
+      expect(state.flags.gaveBeerToMarius).toBe(true);
+      const mariusQuest = state.quests.find(q => q.id === 'marius');
+      expect(mariusQuest?.status).toBe('completed');
+    } else {
+      throw new Error('Beer option not found');
+    }
   });
 
   it('shows trait options when conditions are met and no beer given', () => {
