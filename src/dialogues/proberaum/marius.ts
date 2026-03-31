@@ -15,7 +15,6 @@ export function buildProberaumMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.completeQuestWithFlag('beer', 'gaveBeerToMarius');
-            currentStore.completeQuest('marius');
             currentStore.increaseBandMood(15);
             currentStore.setDialogue('Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"');
           }
