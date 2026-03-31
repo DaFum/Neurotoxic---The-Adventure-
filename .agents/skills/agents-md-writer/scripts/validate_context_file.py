@@ -156,7 +156,7 @@ def get_sections(lines: list[str]) -> dict[str, tuple[int, int]]:
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 
@@ -186,7 +186,7 @@ def find_empty_sections(lines: list[str]) -> list[tuple[int, str]]:
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 
@@ -207,7 +207,7 @@ def find_empty_sections(lines: list[str]) -> list[tuple[int, str]]:
                     ahead_fence_length = len(ahead_stripped) - len(ahead_stripped.lstrip(ahead_fence_char))
                     has_content = True # A fence is content
                     break
-                elif ahead_in_fence and ahead_stripped.startswith(ahead_fence_char * ahead_fence_length):
+                elif ahead_in_fence and ahead_stripped.startswith(ahead_fence_char * ahead_fence_length) and not ahead_stripped.strip(ahead_fence_char).strip():
                     ahead_in_fence = False
                     continue
 
@@ -269,7 +269,9 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
         end = content.find('---', 3)
         if end != -1:
             frontmatter_content = content[:end + 3]
-            frontmatter_count = frontmatter_content.count('\n') + 1
+            after_fm = content[end + 3:]
+            stripped_count = len(after_fm) - len(after_fm.lstrip('\n'))
+            frontmatter_count = frontmatter_content.count('\n') + stripped_count
             body = content[end + 3:].lstrip('\n')
 
     body_lines = body.split('\n')
@@ -294,7 +296,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 
@@ -323,7 +325,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 
@@ -361,7 +363,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 
@@ -390,7 +392,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 
@@ -438,7 +440,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 
@@ -467,7 +469,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
             fence_char = stripped[0]
             fence_length = len(stripped) - len(stripped.lstrip(fence_char))
             continue
-        elif in_fence and stripped.startswith(fence_char * fence_length):
+        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
             in_fence = False
             continue
 

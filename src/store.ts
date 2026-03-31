@@ -455,6 +455,23 @@ const ITEM_PICKUP_LIMITS: Record<string, number> = {
 
 const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
 
+const deriveBandMoodGainSource = (): string => {
+  const stack = new Error().stack;
+  if (!stack) return 'unknown_source';
+
+  const lines = stack.split('\n').map((line) => line.trim());
+  const sourceLine = lines.find((line) =>
+    line &&
+    !line.includes('deriveBandMoodGainSource') &&
+    !line.includes('increaseBandMood') &&
+    !line.includes('store.ts') &&
+    !line.includes('zustand') &&
+    !line.includes('at set')
+  );
+
+  return sourceLine ?? 'unknown_source';
+};
+
 
 /**
  * The Zustand hook for accessing and mutating the global game state.
@@ -651,7 +668,7 @@ export const useStore = create<GameState>()(
         const nextMood = Math.max(0, Math.min(100, state.bandMood + amount));
 
         if (amount > 0) {
-          const gainSource = sourceId ?? `temp_${Date.now()}_${Math.random()}`;
+          const gainSource = sourceId ?? deriveBandMoodGainSource();
           if (state.bandMoodGainClaims[gainSource]) {
             return state;
           }
@@ -679,9 +696,11 @@ export const useStore = create<GameState>()(
       name: 'neurotoxic-game-storage',
       partialize: (state) => ({
         inventory: state.inventory,
+        itemPickupCounts: state.itemPickupCounts,
         flags: state.flags,
         quests: state.quests,
         bandMood: state.bandMood,
+        bandMoodGainClaims: state.bandMoodGainClaims,
         loreEntries: state.loreEntries,
         trait: state.trait,
         skills: state.skills,
@@ -693,6 +712,9 @@ export const useStore = create<GameState>()(
         const persistedLore = Array.isArray(typedPersistedState.loreEntries) ? typedPersistedState.loreEntries : [];
         const persistedFlags = (typedPersistedState.flags !== null && typeof typedPersistedState.flags === 'object')
           ? typedPersistedState.flags
+          : {};
+        const persistedPickupCounts = (typedPersistedState.itemPickupCounts !== null && typeof typedPersistedState.itemPickupCounts === 'object')
+          ? typedPersistedState.itemPickupCounts as Record<string, number>
           : {};
         const persistedInventory = Array.isArray(typedPersistedState.inventory) ? typedPersistedState.inventory : [];
 
@@ -729,9 +751,9 @@ export const useStore = create<GameState>()(
           return acc;
         }, {});
 
-        const mergedPickupCounts: Record<string, number> = {};
+        const mergedPickupCounts: Record<string, number> = { ...persistedPickupCounts };
         for (const [item, count] of Object.entries(inventoryCounts)) {
-          mergedPickupCounts[item] = count;
+          mergedPickupCounts[item] = Math.max(mergedPickupCounts[item] ?? 0, count);
         }
 
         return {
@@ -742,7 +764,9 @@ export const useStore = create<GameState>()(
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           itemPickupCounts: mergedPickupCounts,
-          bandMoodGainClaims: {},
+          bandMoodGainClaims: (typedPersistedState.bandMoodGainClaims !== null && typeof typedPersistedState.bandMoodGainClaims === 'object')
+            ? typedPersistedState.bandMoodGainClaims as Record<string, boolean>
+            : currentState.bandMoodGainClaims,
           flags: {
             ...currentState.flags,
             ...persistedFlags,

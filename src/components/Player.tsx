@@ -42,9 +42,11 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const cameraShake = useStore((state) => state.cameraShake);
   const setCameraShake = useStore((state) => state.setCameraShake);
 
-  // Use the store's current position to initialize the body only once on mount.
-  // Subsequent teleports should be performed imperatively via bodyRef.current.setTranslation(...)
-  const initialPos = useStore.getState().playerPos;
+  // Keep a live reference to the authoritative player position from the store.
+  // This ensures external teleports (scene switches, rehydrates, cheats) are
+  // reflected in the Rapier body even if the component is already mounted.
+  // We don't subscribe to playerPos here to avoid re-renders on every movement.
+  const initialPos = useRef(useStore.getState().playerPos).current;
   const lastSentPosRef = useRef(new THREE.Vector3(initialPos[0], initialPos[1], initialPos[2])).current;
   const [facingRight, setFacingRight] = useState(true);
   const [isMoving, setIsMoving] = useState(false);
@@ -169,6 +171,30 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     } catch (e) {
       // Rapier body may not be initialized yet; ignore.
     }
+
+    // Subscribe to playerPos changes directly to avoid re-renders
+    const unsubscribe = useStore.subscribe(
+      (state) => {
+        const newPos = state.playerPos;
+        if (!bodyRef.current) return;
+        try {
+          const cur = bodyRef.current.translation();
+          const dx = Math.abs(cur.x - newPos[0]) + Math.abs(cur.y - newPos[1]) + Math.abs(cur.z - newPos[2]);
+
+          // Only teleport the rigidbody if the positional difference is significant
+          // to avoid fighting the physics simulation or causing tiny corrective jumps.
+          if (dx > 0.05) {
+            bodyRef.current.setTranslation({ x: newPos[0], y: newPos[1], z: newPos[2] }, true);
+            bodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
+            try { (bodyRef.current as any).setAngvel?.({ x: 0, y: 0, z: 0 }, true); } catch {}
+            lastSentPosRef.set(newPos[0], newPos[1], newPos[2]);
+          }
+        } catch (e) {
+          // Rapier body may not be initialized yet
+        }
+      }
+    );
+    return unsubscribe;
   }, []);
 
   useFrame((state, delta) => {
