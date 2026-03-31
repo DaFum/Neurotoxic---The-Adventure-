@@ -148,17 +148,22 @@ def strip_fenced_blocks(lines: list[str]) -> list[str]:
     fence_char = None
     fence_length = 0
     for line in lines:
-        stripped = line.strip()
-        if not in_fence and (stripped.startswith('```') or stripped.startswith('~~~')):
-            in_fence = True
-            fence_char = stripped[0]
-            fence_length = len(stripped) - len(stripped.lstrip(fence_char))
-            result.append("") # Replace opening fence
-            continue
-        elif in_fence and stripped.startswith(fence_char * fence_length) and not stripped.strip(fence_char).strip():
-            in_fence = False
-            result.append("") # Replace closing fence
-            continue
+        if not in_fence:
+            opener_match = re.match(r'^[ ]{0,3}(`{3,}|~{3,})[^\n]*$', line)
+            if opener_match:
+                in_fence = True
+                fence_str = opener_match.group(1)
+                fence_char = fence_str[0]
+                fence_length = len(fence_str)
+                result.append("") # Replace opening fence
+                continue
+        elif in_fence:
+            # Check for closing fence matching the opener char and length minimum
+            closer_match = re.match(rf'^[ ]{{0,3}}{re.escape(fence_char)}{{{fence_length},}}[ \t]*$', line)
+            if closer_match:
+                in_fence = False
+                result.append("") # Replace closing fence
+                continue
 
         if in_fence:
             result.append("") # Replace content inside fence
@@ -248,7 +253,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
     # Strip frontmatter for analysis
     body = content
     frontmatter_count = 0
-    fm_match = re.match(r'^---\n.*?\n---', content, flags=re.DOTALL)
+    fm_match = re.match(r'^---\s*\n.*?\n^---\s*$', content, flags=re.DOTALL | re.MULTILINE)
     if fm_match:
         end = fm_match.end()
         frontmatter_content = content[:end]
@@ -259,7 +264,7 @@ def validate(file_path: str, readme_path: Optional[str] = None) -> ValidationRes
 
     body_lines = body.split('\n')
     unfenced_lines = strip_fenced_blocks(body_lines)
-    word_count = count_words(body)
+    word_count = count_words('\n'.join(unfenced_lines))
     sections = get_sections(unfenced_lines)
 
     result = ValidationResult(
