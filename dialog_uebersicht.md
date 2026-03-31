@@ -133,7 +133,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * [Social 5]: "Wir schaffen das zusammen" (+15 BandMood, +3 Social).
         * "Ein bisschen schon" (kein BandMood).
         * "Lass uns die Bühne abreißen!" (+10 BandMood).
-    * *Sabotage entdeckt & `mariusSelfDoubtRevealed` (Marius-Zweifel) gesetzt & kein Geständnis:*
+    * *Sabotage entdeckt & `marius_tourbus_doubt` (Marius-Zweifel) gesetzt & kein Geständnis:*
         * [Social 5]: Matze gesteht Sabotage (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
         * [Brutalist]: Schweigend ertappt (-5 BandMood).
 * **Band-Besprechung (Mitte des Busses, nachdem Sabotage entdeckt wurde, einmalig):**
@@ -173,7 +173,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Geist eines Roadies:**
     * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe` (setzt Flag `ghostRecipeQuestStarted`).
-    * *Aktive Rezept-Quest (Hat Geister-Drink):* Rezept-Quest abschließen (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, setzt `ghostRecipeQuestCompleted`, entfernt Geister-Drink). *(Dieser Pfad hat Vorrang vor Lore-Text)*
+    * *Aktive Rezept-Quest (Erinnerung, wenn Geister-Drink fehlt):* Zeigt direkten Reminder-Text ohne Auswahlmenü ("Hast du den Geister-Drink schon gemixt?"). *(Priorisiert über Lore-Text)*
+    * *Aktive Rezept-Quest (Hat Geister-Drink):* Rezept-Quest abschließen (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, setzt `ghostRecipeQuestCompleted`, entfernt Geister-Drink). *(Priorisiert über Lore-Text)*
     * *1982-Follow-up (Flag `askedAbout1982` gesetzt & `ghostSecretRevealed` nicht gesetzt):*
         * [Visionary]: "Erzähl mir alles." (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
         * [Technical 7]: "Anomalie analysieren." (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).

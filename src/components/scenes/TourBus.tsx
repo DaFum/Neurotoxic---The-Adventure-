@@ -562,7 +562,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusCoffeeCollected && (
+      {!flags.tourbusCoffeeCollected && !hasItem('Kaffee') && (
         <Interactable
           position={[0, 0.5, -3]}
           emoji="☕"
@@ -575,7 +575,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusEnergyDrinkCollected && (
+      {!flags.tourbusEnergyDrinkCollected && !hasItem('Energiedrink') && (
         <Interactable
           position={[-1, 0.5, -3]}
           emoji="🥤"
@@ -588,7 +588,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusBeerCollected && (
+      {!flags.tourbusBeerCollected && !hasItem('Bier') && (
         <Interactable
           position={[2, 0.5, 3]}
           emoji="🍺"

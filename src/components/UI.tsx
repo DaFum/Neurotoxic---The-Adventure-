@@ -606,6 +606,9 @@ export function UI() {
                       const skillReq = option.requiredSkill;
                       const traitReq = option.requiredTrait;
                       const questDeps = option.questDependencies;
+                      const requiredItems = option.requiredItems;
+                      const requiredFlags = option.requiredFlags;
+                      const forbiddenFlags = option.forbiddenFlags;
                       const isLocked = !canSelectOption(option);
 
                       return (
@@ -633,7 +636,7 @@ export function UI() {
                             {isLocked && <X size={14} className="text-blood" />}
                           </div>
                           
-                          {(skillReq || traitReq || questDeps) && (
+                          {(skillReq || traitReq || questDeps || requiredItems || requiredFlags || forbiddenFlags) && (
                             <div className={`text-[8px] mt-1 font-mono ${isLocked ? 'text-blood' : 'text-toxic/60 group-hover:text-black/60'}`}>
                               {skillReq && `[ REQ: ${skillReq.name.toUpperCase()} ${skillReq.level} ] `}
                               {traitReq && `[ REQ: ${traitReq.toUpperCase()} ] `}
@@ -646,6 +649,15 @@ export function UI() {
                                   return <span key={`dep-${depIdx}`}>[ REQ: QUEST {dep.status.toUpperCase()}: {questTitle} ] </span>
                                 }
                               })}
+                              {requiredItems && requiredItems.map((item, itemIdx) => (
+                                <span key={`req-item-${itemIdx}`}>[ REQ: ITEM: {item.toUpperCase()} ] </span>
+                              ))}
+                              {requiredFlags && requiredFlags.map((flag, flagIdx) => (
+                                <span key={`req-flag-${flagIdx}`}>[ REQ: FLAG: {flag.toUpperCase()} ] </span>
+                              ))}
+                              {forbiddenFlags && forbiddenFlags.map((flag, flagIdx) => (
+                                <span key={`forbid-flag-${flagIdx}`}>[ BLOCKED BY: FLAG: {flag.toUpperCase()} ] </span>
+                              ))}
                             </div>
                           )}
                         </button>

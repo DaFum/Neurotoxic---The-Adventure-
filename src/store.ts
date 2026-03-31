@@ -574,7 +574,7 @@ export const useStore = create<GameState>()(
         const existing = state.quests.find(q => q.id === id);
         if (existing) {
           return {
-            quests: state.quests.map(q => q.id === id ? { ...q, text, status: 'active' as QuestStatus } : q),
+            quests: state.quests.map(q => q.id === id ? { ...q, text, status: existing.status === 'failed' ? 'active' : existing.status } : q),
             flags: { ...state.flags, [flag]: flagValue }
           };
         }

@@ -701,28 +701,24 @@ export function Proberaum() {
                   setDialogue('Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"');
                   increaseBandMood(-5);
                 }},
-                { 
+                ...(!flags.mariusVisionShared && useStore.getState().trait === 'Visionary' ? [{
                   text: 'Ich verstehe deine Vision. [Visionary]', 
-                  requiredTrait: 'Visionary',
-                  forbiddenFlags: ['mariusVisionShared'],
                   action: () => {
                     setDialogue('Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."');
                     useStore.getState().setFlag('mariusVisionShared', true);
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('social', 3);
                   }
-                },
-                { 
+                }] : []),
+                ...(!flags.mariusCalmedDown && useStore.getState().skills.social >= 5 ? [{
                   text: 'Beruhige dich, Star. [Social 5]', 
-                  requiredSkill: { name: 'social', level: 5 },
-                  forbiddenFlags: ['mariusCalmedDown'],
                   action: () => {
                     setDialogue('Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."');
                     useStore.getState().setFlag('mariusCalmedDown', true);
                     increaseBandMood(15);
                     useStore.getState().increaseSkill('social', 2);
                   }
-                }
+                }] : [])
               ]
             });
           } else {
@@ -774,10 +770,8 @@ export function Proberaum() {
                       });
                     }
                   }] as DialogueOption[]),
-                  {
+                  ...(!flags.mariusSelfDoubtRevealed && useStore.getState().trait === 'Diplomat' ? [{
                     text: 'Marius, wie geht es dir wirklich? [Diplomat]',
-                    requiredTrait: 'Diplomat',
-                    forbiddenFlags: ['mariusSelfDoubtRevealed'],
                     action: () => {
                       setDialogue('Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."');
                       useStore.getState().setFlag('mariusSelfDoubtRevealed', true);
@@ -785,18 +779,16 @@ export function Proberaum() {
                       useStore.getState().increaseBandMood(15);
                       useStore.getState().increaseSkill('social', 3);
                     }
-                  },
-                  {
+                  }] : []),
+                  ...(!flags.mariusEgoComplimented && useStore.getState().trait === 'Cynic' ? [{
                     text: 'Dein Ego ist groß genug für zwei Dimensionen. [Cynic]',
-                    requiredTrait: 'Cynic',
-                    forbiddenFlags: ['mariusEgoComplimented'],
                     action: () => {
                       setDialogue('Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"');
                       useStore.getState().setFlag('mariusEgoComplimented', true);
                       useStore.getState().increaseBandMood(5);
                       useStore.getState().increaseSkill('chaos', 2);
                     }
-                  },
+                  }] : []),
                   { text: 'Bereit für den Gig?', action: () => setDialogue('Marius: "Immer!"') }
                 ]
               });
@@ -885,7 +877,6 @@ export function Proberaum() {
           name="Kühles Bier"
           scale={0.6}
           onInteract={() => {
-            setFlag('beerPickedUp', true);
             addToInventory('Bier');
             setDialogue('Ein kühles Bier für Marius!');
           }}
