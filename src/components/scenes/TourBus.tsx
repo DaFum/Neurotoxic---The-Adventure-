@@ -612,7 +612,7 @@ export function TourBus() {
         }}
       />
 
-      {!hasItem('Rostiges Plektrum') && (
+      {!flags.rostigesPlektrumCollected && (
         <Interactable
           position={[-2, 0.5, 0]}
           emoji="🎸"
@@ -620,6 +620,7 @@ export function TourBus() {
           scale={0.5}
           onInteract={() => {
             addToInventory('Rostiges Plektrum');
+            setFlag('rostigesPlektrumCollected', true);
             setDialogue('Ein rostiges Plektrum. Es scheint aus einer Zeit zu stammen, in der Metal noch aus reinem Eisen geschmiedet wurde.');
           }}
         />

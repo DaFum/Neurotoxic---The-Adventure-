@@ -166,7 +166,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Vergessenes Notizbuch:**
     * *Interaktion:* Lesen (+5 BandMood).
 * **Rostiges Plektrum (Item, einmalig):**
-    * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum).
+    * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum, setzt `rostigesPlektrumCollected`).
 * **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
     * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` bereits aktiv** (+10 BandMood, Erhalt: Frequenzfragment, setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar.
 * **Batterie (Item):**

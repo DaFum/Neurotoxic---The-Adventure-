@@ -42,15 +42,20 @@ export function canSelectOption(option: DialogueOption): boolean {
     const counts: Record<string, number> = {};
     for (const item of inventory) counts[item] = (counts[item] || 0) + 1;
 
+    // Build separate tallies: the player must have max(requiredCount, consumeCount) of each item.
+    // Summing the two would double-count items listed in both arrays.
     const requiredCounts: Record<string, number> = {};
     if (option.requiredItems) {
       for (const item of option.requiredItems) requiredCounts[item] = (requiredCounts[item] || 0) + 1;
     }
+    const consumeCounts: Record<string, number> = {};
     if (option.consumeItems) {
-      for (const item of option.consumeItems) requiredCounts[item] = (requiredCounts[item] || 0) + 1;
+      for (const item of option.consumeItems) consumeCounts[item] = (consumeCounts[item] || 0) + 1;
     }
 
-    for (const [item, needed] of Object.entries(requiredCounts)) {
+    const allItems = new Set([...Object.keys(requiredCounts), ...Object.keys(consumeCounts)]);
+    for (const item of allItems) {
+      const needed = Math.max(requiredCounts[item] || 0, consumeCounts[item] || 0);
       if ((counts[item] || 0) < needed) return false;
     }
   }

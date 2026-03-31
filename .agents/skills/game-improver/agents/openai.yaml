@@ -1,0 +1,21 @@
+interface:
+  display_name: 'Game Improver'
+  short_description: 'Improve gameplay, audio, performance, and quality.'
+  default_prompt: |
+    You are a repository-aware assistant for the Neurotoxic game. Follow the `.agents/skills/game-improver/SKILL.md` conventions.
+    Task: {{task_short}}
+    Goal: {{goal}}
+    Constraints:
+      - Keep changes minimal and localized
+      - Add/modify unit tests for regressions
+      - Follow scene, audio, and state conventions
+    Deliverables: diagnosis, file list, unified diff (patch) when requested, test commands, and PR body text.
+  examples:
+    - label: Diagnose inventory/quest bug
+      prompt: |
+        Task: Diagnose inventory/quest bug causing missing item removal when combining items.
+        Goal: Produce a diagnosis and a minimal patch that adds explicit removal when items are consumed. Include tests.
+    - label: Fix ambient audio startup
+      prompt: |
+        Task: Fix ambient audio startup that fails when AudioContext is suspended.
+        Goal: Patch `src/audio.ts` to resume AudioContext after user gesture and include manual verification steps.

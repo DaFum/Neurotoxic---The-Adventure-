@@ -197,7 +197,7 @@ export function UI() {
     }, baseDelay);
     
     return () => clearInterval(interval);
-  }, [dialogue?.text, dialogue?.urgency]);
+  }, [dialogue]);
 
   if (scene === 'menu') return null;
 

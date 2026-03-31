@@ -174,6 +174,22 @@ describe('useStore', () => {
       expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest');
     });
 
+    it('completeQuestWithFlag should backfill a completed quest entry when text is provided for a missing quest', () => {
+      let state = useStore.getState();
+      const initialQuestsLength = state.quests.length;
+
+      state.completeQuestWithFlag('missing_quest_with_text', 'mariusCalmed', true, 'Backfill text');
+
+      state = useStore.getState();
+      expect(state.flags.mariusCalmed).toBe(true);
+      expect(state.quests.length).toBe(initialQuestsLength + 1);
+      const quest = state.quests.find(q => q.id === 'missing_quest_with_text');
+      expect(quest).toBeDefined();
+      expect(quest?.status).toBe('completed');
+      expect(quest?.text).toBe('Backfill text');
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+
     it('completeQuest should return unchanged state if quest is missing and no text is provided', () => {
       let state = useStore.getState();
       const initialState = state;
