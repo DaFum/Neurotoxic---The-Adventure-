@@ -62,36 +62,6 @@ describe('useStore', () => {
       expect(newState.inventory).not.toContain('Rostiges Plektrum');
     });
 
-    it('should complete quest get_setlist_signed when crafting Signierte Setliste', () => {
-      const state = useStore.getState();
-      state.addQuest('get_setlist_signed', 'Lass die Setliste signieren');
-      state.addToInventory('Setliste');
-      state.addToInventory('Stift');
-
-      state.combineItems('Setliste', 'Stift');
-
-      const newState = useStore.getState();
-      expect(newState.inventory).toContain('Signierte Setliste');
-      expect(newState.inventory).not.toContain('Setliste');
-      expect(newState.inventory).not.toContain('Stift');
-      const quest = newState.quests.find(q => q.id === 'get_setlist_signed');
-      expect(quest?.status).toBe('completed');
-    });
-
-    it('should craft Repariertes Plektrum from Rostiges Plektrum and Klebeband', () => {
-      const state = useStore.getState();
-      state.addToInventory('Rostiges Plektrum');
-      state.addToInventory('Klebeband');
-
-      const result = state.combineItems('Rostiges Plektrum', 'Klebeband');
-
-      const newState = useStore.getState();
-      expect(result).toBe(true);
-      expect(newState.inventory).toContain('Repariertes Plektrum');
-      expect(newState.inventory).not.toContain('Rostiges Plektrum');
-      expect(newState.inventory).not.toContain('Klebeband');
-    });
-
     it('should fail gracefully if ingredients do not match', () => {
       const state = useStore.getState();
       state.addToInventory('Turbo-Koffein');

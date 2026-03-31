@@ -51,7 +51,6 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * *Unterzweig (Skill: Social 3):* Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
             * *Unterzweig (Standard):* "Interessante Geschichte" (+10 BandMood, setzt `askedAbout1982` und `bassist_clue_matze` — wichtig für Geist-Dialoge im TourBus und Backstage sowie für die Bassist-Questline).
         * Zweig C: "Buchhaltung" (-2 BandMood).
-        * Zweig D *(Items: Rostiges Plektrum + Klebeband, einmalig)*: "Ich hab ein rostiges Plektrum und Klebeband hier…" → Matze erklärt, die beiden Teile zusammenzukleben (Hinweis auf Rezept **Rostiges Plektrum + Klebeband → Repariertes Plektrum**, setzt `matzeHintedRepairPlektrum`; kein BandMood-Effekt).
 * **Lars (Drummer):**
     * *Nach Rettung:*
         * Zweig A (Trait: Performer): "Bühne braucht dich" (+20 BandMood, +5 Social).
@@ -449,18 +448,8 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
 
 ---
 
-## 7. Keller (Der Keller)
-
-* **Beschreibung:** Ein feuchter Keller unter dem Venue. Gedämpftes blaues Licht, alte Holzkisten.
-* **Ambient-Sound:** Tiefer Keller-Brumm (35–40 Hz Sinus) mit gelegentlichem Tropfen-Ping (~15% Chance pro Tick).
-* **Interaktionsobjekte:**
-    * *Alte Holzkiste:* "Eine alte Holzkiste. Der Geruch von feuchtem Karton und vergessenen Setlisten." (kein Mood-Effekt, kein Item).
-* **Spieler-Bounds:** X: [-9, 9], Z: [-5, 5].
-* **Spawn-Position:** [0, 1, 0] (Standard).
-
-## 8. Crafting & Items (Zustand Store)
+## 7. Crafting & Items (Zustand Store)
 
 * **Resonanz-Kristall:** Entsteht durch die Kombination von `Frequenzfragment` und `Splitter der Leere`.
 * **Geister-Drink:** Entsteht durch die Kombination von `Turbo-Koffein` und `Rostiges Plektrum`. (Erforderlich für Ghost Roadie Quest).
-* **Repariertes Plektrum:** Entsteht durch die Kombination von `Rostiges Plektrum` und `Klebeband`. Matze gibt im Proberaum einen Hinweis darauf (Option erscheint wenn beide Items im Inventar; einmalig, setzt `matzeHintedRepairPlektrum`).
 * **Void-Plektrum:** Entsteht durch die Kombination von `Splitter der Leere` und `Altes Plektrum`.

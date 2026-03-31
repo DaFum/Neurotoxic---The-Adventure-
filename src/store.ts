@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { audio } from './audio';
 
-type Scene = 'menu' | 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter' | 'keller';
+type Scene = 'menu' | 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
 
 /**
  * Status of a quest in the player's log.
@@ -120,8 +120,7 @@ export type Flag =
   | 'matzeRiffDialogueDone'
   | 'matzePerformerTalk'
   | 'salzgitterMatzeWirtDone'
-  | 'rostigesPlektrumCollected'
-  | 'matzeHintedRepairPlektrum';
+  | 'rostigesPlektrumCollected';
 
 /**
  * Defines the possible personality traits a player can select.
@@ -386,7 +385,6 @@ const initialState = {
     matzePerformerTalk: false,
     salzgitterMatzeWirtDone: false,
     rostigesPlektrumCollected: false,
-    matzeHintedRepairPlektrum: false,
   },
 
 
@@ -433,17 +431,15 @@ interface Recipe {
   ingredients: [string, string];
   result: string;
   flagToSet?: keyof typeof initialState.flags;
-  questToComplete?: string;
 }
 
 const RECIPES: Recipe[] = [
   { ingredients: ['Defektes Kabel', 'Klebeband'], result: 'Repariertes Kabel', flagToSet: 'cableFixed' },
-  { ingredients: ['Setliste', 'Stift'], result: 'Signierte Setliste', questToComplete: 'get_setlist_signed' },
+  { ingredients: ['Setliste', 'Stift'], result: 'Signierte Setliste' },
   { ingredients: ['Energiedrink', 'Kaffee'], result: 'Turbo-Koffein' },
   { ingredients: ['Schrottmetall', 'Lötkolben'], result: 'Industrie-Talisman' },
   { ingredients: ['Batterie', 'Lötkolben'], result: 'Plasma-Zünder' },
   { ingredients: ['Turbo-Koffein', 'Rostiges Plektrum'], result: 'Geister-Drink' },
-  { ingredients: ['Rostiges Plektrum', 'Klebeband'], result: 'Repariertes Plektrum' },
   { ingredients: ['Splitter der Leere', 'Altes Plektrum'], result: 'Void-Plektrum' },
   { ingredients: ['Frequenzfragment', 'Splitter der Leere'], result: 'Resonanz-Kristall' },
 ];
@@ -574,7 +570,6 @@ export const useStore = create<GameState>()(
           };
         });
 
-        if (recipe.questToComplete) get().completeQuest(recipe.questToComplete);
         audio.playPickup();
         return true;
       },

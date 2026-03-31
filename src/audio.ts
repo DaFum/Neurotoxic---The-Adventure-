@@ -125,7 +125,7 @@ class AudioEngine {
    * Starts a looping ambient background track specific to the given scene.
    * @param type - The identifier of the scene to load ambient audio for.
    */
-  startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter' | 'keller') {
+  startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter') {
     this.init();
     if (this.currentAmbient === type) return;
     this.stopAmbient();
@@ -173,10 +173,6 @@ class AudioEngine {
         // Distant city hum
         this.playTone(60, 'sine', 1.0, 0.01);
         if (Math.random() > 0.9) this.playTone(200 + Math.random() * 100, 'sine', 2.0, 0.005);
-      } else if (type === 'keller') {
-        // Low basement hum with occasional drip
-        this.playTone(35 + Math.random() * 5, 'sine', 1.5, 0.01);
-        if (Math.random() > 0.85) this.playTone(800 + Math.random() * 200, 'sine', 0.05, 0.03);
       }
     }, type === 'kaminstube' ? 100 : 1000);
   }

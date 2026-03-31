@@ -24,7 +24,6 @@ import { Backstage } from './scenes/Backstage';
 import { VoidStation } from './scenes/VoidStation';
 import { Kaminstube } from './scenes/Kaminstube';
 import { Salzgitter } from './scenes/Salzgitter';
-import { Keller } from './scenes/Keller';
 import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
 import { VirtualJoystick } from './VirtualJoystick';
@@ -345,7 +344,6 @@ export function Game() {
                     {scene === 'void_station' && <VoidStation />}
                     {scene === 'kaminstube' && <Kaminstube />}
                     {scene === 'salzgitter' && <Salzgitter />}
-                    {scene === 'keller' && <Keller />}
                   </Physics>
                 </Suspense>
               </KeyboardControls>

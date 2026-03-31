@@ -507,14 +507,6 @@ export function Proberaum() {
                     ]
                   });
                 }},
-                ...(!currentState.flags.matzeHintedRepairPlektrum ? [{
-                  text: 'Ich hab ein rostiges Plektrum und Klebeband hier...',
-                  requiredItems: ['Rostiges Plektrum', 'Klebeband'],
-                  action: () => {
-                    setDialogue('Matze: "Warte mal — kleb das Klebeband um den Griff! Ein repariertes Plektrum ist besser als gar keins. Ich komm auf solche Sachen, wenn ich zuviel Feedback höre."');
-                    useStore.getState().setFlag('matzeHintedRepairPlektrum', true);
-                  }
-                }] as DialogueOption[] : []),
                 { text: 'Eigentlich wollte ich nur die Buchhaltung machen.', action: () => {
                   setDialogue('Matze: "Buchhaltung? Wir sind eine Metal-Band, kein Steuerbüro! Geh und hol uns ein Bier."');
                   increaseBandMood(-2);
