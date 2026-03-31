@@ -452,7 +452,6 @@ export function Backstage() {
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
-                useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(30);
                 useStore.getState().increaseSkill('social', 3);
               }
@@ -466,7 +465,6 @@ export function Backstage() {
                 useStore.getState().completeQuest('marius');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
                 useStore.getState().setFlag('backstage_performer_speech', true);
-                useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(30);
                 useStore.getState().increaseSkill('social', 3);
               }
@@ -477,7 +475,6 @@ export function Backstage() {
               action: () => {
                 useStore.getState().setDialogue('Marius: "...Du hast Recht. Zerstören. Einfach alles zerstören!"');
                 useStore.getState().setFlag('mariusCalmed', true);
-                useStore.getState().completeQuest('marius');
                 useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(20);
                 useStore.getState().increaseSkill('chaos', 3);
@@ -491,7 +488,6 @@ export function Backstage() {
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
-                useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(25);
                 useStore.getState().increaseSkill('chaos', 3);
               }
@@ -508,7 +504,6 @@ export function Backstage() {
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
-                useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(25);
               } else {
                 useStore.getState().setDialogue('Marius: "1982? Da war ich noch nicht mal in der Band. Wovon redest du? Das macht mich nur noch nervöser!"');
@@ -525,7 +520,6 @@ export function Backstage() {
                 useStore.getState().setFlag('mariusCalmed', true);
                 useStore.getState().completeQuest('marius');
                 useStore.getState().setFlag('mariusConfidenceBoost', true);
-                useStore.getState().completeQuest('marius');
                 useStore.getState().increaseBandMood(35);
                 useStore.getState().increaseSkill('social', 5);
               }
