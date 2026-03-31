@@ -9,7 +9,7 @@ description: |
 user-invocable: true
 metadata:
   scope: user
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Game Improver
@@ -20,10 +20,10 @@ Implement production-ready changes for Neurotoxic — bug fixes, features, refac
 
 ### 1. Understand What's Changing
 
-Read the request and identify which systems are involved:
+Identify which systems the request touches, then use Read on the relevant files and their AGENTS.md before writing any code. Claude Code auto-loads AGENTS.md files — these contain the authoritative conventions for each subsystem.
 
-| System | Key Files | Read Before Changing |
-|--------|-----------|----------------------|
+| System | Key Files | AGENTS.md to Read |
+|--------|-----------|-------------------|
 | State / store | `src/store.ts` | `src/AGENTS.md` |
 | Dialogue trees | Scene files + `dialog_uebersicht.md` | `src/components/scenes/AGENTS.md` |
 | Scenes / physics | `src/components/scenes/*.tsx`, `Game.tsx` | `src/components/scenes/AGENTS.md` |
@@ -32,28 +32,34 @@ Read the request and identify which systems are involved:
 | Inventory / crafting | `src/store.ts` (RECIPES array + mutators) | `src/AGENTS.md` (Store section) |
 | Quests | `src/store.ts` + scene files | `src/AGENTS.md` (Quest API section) |
 
-The AGENTS.md files at each directory level contain the authoritative conventions and API docs for each subsystem. Read the relevant one before making changes — they prevent the most common mistakes.
-
 ### 2. Locate and Inspect
 
-Before writing any code:
+**Read before you write.** This step isn't optional — the codebase has many subtle conventions that aren't obvious from the request alone. A fix that looks correct but uses the wrong API, wrong field name, or wrong import path will fail silently or at lint time.
 
-- Read the files you'll modify
-- Read `dialog_uebersicht.md` if touching dialogue or quests (single source of truth for all dialogue trees, quest triggers, item interactions, and BandMood deltas)
-- Check `src/store.ts` for: current state shape, available mutators, `Flag` union type, `RECIPES` array, and persistence config
-- Check existing tests in `src/store.test.ts` and `src/dialogueEngine.test.ts` for patterns
+- Read `src/store.ts` for the current state shape, `Flag` union, `RECIPES` array, mutator signatures, and persistence config
+- Read `dialog_uebersicht.md` if touching dialogue, quests, items, or BandMood — it's the single source of truth
+- Read existing tests in `src/store.test.ts` and `src/dialogueEngine.test.ts` for test patterns and style before writing new tests
+- Use Grep to find the actual call site before diagnosing a bug — the issue is often in a different file than expected
+
+**For bugs specifically — diagnose before fixing:**
+1. Find the code path that produces the symptom (Grep for the relevant function or item name)
+2. Read the implementation to understand what it actually does vs. what it should do
+3. Identify the exact gap — missing call, wrong field, wrong condition
+4. Then write the fix
 
 ### 3. Implement
 
-Make the smallest change that solves the problem:
+Use Edit to make targeted changes. Make the smallest change that solves the problem.
 
 - One behavioral change per commit
 - Add/update unit tests for any behavior change
-- If adding state fields or mutators, see `references/store-patterns.md` for real examples
-- If adding a scene, follow the 5-step checklist in `src/components/scenes/AGENTS.md`
+- If adding state fields or mutators, read `references/store-patterns.md` for real examples and correct field names
+- If adding a scene, follow the 6-step checklist in `src/components/scenes/AGENTS.md`
 - Update `dialog_uebersicht.md` when changing dialogue, quests, items, or BandMood values
 
 ### 4. Verify
+
+Run via Bash:
 
 ```bash
 pnpm run lint          # TypeScript type-check (tsc --noEmit) — no eslint
@@ -61,19 +67,31 @@ pnpm run test          # Vitest unit tests
 pnpm run build         # Production build
 ```
 
-Manual smoke: start the affected scene, verify spawn point works, test the changed interaction.
+If any step fails, read the error output, fix the issue with Edit, and re-run. Don't skip verification.
+
+## Scene Addition Checklist (6 steps)
+
+When adding a new scene, all 6 steps are required. Missing any one causes a silent or broken experience:
+
+1. **Scene file** — Create `src/components/scenes/YourScene.tsx` with a `<RigidBody type="fixed" position={[0, -0.1, 0]}>` floor and `<Player bounds={...} />`
+2. **Scene union** — Add the scene name to the `Scene` union type in `src/store.ts`
+3. **Game.tsx wiring** — Import and add `{scene === 'your_scene' && <YourScene />}` in the Physics block
+4. **Ambient audio** — Add a `'your_scene'` branch to `startAmbient()` in `src/audio.ts` (also add it to the union type on that function)
+5. **dialog_uebersicht.md** — Add a section with dialogue trees, quest triggers, items, and BandMood deltas
+6. **SceneEnvironmentSetpieces** *(if shared décor is needed)* — Add a `variant` to `src/components/scenes/SceneEnvironmentSetpieces.tsx` and render `<SceneEnvironmentSetpieces variant="..." />` in the scene
 
 ## Critical Gotchas
 
-These are the mistakes that cause real bugs in this codebase. The AGENTS.md files have the full details — these are the concentrated danger zones.
+These cause real bugs in this codebase. The AGENTS.md files have full details — these are the concentrated danger zones.
 
 ### Silent failures (no error, just broken)
 
-- **Physics bodies outside scenes** — declaring `<RigidBody>` outside a scene component (which lives inside `<Physics>`) means the body simply doesn't exist at runtime. No error.
+- **Physics bodies outside scenes** — `<RigidBody>` declared outside a scene component (which lives inside `<Physics>`) simply doesn't exist at runtime. No error thrown.
 - **`requiredSkill` as string** — passing `requiredSkill: 'technical'` instead of `requiredSkill: { name: 'technical', level: 2 }` makes the option appear unlocked but the check never runs.
-- **`removeFromInventory()` not automatic** — consuming an item in a dialogue action requires explicitly calling `removeFromInventory()`. The only exception is `combineItems()`, which handles removal internally.
-- **One-shot dialogue showing repeatedly** — guarding only the rewards inside `action()` still shows the option every time. Exclude it from the options array via a flag check before the `setDialogue()` call.
+- **`removeFromInventory()` not automatic** — consuming an item in a dialogue action requires explicitly calling it. The only exception is `combineItems()`, which handles removal internally.
+- **One-shot dialogue showing repeatedly** — guarding only the rewards inside `action()` still shows the option every time. Exclude it from the options array via a flag check before `setDialogue()`.
 - **Multiple `setDialogue()` in one callback** — only the last call is visible. Use a single conditional call.
+- **Recipe field names** — the `Recipe` type uses `ingredients: [string, string]`, not `item1`/`item2`. Wrong field names are silently ignored at runtime.
 
 ### Stale state
 
@@ -82,11 +100,11 @@ These are the mistakes that cause real bugs in this codebase. The AGENTS.md file
 
 ### Data integrity
 
-- **`bandMood` range** — must stay in [0, 100]. The built-in `increaseBandMood()` clamps, but manual `set()` calls won't.
-- **Flag names** — must exist in the `Flag` union in `store.ts`. TypeScript catches this, but only if you run `pnpm run lint`.
+- **`bandMood` range** — must stay in [0, 100]. The built-in `increaseBandMood()` clamps automatically, but direct `set({ bandMood: value })` calls do not clamp. Always use `increaseBandMood()` for increments.
+- **Flag names** — must exist in the `Flag` union in `store.ts`. TypeScript catches this at `pnpm run lint`, but not at runtime.
 - **Quest IDs** — use snake_case: `'repair_amp'`, `'ghost_recipe'`, `'cosmic_echo'`.
 - **`dialog_uebersicht.md` sync** — if you change a quest trigger, BandMood delta, or item interaction in code, update the doc too. And vice versa.
-- **`@/` alias** — resolves to project root, not `src/`. Imports look like `import { useStore } from '@/src/store'`.
+- **`@/` alias** — resolves to project root, not `src/`. Imports: `import { useStore } from '@/src/store'`.
 
 ## Commit Conventions
 
@@ -106,5 +124,5 @@ Include: motivation (one sentence), changes (file list with reasons), verificati
 
 Read these when you need deeper patterns:
 
-- `references/store-patterns.md` — State mutation examples using real store fields, crafting recipes, persistence changes, immutable update patterns
-- `references/workflow-templates.md` — Bug fix / feature / refactor / performance fix workflows, PR body template
+- `references/store-patterns.md` — State mutation examples using real store fields, correct Recipe syntax, crafting recipes, quest patterns, persistence changes, immutable update patterns
+- `references/workflow-templates.md` — Bug fix / feature / scene addition / refactor / performance fix workflows, PR body template
