@@ -10,5 +10,5 @@
 ## Gotchas
 - Tailwind is integrated via `@tailwindcss/vite`; do not replace it with a PostCSS-based Tailwind setup.
 - All `@react-three/rapier` bodies must be declared inside scene components (under `<Physics>`); defining them outside fails silently.
-- Keep [dialog_uebersicht.md](dialog_uebersicht.md) in sync when editing dialogue, quests, item interactions, or BandMood logic in [src/components/scenes/](src/components/scenes/) and [src/store.ts](src/store.ts).
+- Keep [dialog_uebersicht.md](dialog_uebersicht.md) in sync when editing dialogue, quests, item interactions, or BandMood logic in [src/components/scenes/](src/components/scenes/), [src/dialogues/](src/dialogues/), and [src/store.ts](src/store.ts).
 - Three.js typings come from `three`; fix `THREE.*` type issues by checking/updating `three`, not by adding `@types/three`.

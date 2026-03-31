@@ -16,8 +16,8 @@ export function when<T>(condition: boolean, value: T): T[] {
 }
 
 /**
- * Returns a simple string dialogue (the store handles string-to-Dialogue promotion).
+ * Creates a simple Dialogue object containing only text.
  */
-export function say(text: string): string {
-  return text;
+export function say(text: string): Dialogue {
+  return { text };
 }

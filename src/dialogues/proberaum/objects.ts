@@ -1,7 +1,7 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, say } from '../shared/helpers';
 
-export function buildProberaumWallCracksDialogue(): Dialogue | string {
+export function buildProberaumWallCracksDialogue(): Dialogue {
   return {
     text: 'Risse in der Wand. Sie bilden ein Muster, das an Schallwellen erinnert.',
     options: [
@@ -49,19 +49,11 @@ export function buildProberaumWallCracksDialogue(): Dialogue | string {
   };
 }
 
-export function buildProberaumPuddleDialogue(): Dialogue | string {
-  const store = game();
-  if (store.hasItem('Mop')) {
-    store.setFlag('waterCleaned', true);
-    store.completeQuest('water');
-    store.increaseBandMood(20);
-    return say('Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.');
-  } else {
-    return say('Das ist eine riesige Pfütze. Sie scheint aus dem Nichts zu kommen und vibriert im Takt eines vergessenen Drum-Computers.');
-  }
+export function buildProberaumPuddleDialogue(): Dialogue {
+  return say('Das ist eine riesige Pfütze. Sie scheint aus dem Nichts zu kommen und vibriert im Takt eines vergessenen Drum-Computers.');
 }
 
-export function buildProberaumAmpDialogue(): Dialogue | string {
+export function buildProberaumAmpDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
 
@@ -79,9 +71,8 @@ export function buildProberaumAmpDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"');
-            currentStore.setFlag('ampTherapyCompleted', true);
+            currentStore.completeQuestWithFlag('amp_therapy', 'ampTherapyCompleted');
             currentStore.setFlag('ampSentient', true);
-            currentStore.completeQuest('amp_therapy');
             currentStore.increaseBandMood(20);
           }
         },
@@ -91,8 +82,7 @@ export function buildProberaumAmpDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."');
-            currentStore.setFlag('ampTherapyCompleted', true);
-            currentStore.completeQuest('amp_therapy');
+            currentStore.completeQuestWithFlag('amp_therapy', 'ampTherapyCompleted');
             currentStore.increaseBandMood(30);
           }
         },
@@ -102,8 +92,7 @@ export function buildProberaumAmpDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Amp: "So kalt... aber vielleicht hast du recht. Ich bin nur hier, um zu schreien."');
-            currentStore.setFlag('ampTherapyCompleted', true);
-            currentStore.completeQuest('amp_therapy');
+            currentStore.completeQuestWithFlag('amp_therapy', 'ampTherapyCompleted');
             currentStore.increaseBandMood(10);
           }
         },
@@ -124,8 +113,7 @@ export function buildProberaumAmpDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Amp: "Du würdest mir zuhören? Das würde mir viel bedeuten."');
-            currentStore.setFlag('ampTherapyStarted', true);
-            currentStore.addQuest('amp_therapy', 'Führe eine Therapie-Sitzung mit dem sprechenden Amp durch');
+            currentStore.startQuestWithFlag('amp_therapy', 'Führe eine Therapie-Sitzung mit dem sprechenden Amp durch', 'ampTherapyStarted');
           }
         },
         {
@@ -135,9 +123,6 @@ export function buildProberaumAmpDialogue(): Dialogue | string {
       ]
     };
   } else if (!flags.talkingAmpHeard) {
-    store.setFlag('talkingAmpHeard', true);
-    store.addQuest('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
-    store.increaseBandMood(2);
     return say('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
   } else {
     const ampOptions: DialogueOption[] = [];
@@ -162,11 +147,7 @@ export function buildProberaumAmpDialogue(): Dialogue | string {
         text: 'Repariere den Amp.', action: () => {
             const currentStore = game();
             currentStore.setDialogue('Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."');
-            currentStore.setFlag('talkingAmpRepaired', true);
-            if (!currentStore.quests.find(q => q.id === 'repair_amp')) {
-              currentStore.addQuest('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
-            }
-            currentStore.completeQuest('repair_amp');
+            currentStore.completeQuestWithFlag('repair_amp', 'talkingAmpRepaired', true, 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall');
             currentStore.removeFromInventory('Lötkolben');
             currentStore.removeFromInventory('Schrottmetall');
             currentStore.increaseBandMood(20);
@@ -185,7 +166,7 @@ export function buildProberaumAmpDialogue(): Dialogue | string {
   }
 }
 
-export function buildProberaumDrumMachineDialogue(): Dialogue | string {
+export function buildProberaumDrumMachineDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
 
@@ -208,12 +189,12 @@ export function buildProberaumDrumMachineDialogue(): Dialogue | string {
             const receivedCable = currentStore.addToInventory('Quanten-Kabel');
             if (receivedCable) {
               currentStore.setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
+              currentStore.completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
+              currentStore.increaseBandMood(25);
+              currentStore.increaseSkill('chaos', 10);
             } else {
-              currentStore.setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Dein Inventarlimit blockiert weitere Quanten-Kabel. Der Beat gehört trotzdem dir."');
+              currentStore.setDialogue('TR-8080: "Mach erst Platz in deinem Inventar, dann kann ich dir das Quanten-Kabel geben."');
             }
-            currentStore.completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
-            currentStore.increaseBandMood(25);
-            currentStore.increaseSkill('chaos', 10);
           }
         },
         {
@@ -266,7 +247,7 @@ export function buildProberaumDrumMachineDialogue(): Dialogue | string {
   }
 }
 
-export function buildProberaumMonitorDialogue(): Dialogue | string {
+export function buildProberaumMonitorDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
 

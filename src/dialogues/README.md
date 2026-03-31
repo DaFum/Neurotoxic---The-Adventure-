@@ -3,6 +3,16 @@
 Dieses Verzeichnis enthält isolierte Builder-Funktionen für die Dialoge der NPCs (und wichtiger Objekte) aus den 3D-Szenen.
 Das Ziel ist es, die 3D-Szenen (`src/components/scenes/`) sauber von Text-, Story-Branching- und Quest-Logik zu trennen.
 
+## Wichtig: dialog_uebersicht.md synchron halten
+
+Beim Hinzufügen oder Ändern eines Builders, der Dialogtext, Quest-Trigger, Item-Interaktionen oder BandMood-Deltas berührt, muss `dialog_uebersicht.md` im Projekt-Root aktualisiert werden. Folgende Änderungen erfordern eine Aktualisierung:
+
+- Dialogbäume (neuer Text, neue Optionen, neue Branches)
+- Quest-Trigger (`addQuest`, `startQuestWithFlag`, `completeQuest`, `completeQuestWithFlag`)
+- Item-Vergabe oder -Verbrauch (`addToInventory`, `removeFromInventory`)
+- BandMood-Deltas (`increaseBandMood`)
+- Änderungen an `src/store.ts` (neue Flags, neue Quests in `initialState`)
+
 ## Konventionen & Struktur
 
 - **Ordner-Struktur:** Dialoge werden nach Szene gruppiert (z. B. `src/dialogues/proberaum/`).
@@ -17,12 +27,14 @@ Wir nutzen minimale Helfer-Funktionen, um den Code lesbar zu halten, **ohne** ei
 
 - `game()`: Holt den aktuellen Zustand aus dem Zustand-Store (`useStore.getState()`). Sollte bevorzugt verwendet werden.
 - `when(condition, value)`: Gibt ein Array mit dem Wert zurück, wenn die Bedingung wahr ist. Nutze den Spread-Operator, um Optionen bedingt anzuzeigen:
+
   ```ts
   options: [
     { text: 'Immer sichtbar' },
     ...when(!flags.someEvent, { text: 'Bedingte Option', action: () => ... })
   ]
   ```
+
 - `say(text)`: Ein Shortcut, um simple Text-Dialoge ohne Optionen zu bauen: `return say("Hallo Manager!");`.
 
 ## Testing

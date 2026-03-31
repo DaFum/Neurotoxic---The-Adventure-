@@ -1,7 +1,7 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, when, say } from '../shared/helpers';
 
-export function buildProberaumMatzeDialogue(): Dialogue | string {
+export function buildProberaumMatzeDialogue(): Dialogue {
   const store = game();
   const { flags, bandMood } = store;
 
@@ -234,6 +234,10 @@ export function buildProberaumMatzeDialogue(): Dialogue | string {
                   currentStore.setFlag('bassist_clue_matze', true);
                   currentStore.increaseBandMood(10);
                 }
+              },
+              {
+                text: 'Zurück.',
+                action: () => game().setDialogue(buildProberaumMatzeDialogue())
               }
             ]
           });

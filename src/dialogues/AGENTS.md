@@ -1,0 +1,12 @@
+# dialogues — Agent Instructions
+
+Dialogue builder functions live here. Each file exports one or more `build[Scene][Npc]Dialogue()` factory functions that return a `Dialogue` object by reading current store state via `game()`.
+
+## Gotchas
+
+- `addToInventory(item)` returns `boolean` — always branch on the result. Quest completions, flag sets, and mood/skill rewards must be inside the `if (received)` block; the `else` branch must give explicit failure feedback (e.g. inventory-full message). Unconditional completions after a failed pickup are a bug.
+- Use `completeQuestWithFlag(id, flag, ...)` and `startQuestWithFlag(id, text, flag)` instead of paired `completeQuest` + `setFlag` (or `addQuest` + `setFlag`) calls — separate Zustand writes leave a window where subscribers observe inconsistent state.
+- Completing a sub-quest (e.g. `'beer'`) does **not** auto-complete a parent quest — call `completeQuest(parentId)` explicitly where needed.
+- Nested sub-menus built inline with `game().setDialogue({...})` must include a `'Zurück.'` option that calls `game().setDialogue(buildThisDialogue())` so the player can navigate back.
+- New flags used in builder `action` callbacks must be added to the `Flag` union in `src/store.ts` before use — TypeScript enforces this at compile time.
+- Update `dialog_uebersicht.md` when changing any builder that touches dialogue text, quest triggers, item interactions, or BandMood deltas.

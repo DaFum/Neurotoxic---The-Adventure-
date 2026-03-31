@@ -1,12 +1,12 @@
-import { useStore, type Dialogue } from '../../store';
+import { useStore, type GameState, type Dialogue } from '../../store';
 
 /**
  * Resets the game to a clean slate, then applies any partial state needed for the test.
  */
-export function setupTestState(partialState?: Partial<ReturnType<typeof useStore.getState>>) {
+export function setupTestState(partialState?: Partial<GameState>) {
   useStore.getState().resetGame();
   if (partialState) {
-    useStore.setState(partialState);
+    useStore.setState(partialState as GameState);
   }
 }
 
@@ -14,15 +14,6 @@ export function setupTestState(partialState?: Partial<ReturnType<typeof useStore
  * Extracts all option texts from a Dialogue object.
  * Returns an empty array if no options exist, making assertions like `.toContain()` safe.
  */
-export function getOptionTexts(dialogue: Dialogue | string): string[] {
-  if (typeof dialogue === 'string') return [];
+export function getOptionTexts(dialogue: Dialogue): string[] {
   return dialogue.options?.map(o => o.text) || [];
-}
-
-/**
- * Extracts the main text from a Dialogue object or string.
- */
-export function getDialogueText(dialogue: Dialogue | string): string {
-  if (typeof dialogue === 'string') return dialogue;
-  return dialogue.text;
 }

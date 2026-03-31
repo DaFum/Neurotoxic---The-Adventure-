@@ -1,7 +1,7 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, when, say } from '../shared/helpers';
 
-export function buildProberaumMariusDialogue(): Dialogue | string {
+export function buildProberaumMariusDialogue(): Dialogue {
   const store = game();
   const { flags, bandMood, hasItem, trait, skills } = store;
 
@@ -105,6 +105,10 @@ export function buildProberaumMariusDialogue(): Dialogue | string {
                   {
                     text: 'Bleib einfach cool.',
                     action: () => game().setDialogue('Marius: "Ich bin immer cool."')
+                  },
+                  {
+                    text: 'Zurück.',
+                    action: () => game().setDialogue(buildProberaumMariusDialogue())
                   }
                 ]
               });

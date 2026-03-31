@@ -1,7 +1,7 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, when, say } from '../shared/helpers';
 
-export function buildProberaumLarsDialogue(): Dialogue | string {
+export function buildProberaumLarsDialogue(): Dialogue {
   const store = game();
   const { flags, bandMood, hasItem } = store;
 
@@ -71,6 +71,10 @@ export function buildProberaumLarsDialogue(): Dialogue | string {
                 {
                   text: 'Ich brauche Bedenkzeit.',
                   action: () => game().setDialogue('Lars: "Der Beat wartet auf niemanden lange."')
+                },
+                {
+                  text: 'Zurück.',
+                  action: () => game().setDialogue(buildProberaumLarsDialogue())
                 }
               ]
             });
@@ -139,6 +143,10 @@ export function buildProberaumLarsDialogue(): Dialogue | string {
                 {
                   text: 'Klingt anstrengend.',
                   action: () => game().setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"')
+                },
+                {
+                  text: 'Zurück.',
+                  action: () => game().setDialogue(buildProberaumLarsDialogue())
                 }
               ]
             });
