@@ -13,3 +13,6 @@
 ## 2024-05-20 - Zustand useFrame Throttling
 **Learning:** Updating continuous values like 3D positions in Zustand from `useFrame` will spam state subscribers and force component re-evaluations every frame during movement, even if the state reducer checks for shallow equality.
 **Action:** Throttle continuous updates by maintaining a `useRef` of the last sent value. Calculate the delta (e.g., squared distance) and only dispatch a state update when the threshold is exceeded.
+## 2026-03-31 - [Distance Calculation Optimization in useFrame]
+**Learning:** In Three.js/React Three Fiber high-frequency loops like `useFrame`, avoiding `THREE.Vector3.distanceTo()` prevents expensive `Math.sqrt()` calls for every object on every frame.
+**Action:** Use `.distanceToSquared()` with a squared threshold. When providing distances to `KeyboardInteractionManager`, squared distances are fully compatible since it only evaluates relative proximity to determine the closest interactable.
