@@ -845,8 +845,8 @@ export function Proberaum() {
                       store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
                     }
                     const pickedUpFragment = store.addToInventory('Frequenzfragment');
-                    store.increaseBandMood(15);
                     if (pickedUpFragment) {
+                      store.increaseBandMood(15, 'frequenz1982_proberaum_visionary');
                       store.setFlag('frequenz1982_proberaum', true);
                       setDialogue('Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.');
                     } else {
@@ -863,8 +863,8 @@ export function Proberaum() {
                       store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
                     }
                     const pickedUpFragment = store.addToInventory('Frequenzfragment');
-                    store.increaseBandMood(15);
                     if (pickedUpFragment) {
+                      store.increaseBandMood(15, 'frequenz1982_proberaum_technical');
                       store.setFlag('frequenz1982_proberaum', true);
                       setDialogue('Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.');
                     } else {

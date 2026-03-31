@@ -41,11 +41,11 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const setPlayerPos = useStore((state) => state.setPlayerPos);
   const cameraShake = useStore((state) => state.cameraShake);
   const setCameraShake = useStore((state) => state.setCameraShake);
-  // Keep a live reference to the authoritative player position from the store.
-  // This ensures external teleports (scene switches, rehydrates, cheats) are
-  // reflected in the Rapier body even if the component is already mounted.
-  const playerPos = useStore((state) => state.playerPos);
-  const lastSentPosRef = useRef(new THREE.Vector3(playerPos[0], playerPos[1], playerPos[2])).current;
+
+  // Use the store's current position to initialize the body only once on mount.
+  // Subsequent teleports should be performed imperatively via bodyRef.current.setTranslation(...)
+  const initialPos = useStore.getState().playerPos;
+  const lastSentPosRef = useRef(new THREE.Vector3(initialPos[0], initialPos[1], initialPos[2])).current;
   const [facingRight, setFacingRight] = useState(true);
   const [isMoving, setIsMoving] = useState(false);
   const footstepTimer = useRef(0);
@@ -161,25 +161,15 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   useEffect(() => {
     if (!bodyRef.current) return;
     try {
-      const cur = bodyRef.current.translation();
-      const dx = Math.abs(cur.x - playerPos[0]) + Math.abs(cur.y - playerPos[1]) + Math.abs(cur.z - playerPos[2]);
-
-      // Only teleport the rigidbody if the positional difference is significant
-      // to avoid fighting the physics simulation or causing tiny corrective jumps.
-      if (dx > 0.05) {
-        bodyRef.current.setTranslation({ x: playerPos[0], y: playerPos[1], z: playerPos[2] }, true);
-        // Zero linear velocity to avoid the body immediately re-moving after teleport.
-        bodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
-        // Attempt to zero angular velocity if supported by the runtime binding.
-        try { (bodyRef.current as any).setAngvel?.({ x: 0, y: 0, z: 0 }, true); } catch {}
-
-        // Update the last-sent position so the frame-loop doesn't immediately re-flush.
-        lastSentPosRef.set(playerPos[0], playerPos[1], playerPos[2]);
-      }
+      // Sync the rapier body with the store exactly once on mount to handle spawns.
+      bodyRef.current.setTranslation({ x: initialPos[0], y: initialPos[1], z: initialPos[2] }, true);
+      bodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
+      try { (bodyRef.current as any).setAngvel?.({ x: 0, y: 0, z: 0 }, true); } catch {}
+      lastSentPosRef.set(initialPos[0], initialPos[1], initialPos[2]);
     } catch (e) {
-      // Rapier body may not be initialized yet; ignore and wait for next effect run.
+      // Rapier body may not be initialized yet; ignore.
     }
-  }, [playerPos]);
+  }, []);
 
   useFrame((state, delta) => {
     if (!bodyRef.current) return;

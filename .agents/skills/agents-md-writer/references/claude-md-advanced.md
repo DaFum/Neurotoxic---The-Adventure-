@@ -3,6 +3,7 @@
 Deep dive into Claude Code-specific context file features that go beyond what AGENTS.md can express.
 
 ## Table of Contents
+
 1. File Discovery and Loading Order
 2. Import System
 3. Rules Directory
@@ -81,7 +82,7 @@ This keeps the root file under 10 lines while giving Claude access to shared ins
 
 ### Structure
 
-```
+```text
 .claude/
 └── rules/
     ├── general.md          # Always loaded
@@ -142,7 +143,7 @@ Patterns are matched against absolute file paths using glob syntax. Can be set a
 
 ### Monorepo CLAUDE.md strategy
 
-```
+```text
 monorepo/
 ├── CLAUDE.md                    # Minimal shared rules (build system, CI, commit format)
 ├── AGENTS.md                    # Cross-tool shared rules

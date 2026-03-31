@@ -853,8 +853,8 @@ export function TourBus() {
                     if (hasQuest && !hasFoundHere) {
                       const store = useStore.getState();
                       const pickedUpFragment = store.addToInventory('Frequenzfragment');
-                      store.increaseBandMood(10);
                       if (pickedUpFragment) {
+                        store.increaseBandMood(10, 'frequenz1982_tourbus');
                         store.setFlag('frequenz1982_tourbus', true);
                         setDialogue('Unter der Notiz entdeckst du ein Magnetband-Schnipsel. Das ist ein weiteres Frequenzfragment!');
                       } else {
@@ -891,13 +891,15 @@ export function TourBus() {
         emoji="🚐"
         name="Zum Auftritt"
         onInteract={() => {
-          if (hasItem('Repariertes Kabel') || flags.cableFixed) {
+          if (useStore.getState().hasItem('Repariertes Kabel') || useStore.getState().flags.cableFixed) {
             setDialogue('Auf gehts zum Gig! Nächster Halt: Backstage.');
             if (exitTimeoutRef.current !== null) {
               window.clearTimeout(exitTimeoutRef.current);
             }
             exitTimeoutRef.current = window.setTimeout(() => {
-              if (useStore.getState().scene === 'tourbus') setScene('backstage');
+              if (useStore.getState().scene === 'tourbus') {
+                useStore.getState().setScene('backstage');
+              }
               exitTimeoutRef.current = null;
             }, 1000);
           } else {

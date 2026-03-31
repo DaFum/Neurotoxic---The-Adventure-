@@ -3,6 +3,7 @@
 This reference covers detailed migration paths from each tool-specific format to AGENTS.md as the universal standard.
 
 ## Table of Contents
+
 1. From .cursorrules / .cursor/rules/
 2. From .github/copilot-instructions.md
 3. From GEMINI.md
@@ -204,7 +205,7 @@ find . -maxdepth 3 \( \
 
 ### Final structure for a well-organized multi-tool repo
 
-```
+```text
 project-root/
 ├── AGENTS.md                                    # Universal truth
 ├── CLAUDE.md                                    # @AGENTS.md + Claude-only

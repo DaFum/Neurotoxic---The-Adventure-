@@ -833,13 +833,16 @@ export function Backstage() {
         emoji="🌀"
         name="Zur Realitäts-Grenze"
         onInteract={() => {
-          if (flags.mariusCalmed && flags.setlistFound) {
+          const store = useStore.getState();
+          if (store.flags.mariusCalmed && store.flags.setlistFound) {
             setDialogue('Die Welt beginnt zu flimmern. Wir verlassen die bekannte Realität.');
             if (exitTimeoutRef.current !== null) {
               window.clearTimeout(exitTimeoutRef.current);
             }
             exitTimeoutRef.current = window.setTimeout(() => {
-              if (useStore.getState().scene === 'backstage') setScene('void_station');
+              if (useStore.getState().scene === 'backstage') {
+                useStore.getState().setScene('void_station');
+              }
               exitTimeoutRef.current = null;
             }, 1000);
           } else {

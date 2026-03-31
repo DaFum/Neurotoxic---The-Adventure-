@@ -5,7 +5,7 @@
 
 ## Architecture Constraints
 - `@/` resolves to project root (`./`), not `src/`; keep alias config in [vite.config.ts](vite.config.ts) and [tsconfig.json](tsconfig.json) aligned.
-- New scenes require all five integration steps listed in [src/components/scenes/AGENTS.md](src/components/scenes/AGENTS.md) (scene file, `Scene` union, `Game.tsx` switch, audio ambient switch, dialogue overview update).
+- New scenes require all required checklist items listed in [src/components/scenes/AGENTS.md](src/components/scenes/AGENTS.md) (scene file, `Scene` union, `Game.tsx` switch, audio ambient switch, dialogue overview update).
 
 ## Gotchas
 - Tailwind is integrated via `@tailwindcss/vite`; do not replace it with a PostCSS-based Tailwind setup.
