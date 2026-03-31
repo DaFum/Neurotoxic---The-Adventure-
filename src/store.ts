@@ -399,6 +399,23 @@ const initialState = {
   cameraShake: 0,
 };
 
+interface Recipe {
+  ingredients: [string, string];
+  result: string;
+  flagToSet?: keyof typeof initialState.flags;
+}
+
+const RECIPES: Recipe[] = [
+  { ingredients: ['Defektes Kabel', 'Klebeband'], result: 'Repariertes Kabel', flagToSet: 'cableFixed' },
+  { ingredients: ['Setliste', 'Stift'], result: 'Signierte Setliste' },
+  { ingredients: ['Energiedrink', 'Kaffee'], result: 'Turbo-Koffein' },
+  { ingredients: ['Schrottmetall', 'Lötkolben'], result: 'Industrie-Talisman' },
+  { ingredients: ['Batterie', 'Lötkolben'], result: 'Plasma-Zünder' },
+  { ingredients: ['Turbo-Koffein', 'Rostiges Plektrum'], result: 'Geister-Drink' },
+  { ingredients: ['Splitter der Leere', 'Altes Plektrum'], result: 'Void-Plektrum' },
+  { ingredients: ['Frequenzfragment', 'Splitter der Leere'], result: 'Resonanz-Kristall' },
+];
+
 /**
  * The Zustand hook for accessing and mutating the global game state.
  * Automatically persists the state to localStorage.
@@ -429,85 +446,41 @@ export const useStore = create<GameState>()(
       },
       hasItem: (item) => get().inventory.includes(item),
       combineItems: (item1, item2) => {
-        const inv = get().inventory;
-        if (inv.includes(item1) && inv.includes(item2)) {
-          // Cable + Tape = Fixed Cable
-          if ((item1 === 'Defektes Kabel' && item2 === 'Klebeband') || (item1 === 'Klebeband' && item2 === 'Defektes Kabel')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Repariertes Kabel'],
-              flags: { ...state.flags, cableFixed: true }
-            }));
-            audio.playPickup();
-            return true;
-          }
-          // Setlist + Stift = Signierte Setliste
-          if ((item1 === 'Setliste' && item2 === 'Stift') || (item1 === 'Stift' && item2 === 'Setliste')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Signierte Setliste']
-            }));
-            audio.playPickup();
-            return true;
-          }
-          // Energiedrink + Kaffee = Turbo-Koffein
-          if ((item1 === 'Energiedrink' && item2 === 'Kaffee') || (item1 === 'Kaffee' && item2 === 'Energiedrink')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Turbo-Koffein']
-            }));
-            audio.playPickup();
-            return true;
-          }
-          // Schrottmetall + Lötkolben = Industrie-Talisman
-          if ((item1 === 'Schrottmetall' && item2 === 'Lötkolben') || (item1 === 'Lötkolben' && item2 === 'Schrottmetall')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Industrie-Talisman']
-            }));
-            audio.playPickup();
-            return true;
-          }
-          // Batterie + Lötkolben = Plasma-Zünder
-          if ((item1 === 'Batterie' && item2 === 'Lötkolben') || (item1 === 'Lötkolben' && item2 === 'Batterie')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Plasma-Zünder']
-            }));
-            audio.playPickup();
-            return true;
-          }
-          // Turbo-Koffein + Rostiges Plektrum = Geister-Drink
-          if ((item1 === 'Turbo-Koffein' && item2 === 'Rostiges Plektrum') || (item1 === 'Rostiges Plektrum' && item2 === 'Turbo-Koffein')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Geister-Drink']
-            }));
-            audio.playPickup();
-            return true;
-          }
+        const recipe = RECIPES.find(r =>
+          (item1 === r.ingredients[0] && item2 === r.ingredients[1]) ||
+          (item1 === r.ingredients[1] && item2 === r.ingredients[0])
+        );
 
-          // Splitter der Leere + Altes Plektrum = Void-Plektrum
-          if ((item1 === 'Splitter der Leere' && item2 === 'Altes Plektrum') || (item1 === 'Altes Plektrum' && item2 === 'Splitter der Leere')) {
-            set((state) => ({
-              inventory: [...state.inventory.filter(i => i !== item1 && i !== item2), 'Void-Plektrum']
-            }));
-            audio.playPickup();
-            return true;
-          }
-          // Frequenzfragment + Splitter der Leere = Resonanz-Kristall
-          if ((item1 === 'Frequenzfragment' && item2 === 'Splitter der Leere') || (item1 === 'Splitter der Leere' && item2 === 'Frequenzfragment')) {
-            set((state) => {
-              const newInventory = [...state.inventory];
-              const idx1 = newInventory.indexOf(item1);
-              const idx2 = newInventory.indexOf(item2);
-              // Remove higher index first to avoid index shifting
-              const higher = Math.max(idx1, idx2);
-              const lower = Math.min(idx1, idx2);
-              newInventory.splice(higher, 1);
-              newInventory.splice(lower, 1);
-              newInventory.push('Resonanz-Kristall');
-              return { inventory: newInventory };
-            });
-            audio.playPickup();
-            return true;
-          }
-        }
-        return false;
+        if (!recipe) return false;
+
+        const inv = get().inventory;
+        const idx1 = inv.indexOf(item1);
+        const idx2 = inv.indexOf(item2, item1 === item2 ? idx1 + 1 : 0);
+
+        // Ensure both ingredients exist (handles duplicate items correctly)
+        if (idx1 === -1 || idx2 === -1) return false;
+
+        set((state) => {
+          const newInventory = [...state.inventory];
+          // Recalculate indices to ensure we are working with the latest state
+          const i1 = newInventory.indexOf(item1);
+          const i2 = newInventory.indexOf(item2, item1 === item2 ? i1 + 1 : 0);
+
+          const higher = Math.max(i1, i2);
+          const lower = Math.min(i1, i2);
+
+          newInventory.splice(higher, 1);
+          newInventory.splice(lower, 1);
+          newInventory.push(recipe.result);
+
+          return {
+            inventory: newInventory,
+            ...(recipe.flagToSet && { flags: { ...state.flags, [recipe.flagToSet]: true } })
+          };
+        });
+
+        audio.playPickup();
+        return true;
       },
       setFlag: (flag, value) => set((state) => ({ flags: { ...state.flags, [flag]: value } })),
       setPlayerPos: (playerPos) => set((state) => {
