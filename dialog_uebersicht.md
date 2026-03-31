@@ -90,6 +90,15 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social, setzt `mariusCalmedDown`). Option verschwindet danach (forbiddenFlags).
 * **Wischmopp (Item):**
     * *Interaktion:* Aufheben (Erhalt: Mop).
+* **Risse in der Wand (Proberaum, nachdem Wasser aufgewischt wurde):**
+    * (Nutzt `Interactable`, `setDialogue` und `useStore`)
+    * *Option (Trait: Visionary):* "Die Risse... sie sind eine Partitur!"
+        * *Erfolg:* Fragment aufgenommen (Calls `store.addQuest('frequenz_1982', ...)` und `store.addToInventory('Frequenzfragment')` returns true → `store.increaseBandMood(15, 'frequenz1982_proberaum_visionary')`, setzt `frequenz1982_proberaum`, **Erfolg-Dialog:** "Du entschlüsselst die Wand!").
+        * *Pickup-Limit:* Inventar voll (`store.addToInventory` returns false → nur Limit-Dialog via `setDialogue`: "dein Inventar ist für weitere Frequenzfragmente bereits am Limit", kein BandMood, kein Flag).
+    * *Option (Skill: Technical 8):* "Die Resonanzfrequenz liegt bei exakt 432.1982 Hz."
+        * *Erfolg:* Fragment aufgenommen (Calls `store.addQuest('frequenz_1982', ...)` und `store.addToInventory('Frequenzfragment')` returns true → `store.increaseBandMood(15, 'frequenz1982_proberaum_technical')`, setzt `frequenz1982_proberaum`, **Erfolg-Dialog:** "Die Wand vibriert").
+        * *Pickup-Limit:* Inventar voll (`store.addToInventory` returns false → nur Limit-Dialog via `setDialogue`: "du kannst kein weiteres Frequenzfragment mehr aufnehmen", kein BandMood, kein Flag).
+    * *Option (Neutral):* "Interessantes Muster." (Zeigt Hinweis via `setDialogue`: "Einfach nur Risse. Aber sie sehen laut aus.")
 * **Autoschlüssel (Item):**
     * *Interaktion:* Aufheben (+10 BandMood, Quest-Abschluss: `keys`, Erhalt: Autoschlüssel).
 * **Kühles Bier (Item):**
@@ -172,7 +181,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Rostiges Plektrum (Item, einmalig):**
     * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum, setzt `rostigesPlektrumCollected`).
 * **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
-    * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` bereits aktiv** (+10 BandMood; bei erfolgreicher Aufnahme setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar. Bei erreichtem Pickup-Limit erscheint ein Hinweistext ohne Flag-Set.
+    * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` den Status `active` hat** (bei erfolgreicher Aufnahme: +10 BandMood, setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar (kein Mood-Effekt). Bei erreichtem Pickup-Limit erscheint ein Hinweistext ohne Flag-Set und ohne +10 BandMood.
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Geist eines Roadies:**

@@ -279,7 +279,7 @@ If the user has existing config files, read `references/migration-guide.md` for 
 After writing a context file, run the bundled validation script to catch common problems:
 
 ```bash
-python scripts/validate_context_file.py <path-to-context-file> [--readme <path-to-readme>]
+python .agents/skills/agents-md-writer/scripts/validate_context_file.py <path-to-context-file> [--readme <path-to-readme>]
 ```
 
 The validator checks for: codebase overviews, directory listings, README duplication, generic advice, technology descriptions, excessive word count, vague instructions, and discoverable commands.
@@ -293,7 +293,7 @@ If the user provides a repo path, run validation automatically after generating 
 3. **Identify non-obvious requirements** — things that meet the Golden Rule
 4. **Draft the file** — aim for 200-400 words, use the structure template
 5. **Review against "What to NEVER Include"** — remove anything that fails
-6. **Run the validator** — `python scripts/validate_context_file.py <file>`
+6. **Run the validator** — `python .agents/skills/agents-md-writer/scripts/validate_context_file.py <file>`
 7. **Check each line**: "Would an agent fail without this specific instruction?" If no, cut it.
 8. **Set up multi-tool strategy** — symlinks, imports, tool-specific files as needed
 9. **Save the file(s)** to the repo root

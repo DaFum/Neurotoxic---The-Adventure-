@@ -57,7 +57,7 @@ const getQuestStatusMeta = (status: QuestStatus) => {
       textClass: 'text-blood/70',
       dotClass: 'bg-blood border-blood',
       badgeClass: 'border-blood/70 text-blood/80',
-      crossedOut: false,
+      crossedOut: true,
     };
   }
 
@@ -132,6 +132,29 @@ export function UI() {
     }
     return counts;
   }, [selectedItems]);
+
+  useEffect(() => {
+    setSelectedItems((prev) => {
+      const counts = new Map<string, number>();
+      for (const item of inventory) {
+        counts.set(item, (counts.get(item) ?? 0) + 1);
+      }
+
+      const newSelected: string[] = [];
+      for (const item of prev) {
+        const available = counts.get(item) ?? 0;
+        if (available > 0) {
+          newSelected.push(item);
+          counts.set(item, available - 1);
+        }
+      }
+
+      if (newSelected.length !== prev.length) {
+        return newSelected;
+      }
+      return prev;
+    });
+  }, [inventory]);
   const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
   const loreCodexContainerRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);

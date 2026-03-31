@@ -257,7 +257,7 @@ interface GameState {
   startQuestWithFlag: (id: string, text: string, flag: Flag, flagValue?: boolean) => void;
   completeQuestWithFlag: (id: string, flag: Flag, flagValue?: boolean, text?: string) => void;
   bandMood: number;
-  increaseBandMood: (amount: number) => void;
+  increaseBandMood: (amount: number, sourceId?: string) => void;
   bandMoodGainClaims: Record<string, boolean>;
   cameraShake: number;
   setCameraShake: (shake: number) => void;
@@ -472,6 +472,7 @@ const deriveBandMoodGainSource = (): string => {
   return sourceLine ?? 'unknown_source';
 };
 
+
 /**
  * The Zustand hook for accessing and mutating the global game state.
  * Automatically persists the state to localStorage.
@@ -663,11 +664,11 @@ export const useStore = create<GameState>()(
         }
         return { quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }] };
       }),
-      increaseBandMood: (amount) => set((state) => {
+      increaseBandMood: (amount, sourceId) => set((state) => {
         const nextMood = Math.max(0, Math.min(100, state.bandMood + amount));
 
         if (amount > 0) {
-          const gainSource = deriveBandMoodGainSource();
+          const gainSource = sourceId ?? deriveBandMoodGainSource();
           if (state.bandMoodGainClaims[gainSource]) {
             return state;
           }

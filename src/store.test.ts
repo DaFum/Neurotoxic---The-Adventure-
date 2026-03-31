@@ -122,7 +122,7 @@ describe('useStore', () => {
 
   describe('Band Mood Gain De-duplication', () => {
     it('should apply positive mood gain only once for the same source callsite', () => {
-      const triggerSameSourceGain = () => useStore.getState().increaseBandMood(10);
+      const triggerSameSourceGain = () => useStore.getState().increaseBandMood(10, 'test_source');
 
       triggerSameSourceGain();
       triggerSameSourceGain();
@@ -131,10 +131,28 @@ describe('useStore', () => {
     });
 
     it('should still allow repeated negative mood deltas', () => {
-      const triggerSameSourceLoss = () => useStore.getState().increaseBandMood(-5);
+      const triggerSameSourceLoss = () => useStore.getState().increaseBandMood(-5, 'test_source_loss');
 
       triggerSameSourceLoss();
       triggerSameSourceLoss();
+
+      expect(useStore.getState().bandMood).toBe(10);
+    });
+
+    it('should deduplicate positive mood gains when no explicit sourceId is provided (fallback logic)', () => {
+      const triggerGainNoSource = () => useStore.getState().increaseBandMood(10);
+
+      triggerGainNoSource();
+      triggerGainNoSource();
+
+      expect(useStore.getState().bandMood).toBe(30);
+    });
+
+    it('should allow repeated negative mood deltas when no explicit sourceId is provided (fallback logic)', () => {
+      const triggerLossNoSource = () => useStore.getState().increaseBandMood(-5);
+
+      triggerLossNoSource();
+      triggerLossNoSource();
 
       expect(useStore.getState().bandMood).toBe(10);
     });
