@@ -626,8 +626,7 @@ export function TourBus() {
               options: [
                 { text: 'Prost!', action: () => {
                     removeFromInventory('Geister-Drink');
-                    setFlag('ghostRecipeQuestCompleted', true);
-                    completeQuest('ghost_recipe');
+                    useStore.getState().completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted');
                     increaseBandMood(40);
                     useStore.getState().increaseSkill('social', 5);
                     setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
@@ -672,13 +671,13 @@ export function TourBus() {
             return;
           }
 
-          if (flags.ghostSecretRevealed) {
-            setDialogue('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
+          if (flags.ghostRecipeQuestStarted && !hasGeisterDrink) {
+            setDialogue('Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."');
             return;
           }
 
-          if (flags.ghostRecipeQuestStarted && !hasGeisterDrink) {
-            setDialogue('Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."');
+          if (flags.ghostSecretRevealed) {
+            setDialogue('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
             return;
           }
 
@@ -809,8 +808,7 @@ export function TourBus() {
                 }},
                 { text: 'Kann ich dir irgendwie helfen?', action: () => {
                     setDialogue('Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."');
-                    setFlag('ghostRecipeQuestStarted', true);
-                    addQuest('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies');
+                    useStore.getState().startQuestWithFlag('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies', 'ghostRecipeQuestStarted');
                     increaseBandMood(5);
                 }}
               ]

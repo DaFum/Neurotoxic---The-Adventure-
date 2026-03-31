@@ -236,9 +236,11 @@ interface GameState {
   setPaused: (paused: boolean) => void;
   quests: { id: string; text: string; status: QuestStatus }[];
   addQuest: (id: string, text: string) => void;
-  completeQuest: (id: string) => void;
-  failQuest: (id: string) => void;
+  completeQuest: (id: string, text?: string) => void;
+  failQuest: (id: string, text?: string) => void;
   startAndFinishQuest: (id: string, text: string) => void;
+  startQuestWithFlag: (id: string, text: string, flag: Flag, flagValue?: boolean) => void;
+  completeQuestWithFlag: (id: string, flag: Flag, flagValue?: boolean, text?: string) => void;
   bandMood: number;
   increaseBandMood: (amount: number) => void;
   cameraShake: number;
@@ -442,7 +444,15 @@ export const useStore = create<GameState>()(
         set((state) => ({ inventory: [...state.inventory, item] }));
       },
       removeFromInventory: (item) => {
-        set((state) => ({ inventory: state.inventory.filter((i) => i !== item) }));
+        set((state) => {
+          const index = state.inventory.indexOf(item);
+          if (index !== -1) {
+            const newInventory = [...state.inventory];
+            newInventory.splice(index, 1);
+            return { inventory: newInventory };
+          }
+          return state;
+        });
       },
       hasItem: (item) => get().inventory.includes(item),
       combineItems: (item1, item2) => {
@@ -505,12 +515,66 @@ export const useStore = create<GameState>()(
         }
         return { quests: [...state.quests, { id, text, status: 'active' as QuestStatus }] };
       }),
-      completeQuest: (id) => set((state) => ({
-        quests: state.quests.map(q => q.id === id ? { ...q, status: 'completed' as QuestStatus } : q)
-      })),
-      failQuest: (id) => set((state) => ({
-        quests: state.quests.map(q => q.id === id ? { ...q, status: 'failed' as QuestStatus } : q)
-      })),
+      completeQuest: (id, text) => set((state) => {
+        const exists = state.quests.some(q => q.id === id);
+        if (!exists) {
+          if (text) {
+            return {
+              quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }]
+            };
+          }
+          console.warn(`Attempted to complete unregistered quest: ${id}`);
+          return state;
+        }
+        return {
+          quests: state.quests.map(q => q.id === id ? { ...q, status: 'completed' as QuestStatus } : q)
+        };
+      }),
+      failQuest: (id, text) => set((state) => {
+        const exists = state.quests.some(q => q.id === id);
+        if (!exists) {
+          if (text) {
+            return {
+              quests: [...state.quests, { id, text, status: 'failed' as QuestStatus }]
+            };
+          }
+          console.warn(`Attempted to fail unregistered quest: ${id}`);
+          return state;
+        }
+        return {
+          quests: state.quests.map(q => q.id === id ? { ...q, status: 'failed' as QuestStatus } : q)
+        };
+      }),
+      startQuestWithFlag: (id, text, flag, flagValue = true) => set((state) => {
+        const existing = state.quests.find(q => q.id === id);
+        if (existing) {
+          return {
+            quests: state.quests.map(q => q.id === id ? { ...q, text } : q),
+            flags: { ...state.flags, [flag]: flagValue }
+          };
+        }
+        return {
+          quests: [...state.quests, { id, text, status: 'active' as QuestStatus }],
+          flags: { ...state.flags, [flag]: flagValue }
+        };
+      }),
+      completeQuestWithFlag: (id, flag, flagValue = true, text) => set((state) => {
+        const exists = state.quests.some(q => q.id === id);
+        if (!exists) {
+          if (text) {
+            return {
+              quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }],
+              flags: { ...state.flags, [flag]: flagValue }
+            };
+          }
+          console.warn(`Attempted to complete unregistered quest: ${id}`);
+          return { flags: { ...state.flags, [flag]: flagValue } };
+        }
+        return {
+          quests: state.quests.map(q => q.id === id ? { ...q, status: 'completed' as QuestStatus } : q),
+          flags: { ...state.flags, [flag]: flagValue }
+        };
+      }),
       startAndFinishQuest: (id, text) => set((state) => {
         const existing = state.quests.find(q => q.id === id);
         if (existing?.status === 'completed' || existing?.status === 'failed') return state;

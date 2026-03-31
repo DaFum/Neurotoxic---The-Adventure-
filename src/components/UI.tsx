@@ -57,6 +57,7 @@ export function UI() {
   const [displayedText, setDisplayedText] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showLoreCodex, setShowLoreCodex] = useState(false);
+  const [isResolving, setIsResolving] = useState(false);
   const [showHudPanels, setShowHudPanels] = useState(() => (
     typeof window === 'undefined' ? true : window.innerWidth >= 1280
   ));
@@ -609,10 +610,15 @@ export function UI() {
                       return (
                         <button
                           key={idx}
-                          disabled={isLocked}
-                          onClick={() => executeDialogueOption(option)}
+                          disabled={isLocked || isResolving}
+                          onClick={() => {
+                            if (isResolving) return;
+                            setIsResolving(true);
+                            executeDialogueOption(option);
+                            setTimeout(() => setIsResolving(false), 300);
+                          }}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
-                            isLocked 
+                            isLocked || isResolving
                             ? 'bg-zinc-900/50 border-zinc-800 text-zinc-600 cursor-not-allowed grayscale' 
                             : 'bg-zinc-900 hover:bg-toxic text-zinc-400 hover:text-black border-zinc-800 hover:border-toxic'
                           }`}

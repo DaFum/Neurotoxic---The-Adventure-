@@ -1088,12 +1088,8 @@ export function Proberaum() {
                 { text: 'Ja, füttere deine Schaltkreise.', action: () => {
                   setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
                   addToInventory('Quanten-Kabel');
-                  setFlag('drumMachineQuestCompleted', true);
-                  // addQuest is idempotent — safe to call even if the quest was already
-                  // registered via the !questStarted branch. Ensures the quest exists
-                  // before completing it when the player found the riff first.
-                  addQuest('drum_machine', 'Finde das Verbotene Riff für die TR-8080');
-                  completeQuest('drum_machine');
+                  // completeQuestWithFlag is idempotent and safely auto-registers if missing (thanks to earlier fix or handles it gracefully)
+                  useStore.getState().completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
                   increaseBandMood(25);
                   useStore.getState().increaseSkill('chaos', 10);
                 }},
@@ -1111,8 +1107,7 @@ export function Proberaum() {
               options: [
                 { text: 'Was suchst du?', action: () => {
                   setDialogue('TR-8080: "Das Verbotene Riff. Es soll irgendwo in diesem Gebäude versteckt sein. Bring es mir, und ich zeige dir den wahren Beat."');
-                  setFlag('drumMachineQuestStarted', true);
-                  addQuest('drum_machine', 'Finde das Verbotene Riff für die TR-8080');
+                  useStore.getState().startQuestWithFlag('drum_machine', 'Finde das Verbotene Riff für die TR-8080', 'drumMachineQuestStarted');
                 }},
                 { text: 'Ich hab keine Zeit für Maschinen-Probleme.', action: () => {
                   setDialogue('TR-8080: "Dann bleib in deiner 3-dimensionalen Begrenztheit. Pff."');
@@ -1155,8 +1150,7 @@ export function Proberaum() {
               options: [
                 { text: 'Wie kann ich helfen?', action: () => {
                   setDialogue('Monitor: "Finde das Quanten-Kabel. Es ist irgendwo im Proberaum versteckt. Wenn du es mir bringst, werde ich dir die Frequenzen der Zukunft offenbaren."');
-                  setFlag('feedbackMonitorTalked', true);
-                  addQuest('feedback_monitor', 'Finde das Quanten-Kabel für den Feedback Monitor');
+                  useStore.getState().startQuestWithFlag('feedback_monitor', 'Finde das Quanten-Kabel für den Feedback Monitor', 'feedbackMonitorTalked');
                 }},
                 { text: 'Nicht jetzt.', action: () => {
                   setDialogue('Monitor: "Das Rauschen... es wird lauter..."');
@@ -1179,8 +1173,7 @@ export function Proberaum() {
                 options: [
                   { text: 'Danke!', action: () => {
                     removeFromInventory('Quanten-Kabel');
-                    setFlag('feedbackMonitorQuestCompleted', true);
-                    completeQuest('feedback_monitor');
+                    useStore.getState().completeQuestWithFlag('feedback_monitor', 'feedbackMonitorQuestCompleted');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 5);
                     setDialogue('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
