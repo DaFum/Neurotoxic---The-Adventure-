@@ -4,6 +4,10 @@
 
 *Update 30.03.2026 (Environment Pass): Alle Szenen-Modelle/Setpieces visuell erweitert (`SceneEnvironmentSetpieces.tsx`). Keine Änderungen an Dialogbäumen, Quest-Triggern, Flag-Namen, Item-Logik oder BandMood-Werten.*
 *Update 30.03.2026 (Quest/Dialog Fixes): `final` wird im Finale zuerst als Quest angelegt und dann abgeschlossen; `amp` in der Kaminstube wird beim Reparieren fehlertolerant nachgetragen; `repair_amp` ist im Proberaum in einem linearen Run abschließbar (zusätzlicher Lötkolben-Pickup); fehlende Flags (`frequenzCalibrated`, `inschriftDecoded`, `magnetbandPlayed`, `showedRiffToMatze`, `talkingAmpRepaired`, `tankwartMysticDone`) sind nun im Store initialisiert.*
+*Update 31.03.2026 (Pickup-Limits): Item-Aufnahmen sind global limitiert; Interactables verschwinden nach Erreichen des Limits auch dann, wenn das Item später verbraucht wurde. Standardlimit: 1. Ausnahmen: `Bier` 2, `Lötkolben` 3, `Schrottmetall` 2, `Frequenzfragment` 2.*
+*Update 31.03.2026 (Inventory/UI & Reward-Safety): HUD-Inventar zeigt Duplikate als Stack (`Item xN`) und erlaubt doppelte Auswahl desselben Stacks für Crafting; `addToInventory` liefert Erfolg/Fehlschlag zurück und kritische Dialog-Rewards (Frequenzfragment/Bier) behandeln Limit-Fälle mit eigenem Feedback statt stiller Erfolgsannahme.*
+*Update 31.03.2026 (BandMood Anti-Farm): Positive BandMood-Boni aus demselben Dialog-/Interaktions-Callsite werden pro Run nur einmal gewährt (negative Deltas bleiben wiederholbar). Zusätzlich wurde die TR-8080-Quantenkabel-Belohnung im Proberaum um explizites Limit-Feedback ergänzt.*
+*Update 31.03.2026 (Scene Transition Pacing): Vorwärts-Übergänge zwischen Szenen (`Proberaum -> TourBus`, `Backstage -> VoidStation`, `VoidStation -> Kaminstube`, `Kaminstube -> Salzgitter`) nutzen nun einen kurzen Delay (1s) nach Exit-Dialog, inklusive Timeout-Cleanup beim Unmount, damit Übergänge nicht abrupt wirken.*
 
 > **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx` oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `Proberaum.tsx`, `TourBus.tsx`, `Backstage.tsx`, `VoidStation.tsx`, `Kaminstube.tsx`, `Salzgitter.tsx`, `store.ts`.
 
@@ -20,8 +24,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
     * *Nach dem Aufwischen (Wasser aufgewischt):* Option "Erzähl mir von der Tour 1982." öffnet einen Unterdialog.
-        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (+25 BandMood, +4 Chaos, Erhalt: Frequenzfragment, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `frequenz1982_proberaum`, `matzeDeepTalk`).
-        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (+10 BandMood, +3 Chaos, Erhalt: Frequenzfragment, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `frequenz1982_proberaum`, `proberaum_brutalist_smash`, `matzeDeepTalk`).
+        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (+25 BandMood, +4 Chaos, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `matzeDeepTalk`; **bei erfolgreicher Aufnahme zusätzlich** Erhalt: Frequenzfragment und `frequenz1982_proberaum`).
+        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (+10 BandMood, +3 Chaos, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `proberaum_brutalist_smash`, `matzeDeepTalk`; **bei erfolgreicher Aufnahme zusätzlich** Erhalt: Frequenzfragment und `frequenz1982_proberaum`).
         * Zweig C (Trait: Visionary): "Ich sehe Muster im Lärm." (+30 BandMood, +5 Chaos, Lore: `matze_1982_truth`, setzt `matzeDeepTalk`).
         * Zweig D (Skill: Technical 5): Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
         * Zweig E (Skill: Social 3): Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
@@ -89,22 +93,22 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Autoschlüssel (Item):**
     * *Interaktion:* Aufheben (+10 BandMood, Quest-Abschluss: `keys`, Erhalt: Autoschlüssel).
 * **Kühles Bier (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Bier, setzt `beerPickedUp`). *Spawnt neu, solange Marius kein Bier hat und keins im Inventar ist, um Deadlocks durch Lars zu verhindern.*
+    * *Interaktion:* Aufheben (Erhalt: Bier). *Kann insgesamt maximal 2x aufgenommen werden (globales Pickup-Limit), damit Marius/Lars-Pfade möglich bleiben, aber kein Infinite-Farming entsteht.*
 * **Mysteriöse Pfütze:**
     * *Interaktion (Item: Mop):* Aufwischen (+20 BandMood, Quest-Abschluss: `water`).
 * **Sprechender Amp (Existenzielle Krise):**
     * *Initial:* Erzählt von der 5. Dimension (+2 BandMood, setzt `talkingAmpHeard`, Quest hinzugefügt: `repair_amp`).
     * *Nach Erstkontakt, vor Reparatur (Trait: Mystic, einmalig):* "Ich höre eine andere Stimme in dir." (+10 BandMood, +2 Chaos, setzt `maschinen_seele_amp`, startet Quest `maschinen_seele` falls noch nicht aktiv). **Option verschwindet nach einmaligem Auslösen.**
-    * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical, Quest-Abschluss: `repair_amp`, setzt `talkingAmpRepaired`, entfernt Lötkolben, entfernt Schrottmetall). /// Item respawn after repair enables both repair and crafting paths
+    * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical, Quest-Abschluss: `repair_amp`, setzt `talkingAmpRepaired`, entfernt Lötkolben, entfernt Schrottmetall). Zusätzliche Aufnahmen sind nur bis zum globalen Item-Limit möglich.
     * *Nach Reparatur:* Bietet Therapie-Sitzung an (setzt `ampTherapyStarted`, Quest hinzugefügt: `amp_therapy`).
     * *Therapie-Sitzung:*
         * Option (Trait: Mystic): "Ich höre deine wahre Stimme, Amp" (+20 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted` & `ampSentient`).
         * Option (Trait: Diplomat): "Du bist ein Bewusstsein" (+30 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
         * Option (Trait: Brutalist): "Du bist ein Werkzeug" (+10 BandMood, Quest-Abschluss: `amp_therapy`, setzt `ampTherapyCompleted`).
 * **Lötkolben (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Lötkolben). **Spawn in Proberaum und Backstage.**
+    * *Interaktion:* Aufheben (Erhalt: Lötkolben). **Spawn in Proberaum und Backstage; globales Pickup-Limit: 3.**
 * **Schrottmetall (Item):**
-    * *Interaktion:* Aufheben (Erhalt: Schrottmetall).
+    * *Interaktion:* Aufheben (Erhalt: Schrottmetall). **Globales Pickup-Limit: 2.**
 * **Alte Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Quanten-Kabel (Item):**
@@ -168,7 +172,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Rostiges Plektrum (Item, einmalig):**
     * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum, setzt `rostigesPlektrumCollected`).
 * **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
-    * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` bereits aktiv** (+10 BandMood, Erhalt: Frequenzfragment, setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar.
+    * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` bereits aktiv** (+10 BandMood; bei erfolgreicher Aufnahme setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar. Bei erreichtem Pickup-Limit erscheint ein Hinweistext ohne Flag-Set.
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Geist eines Roadies:**
@@ -324,7 +328,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * Option (Skill: Chaos 5): "Die Wahrheit muss raus!" (+15 BandMood, +3 Chaos, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
     * *Item (Industrie-Talisman):* Erhält "Altes Plektrum" (wichtig für Matze in Salzgitter) (+20 BandMood, Erhalt: Altes Plektrum).
     * *BandMood > 80:* Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
-    * *Standard:* Erhalt: Bier.
+    * *Standard:* Erhalt: Bier, solange Pickup-Limit nicht erreicht ist; bei Limit verweigert der Wirt weiteres Freibier mit eigener Antwort.
 * **Ersatzröhre (Item):**
     * *Interaktion:* Aufheben (Erhalt: Röhre). *Hinweis: Der Pickup wird versteckt, sobald die `amp` Quest abgeschlossen ist (oder `ampFixed` gesetzt ist).*
 * **Kaputter Amp:**

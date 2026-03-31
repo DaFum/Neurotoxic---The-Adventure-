@@ -30,6 +30,7 @@ import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
  */
 export function Backstage() {
   const addToInventory = useStore((state) => state.addToInventory);
+  const canPickupItem = useStore((state) => state.canPickupItem);
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
   const flags = useStore((state) => state.flags);
@@ -40,6 +41,7 @@ export function Backstage() {
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const increaseSkill = useStore((state) => state.increaseSkill);
   const hasItem = useStore((state) => state.hasItem);
+  const inventory = useStore((state) => state.inventory);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const exitTimeoutRef = useRef<number | null>(null);
 
@@ -283,7 +285,7 @@ export function Backstage() {
           position={[0, 6, -9.4]}
           fontSize={1.5}
           color="#adff2f"
-          font="https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff"
+          font="/fonts/pressstart2p-v16.ttf"
         >
           BACKSTAGE_ZONE
         </Text>
@@ -632,7 +634,7 @@ export function Backstage() {
       />
 
       {/* Items */}
-      {!flags.setlistFound && (
+      {!flags.setlistFound && canPickupItem('Setliste') && !inventory.includes('Setliste') && (
         <Interactable
           position={[0, 0, -2]}
           emoji="📜"
@@ -646,18 +648,19 @@ export function Backstage() {
         />
       )}
 
+      {canPickupItem('Stift') && !inventory.includes('Stift') && (
+        <Interactable
+          position={[8, 0, 2]}
+          emoji="🖊️"
+          name="Stift"
+          onInteract={() => {
+            addToInventory('Stift');
+            setDialogue('Ein wasserfester Edding. Perfekt für Autogramme auf verschwitzten T-Shirts oder um "NEUROTOXIC" auf fremde Tourbusse zu schreiben.');
+          }}
+        />
+      )}
 
-      <Interactable
-        position={[8, 0, 2]}
-        emoji="🖊️"
-        name="Stift"
-        onInteract={() => {
-          addToInventory('Stift');
-          setDialogue('Ein wasserfester Edding. Perfekt für Autogramme auf verschwitzten T-Shirts oder um "NEUROTOXIC" auf fremde Tourbusse zu schreiben.');
-        }}
-      />
-
-      {!hasItem('Lötkolben') && (
+      {canPickupItem('Lötkolben') && !inventory.includes('Lötkolben') && (
         <Interactable
           position={[12, 0, -5]}
           emoji="🔌"
@@ -832,7 +835,13 @@ export function Backstage() {
         onInteract={() => {
           if (flags.mariusCalmed && flags.setlistFound) {
             setDialogue('Die Welt beginnt zu flimmern. Wir verlassen die bekannte Realität.');
-            setScene('void_station');
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+            }
+            exitTimeoutRef.current = window.setTimeout(() => {
+              if (useStore.getState().scene === 'backstage') setScene('void_station');
+              exitTimeoutRef.current = null;
+            }, 1000);
           } else {
             setDialogue('Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!');
           }

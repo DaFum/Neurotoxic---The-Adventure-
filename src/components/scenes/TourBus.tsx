@@ -34,8 +34,10 @@ export function TourBus() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
+  const canPickupItem = useStore((state) => state.canPickupItem);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const hasItem = useStore((state) => state.hasItem);
+  const inventory = useStore((state) => state.inventory);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
@@ -538,7 +540,7 @@ export function TourBus() {
       )}
 
       {/* Bus Items */}
-      {!hasItem('Klebeband') && !hasItem('Repariertes Kabel') && (
+      {canPickupItem('Klebeband') && !inventory.includes('Klebeband') && !inventory.includes('Repariertes Kabel') && (
         <Interactable
           position={[-5, 0.5, 2]}
           emoji="🩹"
@@ -550,7 +552,7 @@ export function TourBus() {
         />
       )}
 
-      {!hasItem('Defektes Kabel') && !hasItem('Repariertes Kabel') && (
+      {canPickupItem('Defektes Kabel') && !inventory.includes('Defektes Kabel') && !inventory.includes('Repariertes Kabel') && (
         <Interactable
           position={[5, 0.5, 2]}
           emoji="🔌"
@@ -562,7 +564,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusCoffeeCollected && !hasItem('Kaffee') && (
+      {!flags.tourbusCoffeeCollected && canPickupItem('Kaffee') && !inventory.includes('Kaffee') && (
         <Interactable
           position={[0, 0.5, -3]}
           emoji="☕"
@@ -575,7 +577,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusEnergyDrinkCollected && !hasItem('Energiedrink') && (
+      {!flags.tourbusEnergyDrinkCollected && canPickupItem('Energiedrink') && !inventory.includes('Energiedrink') && (
         <Interactable
           position={[-1, 0.5, -3]}
           emoji="🥤"
@@ -588,7 +590,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusBeerCollected && !hasItem('Bier') && (
+      {!flags.tourbusBeerCollected && canPickupItem('Bier') && !inventory.includes('Bier') && (
         <Interactable
           position={[2, 0.5, 3]}
           emoji="🍺"
@@ -849,10 +851,15 @@ export function TourBus() {
                     const hasQuest = useStore.getState().quests.find(q => q.id === 'frequenz_1982');
                     const hasFoundHere = useStore.getState().flags.frequenz1982_tourbus;
                     if (hasQuest && !hasFoundHere) {
-                      setDialogue('Unter der Notiz entdeckst du ein Magnetband-Schnipsel. Das ist ein weiteres Frequenzfragment!');
-                      useStore.getState().setFlag('frequenz1982_tourbus', true);
-                      useStore.getState().addToInventory('Frequenzfragment');
-                      useStore.getState().increaseBandMood(10);
+                      const store = useStore.getState();
+                      const pickedUpFragment = store.addToInventory('Frequenzfragment');
+                      store.increaseBandMood(10);
+                      if (pickedUpFragment) {
+                        store.setFlag('frequenz1982_tourbus', true);
+                        setDialogue('Unter der Notiz entdeckst du ein Magnetband-Schnipsel. Das ist ein weiteres Frequenzfragment!');
+                      } else {
+                        setDialogue('Du findest ein Frequenzfragment, kannst aber kein weiteres mehr aufnehmen.');
+                      }
                     } else {
                       setDialogue('Du untersuchst die Verkleidung. Nichts weiter zu finden, außer etwas getrocknetem Klebstoff.');
                     }
@@ -865,7 +872,7 @@ export function TourBus() {
         />
       )}
 
-      {!hasItem('Batterie') && (
+      {canPickupItem('Batterie') && !inventory.includes('Batterie') && (
         <Interactable
           position={[-3, 0.5, 4]}
           emoji="🔋"
@@ -886,7 +893,13 @@ export function TourBus() {
         onInteract={() => {
           if (hasItem('Repariertes Kabel') || flags.cableFixed) {
             setDialogue('Auf gehts zum Gig! Nächster Halt: Backstage.');
-            exitTimeoutRef.current = window.setTimeout(() => setScene('backstage'), 1000);
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+            }
+            exitTimeoutRef.current = window.setTimeout(() => {
+              if (useStore.getState().scene === 'tourbus') setScene('backstage');
+              exitTimeoutRef.current = null;
+            }, 1000);
           } else {
             setDialogue('Wir können noch nicht los. Matze braucht erst ein funktionierendes Kabel.');
           }
@@ -903,7 +916,7 @@ export function TourBus() {
           position={[0, 3, -4.4]}
           fontSize={0.3}
           color="#00ff00"
-          font="https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff"
+          font="/fonts/pressstart2p-v16.ttf"
         >
           NEUROTOXIC TOUR 2026
         </Text>

@@ -22,6 +22,7 @@ import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
+import { useEffect, useRef } from 'react';
 
 /**
  * Renders the 3D scene environment and logic for Proberaum.
@@ -31,14 +32,26 @@ export function Proberaum() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
+  const canPickupItem = useStore((state) => state.canPickupItem);
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
+  const inventory = useStore((state) => state.inventory);
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const addQuest = useStore((state) => state.addQuest);
   const bandMood = useStore((state) => state.bandMood);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const discoverLore = useStore((state) => state.discoverLore);
+  const exitTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -420,28 +433,38 @@ export function Proberaum() {
                         text: 'Ich spüre eine Frequenz in den Wänden... [Mystic]',
                         requiredTrait: 'Mystic',
                         action: () => {
-                          setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
-                          useStore.getState().setFlag('frequenz1982_proberaum', true);
-                          useStore.getState().setFlag('bassist_clue_matze', true);
-                          useStore.getState().addToInventory('Frequenzfragment');
-                          useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                          useStore.getState().increaseBandMood(25);
-                          useStore.getState().increaseSkill('chaos', 4);
-                          useStore.getState().setFlag('matzeDeepTalk', true);
+                          const store = useStore.getState();
+                          const pickedUpFragment = store.addToInventory('Frequenzfragment');
+                          store.setFlag('bassist_clue_matze', true);
+                          store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                          store.increaseBandMood(25);
+                          store.increaseSkill('chaos', 4);
+                          store.setFlag('matzeDeepTalk', true);
+                          if (pickedUpFragment) {
+                            store.setFlag('frequenz1982_proberaum', true);
+                            setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
+                          } else {
+                            setDialogue('Matze: "Du... spürst sie? Das Fragment ist echt, aber du kannst gerade keins mehr tragen."');
+                          }
                         }
                       },
                       { text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
                         requiredTrait: 'Brutalist',
                         action: () => {
-                          setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
-                          useStore.getState().setFlag('frequenz1982_proberaum', true);
-                          useStore.getState().setFlag('proberaum_brutalist_smash', true);
-                          useStore.getState().setFlag('bassist_clue_matze', true);
-                          useStore.getState().addToInventory('Frequenzfragment');
-                          useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                          useStore.getState().increaseBandMood(10);
-                          useStore.getState().increaseSkill('chaos', 3);
-                          useStore.getState().setFlag('matzeDeepTalk', true);
+                          const store = useStore.getState();
+                          const pickedUpFragment = store.addToInventory('Frequenzfragment');
+                          store.setFlag('proberaum_brutalist_smash', true);
+                          store.setFlag('bassist_clue_matze', true);
+                          store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                          store.increaseBandMood(10);
+                          store.increaseSkill('chaos', 3);
+                          store.setFlag('matzeDeepTalk', true);
+                          if (pickedUpFragment) {
+                            store.setFlag('frequenz1982_proberaum', true);
+                            setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
+                          } else {
+                            setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Fragment, aber du kannst keins mehr aufnehmen."');
+                          }
                         }
                       },
                       { 
@@ -817,26 +840,36 @@ export function Proberaum() {
                   text: 'Die Risse... sie sind eine Partitur! [Visionary]',
                   requiredTrait: 'Visionary',
                   action: () => {
-                    setDialogue('Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.');
-                    if (!useStore.getState().quests.find(q => q.id === 'frequenz_1982')) {
-                      useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                    const store = useStore.getState();
+                    if (!store.quests.find(q => q.id === 'frequenz_1982')) {
+                      store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
                     }
-                    useStore.getState().setFlag('frequenz1982_proberaum', true);
-                    useStore.getState().addToInventory('Frequenzfragment');
-                    useStore.getState().increaseBandMood(15);
+                    const pickedUpFragment = store.addToInventory('Frequenzfragment');
+                    store.increaseBandMood(15);
+                    if (pickedUpFragment) {
+                      store.setFlag('frequenz1982_proberaum', true);
+                      setDialogue('Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.');
+                    } else {
+                      setDialogue('Du entschlüsselst die Wand, aber dein Inventar ist für weitere Frequenzfragmente bereits am Limit.');
+                    }
                   }
                 },
                 {
                   text: 'Die Resonanzfrequenz liegt bei exakt 432.1982 Hz. [Technical 8]',
                   requiredSkill: { name: 'technical', level: 8 },
                   action: () => {
-                    setDialogue('Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.');
-                    if (!useStore.getState().quests.find(q => q.id === 'frequenz_1982')) {
-                      useStore.getState().addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+                    const store = useStore.getState();
+                    if (!store.quests.find(q => q.id === 'frequenz_1982')) {
+                      store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
                     }
-                    useStore.getState().setFlag('frequenz1982_proberaum', true);
-                    useStore.getState().addToInventory('Frequenzfragment');
-                    useStore.getState().increaseBandMood(15);
+                    const pickedUpFragment = store.addToInventory('Frequenzfragment');
+                    store.increaseBandMood(15);
+                    if (pickedUpFragment) {
+                      store.setFlag('frequenz1982_proberaum', true);
+                      setDialogue('Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.');
+                    } else {
+                      setDialogue('Die Wand vibriert, aber du kannst kein weiteres Frequenzfragment mehr aufnehmen.');
+                    }
                   }
                 },
                 { text: 'Interessantes Muster.', action: () => setDialogue('Einfach nur Risse. Aber sie sehen laut aus.') }
@@ -846,7 +879,7 @@ export function Proberaum() {
         />
       )}
 
-      {!hasItem('Mop') && (
+      {canPickupItem('Mop') && !inventory.includes('Mop') && (
         <Interactable
           position={[-8, 0.5, 3]}
           emoji="🧹"
@@ -859,7 +892,7 @@ export function Proberaum() {
         />
       )}
 
-      {!hasItem('Autoschlüssel') && (
+      {canPickupItem('Autoschlüssel') && !inventory.includes('Autoschlüssel') && (
         <Interactable
           position={[-10, 0.5, -4]}
           emoji="🔑"
@@ -874,7 +907,7 @@ export function Proberaum() {
         />
       )}
 
-      {!flags.gaveBeerToMarius && !hasItem('Bier') && (
+      {!flags.gaveBeerToMarius && canPickupItem('Bier') && !inventory.includes('Bier') && (
         <Interactable
           position={[8, 0.5, -5]}
           emoji="🍺"
@@ -1024,7 +1057,7 @@ export function Proberaum() {
         />
       )}
 
-      {!hasItem('Lötkolben') && (
+      {canPickupItem('Lötkolben') && !inventory.includes('Lötkolben') && (
         <Interactable
           position={[8, 0.5, -1]}
           emoji="🛠️"
@@ -1037,7 +1070,7 @@ export function Proberaum() {
         />
       )}
 
-      {!hasItem('Schrottmetall') && (
+      {canPickupItem('Schrottmetall') && !inventory.includes('Schrottmetall') && (
         <Interactable
           position={[10, 0.5, -2]}
           emoji="🔩"
@@ -1050,7 +1083,7 @@ export function Proberaum() {
         />
       )}
 
-      {!hasItem('Batterie') && (
+      {canPickupItem('Batterie') && !inventory.includes('Batterie') && (
         <Interactable
           position={[-12, 0.5, 4]}
           emoji="🔋"
@@ -1063,7 +1096,7 @@ export function Proberaum() {
         />
       )}
 
-      {!hasItem('Quanten-Kabel') && !flags.feedbackMonitorQuestCompleted && (
+      {canPickupItem('Quanten-Kabel') && !inventory.includes('Quanten-Kabel') && !flags.feedbackMonitorQuestCompleted && (
         <Interactable
           position={[-10, 0.5, 5]}
           emoji="🔌"
@@ -1096,8 +1129,12 @@ export function Proberaum() {
               text: 'TR-8080: "DIESE FREQUENZ! Es ist das Verbotene Riff! Mein analoges Herz schlägt im Takt der Vernichtung. Darf ich es... absorbieren?"',
               options: [
                 { text: 'Ja, füttere deine Schaltkreise.', action: () => {
-                  setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
-                  addToInventory('Quanten-Kabel');
+                  const receivedCable = addToInventory('Quanten-Kabel');
+                  if (receivedCable) {
+                    setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
+                  } else {
+                    setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Dein Inventarlimit blockiert weitere Quanten-Kabel. Der Beat gehört trotzdem dir."');
+                  }
                   // completeQuestWithFlag is idempotent and safely auto-registers if missing (thanks to earlier fix or handles it gracefully)
                   useStore.getState().completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
                   increaseBandMood(25);
@@ -1206,9 +1243,18 @@ export function Proberaum() {
           scale={1.2}
           onInteract={() => {
             if (hasItem('Autoschlüssel')) {
-              useStore.getState().setScene('tourbus');
-              addQuest('cable', 'Repariere Matzes Kabel mit Klebeband und defektem Kabel');
               setDialogue('Auf in den Tourbus! Nächster Halt: Tangermünde.');
+              if (exitTimeoutRef.current !== null) {
+                window.clearTimeout(exitTimeoutRef.current);
+              }
+              exitTimeoutRef.current = window.setTimeout(() => {
+                const store = useStore.getState();
+                if (store.scene === 'proberaum') {
+                  store.addQuest('cable', 'Repariere Matzes Kabel mit Klebeband und defektem Kabel');
+                  store.setScene('tourbus');
+                }
+                exitTimeoutRef.current = null;
+              }, 1000);
             } else {
               setDialogue('Wir können noch nicht losfahren. Wo sind die Autoschlüssel für den Van?');
             }

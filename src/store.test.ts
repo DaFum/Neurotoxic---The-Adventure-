@@ -97,10 +97,7 @@ describe('useStore', () => {
 
   describe('Inventory', () => {
     it('removeFromInventory should only remove the first matching item when duplicates exist', () => {
-      const state = useStore.getState();
-      state.addToInventory('Bier');
-      state.addToInventory('Bier');
-      state.addToInventory('Bier');
+      useStore.setState({ inventory: ['Bier', 'Bier', 'Bier'] });
 
       let currentState = useStore.getState();
       expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(3);
@@ -109,6 +106,37 @@ describe('useStore', () => {
       currentState = useStore.getState();
 
       expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(2);
+    });
+
+    it('addToInventory should return false when pickup limit is reached', () => {
+      const state = useStore.getState();
+
+      expect(state.addToInventory('Bier')).toBe(true);
+      expect(state.addToInventory('Bier')).toBe(true);
+      expect(state.addToInventory('Bier')).toBe(false);
+
+      const currentState = useStore.getState();
+      expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(2);
+    });
+  });
+
+  describe('Band Mood Gain De-duplication', () => {
+    it('should apply positive mood gain only once for the same source callsite', () => {
+      const triggerSameSourceGain = () => useStore.getState().increaseBandMood(10);
+
+      triggerSameSourceGain();
+      triggerSameSourceGain();
+
+      expect(useStore.getState().bandMood).toBe(30);
+    });
+
+    it('should still allow repeated negative mood deltas', () => {
+      const triggerSameSourceLoss = () => useStore.getState().increaseBandMood(-5);
+
+      triggerSameSourceLoss();
+      triggerSameSourceLoss();
+
+      expect(useStore.getState().bandMood).toBe(10);
     });
   });
 

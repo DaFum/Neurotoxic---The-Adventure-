@@ -206,7 +206,7 @@ export interface Dialogue {
  * @property flags - A record of boolean flags tracking game progress.
  * @property setFlag - Sets a specific game flag to a boolean value.
  * @property inventory - A list of item IDs currently held by the player.
- * @property addToInventory - Adds an item ID to the inventory.
+ * @property addToInventory - Adds an item ID to the inventory. Returns whether the item was added.
  * @property removeFromInventory - Removes an item ID from the inventory.
  * @property hasItem - Checks if the player has a specific item ID in their inventory.
  * @property combineItems - Attempts to combine two item IDs into a new item.
@@ -237,9 +237,11 @@ interface GameState {
   dialogue: Dialogue | null;
   setDialogue: (dialogue: Dialogue | string | null) => void;
   inventory: string[];
-  addToInventory: (item: string) => void;
+  addToInventory: (item: string) => boolean;
   removeFromInventory: (item: string) => void;
   hasItem: (item: string) => boolean;
+  canPickupItem: (item: string) => boolean;
+  itemPickupCounts: Record<string, number>;
   combineItems: (item1: string, item2: string) => boolean;
   flags: Record<Flag, boolean>;
   setFlag: (flag: Flag, value: boolean) => void;
@@ -256,6 +258,7 @@ interface GameState {
   completeQuestWithFlag: (id: string, flag: Flag, flagValue?: boolean, text?: string) => void;
   bandMood: number;
   increaseBandMood: (amount: number) => void;
+  bandMoodGainClaims: Record<string, boolean>;
   cameraShake: number;
   setCameraShake: (shake: number) => void;
   loreEntries: LoreEntry[];
@@ -273,6 +276,7 @@ const initialState = {
   },
   dialogue: null,
   inventory: [],
+  itemPickupCounts: {} as Record<string, number>,
   flags: {
     waterCleaned: false,
     ampFixed: false,
@@ -419,6 +423,7 @@ const initialState = {
     { id: 'marius', text: 'Beruhige Marius vor dem Auftritt', status: 'active' as QuestStatus },
   ],
   bandMood: 20,
+  bandMoodGainClaims: {},
   cameraShake: 0,
 };
 
@@ -438,6 +443,34 @@ const RECIPES: Recipe[] = [
   { ingredients: ['Splitter der Leere', 'Altes Plektrum'], result: 'Void-Plektrum' },
   { ingredients: ['Frequenzfragment', 'Splitter der Leere'], result: 'Resonanz-Kristall' },
 ];
+
+// Limits how often an item may be collected in total during a run.
+// Default is 1 for all items not listed here.
+const ITEM_PICKUP_LIMITS: Record<string, number> = {
+  Bier: 2,
+  Lötkolben: 3,
+  Schrottmetall: 2,
+  Frequenzfragment: 2,
+};
+
+const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
+
+const deriveBandMoodGainSource = (): string => {
+  const stack = new Error().stack;
+  if (!stack) return 'unknown_source';
+
+  const lines = stack.split('\n').map((line) => line.trim());
+  const sourceLine = lines.find((line) =>
+    line &&
+    !line.includes('deriveBandMoodGainSource') &&
+    !line.includes('increaseBandMood') &&
+    !line.includes('store.ts') &&
+    !line.includes('zustand') &&
+    !line.includes('at set')
+  );
+
+  return sourceLine ?? 'unknown_source';
+};
 
 /**
  * The Zustand hook for accessing and mutating the global game state.
@@ -461,8 +494,28 @@ export const useStore = create<GameState>()(
         }
       },
       addToInventory: (item) => {
-        audio.playPickup();
-        set((state) => ({ inventory: [...state.inventory, item] }));
+        let didAdd = false;
+        set((state) => {
+          const pickedCount = state.itemPickupCounts[item] ?? 0;
+          const pickupLimit = getItemPickupLimit(item);
+
+          if (pickedCount >= pickupLimit) {
+            return state;
+          }
+
+          didAdd = true;
+          return {
+            inventory: [...state.inventory, item],
+            itemPickupCounts: {
+              ...state.itemPickupCounts,
+              [item]: pickedCount + 1,
+            },
+          };
+        });
+        if (didAdd) {
+          audio.playPickup();
+        }
+        return didAdd;
       },
       removeFromInventory: (item) => {
         set((state) => {
@@ -477,6 +530,11 @@ export const useStore = create<GameState>()(
         });
       },
       hasItem: (item) => get().inventory.includes(item),
+      canPickupItem: (item) => {
+        const state = get();
+        const pickedCount = state.itemPickupCounts[item] ?? 0;
+        return pickedCount < getItemPickupLimit(item);
+      },
       combineItems: (item1, item2) => {
         const recipe = RECIPES.find(r =>
           (item1 === r.ingredients[0] && item2 === r.ingredients[1]) ||
@@ -605,9 +663,22 @@ export const useStore = create<GameState>()(
         }
         return { quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }] };
       }),
-      increaseBandMood: (amount) => set((state) => ({
-        bandMood: Math.max(0, Math.min(100, state.bandMood + amount))
-      })),
+      increaseBandMood: (amount) => set((state) => {
+        const nextMood = Math.max(0, Math.min(100, state.bandMood + amount));
+
+        if (amount > 0) {
+          const gainSource = deriveBandMoodGainSource();
+          if (state.bandMoodGainClaims[gainSource]) {
+            return state;
+          }
+          return {
+            bandMood: nextMood,
+            bandMoodGainClaims: { ...state.bandMoodGainClaims, [gainSource]: true }
+          };
+        }
+
+        return { bandMood: nextMood };
+      }),
       setCameraShake: (cameraShake) => set({ cameraShake }),
       discoverLore: (id) => set((state) => {
         const entry = state.loreEntries.find(e => e.id === id);
@@ -624,9 +695,11 @@ export const useStore = create<GameState>()(
       name: 'neurotoxic-game-storage',
       partialize: (state) => ({
         inventory: state.inventory,
+        itemPickupCounts: state.itemPickupCounts,
         flags: state.flags,
         quests: state.quests,
         bandMood: state.bandMood,
+        bandMoodGainClaims: state.bandMoodGainClaims,
         loreEntries: state.loreEntries,
         trait: state.trait,
         skills: state.skills,
@@ -639,6 +712,10 @@ export const useStore = create<GameState>()(
         const persistedFlags = (typedPersistedState.flags !== null && typeof typedPersistedState.flags === 'object')
           ? typedPersistedState.flags
           : {};
+        const persistedPickupCounts = (typedPersistedState.itemPickupCounts !== null && typeof typedPersistedState.itemPickupCounts === 'object')
+          ? typedPersistedState.itemPickupCounts as Record<string, number>
+          : {};
+        const persistedInventory = Array.isArray(typedPersistedState.inventory) ? typedPersistedState.inventory : [];
 
         const normalizeQuestStatus = (status: unknown, completed: unknown): QuestStatus => {
           if (status === 'active' || status === 'completed' || status === 'failed') return status;
@@ -667,6 +744,17 @@ export const useStore = create<GameState>()(
           return persistedEntry ? { ...e, discovered: persistedEntry.discovered } : e;
         });
 
+        const inventoryCounts = persistedInventory.reduce<Record<string, number>>((acc, item) => {
+          if (typeof item !== 'string') return acc;
+          acc[item] = (acc[item] ?? 0) + 1;
+          return acc;
+        }, {});
+
+        const mergedPickupCounts: Record<string, number> = { ...persistedPickupCounts };
+        for (const [item, count] of Object.entries(inventoryCounts)) {
+          mergedPickupCounts[item] = Math.max(mergedPickupCounts[item] ?? 0, count);
+        }
+
         return {
           ...currentState,
           ...typedPersistedState,
@@ -674,6 +762,10 @@ export const useStore = create<GameState>()(
           playerPos: currentState.playerPos,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
+          itemPickupCounts: mergedPickupCounts,
+          bandMoodGainClaims: (typedPersistedState.bandMoodGainClaims !== null && typeof typedPersistedState.bandMoodGainClaims === 'object')
+            ? typedPersistedState.bandMoodGainClaims as Record<string, boolean>
+            : currentState.bandMoodGainClaims,
           flags: {
             ...currentState.flags,
             ...persistedFlags,
