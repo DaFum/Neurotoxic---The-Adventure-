@@ -208,9 +208,10 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
     targetPosVector.set(position[0], position[1], position[2]);
 
-    const dist = playerPosVector.distanceTo(targetPosVector);
-    const inRangeNow = dist < 4.0;
-    distanceRef.current = dist;
+    // ⚡ Bolt Optimization: Use distanceToSquared to avoid expensive Math.sqrt() calls every frame for every interactable
+    const distSq = playerPosVector.distanceToSquared(targetPosVector);
+    const inRangeNow = distSq < 16.0; // 4.0 squared
+    distanceRef.current = distSq; // keyboard interaction only compares relative distances, so squared is fine
     inRangeRef.current = inRangeNow;
     setInRange((prev) => (prev === inRangeNow ? prev : inRangeNow));
 
