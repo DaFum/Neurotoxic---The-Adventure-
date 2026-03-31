@@ -16,7 +16,6 @@ export type QuestStatus = 'active' | 'completed' | 'failed';
 export type Flag =
   | 'waterCleaned'
   | 'ampFixed'
-  | 'beerPickedUp'
   | 'cableFixed'
   | 'setlistFound'
   | 'mariusCalmed'
@@ -276,7 +275,6 @@ const initialState = {
   flags: {
     waterCleaned: false,
     ampFixed: false,
-    beerPickedUp: false,
     cableFixed: false,
     setlistFound: false,
     mariusCalmed: false,

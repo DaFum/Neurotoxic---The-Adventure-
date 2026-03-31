@@ -169,6 +169,9 @@ export function UI() {
   };
 
   useEffect(() => {
+    isResolvingRef.current = false;
+    setIsResolving(false);
+
     if (!dialogue) {
       setDisplayedText('');
       return;
@@ -620,10 +623,7 @@ export function UI() {
                             isResolvingRef.current = true;
                             setIsResolving(true);
                             executeDialogueOption(option);
-                            setTimeout(() => {
-                              isResolvingRef.current = false;
-                              setIsResolving(false);
-                            }, 300);
+                            // isResolving is reset in the dialogue useEffect
                           }}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
                             isLocked || isResolving

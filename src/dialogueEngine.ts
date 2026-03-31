@@ -37,13 +37,18 @@ export function canSelectOption(option: DialogueOption): boolean {
     return false;
   }
 
-  if (option.requiredItems) {
-    // Inventory needs to support multiple of the same item if `requiredItems` specifies duplicates
+  if (option.requiredItems || option.consumeItems) {
+    // Inventory needs to support multiple of the same item if `requiredItems` or `consumeItems` specifies duplicates
     const counts: Record<string, number> = {};
     for (const item of inventory) counts[item] = (counts[item] || 0) + 1;
 
     const requiredCounts: Record<string, number> = {};
-    for (const item of option.requiredItems) requiredCounts[item] = (requiredCounts[item] || 0) + 1;
+    if (option.requiredItems) {
+      for (const item of option.requiredItems) requiredCounts[item] = (requiredCounts[item] || 0) + 1;
+    }
+    if (option.consumeItems) {
+      for (const item of option.consumeItems) requiredCounts[item] = (requiredCounts[item] || 0) + 1;
+    }
 
     for (const [item, needed] of Object.entries(requiredCounts)) {
       if ((counts[item] || 0) < needed) return false;

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useStore } from './store';
 
 describe('useStore', () => {
@@ -113,6 +113,15 @@ describe('useStore', () => {
   });
 
   describe('Quest Helpers', () => {
+    let warnSpy: any;
+
+    beforeEach(() => {
+      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      warnSpy.mockRestore();
+    });
     it('startQuestWithFlag should add an active quest and set a flag', () => {
       const state = useStore.getState();
       state.startQuestWithFlag('test_quest', 'Test description', 'mariusCalmed');
@@ -162,6 +171,7 @@ describe('useStore', () => {
       // Because we returned the original state entirely, the flag should NOT be set
       expect(state.flags.mariusCalmed).toBe(false);
       expect(state.quests.length).toBe(initialQuestsLength);
+      expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest');
     });
 
     it('completeQuest should return unchanged state if quest is missing and no text is provided', () => {
@@ -172,6 +182,7 @@ describe('useStore', () => {
 
       state = useStore.getState();
       expect(state).toBe(initialState);
+      expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest_2');
     });
 
     it('failQuest should return unchanged state if quest is missing and no text is provided', () => {
@@ -182,6 +193,7 @@ describe('useStore', () => {
 
       state = useStore.getState();
       expect(state).toBe(initialState);
+      expect(warnSpy).toHaveBeenCalledWith('Attempted to fail unregistered quest: missing_quest_3');
     });
   });
 });

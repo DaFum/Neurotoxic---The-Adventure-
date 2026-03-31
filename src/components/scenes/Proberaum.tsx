@@ -702,6 +702,7 @@ export function Proberaum() {
                   increaseBandMood(-5);
                 }},
                 ...(!flags.mariusVisionShared && useStore.getState().trait === 'Visionary' ? [{
+                  id: 'marius_vision_shared',
                   text: 'Ich verstehe deine Vision. [Visionary]', 
                   action: () => {
                     setDialogue('Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."');
@@ -711,6 +712,7 @@ export function Proberaum() {
                   }
                 }] : []),
                 ...(!flags.mariusCalmedDown && useStore.getState().skills.social >= 5 ? [{
+                  id: 'marius_calmed_down',
                   text: 'Beruhige dich, Star. [Social 5]', 
                   action: () => {
                     setDialogue('Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."');
@@ -771,6 +773,7 @@ export function Proberaum() {
                     }
                   }] as DialogueOption[]),
                   ...(!flags.mariusSelfDoubtRevealed && useStore.getState().trait === 'Diplomat' ? [{
+                    id: 'marius_self_doubt',
                     text: 'Marius, wie geht es dir wirklich? [Diplomat]',
                     action: () => {
                       setDialogue('Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."');
@@ -781,6 +784,7 @@ export function Proberaum() {
                     }
                   }] : []),
                   ...(!flags.mariusEgoComplimented && useStore.getState().trait === 'Cynic' ? [{
+                    id: 'marius_ego_cynic',
                     text: 'Dein Ego ist groß genug für zwei Dimensionen. [Cynic]',
                     action: () => {
                       setDialogue('Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"');
