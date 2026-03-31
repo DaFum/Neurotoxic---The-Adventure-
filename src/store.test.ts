@@ -94,4 +94,94 @@ describe('useStore', () => {
       expect(questIds.length).toBe(uniqueQuestIds.size);
     });
   });
+
+  describe('Inventory', () => {
+    it('removeFromInventory should only remove the first matching item when duplicates exist', () => {
+      const state = useStore.getState();
+      state.addToInventory('Bier');
+      state.addToInventory('Bier');
+      state.addToInventory('Bier');
+
+      let currentState = useStore.getState();
+      expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(3);
+
+      currentState.removeFromInventory('Bier');
+      currentState = useStore.getState();
+
+      expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(2);
+    });
+  });
+
+  describe('Quest Helpers', () => {
+    it('startQuestWithFlag should add an active quest and set a flag', () => {
+      const state = useStore.getState();
+      state.startQuestWithFlag('test_quest', 'Test description', 'mariusCalmed');
+
+      const currentState = useStore.getState();
+      expect(currentState.flags.mariusCalmed).toBe(true);
+      const quest = currentState.quests.find(q => q.id === 'test_quest');
+      expect(quest).toBeDefined();
+      expect(quest?.status).toBe('active');
+      expect(quest?.text).toBe('Test description');
+    });
+
+    it('startQuestWithFlag should update an existing quest to active and update text', () => {
+      let state = useStore.getState();
+      state.addQuest('test_quest_2', 'Old text');
+      state.failQuest('test_quest_2');
+
+      state = useStore.getState();
+      expect(state.quests.find(q => q.id === 'test_quest_2')?.status).toBe('failed');
+
+      state.startQuestWithFlag('test_quest_2', 'New text', 'mariusCalmed');
+
+      state = useStore.getState();
+      const quest = state.quests.find(q => q.id === 'test_quest_2');
+      expect(quest?.status).toBe('active');
+      expect(quest?.text).toBe('New text');
+    });
+
+    it('completeQuestWithFlag should complete an existing quest and set a flag', () => {
+      let state = useStore.getState();
+      state.addQuest('test_quest_3', 'Some text');
+
+      state.completeQuestWithFlag('test_quest_3', 'mariusCalmed');
+
+      state = useStore.getState();
+      expect(state.flags.mariusCalmed).toBe(true);
+      expect(state.quests.find(q => q.id === 'test_quest_3')?.status).toBe('completed');
+    });
+
+    it('completeQuestWithFlag should return unchanged state if quest is missing and no text is provided', () => {
+      let state = useStore.getState();
+      const initialQuestsLength = state.quests.length;
+
+      state.completeQuestWithFlag('missing_quest', 'mariusCalmed');
+
+      state = useStore.getState();
+      // Because we returned the original state entirely, the flag should NOT be set
+      expect(state.flags.mariusCalmed).toBe(false);
+      expect(state.quests.length).toBe(initialQuestsLength);
+    });
+
+    it('completeQuest should return unchanged state if quest is missing and no text is provided', () => {
+      let state = useStore.getState();
+      const initialState = state;
+
+      state.completeQuest('missing_quest_2');
+
+      state = useStore.getState();
+      expect(state).toBe(initialState);
+    });
+
+    it('failQuest should return unchanged state if quest is missing and no text is provided', () => {
+      let state = useStore.getState();
+      const initialState = state;
+
+      state.failQuest('missing_quest_3');
+
+      state = useStore.getState();
+      expect(state).toBe(initialState);
+    });
+  });
 });

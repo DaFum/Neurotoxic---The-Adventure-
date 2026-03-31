@@ -58,6 +58,7 @@ export function UI() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showLoreCodex, setShowLoreCodex] = useState(false);
   const [isResolving, setIsResolving] = useState(false);
+  const isResolvingRef = useRef(false);
   const [showHudPanels, setShowHudPanels] = useState(() => (
     typeof window === 'undefined' ? true : window.innerWidth >= 1280
   ));
@@ -612,10 +613,14 @@ export function UI() {
                           key={option.id || idx}
                           disabled={isLocked || isResolving}
                           onClick={() => {
-                            if (isResolving) return;
+                            if (isResolvingRef.current) return;
+                            isResolvingRef.current = true;
                             setIsResolving(true);
                             executeDialogueOption(option);
-                            setTimeout(() => setIsResolving(false), 300);
+                            setTimeout(() => {
+                              isResolvingRef.current = false;
+                              setIsResolving(false);
+                            }, 300);
                           }}
                           className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
                             isLocked || isResolving

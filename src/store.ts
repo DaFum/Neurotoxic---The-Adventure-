@@ -574,7 +574,7 @@ export const useStore = create<GameState>()(
         const existing = state.quests.find(q => q.id === id);
         if (existing) {
           return {
-            quests: state.quests.map(q => q.id === id ? { ...q, text } : q),
+            quests: state.quests.map(q => q.id === id ? { ...q, text, status: 'active' as QuestStatus } : q),
             flags: { ...state.flags, [flag]: flagValue }
           };
         }
@@ -593,7 +593,7 @@ export const useStore = create<GameState>()(
             };
           }
           console.warn(`Attempted to complete unregistered quest: ${id}`);
-          return { flags: { ...state.flags, [flag]: flagValue } };
+          return state;
         }
         return {
           quests: state.quests.map(q => q.id === id ? { ...q, status: 'completed' as QuestStatus } : q),

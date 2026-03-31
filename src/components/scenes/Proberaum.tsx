@@ -1187,7 +1187,7 @@ export function Proberaum() {
                 options: [
                   { text: 'Danke!', action: () => {
                     removeFromInventory('Quanten-Kabel');
-                    useStore.getState().completeQuestWithFlag('feedback_monitor', 'feedbackMonitorQuestCompleted');
+                    useStore.getState().completeQuestWithFlag('feedback_monitor', 'feedbackMonitorQuestCompleted', true, 'Finde das Quanten-Kabel für den Feedback Monitor');
                     increaseBandMood(20);
                     useStore.getState().increaseSkill('technical', 5);
                     setDialogue('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
