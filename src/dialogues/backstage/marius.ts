@@ -17,7 +17,38 @@ export function buildBackstageMariusDialogue(): Dialogue {
     };
   }
 
-  const options: DialogueOption[] = [
+  const options: DialogueOption[] = [];
+
+  if (!flags.askedAbout1982Attempted) {
+    options.push({
+      text: 'Denk an den Gig 1982. Wir haben Schlimmeres überlebt.',
+      action: () => {
+        const currentStore = game();
+        if (currentStore.flags.askedAbout1982) {
+          currentStore.setDialogue({
+            text: 'Marius: "1982... ja. Als die Gießerei bebte. Wenn wir das überlebt haben, ist Tangermünde ein Kinderspiel."',
+          });
+          currentStore.completeQuestWithFlag(
+            BACKSTAGE_MARIUS_QUEST_ID,
+            'mariusCalmed',
+            true,
+            BACKSTAGE_MARIUS_QUEST_TEXT
+          );
+          currentStore.setFlag('mariusConfidenceBoost', true);
+          currentStore.increaseBandMood(25);
+          return;
+        }
+
+        currentStore.setDialogue(
+          'Marius: "1982? Da war ich noch nicht mal in der Band. Wovon redest du? Das macht mich nur noch nervöser!"'
+        );
+        currentStore.setFlag('askedAbout1982Attempted', true);
+        currentStore.increaseBandMood(-5);
+      },
+    });
+  }
+
+  options.push(
     {
       text: 'Du bist ein Gott am Mikrofon. Vertrau dir. [Social 5]',
       requiredSkill: { name: 'social', level: 5 },
@@ -109,33 +140,8 @@ export function buildBackstageMariusDialogue(): Dialogue {
         const currentStore = game();
         currentStore.increaseBandMood(10);
       },
-    },
-    {
-      text: 'Denk an den Gig 1982. Wir haben Schlimmeres überlebt.',
-      action: () => {
-        const currentStore = game();
-        if (currentStore.flags.askedAbout1982) {
-          currentStore.setDialogue({
-            text: 'Marius: "1982... ja. Als die Gießerei bebte. Wenn wir das überlebt haben, ist Tangermünde ein Kinderspiel."',
-          });
-          currentStore.setFlag('mariusCalmed', true);
-          currentStore.addQuest(
-            BACKSTAGE_MARIUS_QUEST_ID,
-            BACKSTAGE_MARIUS_QUEST_TEXT
-          );
-          currentStore.completeQuest(BACKSTAGE_MARIUS_QUEST_ID);
-          currentStore.setFlag('mariusConfidenceBoost', true);
-          currentStore.increaseBandMood(25);
-          return;
-        }
-
-        currentStore.setDialogue(
-          'Marius: "1982? Da war ich noch nicht mal in der Band. Wovon redest du? Das macht mich nur noch nervöser!"'
-        );
-        currentStore.increaseBandMood(-5);
-      },
-    },
-  ];
+    }
+  );
 
   if (flags.mariusEgoStrategy) {
     options.unshift({

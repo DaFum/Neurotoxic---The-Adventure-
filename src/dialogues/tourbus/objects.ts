@@ -123,20 +123,22 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             const received = currentStore.addToInventory(
               'Verstärker-Schaltplan'
             );
-            currentStore.removeFromInventory('Geister-Drink');
-            currentStore.completeQuestWithFlag(
-              'ghost_recipe',
-              'ghostRecipeQuestCompleted',
-              true,
-              'Mixe den Geister-Drink für den Geist des Roadies'
-            );
             if (received) {
+              // Only complete quest if inventory add succeeded
+              currentStore.removeFromInventory('Geister-Drink');
+              currentStore.completeQuestWithFlag(
+                'ghost_recipe',
+                'ghostRecipeQuestCompleted',
+                true,
+                'Mixe den Geister-Drink für den Geist des Roadies'
+              );
               currentStore.increaseBandMood(40);
               currentStore.increaseSkill('social', 5);
               currentStore.setDialogue(
                 'Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."'
               );
             } else {
+              // Inventory full: do not complete quest, do not consume drink
               currentStore.setDialogue(
                 'Geist: "Ich habe ein Geschenk für dich, aber du kannst den Verstärker-Schaltplan nicht noch einmal aufnehmen. Dein Pickup-Limit ist erreicht."'
               );
@@ -344,7 +346,10 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             currentStore.setDialogue(
               'Geist: "Vielleicht hast du recht. Aber der Lärm findet immer einen Weg."'
             );
-            currentStore.increaseBandMood(5);
+            if (!currentStore.flags.ghostSecretRevealed) {
+              currentStore.increaseBandMood(5);
+              currentStore.setFlag('ghostSecretRevealed', true);
+            }
           },
         },
       ],

@@ -66,7 +66,7 @@ describe('TourBus Objects Dialogues', () => {
       expect(options).toContain('Prost!');
     });
 
-    it('completes ghost recipe even when plan pickup limit is exhausted', () => {
+    it('does not complete ghost recipe when plan pickup limit is exhausted', () => {
       const store = useStore.getState();
       store.addQuest(
         'ghost_recipe',
@@ -89,10 +89,11 @@ describe('TourBus Objects Dialogues', () => {
       executeDialogueOption(prostOption);
       const state = useStore.getState();
 
-      expect(state.inventory).not.toContain('Geister-Drink');
-      expect(state.flags.ghostRecipeQuestCompleted).toBe(true);
+      // Quest should NOT complete; item should NOT be consumed when inventory fails
+      expect(state.inventory).toContain('Geister-Drink');
+      expect(state.flags.ghostRecipeQuestCompleted).toBe(false);
       const quest = state.quests.find((q) => q.id === 'ghost_recipe');
-      expect(quest?.status).toBe('completed');
+      expect(quest?.status).toBe('active');
       expect(state.bandMood).toBe(moodBefore);
       expect(state.skills.social).toBe(socialBefore);
     });

@@ -29,6 +29,10 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             text: 'Vereinige das Maschinen-Bewusstsein. [Mystic]',
             requiredTrait: 'Mystic',
             flagToSet: { flag: 'maschinen_seele_complete', value: true },
+            questToAdd: {
+              id: MASCHINEN_SEELE_QUEST_ID,
+              text: 'Vereinige das Maschinen-Bewusstsein',
+            },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             nextDialogue: {
               text: 'Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.',
@@ -44,6 +48,10 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             text: 'Verbinde die Schaltkreise logisch. [Technical 7]',
             requiredSkill: { name: 'technical', level: 7 },
             flagToSet: { flag: 'maschinen_seele_complete', value: true },
+            questToAdd: {
+              id: MASCHINEN_SEELE_QUEST_ID,
+              text: 'Vereinige das Maschinen-Bewusstsein',
+            },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             nextDialogue: {
               text: 'Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.',
@@ -58,6 +66,10 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           {
             text: 'Lass die Verbindung einfach laufen.',
             flagToSet: { flag: 'maschinen_seele_complete', value: true },
+            questToAdd: {
+              id: MASCHINEN_SEELE_QUEST_ID,
+              text: 'Vereinige das Maschinen-Bewusstsein',
+            },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             nextDialogue: {
               text: 'Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."',

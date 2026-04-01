@@ -189,7 +189,9 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
         {
           text: 'Lass uns spielen.',
           action: () => {
-            game().setDialogue('Matze: "Ja. Der Stahl wartet."');
+            const currentStore = game();
+            currentStore.setDialogue('Matze: "Ja. Der Stahl wartet."');
+            currentStore.increaseBandMood(10);
           },
         },
       ],

@@ -60,6 +60,22 @@ export function Backstage() {
     } else {
       addQuest('setlist', 'Finde die Setliste im Backstage');
     }
+
+    // Register the backstage_ritual quest when the player first enters Backstage.
+    // For legacy saves where the ritual was already performed, use startAndFinishQuest
+    // to avoid incorrectly leaving it as 'active' after the scene exit.
+    if (flags.backstageRitualPerformed) {
+      startAndFinishQuest(
+        'backstage_ritual',
+        'Führe ein Bandritual vor dem Auftritt durch'
+      );
+    } else {
+      addQuest(
+        'backstage_ritual',
+        'Führe ein Bandritual vor dem Auftritt durch'
+      );
+    }
+
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);

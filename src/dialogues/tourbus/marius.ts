@@ -22,6 +22,7 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
           },
           action: () => {
             const currentStore = game();
+            currentStore.removeFromInventory('Marius Ego');
             currentStore.increaseBandMood(20);
           },
         },
@@ -73,8 +74,8 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
     } else {
       const moodText =
         bandMood > 60
-          ? 'Marius: "Die Energie im Bus ist fantastisch! Tangermünde wird beben!"'
-          : 'Marius: "Nächster Halt: Tangermünde! Bist du bereit für die Kaminstube?"';
+          ? 'Marius: "Die Energie im Bus ist fantastisch! Salzgitter wird beben!"'
+          : 'Marius: "Nächster Halt: Salzgitter! Bist du bereit für Backstage?"';
       return {
         text: moodText,
         options: [

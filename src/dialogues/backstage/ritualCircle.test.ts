@@ -76,7 +76,7 @@ describe('buildBackstageRitualCircleDialogue', () => {
     expect(stateAfter.bandMood).toBe(moodBefore + 30);
   });
 
-  it('registers backstage ritual quest once when no special branch applies', () => {
+  it('does not register backstage ritual quest in dialogue (registered at scene entry)', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const first = buildBackstageRitualCircleDialogue(vi.fn());
@@ -86,8 +86,10 @@ describe('buildBackstageRitualCircleDialogue', () => {
     );
 
     expect(first.text).toContain('Marius muss erst beruhigt werden');
-    expect(questAfterFirst).toHaveLength(1);
-    expect(afterFirst.bandMood).toBe(moodBefore + 5);
+    // Quest registration now happens at Backstage scene entry, not in the dialogue
+    expect(questAfterFirst).toHaveLength(0);
+    // Mood increase only happens when ritual is performed (via action callback)
+    expect(afterFirst.bandMood).toBe(moodBefore);
 
     const second = buildBackstageRitualCircleDialogue(vi.fn());
     const afterSecond = useStore.getState();
@@ -96,7 +98,7 @@ describe('buildBackstageRitualCircleDialogue', () => {
     );
 
     expect(second.text).toContain('Marius muss erst beruhigt werden');
-    expect(questAfterSecond).toHaveLength(1);
-    expect(afterSecond.bandMood).toBe(moodBefore + 5);
+    expect(questAfterSecond).toHaveLength(0);
+    expect(afterSecond.bandMood).toBe(moodBefore);
   });
 });

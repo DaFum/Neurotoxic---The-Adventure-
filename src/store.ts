@@ -42,6 +42,7 @@ export type Flag =
   | 'larsDrumPhilosophy'
   | 'mariusConfidenceBoost'
   | 'askedAbout1982'
+  | 'askedAbout1982Attempted'
   | 'larsVibrating'
   | 'drumMachineQuestStarted'
   | 'drumMachineQuestCompleted'
@@ -334,6 +335,7 @@ const initialState = {
     larsDrumPhilosophy: false,
     mariusConfidenceBoost: false,
     askedAbout1982: false,
+    askedAbout1982Attempted: false,
     larsVibrating: false,
     drumMachineQuestStarted: false,
     drumMachineQuestCompleted: false,

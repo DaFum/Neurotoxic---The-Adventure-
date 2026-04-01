@@ -6,8 +6,7 @@ type SkillName = keyof Skills;
 const bassistActionWrapper = (
   mood: number,
   skillName: SkillName,
-  skillIncrease: number,
-  _dialogueText: string
+  skillIncrease: number
 ) => {
   const store = game();
   if (store.flags.voidBassistRewarded) {
@@ -98,12 +97,7 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         action: () => {
           game().setFlag('voidBassistSpoken', true);
-          bassistActionWrapper(
-            25,
-            'social',
-            3,
-            'Bassist: "Sie vermissen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."'
-          );
+          bassistActionWrapper(25, 'social', 3);
         },
       },
       {
@@ -120,12 +114,7 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         action: () => {
           game().setFlag('voidBassistSpoken', true);
-          bassistActionWrapper(
-            50,
-            'technical',
-            3,
-            'Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"'
-          );
+          bassistActionWrapper(50, 'technical', 3);
         },
       },
       {
@@ -142,12 +131,7 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         action: () => {
           game().setFlag('voidBassistSpoken', true);
-          bassistActionWrapper(
-            40,
-            'chaos',
-            3,
-            'Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."'
-          );
+          bassistActionWrapper(40, 'chaos', 3);
         },
       },
       {
@@ -164,12 +148,7 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         action: () => {
           game().setFlag('voidBassistSpoken', true);
-          bassistActionWrapper(
-            40,
-            'chaos',
-            3,
-            'Bassist: "Du siehst das ganze Bild... Ich bin nicht verloren, ich bin das Fundament. Ich werde den Gig in Salzgitter stützen."'
-          );
+          bassistActionWrapper(40, 'chaos', 3);
         },
       },
       {

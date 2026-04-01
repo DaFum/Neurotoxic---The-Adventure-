@@ -16,9 +16,16 @@ describe('buildSalzgitterLarsDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildSalzgitterLarsDialogue();
-    const stateAfter = useStore.getState();
-
     expect(dialogue.text).toContain('im Backstage gebremst');
+
+    // Find and execute the paced option action
+    const pacedOption = dialogue.options?.[0];
+    expect(pacedOption).toBeDefined();
+    if (pacedOption?.action) {
+      pacedOption.action();
+    }
+
+    const stateAfter = useStore.getState();
     expect(stateAfter.flags.salzgitter_lars_paced_talked).toBe(true);
     expect(stateAfter.bandMood).toBe(moodBefore + 25);
   });

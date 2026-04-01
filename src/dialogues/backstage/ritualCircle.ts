@@ -211,13 +211,6 @@ export function buildBackstageRitualCircleDialogue(
     );
   }
 
-  if (!store.quests.find((quest) => quest.id === 'backstage_ritual')) {
-    store.addQuest(
-      'backstage_ritual',
-      'Führe ein Bandritual vor dem Auftritt durch'
-    );
-    store.increaseBandMood(5);
-  }
   return say(
     'Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.'
   );

@@ -68,7 +68,6 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
   if (store.flags.voidBassistSpoken) {
     options.unshift({
       text: 'Du erinnerst dich an mich.',
-      flagToSet: { flag: 'voidBassistMoodGiven', value: true },
       nextDialogue: {
         text: 'Bassist: "Ja... du hast mir in der Leere zugehört. Meine Töne gehören heute euch."',
       },
@@ -76,6 +75,7 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
         const currentStore = game();
         if (!currentStore.flags.voidBassistMoodGiven) {
           currentStore.increaseBandMood(20);
+          currentStore.setFlag('voidBassistMoodGiven', true);
         }
       },
     });
