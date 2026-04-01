@@ -159,11 +159,9 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
               currentStore.setDialogue(
                 'Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."'
               );
-              if (!currentStore.flags.salzgitterMatzeDeepTalkDone) {
-                currentStore.increaseBandMood(40);
-                currentStore.increaseSkill('chaos', 5);
-                currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
-              }
+              currentStore.increaseBandMood(40);
+              currentStore.increaseSkill('chaos', 5);
+              currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
             },
           },
           {
@@ -171,10 +169,8 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue('Matze: "Ja. Der Stahl wartet."');
-              if (!currentStore.flags.salzgitterMatzeDeepTalkDone) {
-                currentStore.increaseBandMood(10);
-                currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
-              }
+              currentStore.increaseBandMood(10);
+              currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
             },
           },
         ],
