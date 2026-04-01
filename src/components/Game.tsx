@@ -74,27 +74,54 @@ export function Game() {
         setHasSavedGame(false);
         return;
       }
-      const parsed = JSON.parse(raw) as { state?: any } | null;
+
+      let parsed: { state?: any } | null = null;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        console.error('Failed to parse saved game data:', e);
+        setHasSavedGame(false);
+        return;
+      }
+
       const saved = parsed?.state;
-      if (!saved) {
+      if (!saved || typeof saved !== 'object') {
         setHasSavedGame(false);
         return;
       }
 
       const hasTrait = saved.trait !== null && saved.trait !== undefined;
-      const hasInventory = Array.isArray(saved.inventory) && saved.inventory.length > 0;
-      const hasCompletedQuest = Array.isArray(saved.quests) && saved.quests.some((q: any) => q?.status === 'completed' || q?.completed === true);
-      const hasLoreProgress = Array.isArray(saved.loreEntries) && saved.loreEntries.some((e: any) => e?.discovered);
-      const hasMoodOrSkillProgress =
-        saved.bandMood !== undefined && typeof saved.bandMood === 'number' && (
-          saved.bandMood !== 20 ||
-          saved.skills?.technical > 0 ||
-          saved.skills?.social > 0 ||
-          saved.skills?.chaos > 0
+      const hasInventory =
+        Array.isArray(saved.inventory) && saved.inventory.length > 0;
+      const hasCompletedQuest =
+        Array.isArray(saved.quests) &&
+        saved.quests.some(
+          (q: any) => q?.status === 'completed' || q?.completed === true
         );
+      const hasLoreProgress =
+        Array.isArray(saved.loreEntries) &&
+        saved.loreEntries.some((e: any) => e?.discovered);
 
-      setHasSavedGame(Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress));
-    } catch {
+      const skills = saved.skills;
+      const hasSkills = typeof skills === 'object' && skills !== null;
+      const hasMoodOrSkillProgress =
+        saved.bandMood !== undefined &&
+        typeof saved.bandMood === 'number' &&
+        (saved.bandMood !== 20 ||
+          (hasSkills &&
+            (skills.technical > 0 || skills.social > 0 || skills.chaos > 0)));
+
+      setHasSavedGame(
+        Boolean(
+          hasTrait ||
+            hasInventory ||
+            hasCompletedQuest ||
+            hasLoreProgress ||
+            hasMoodOrSkillProgress
+        )
+      );
+    } catch (err) {
+      console.error('Error checking for saved game:', err);
       setHasSavedGame(false);
     }
   }, []);
