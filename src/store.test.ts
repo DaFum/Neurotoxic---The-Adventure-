@@ -208,6 +208,7 @@ describe('useStore', () => {
 
       state = useStore.getState();
       const quest = state.quests.find(q => q.id === 'test_quest_4');
+      expect(state.flags.mariusCalmed).toBe(true);
       expect(quest?.status).toBe('completed');
       expect(quest?.text).toBe('New text');
     });

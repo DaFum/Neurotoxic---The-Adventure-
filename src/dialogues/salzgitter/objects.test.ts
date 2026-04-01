@@ -27,6 +27,7 @@ describe('Salzgitter object dialogues', () => {
       ],
     });
 
+    const moodBefore = useStore.getState().bandMood;
     const dialogue = buildSalzgitterBassistDialogue();
 
     // The side-effects are now moved to the dialogue option.
@@ -38,6 +39,7 @@ describe('Salzgitter object dialogues', () => {
 
     const stateAfter = useStore.getState();
     expect(stateAfter.flags.bassist_restored).toBe(true);
+    expect(stateAfter.bandMood).toBe(moodBefore + 30);
   });
 
   it('starts fan movement via social option', () => {
