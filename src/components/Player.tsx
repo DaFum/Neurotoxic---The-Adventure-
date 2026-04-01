@@ -39,7 +39,6 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const shakeOffset = useRef(new THREE.Vector3()).current;
   const [, get] = useKeyboardControls();
   const setPlayerPos = useStore((state) => state.setPlayerPos);
-  const cameraShake = useStore((state) => state.cameraShake);
   const setCameraShake = useStore((state) => state.setCameraShake);
 
   // Keep a live reference to the authoritative player position from the store.
@@ -48,7 +47,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   // We don't subscribe to playerPos here to avoid re-renders on every movement.
   const initialPos = useRef(useStore.getState().playerPos).current;
   const lastSentPosRef = useRef(new THREE.Vector3(initialPos[0], initialPos[1], initialPos[2])).current;
-  const [facingRight, setFacingRight] = useState(true);
+  const facingRight = useRef(true);
   const [isMoving, setIsMoving] = useState(false);
   const footstepTimer = useRef(0);
 
@@ -221,8 +220,8 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
     // Update facing direction from combined input
     // ⚡ Bolt Optimization: Only update state if value actually changed to prevent unnecessary re-renders in useFrame
-    if (velocity.x < -0.1 && facingRight) setFacingRight(false);
-    else if (velocity.x > 0.1 && !facingRight) setFacingRight(true);
+    if (velocity.x < -0.1 && facingRight.current) facingRight.current = false;
+    else if (velocity.x > 0.1 && !facingRight.current) facingRight.current = true;
 
     const moving = velocity.length() > 0;
     if (moving !== isMoving) setIsMoving(moving);
@@ -268,11 +267,13 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     }
 
     // Camera follow with shake
+    const currentCameraShake = useStore.getState().cameraShake;
+
     // Override the shakeOffset vector instead of creating a new one
     shakeOffset.set(
-      (Math.random() - 0.5) * cameraShake,
-      (Math.random() - 0.5) * cameraShake,
-      (Math.random() - 0.5) * cameraShake
+      (Math.random() - 0.5) * currentCameraShake,
+      (Math.random() - 0.5) * currentCameraShake,
+      (Math.random() - 0.5) * currentCameraShake
     );
 
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, clampedX + shakeOffset.x, 0.1);
@@ -281,21 +282,21 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     state.camera.lookAt(clampedX, 0, clampedZ);
 
     // Decay camera shake
-    if (cameraShake > 0) {
-      setCameraShake(Math.max(0, cameraShake - delta * 2));
+    if (currentCameraShake > 0) {
+      setCameraShake(Math.max(0, currentCameraShake - delta * 2));
     }
 
     if (spriteRef.current) {
       const bounce = isMoving ? Math.abs(Math.sin(state.clock.elapsedTime * 10)) * 0.08 : 0;
       spriteRef.current.position.y = 1.05 + bounce;
-      const dir = facingRight ? 1 : -1;
+      const dir = facingRight.current ? 1 : -1;
       spriteRef.current.scale.set(2.3 * dir, 2.3, 1);
     }
 
     if (modelRef.current) {
       const sway = isMoving ? Math.sin(state.clock.elapsedTime * 12) * 0.08 : 0;
       modelRef.current.rotation.z = sway;
-      modelRef.current.rotation.y = THREE.MathUtils.lerp(modelRef.current.rotation.y, facingRight ? 0 : Math.PI, 0.16);
+      modelRef.current.rotation.y = THREE.MathUtils.lerp(modelRef.current.rotation.y, facingRight.current ? 0 : Math.PI, 0.16);
     }
 
     if (ringRef.current) {
