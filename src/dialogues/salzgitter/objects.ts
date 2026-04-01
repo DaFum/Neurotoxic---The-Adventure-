@@ -18,11 +18,21 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
     !store.hasItem('Bassist-Saite') &&
     !store.hasItem('Resonanz-Kristall')
   ) {
-    store.increaseBandMood(30);
-    store.setFlag('bassist_restored', true);
-    return say(
-      'Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."'
-    );
+    return {
+      text: 'Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."',
+      options: [
+        {
+          text: '(Weiter)',
+          action: () => {
+            const currentStore = game();
+            if (!currentStore.flags.bassist_restored) {
+              currentStore.increaseBandMood(30);
+              currentStore.setFlag('bassist_restored', true);
+            }
+          },
+        },
+      ],
+    };
   }
 
   const options: DialogueOption[] = [
@@ -144,8 +154,21 @@ export function buildSalzgitterFanDialogue(): Dialogue {
 
   if (store.flags.backstage_performer_speech) {
     if (!store.flags.salzgitter_fan_speech_heard) {
-      store.setFlag('salzgitter_fan_speech_heard', true);
-      store.increaseBandMood(5);
+      return {
+        text: 'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"',
+        options: [
+          {
+            text: '(Weiter)',
+            action: () => {
+              const currentStore = game();
+              if (!currentStore.flags.salzgitter_fan_speech_heard) {
+                currentStore.setFlag('salzgitter_fan_speech_heard', true);
+                currentStore.increaseBandMood(5);
+              }
+            },
+          },
+        ],
+      };
     }
     return say(
       'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"'
@@ -260,12 +283,14 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     );
   }
 
-  store.completeQuestWithFlag(
-    'final',
-    'salzgitter_finalized',
-    true,
-    'Spiele das Finale in Salzgitter'
-  );
+  if (!store.flags.salzgitter_finalized) {
+    store.completeQuestWithFlag(
+      'final',
+      'salzgitter_finalized',
+      true,
+      'Spiele das Finale in Salzgitter'
+    );
+  }
 
   let endingsCount = 0;
   if (store.flags.salzgitterBandUnited) endingsCount++;
@@ -279,17 +304,21 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     store.flags.bassist_restored &&
     store.flags.maschinen_seele_complete
   ) {
-    store.increaseBandMood(100);
-    store.discoverLore('bassist_wahrheit');
-    store.discoverLore('maschinen_bewusstsein');
-    store.discoverLore('frequenz_1982_decoded');
+    if (!store.flags.salzgitter_finalized) {
+      store.increaseBandMood(100);
+      store.discoverLore('bassist_wahrheit');
+      store.discoverLore('maschinen_bewusstsein');
+      store.discoverLore('frequenz_1982_decoded');
+    }
     return say(
       'Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt - er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]'
     );
   }
 
   if (store.flags.salzgitter_encore_unlocked) {
-    store.increaseBandMood(50);
+    if (!store.flags.salzgitter_finalized) {
+      store.increaseBandMood(50);
+    }
     return say(
       'ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]'
     );
@@ -310,7 +339,9 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     if (store.flags.fanMovement && store.flags.salzgitterBandUnited) {
       baseText += ' Eine wahre Fan-Bewegung ist entstanden!';
     }
-    store.increaseBandMood(70);
+    if (!store.flags.salzgitter_finalized) {
+      store.increaseBandMood(70);
+    }
     return say(baseText + ' [BEST ENDING]');
   }
 
@@ -318,13 +349,17 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     endingsCount >= 2 ||
     (store.bandMood > 70 && store.flags.mariusConfidenceBoost)
   ) {
-    store.increaseBandMood(50);
+    if (!store.flags.salzgitter_finalized) {
+      store.increaseBandMood(50);
+    }
     return say(
       'Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Band hat einiges zusammen durchgestanden. Die Tour ist ein Erfolg! [GOOD ENDING]'
     );
   }
 
-  store.increaseBandMood(30);
+  if (!store.flags.salzgitter_finalized) {
+    store.increaseBandMood(30);
+  }
   return say(
     'Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]'
   );

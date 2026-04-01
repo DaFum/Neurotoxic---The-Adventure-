@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useStore } from '../../store';
 import { setupTestState } from '../shared/test-helpers';
 import { buildSalzgitterLarsDialogue } from './lars';
+import { executeDialogueOption } from '../../dialogueEngine';
 
 describe('buildSalzgitterLarsDialogue', () => {
   beforeEach(() => setupTestState());
@@ -19,10 +20,12 @@ describe('buildSalzgitterLarsDialogue', () => {
     expect(dialogue.text).toContain('im Backstage gebremst');
 
     // Find and execute the paced option action
-    const pacedOption = dialogue.options?.[0];
+    const pacedOption = dialogue.options?.find(
+      (o) => o.text === 'Halte den Puls.'
+    );
     expect(pacedOption).toBeDefined();
-    if (pacedOption?.action) {
-      pacedOption.action();
+    if (pacedOption) {
+      executeDialogueOption(pacedOption);
     }
 
     const stateAfter = useStore.getState();

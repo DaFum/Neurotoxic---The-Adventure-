@@ -28,9 +28,16 @@ describe('Salzgitter object dialogues', () => {
     });
 
     const dialogue = buildSalzgitterBassistDialogue();
-    const stateAfter = useStore.getState();
 
+    // The side-effects are now moved to the dialogue option.
     expect(dialogue.text).toContain('Ich segne diesen Gig');
+
+    const option = dialogue.options?.find((entry) => entry.text === '(Weiter)');
+    if (option) {
+      executeDialogueOption(option);
+    }
+
+    const stateAfter = useStore.getState();
     expect(stateAfter.flags.bassist_restored).toBe(true);
   });
 
