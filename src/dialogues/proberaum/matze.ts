@@ -148,100 +148,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
       } as DialogueOption),
       {
         text: 'Erzähl mir von der Tour 1982.',
-        action: () => {
-          game().setDialogue({
-            text: 'Matze: "1982... da war der Lärm noch rein. Wir haben in einer alten Gießerei gespielt. Der Bassist ist damals verschwunden, aber der Sound war legendär. Wir suchen ihn immer noch."',
-            options: [
-              {
-                text: 'Ich spüre eine Frequenz in den Wänden... [Mystic]',
-                requiredTrait: 'Mystic',
-                action: () => {
-                  const currentStore = game();
-                  const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
-                  currentStore.setFlag('bassist_clue_matze', true);
-                  currentStore.setFlag('matzeDeepTalk', true);
-                  currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                  currentStore.increaseBandMood(25, 'matze_frequenz1982');
-                  currentStore.increaseSkill('chaos', 4);
-                  if (pickedUpFragment) {
-                    currentStore.setFlag('frequenz1982_proberaum', true);
-                    currentStore.setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
-                  } else {
-                    currentStore.setDialogue('Matze: "Du... spürst sie? Das Fragment ist echt, aber du kannst gerade keins mehr tragen."');
-                  }
-                }
-              },
-              {
-                text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
-                requiredTrait: 'Brutalist',
-                action: () => {
-                  const currentStore = game();
-                  const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
-                  currentStore.setFlag('proberaum_brutalist_smash', true);
-                  currentStore.setFlag('bassist_clue_matze', true);
-                  currentStore.setFlag('matzeDeepTalk', true);
-                  currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-                  currentStore.increaseBandMood(10, 'matze_frequenz1982');
-                  currentStore.increaseSkill('chaos', 3);
-                  if (pickedUpFragment) {
-                    currentStore.setFlag('frequenz1982_proberaum', true);
-                    currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
-                  } else {
-                    currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Fragment, aber du kannst keins mehr aufnehmen."');
-                  }
-                }
-              },
-              {
-                text: 'Ich sehe Muster im Lärm. [Visionary]',
-                requiredTrait: 'Visionary',
-                action: () => {
-                  const currentStore = game();
-                  currentStore.setDialogue('Matze: "Du siehst sie auch?! Die Geometrie des Feedbacks... Du bist der Manager, den wir brauchen. In Salzgitter wird alles zusammenfallen."');
-                  currentStore.setFlag('matzeDeepTalk', true);
-                  currentStore.discoverLore('matze_1982_truth');
-                  currentStore.increaseBandMood(30);
-                  currentStore.increaseSkill('chaos', 5);
-                }
-              },
-              {
-                text: 'Analysiere die Frequenz. [Technical 5]',
-                requiredSkill: { name: 'technical', level: 5 },
-                action: () => {
-                  const currentStore = game();
-                  currentStore.setDialogue('Matze: "Die Frequenz der Gießerei lag bei exakt 432Hz. Es war, als ob der Stahl selbst schreit. Du hast ein Ohr für Details, Manager."');
-                  currentStore.setFlag('matzeDeepTalk', true);
-                  currentStore.increaseBandMood(20);
-                  currentStore.increaseSkill('technical', 3);
-                }
-              },
-              {
-                text: 'Beruhige dich, Matze. [Social 3]',
-                requiredSkill: { name: 'social', level: 3 },
-                action: () => {
-                  const currentStore = game();
-                  currentStore.setDialogue('Matze: "Du hast recht. Ich steigere mich da zu sehr rein. Lass uns einfach spielen. Danke, Manager."');
-                  currentStore.setFlag('matzeDeepTalk', true);
-                  currentStore.increaseBandMood(15);
-                  currentStore.increaseSkill('social', 2);
-                }
-              },
-              {
-                text: 'Interessante Geschichte.',
-                action: () => {
-                  const currentStore = game();
-                  currentStore.setDialogue('Matze: "Manche Dinge lassen sich nicht in Worte fassen. Lass uns weitermachen."');
-                  currentStore.setFlag('askedAbout1982', true);
-                  currentStore.setFlag('bassist_clue_matze', true);
-                  currentStore.increaseBandMood(10);
-                }
-              },
-              {
-                text: 'Zurück.',
-                action: () => game().setDialogue(buildProberaumMatzeDialogue())
-              }
-            ]
-          });
-        }
+        action: () => game().setDialogue(buildMatze1982Dialogue())
       },
       {
         text: 'Eigentlich wollte ich nur die Buchhaltung machen.',
@@ -250,6 +157,101 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           currentStore.setDialogue('Matze: "Buchhaltung? Wir sind eine Metal-Band, kein Steuerbüro! Geh und hol uns ein Bier."');
           currentStore.increaseBandMood(-2);
         }
+      }
+    ]
+  };
+}
+
+export function buildMatze1982Dialogue(): Dialogue {
+  return {
+    text: 'Matze: "1982... da war der Lärm noch rein. Wir haben in einer alten Gießerei gespielt. Der Bassist ist damals verschwunden, aber der Sound war legendär. Wir suchen ihn immer noch."',
+    options: [
+      {
+        text: 'Ich spüre eine Frequenz in den Wänden... [Mystic]',
+        requiredTrait: 'Mystic',
+        action: () => {
+          const currentStore = game();
+          const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
+          currentStore.setFlag('bassist_clue_matze', true);
+          currentStore.setFlag('matzeDeepTalk', true);
+          currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+          currentStore.increaseBandMood(25, 'matze_frequenz1982');
+          currentStore.increaseSkill('chaos', 4);
+          if (pickedUpFragment) {
+            currentStore.setFlag('frequenz1982_proberaum', true);
+            currentStore.setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
+          } else {
+            currentStore.setDialogue('Matze: "Du... spürst sie? Das Fragment ist echt, aber du kannst gerade keins mehr tragen."');
+          }
+        }
+      },
+      {
+        text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
+        requiredTrait: 'Brutalist',
+        action: () => {
+          const currentStore = game();
+          const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
+          currentStore.setFlag('proberaum_brutalist_smash', true);
+          currentStore.setFlag('bassist_clue_matze', true);
+          currentStore.setFlag('matzeDeepTalk', true);
+          currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+          currentStore.increaseBandMood(10, 'matze_frequenz1982');
+          currentStore.increaseSkill('chaos', 3);
+          if (pickedUpFragment) {
+            currentStore.setFlag('frequenz1982_proberaum', true);
+            currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
+          } else {
+            currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Fragment, aber du kannst keins mehr aufnehmen."');
+          }
+        }
+      },
+      {
+        text: 'Ich sehe Muster im Lärm. [Visionary]',
+        requiredTrait: 'Visionary',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Matze: "Du siehst sie auch?! Die Geometrie des Feedbacks... Du bist der Manager, den wir brauchen. In Salzgitter wird alles zusammenfallen."');
+          currentStore.setFlag('matzeDeepTalk', true);
+          currentStore.discoverLore('matze_1982_truth');
+          currentStore.increaseBandMood(30);
+          currentStore.increaseSkill('chaos', 5);
+        }
+      },
+      {
+        text: 'Analysiere die Frequenz. [Technical 5]',
+        requiredSkill: { name: 'technical', level: 5 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Matze: "Die Frequenz der Gießerei lag bei exakt 432Hz. Es war, als ob der Stahl selbst schreit. Du hast ein Ohr für Details, Manager."');
+          currentStore.setFlag('matzeDeepTalk', true);
+          currentStore.increaseBandMood(20);
+          currentStore.increaseSkill('technical', 3);
+        }
+      },
+      {
+        text: 'Beruhige dich, Matze. [Social 3]',
+        requiredSkill: { name: 'social', level: 3 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Matze: "Du hast recht. Ich steigere mich da zu sehr rein. Lass uns einfach spielen. Danke, Manager."');
+          currentStore.setFlag('matzeDeepTalk', true);
+          currentStore.increaseBandMood(15);
+          currentStore.increaseSkill('social', 2);
+        }
+      },
+      {
+        text: 'Interessante Geschichte.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Matze: "Manche Dinge lassen sich nicht in Worte fassen. Lass uns weitermachen."');
+          currentStore.setFlag('askedAbout1982', true);
+          currentStore.setFlag('bassist_clue_matze', true);
+          currentStore.increaseBandMood(10);
+        }
+      },
+      {
+        text: 'Zurück.',
+        action: () => game().setDialogue(buildProberaumMatzeDialogue())
       }
     ]
   };

@@ -342,7 +342,6 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
           currentStore.setFlag('tourbusBandMeeting', true);
           currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(25);
-          currentStore.increaseSkill('social', 5);
         }
       },
       {

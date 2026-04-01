@@ -158,7 +158,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * Standard: Einfache Ansagen (+10 BandMood).
 * **Marius:**
     * *Item (Marius Ego):* Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
-    * *BandMood < 30 (kein Ego):* Nervenzusammenbruch — Anzeige des Dialogs setzt automatisch `marius_tourbus_doubt: true`.
+    * *BandMood < 30 (kein Ego):* Nervenzusammenbruch — `marius_tourbus_doubt` wird beim Öffnen des Dialogs via `onInteract` gesetzt (nicht im Builder).
         * [Social 7]: Aufmuntern (+10 BandMood).
         * [Diplomat]: Fokussieren (+15 BandMood).
         * Standard: kein Effekt.

@@ -38,47 +38,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
       options: [
         {
           text: 'Lass uns einen Rhythmus-Pakt schließen.',
-          action: () => {
-            game().setDialogue({
-              text: 'Lars: "Ein Pakt... das ist ernst. Wie soll unser Pakt klingen?"',
-              options: [
-                {
-                  text: 'Aggressiv und unaufhaltsam. [Brutalist]',
-                  requiredTrait: 'Brutalist',
-                  action: () => {
-                    const currentStore = game();
-                    currentStore.setDialogue('Lars: "JA! Wir werden die Zeit selbst zertrümmern!"');
-                    currentStore.increaseBandMood(25);
-                    currentStore.increaseSkill('chaos', 5);
-                    currentStore.setFlag('larsRhythmPact', true);
-                    currentStore.startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
-                    currentStore.discoverLore('rhythm_pact');
-                  }
-                },
-                {
-                  text: 'Harmonisch und präzise. [Diplomat]',
-                  requiredTrait: 'Diplomat',
-                  action: () => {
-                    const currentStore = game();
-                    currentStore.setDialogue('Lars: "Ein perfektes Uhrwerk. Der Rhythmus wird uns leiten."');
-                    currentStore.increaseBandMood(20);
-                    currentStore.increaseSkill('social', 5);
-                    currentStore.setFlag('larsRhythmPact', true);
-                    currentStore.startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
-                    currentStore.discoverLore('rhythm_pact');
-                  }
-                },
-                {
-                  text: 'Ich brauche Bedenkzeit.',
-                  action: () => game().setDialogue('Lars: "Der Beat wartet auf niemanden lange."')
-                },
-                {
-                  text: 'Zurück.',
-                  action: () => game().setDialogue(buildProberaumLarsDialogue())
-                }
-              ]
-            });
-          }
+          action: () => game().setDialogue(buildLarsRhythmusPaktDialogue())
         },
         ...when(hasBeer && !flags.gaveBeerToLars, {
           text: 'Hier, lass dir dieses kühle Blonde schmecken.',
@@ -114,43 +74,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
         },
         {
           text: 'Was ist deine Drum-Philosophie?',
-          action: () => {
-            game().setDialogue({
-              text: 'Lars: "Meine Philosophie? Schlag so hart zu, dass die Realität Risse bekommt. Jeder Schlag ist ein Schlag gegen die Stille. Willst du mehr wissen?"',
-              options: [
-                {
-                  text: 'Ja, lehre mich den Beat. [Chaos 3]',
-                  requiredSkill: { name: 'chaos', level: 3 },
-                  action: () => {
-                    const currentStore = game();
-                    currentStore.setDialogue('Lars: "Der Beat kommt nicht aus den Armen, er kommt aus dem Zorn. Wenn du in Salzgitter spielst, denk an den Zorn der Maschinen. Du hast das Potenzial, Manager."');
-                    currentStore.setFlag('larsDrumPhilosophy', true);
-                    currentStore.increaseBandMood(20);
-                    currentStore.increaseSkill('chaos', 2);
-                  }
-                },
-                {
-                  text: 'Analysiere die Schlagkraft. [Technical 3]',
-                  requiredSkill: { name: 'technical', level: 3 },
-                  action: () => {
-                    const currentStore = game();
-                    currentStore.setDialogue('Lars: "Exakt 120 Newton pro Schlag. Du hast ein Auge für die Mechanik. Das gefällt mir."');
-                    currentStore.setFlag('larsDrumPhilosophy', true);
-                    currentStore.increaseBandMood(15);
-                    currentStore.increaseSkill('technical', 2);
-                  }
-                },
-                {
-                  text: 'Klingt anstrengend.',
-                  action: () => game().setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"')
-                },
-                {
-                  text: 'Zurück.',
-                  action: () => game().setDialogue(buildProberaumLarsDialogue())
-                }
-              ]
-            });
-          }
+          action: () => game().setDialogue(buildLarsDrumPhilosophieDialogue())
         },
         {
           text: 'Das ist für Marius.',
@@ -210,4 +134,84 @@ export function buildProberaumLarsDialogue(): Dialogue {
       ]
     };
   }
+}
+
+export function buildLarsRhythmusPaktDialogue(): Dialogue {
+  return {
+    text: 'Lars: "Ein Pakt... das ist ernst. Wie soll unser Pakt klingen?"',
+    options: [
+      {
+        text: 'Aggressiv und unaufhaltsam. [Brutalist]',
+        requiredTrait: 'Brutalist',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Lars: "JA! Wir werden die Zeit selbst zertrümmern!"');
+          currentStore.increaseBandMood(25);
+          currentStore.increaseSkill('chaos', 5);
+          currentStore.setFlag('larsRhythmPact', true);
+          currentStore.startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
+          currentStore.discoverLore('rhythm_pact');
+        }
+      },
+      {
+        text: 'Harmonisch und präzise. [Diplomat]',
+        requiredTrait: 'Diplomat',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Lars: "Ein perfektes Uhrwerk. Der Rhythmus wird uns leiten."');
+          currentStore.increaseBandMood(20);
+          currentStore.increaseSkill('social', 5);
+          currentStore.setFlag('larsRhythmPact', true);
+          currentStore.startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
+          currentStore.discoverLore('rhythm_pact');
+        }
+      },
+      {
+        text: 'Ich brauche Bedenkzeit.',
+        action: () => game().setDialogue('Lars: "Der Beat wartet auf niemanden lange."')
+      },
+      {
+        text: 'Zurück.',
+        action: () => game().setDialogue(buildProberaumLarsDialogue())
+      }
+    ]
+  };
+}
+
+export function buildLarsDrumPhilosophieDialogue(): Dialogue {
+  return {
+    text: 'Lars: "Meine Philosophie? Schlag so hart zu, dass die Realität Risse bekommt. Jeder Schlag ist ein Schlag gegen die Stille. Willst du mehr wissen?"',
+    options: [
+      {
+        text: 'Ja, lehre mich den Beat. [Chaos 3]',
+        requiredSkill: { name: 'chaos', level: 3 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Lars: "Der Beat kommt nicht aus den Armen, er kommt aus dem Zorn. Wenn du in Salzgitter spielst, denk an den Zorn der Maschinen. Du hast das Potenzial, Manager."');
+          currentStore.setFlag('larsDrumPhilosophy', true);
+          currentStore.increaseBandMood(20);
+          currentStore.increaseSkill('chaos', 2);
+        }
+      },
+      {
+        text: 'Analysiere die Schlagkraft. [Technical 3]',
+        requiredSkill: { name: 'technical', level: 3 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Lars: "Exakt 120 Newton pro Schlag. Du hast ein Auge für die Mechanik. Das gefällt mir."');
+          currentStore.setFlag('larsDrumPhilosophy', true);
+          currentStore.increaseBandMood(15);
+          currentStore.increaseSkill('technical', 2);
+        }
+      },
+      {
+        text: 'Klingt anstrengend.',
+        action: () => game().setDialogue('Lars: "Ist es auch. Aber wer will schon ein leichtes Leben?"')
+      },
+      {
+        text: 'Zurück.',
+        action: () => game().setDialogue(buildProberaumLarsDialogue())
+      }
+    ]
+  };
 }
