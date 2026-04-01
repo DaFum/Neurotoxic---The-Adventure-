@@ -14,7 +14,9 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
       requiredSkill: { name: 'technical', level: 5 },
       action: () => {
         const currentStore = game();
-        currentStore.setDialogue('Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"');
+        currentStore.setDialogue(
+          'Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"'
+        );
         currentStore.setFlag('kaminstube_lars_talked', true);
         currentStore.increaseBandMood(15);
         currentStore.increaseSkill('technical', 3);
@@ -25,7 +27,9 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
       requiredSkill: { name: 'chaos', level: 5 },
       action: () => {
         const currentStore = game();
-        currentStore.setDialogue('Lars: "JA! Ein Polyrhythmus, der die Architektur der Halle in Frage stellt!"');
+        currentStore.setDialogue(
+          'Lars: "JA! Ein Polyrhythmus, der die Architektur der Halle in Frage stellt!"'
+        );
         currentStore.setFlag('kaminstube_lars_talked', true);
         currentStore.increaseBandMood(20);
         currentStore.increaseSkill('chaos', 3);
@@ -36,7 +40,9 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setFlag('kaminstube_lars_talked', true);
-        currentStore.setDialogue('Lars: "Takt ist relativ. Aber okay, ich bemühe mich."');
+        currentStore.setDialogue(
+          'Lars: "Takt ist relativ. Aber okay, ich bemühe mich."'
+        );
       },
     },
   ];
@@ -46,7 +52,9 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
       text: 'Dieser Ort hat einen eigenen Rhythmus.',
       action: () => {
         const currentStore = game();
-        currentStore.setDialogue('Lars: "Ja... der Pakt wird stärker. Ich spüre die Hämmer der alten Gießerei in mir schlagen. Wir sind bereit."');
+        currentStore.setDialogue(
+          'Lars: "Ja... der Pakt wird stärker. Ich spüre die Hämmer der alten Gießerei in mir schlagen. Wir sind bereit."'
+        );
         currentStore.setFlag('kaminstube_lars_talked', true);
         currentStore.increaseBandMood(10);
       },

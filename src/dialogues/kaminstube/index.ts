@@ -1,4 +1,7 @@
-export { buildKaminstubeAmpDialogue, buildKaminstubeTubePickupDialogue } from './amp';
+export {
+  buildKaminstubeAmpDialogue,
+  buildKaminstubeTubePickupDialogue,
+} from './amp';
 export { buildKaminstubeCrowdDialogue } from './crowd';
 export { buildKaminstubeDrumMachineDialogue } from './drumMachine';
 export { buildKaminstubeExitDialogue } from './exit';

@@ -5,7 +5,9 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
   const store = game();
 
   if (store.flags.kaminstube_wirt_betrayal) {
-    return say('Wirt: "Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert."');
+    return say(
+      'Wirt: "Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert."'
+    );
   }
 
   if (store.flags.bassist_contacted && !store.flags.bassist_clue_wirt) {
@@ -17,7 +19,9 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           requiredSkill: { name: 'social', level: 8 },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Wirt: "Okay! Ich war es. Ich habe den Amp manipuliert, der ihn in die Leere riss. Der Sound war zu gefährlich. Es tut mir leid."');
+            currentStore.setDialogue(
+              'Wirt: "Okay! Ich war es. Ich habe den Amp manipuliert, der ihn in die Leere riss. Der Sound war zu gefährlich. Es tut mir leid."'
+            );
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_confession');
             currentStore.increaseBandMood(20);
@@ -29,7 +33,9 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           requiredTrait: 'Brutalist',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Wirt: "Nicht! Beschwöre nicht die Maschinen! Ich bekenne! Ich sabotierte den Gig 1982, um die Stadt zu schützen!"');
+            currentStore.setDialogue(
+              'Wirt: "Nicht! Beschwöre nicht die Maschinen! Ich bekenne! Ich sabotierte den Gig 1982, um die Stadt zu schützen!"'
+            );
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_vergangenheit');
             currentStore.increaseBandMood(15);
@@ -41,7 +47,9 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           requiredTrait: 'Diplomat',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."');
+            currentStore.setDialogue(
+              'Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."'
+            );
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_vergangenheit');
             currentStore.addToInventory('Turbo-Koffein');
@@ -53,7 +61,9 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
   }
 
   if (store.flags.wirtSecretItem) {
-    return say('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');
+    return say(
+      'Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."'
+    );
   }
 
   if (store.hasItem('Industrie-Talisman') && !store.flags.wirtSecretItem) {
@@ -64,7 +74,9 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           text: 'Was ist das?',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."');
+            currentStore.setDialogue(
+              'Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."'
+            );
             currentStore.addToInventory('Altes Plektrum');
             currentStore.setFlag('wirtSecretItem', true);
             currentStore.increaseBandMood(20);

@@ -16,7 +16,9 @@ describe('buildKaminstubeWirtPreludeDialogue', () => {
     });
 
     const dialogue = buildKaminstubeWirtPreludeDialogue();
-    expect(dialogue?.text).toContain('Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert.');
+    expect(dialogue?.text).toContain(
+      'Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert.'
+    );
   });
 
   it('returns bassist confession branch when bassist is contacted and clue is missing', () => {
@@ -28,7 +30,8 @@ describe('buildKaminstubeWirtPreludeDialogue', () => {
     });
 
     const dialogue = buildKaminstubeWirtPreludeDialogue();
-    if (!dialogue) throw new Error('Expected dialogue for bassist_contacted branch');
+    if (!dialogue)
+      throw new Error('Expected dialogue for bassist_contacted branch');
 
     const options = getOptionTexts(dialogue);
     expect(options).toContain('Zwinge ihn zur Wahrheit. [Social 8]');
@@ -56,7 +59,9 @@ describe('buildKaminstubeWirtPreludeDialogue', () => {
     const dialogue = buildKaminstubeWirtPreludeDialogue();
     if (!dialogue) throw new Error('Expected dialogue for talisman branch');
 
-    const option = dialogue.options?.find((entry) => entry.text === 'Was ist das?');
+    const option = dialogue.options?.find(
+      (entry) => entry.text === 'Was ist das?'
+    );
     if (!option) throw new Error('Expected talisman reveal option');
 
     executeDialogueOption(option);

@@ -36,7 +36,9 @@ describe('buildBackstageLarsDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildBackstageLarsDialogue();
-    const option = dialogue.options?.find((entry) => entry.text === 'Trink es auf Ex!');
+    const option = dialogue.options?.find(
+      (entry) => entry.text === 'Trink es auf Ex!'
+    );
 
     if (!option) {
       throw new Error('Expected turbo drink option for Lars');

@@ -56,7 +56,9 @@ describe('buildBackstageRitualCircleDialogue', () => {
 
     const first = buildBackstageRitualCircleDialogue(vi.fn());
     const afterFirst = useStore.getState();
-    const questAfterFirst = afterFirst.quests.filter((quest) => quest.id === 'backstage_ritual');
+    const questAfterFirst = afterFirst.quests.filter(
+      (quest) => quest.id === 'backstage_ritual'
+    );
 
     expect(first.text).toContain('Marius muss erst beruhigt werden');
     expect(questAfterFirst).toHaveLength(1);
@@ -64,7 +66,9 @@ describe('buildBackstageRitualCircleDialogue', () => {
 
     const second = buildBackstageRitualCircleDialogue(vi.fn());
     const afterSecond = useStore.getState();
-    const questAfterSecond = afterSecond.quests.filter((quest) => quest.id === 'backstage_ritual');
+    const questAfterSecond = afterSecond.quests.filter(
+      (quest) => quest.id === 'backstage_ritual'
+    );
 
     expect(second.text).toContain('Marius muss erst beruhigt werden');
     expect(questAfterSecond).toHaveLength(1);

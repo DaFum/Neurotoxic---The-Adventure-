@@ -5,10 +5,12 @@ type RitualActionWrapper = (
   mood: number,
   skillName: 'chaos' | 'social' | 'technical' | null,
   skillIncrease: number,
-  dialogueText: string,
+  dialogueText: string
 ) => void;
 
-export function buildBackstageRitualCircleDialogue(ritualActionWrapper: RitualActionWrapper): Dialogue {
+export function buildBackstageRitualCircleDialogue(
+  ritualActionWrapper: RitualActionWrapper
+): Dialogue {
   const store = game();
   const hasForbiddenRiff = store.hasItem('Verbotenes Riff');
   const hasPlasmaZunder = store.hasItem('Plasma-Zünder');
@@ -22,27 +24,47 @@ export function buildBackstageRitualCircleDialogue(ritualActionWrapper: RitualAc
           text: 'Kosmisches Ritual. [Mystic]',
           requiredTrait: 'Mystic',
           action: () => {
-            ritualActionWrapper(35, 'chaos', 5, 'Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.');
+            ritualActionWrapper(
+              35,
+              'chaos',
+              5,
+              'Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.'
+            );
           },
         },
         {
           text: 'Showmanship Ritual. [Performer]',
           requiredTrait: 'Performer',
           action: () => {
-            ritualActionWrapper(30, 'social', 5, 'Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!');
+            ritualActionWrapper(
+              30,
+              'social',
+              5,
+              'Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!'
+            );
           },
         },
         {
           text: 'Frequenz-Anpassung. [Technician]',
           requiredTrait: 'Technician',
           action: () => {
-            ritualActionWrapper(25, 'technical', 5, 'Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.');
+            ritualActionWrapper(
+              25,
+              'technical',
+              5,
+              'Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.'
+            );
           },
         },
         {
           text: 'Einfacher Gruppen-Chant.',
           action: () => {
-            ritualActionWrapper(15, null, 0, 'Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"');
+            ritualActionWrapper(
+              15,
+              null,
+              0,
+              'Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"'
+            );
           },
         },
       ],
@@ -50,7 +72,9 @@ export function buildBackstageRitualCircleDialogue(ritualActionWrapper: RitualAc
   }
 
   if (store.flags.frequenz1982_complete) {
-    return say('Der Kreis leuchtet stetig im Takt von 1982. Die Realität hat hier einen Riss.');
+    return say(
+      'Der Kreis leuchtet stetig im Takt von 1982. Die Realität hat hier einen Riss.'
+    );
   }
 
   const hasFrequenzfragment = store.hasItem('Frequenzfragment');
@@ -64,7 +88,9 @@ export function buildBackstageRitualCircleDialogue(ritualActionWrapper: RitualAc
           requiredTrait: 'Mystic',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!');
+            currentStore.setDialogue(
+              'Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!'
+            );
             currentStore.setFlag('frequenz1982_complete', true);
             currentStore.completeQuest('frequenz_1982');
             currentStore.discoverLore('frequenz_1982_decoded');
@@ -77,7 +103,9 @@ export function buildBackstageRitualCircleDialogue(ritualActionWrapper: RitualAc
           requiredTrait: 'Brutalist',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
+            currentStore.setDialogue(
+              'Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!'
+            );
             currentStore.removeFromInventory('Resonanz-Kristall');
             currentStore.setFlag('frequenz1982_complete', true);
             currentStore.completeQuest('frequenz_1982');
@@ -105,7 +133,9 @@ export function buildBackstageRitualCircleDialogue(ritualActionWrapper: RitualAc
           requiredTrait: 'Brutalist',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
+            currentStore.setDialogue(
+              'Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!'
+            );
             currentStore.removeFromInventory('Frequenzfragment');
             currentStore.setFlag('frequenz1982_complete', true);
             currentStore.completeQuest('frequenz_1982');
@@ -127,21 +157,32 @@ export function buildBackstageRitualCircleDialogue(ritualActionWrapper: RitualAc
   if (hasPlasmaZunder) {
     store.increaseBandMood(30);
     store.removeFromInventory('Plasma-Zünder');
-    return say('Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"');
+    return say(
+      'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"'
+    );
   }
 
   if (hasForbiddenRiff) {
     store.increaseBandMood(15);
-    return say('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
+    return say(
+      'Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"'
+    );
   }
 
   if (store.flags.backstageRitualPerformed) {
-    return say('Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.');
+    return say(
+      'Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.'
+    );
   }
 
   if (!store.quests.find((quest) => quest.id === 'backstage_ritual')) {
-    store.addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
+    store.addQuest(
+      'backstage_ritual',
+      'Führe ein Bandritual vor dem Auftritt durch'
+    );
     store.increaseBandMood(5);
   }
-  return say('Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.');
+  return say(
+    'Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.'
+  );
 }

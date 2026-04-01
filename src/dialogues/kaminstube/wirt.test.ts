@@ -16,7 +16,9 @@ describe('buildKaminstubeWirtDialogue', () => {
     });
 
     const dialogue = buildKaminstubeWirtDialogue();
-    expect(dialogue.text).toContain('Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert.');
+    expect(dialogue.text).toContain(
+      'Verschwinde. Der Lärm hat diese Stadt schon einmal ruiniert.'
+    );
   });
 
   it('adds ghost shortcut in the 1982 legacy branch', () => {
@@ -32,7 +34,9 @@ describe('buildKaminstubeWirtDialogue', () => {
     const dialogue = buildKaminstubeWirtDialogue();
     const options = getOptionTexts(dialogue);
 
-    expect(dialogue.text).toContain('Ihr habt die Stimmung zum Kochen gebracht');
+    expect(dialogue.text).toContain(
+      'Ihr habt die Stimmung zum Kochen gebracht'
+    );
     expect(options[0]).toBe('Der Geist hat mich geschickt.');
     expect(options).toContain('Erzähl mir die ganze Geschichte von 1982.');
   });
@@ -44,7 +48,9 @@ describe('buildKaminstubeWirtDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildKaminstubeWirtDialogue();
-    const option = dialogue.options?.find((entry) => entry.text === 'Erzähl mir vom Gig 1982.');
+    const option = dialogue.options?.find(
+      (entry) => entry.text === 'Erzähl mir vom Gig 1982.'
+    );
 
     if (!option) {
       throw new Error('Expected high-mood 1982 option');
@@ -54,7 +60,9 @@ describe('buildKaminstubeWirtDialogue', () => {
     const stateAfter = useStore.getState();
 
     expect(stateAfter.bandMood).toBe(moodBefore + 10);
-    expect(stateAfter.dialogue?.text).toContain('Fenster in ganz Tangermünde zersprangen');
+    expect(stateAfter.dialogue?.text).toContain(
+      'Fenster in ganz Tangermünde zersprangen'
+    );
   });
 
   it('serves beer in the neutral branch when none is carried', () => {
@@ -63,7 +71,9 @@ describe('buildKaminstubeWirtDialogue', () => {
     });
 
     const dialogue = buildKaminstubeWirtDialogue();
-    const option = dialogue.options?.find((entry) => entry.text === 'Ein Bier, bitte.');
+    const option = dialogue.options?.find(
+      (entry) => entry.text === 'Ein Bier, bitte.'
+    );
 
     if (!option) {
       throw new Error('Expected beer option in neutral bark branch');

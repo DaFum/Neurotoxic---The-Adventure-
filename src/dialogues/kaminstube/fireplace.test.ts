@@ -23,11 +23,18 @@ describe('buildKaminstubeFireplaceDialogue', () => {
     setupTestState({
       trait: 'Mystic',
     });
-    useStore.getState().addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
+    useStore
+      .getState()
+      .addQuest(
+        'forgotten_lore',
+        'Entschlüssele die vergessene Lore in der Kaminstube'
+      );
 
     const moodBefore = useStore.getState().bandMood;
     const dialogue = buildKaminstubeFireplaceDialogue();
-    const option = dialogue.options?.find((entry) => entry.text.includes('[Mystic]'));
+    const option = dialogue.options?.find((entry) =>
+      entry.text.includes('[Mystic]')
+    );
 
     if (!option) {
       throw new Error('Expected Mystic fireplace option');
@@ -39,7 +46,9 @@ describe('buildKaminstubeFireplaceDialogue', () => {
     expect(stateAfter.flags.forgotten_lore).toBe(true);
     expect(stateAfter.flags.kaminFeuerPact).toBe(true);
     expect(stateAfter.bandMood).toBe(moodBefore + 20);
-    expect(stateAfter.dialogue?.text).toContain('Der Kamin flüstert von Salzgitter');
+    expect(stateAfter.dialogue?.text).toContain(
+      'Der Kamin flüstert von Salzgitter'
+    );
   });
 
   it('applies chaos skill gain for chaos option', () => {
@@ -49,11 +58,18 @@ describe('buildKaminstubeFireplaceDialogue', () => {
         chaos: 7,
       },
     });
-    useStore.getState().addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
+    useStore
+      .getState()
+      .addQuest(
+        'forgotten_lore',
+        'Entschlüssele die vergessene Lore in der Kaminstube'
+      );
     const chaosBefore = useStore.getState().skills.chaos;
 
     const dialogue = buildKaminstubeFireplaceDialogue();
-    const option = dialogue.options?.find((entry) => entry.text.includes('[Chaos 7]'));
+    const option = dialogue.options?.find((entry) =>
+      entry.text.includes('[Chaos 7]')
+    );
 
     if (!option) {
       throw new Error('Expected Chaos fireplace option');
