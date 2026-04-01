@@ -1,16 +1,4 @@
 /**
- * #1: UPDATES
- * - Initialized audio engine for sound effects and ambient music.
- * 
- * #2: NEXT STEPS & IDEAS
- * - Add more complex music tracks.
- * - Implement volume control settings.
- * - Add sound effects for dialogue typing.
- * 
- * #3: ERRORS & SOLUTIONS
- * - No major errors found.
- */
-/**
  * A simple audio engine class for managing sound effects and ambient music
  * in the game using the Web Audio API. It supports synthesized sounds,
  * footsteps, interactions, ambient tracks, and basic music.
@@ -28,11 +16,17 @@ class AudioEngine {
    * Resumes the context if it is in a suspended state.
    */
   init() {
-    if (!this.ctx) {
-      this.ctx = new AudioContext();
-    }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    try {
+      if (!this.ctx) {
+        this.ctx = new AudioContext();
+      }
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume().catch((e) => {
+          console.warn('AudioContext resume failed:', e);
+        });
+      }
+    } catch (e) {
+      console.warn('AudioContext initialization failed:', e);
     }
   }
 
@@ -58,20 +52,24 @@ class AudioEngine {
    */
   playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
     if (!this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-    
-    gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-    
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    
-    osc.start();
-    osc.stop(this.ctx.currentTime + duration);
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+      gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {
+      console.warn('Error playing tone:', e);
+    }
   }
 
   /**
@@ -149,26 +147,30 @@ class AudioEngine {
         this.playTone(20 + Math.random() * 30, 'square', 0.2, 0.05);
       } else if (type === 'kaminstube') {
         // Fire crackling (noise bursts)
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        const filter = this.ctx.createBiquadFilter();
-        
-        filter.type = 'bandpass';
-        filter.frequency.value = 1000 + Math.random() * 2000;
-        filter.Q.value = 10;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
 
-        osc.type = 'sawtooth';
-        osc.frequency.value = 100;
-        
-        gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+          filter.type = 'bandpass';
+          filter.frequency.value = 1000 + Math.random() * 2000;
+          filter.Q.value = 10;
 
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.ctx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.value = 100;
 
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.05);
+        } catch (e) {
+          console.warn('Error playing kaminstube ambient:', e);
+        }
       } else if (type === 'salzgitter') {
         // Distant city hum
         this.playTone(60, 'sine', 1.0, 0.01);
@@ -217,16 +219,20 @@ class AudioEngine {
       
       // Play kick drum (low sine sweep)
       if (step % 2 === 0) {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.1);
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.1);
+        } catch (e) {
+          console.warn('Error playing kick drum:', e);
+        }
       }
 
       // Play snare (noise burst)
