@@ -171,9 +171,9 @@ export function buildMatze1982Dialogue(): Dialogue {
         requiredTrait: 'Mystic',
         action: () => {
           const currentStore = game();
+          currentStore.setFlag('bassist_clue_matze', true);
           const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
-            currentStore.setFlag('bassist_clue_matze', true);
             currentStore.setFlag('matzeDeepTalk', true);
             currentStore.setFlag('frequenz1982_proberaum', true);
             currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
@@ -190,10 +190,10 @@ export function buildMatze1982Dialogue(): Dialogue {
         requiredTrait: 'Brutalist',
         action: () => {
           const currentStore = game();
+          currentStore.setFlag('bassist_clue_matze', true);
           const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
             currentStore.setFlag('proberaum_brutalist_smash', true);
-            currentStore.setFlag('bassist_clue_matze', true);
             currentStore.setFlag('matzeDeepTalk', true);
             currentStore.setFlag('frequenz1982_proberaum', true);
             currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
