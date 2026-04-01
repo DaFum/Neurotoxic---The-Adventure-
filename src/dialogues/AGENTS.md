@@ -4,7 +4,9 @@ Dialogue builder functions live here. Each file exports one or more `build[Scene
 
 ## Gotchas
 
-- `addToInventory(item)` returns `boolean` — always branch on the result. Quest completions, flag sets, and mood/skill rewards must be inside the `if (received)` block; the `else` branch must give explicit failure feedback (e.g. inventory-full message). Unconditional completions after a failed pickup are a bug.
+- `addToInventory(item)` returns `boolean` — always branch on the result. Quest completions, flag sets, and mood/skill rewards must be inside the `if (received)` block; the `else` branch must give explicit failure feedback (e.g. inventory-full message). Unconditional completions after a failed pickup are a bug. Note: returns `false` both for a full inventory **and** for per-item pickup limits (see `ITEM_PICKUP_LIMITS` in store.ts).
+- Always call `game()` fresh inside each `action()` callback — never capture the builder-scope reference in a closure, as it will be stale by the time the action fires.
+- If an option sets both `nextDialogue` and calls `setDialogue()` inside `action()`, `nextDialogue` wins and silently overwrites the action's dialogue. Use one or the other per option.
 - Use `completeQuestWithFlag(id, flag, ...)` and `startQuestWithFlag(id, text, flag)` instead of paired `completeQuest` + `setFlag` (or `addQuest` + `setFlag`) calls — separate Zustand writes leave a window where subscribers observe inconsistent state.
 - Completing a sub-quest (e.g. `'beer'`) does **not** auto-complete a parent quest — call `completeQuest(parentId)` explicitly where needed.
 - Nested sub-menus built inline with `game().setDialogue({...})` must include a `'Zurück.'` option that calls `game().setDialogue(buildThisDialogue())` so the player can navigate back.

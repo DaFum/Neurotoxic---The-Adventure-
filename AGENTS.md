@@ -2,6 +2,7 @@
 
 ## Critical Commands
 - Lint: `pnpm run lint` (TypeScript only; no ESLint/Prettier gate)
+- Test: `pnpm run test` (Vitest; test files co-located with source as `*.test.ts`)
 
 ## Architecture Constraints
 - `@/` resolves to project root (`./`), not `src/`; keep alias config in [vite.config.ts](vite.config.ts) and [tsconfig.json](tsconfig.json) aligned.
