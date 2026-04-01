@@ -5,7 +5,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
   const store = game();
   const { flags, bandMood, hasItem } = store;
 
-  if (bandMood < 20 && !hasItem('Repariertes Kabel') && !flags.tourbus_sabotage_discovered) {
+  if (bandMood < 20 && !hasItem('Repariertes Kabel') && !flags.cableFixed && !flags.tourbus_sabotage_discovered) {
     return say('Matze: "Lass mich in Ruhe. Dieses kaputte Kabel ist das Ende der Band."');
   }
 
@@ -82,7 +82,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue('Matze: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..."');
-              currentStore.completeQuestWithFlag('tourbus_saboteur', 'tourbus_matze_confession', true);
+              currentStore.completeQuestWithFlag('tourbus_saboteur', 'tourbus_matze_confession', true, 'Finde heraus, wer das Kabel sabotiert hat');
               currentStore.increaseBandMood(10);
               currentStore.increaseSkill('social', 3);
             }

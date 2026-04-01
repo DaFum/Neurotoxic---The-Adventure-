@@ -120,8 +120,8 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
-            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
+            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
+            currentStore.setFlag('ghostTrustEarned', true);
             currentStore.increaseBandMood(25);
             currentStore.discoverLore('ghost_legacy');
           }
@@ -132,8 +132,8 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
-            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
+            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
+            currentStore.setFlag('ghostTrustEarned', true);
             currentStore.increaseBandMood(20);
             currentStore.discoverLore('ghost_legacy');
           }
@@ -146,7 +146,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
     };
   }
 
-  if (flags.ghostRecipeQuestStarted && !hasGeisterDrink) {
+  if (flags.ghostRecipeQuestStarted && !hasGeisterDrink && !flags.ghostRecipeQuestCompleted) {
     return say('Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."');
   }
 

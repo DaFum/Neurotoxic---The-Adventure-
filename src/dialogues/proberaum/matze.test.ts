@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from '../../store';
-import { buildProberaumMatzeDialogue } from './matze';
+import { buildProberaumMatzeDialogue, buildMatze1982Dialogue } from './matze';
 import { setupTestState, getOptionTexts } from '../shared/test-helpers';
+import { executeDialogueOption } from '../../dialogueEngine';
 
 describe('buildProberaumMatzeDialogue', () => {
   beforeEach(() => setupTestState());
@@ -109,5 +110,28 @@ describe('buildProberaumMatzeDialogue', () => {
     expect(options.some(o => o.includes('[Performer]'))).toBe(false);
     expect(options.some(o => o.includes('[Cynic]'))).toBe(false);
     expect(options).toContain('Erzähl mir von der Tour 1982.');
+  });
+});
+
+describe('buildMatze1982Dialogue', () => {
+  beforeEach(() => setupTestState());
+
+  it('sets bassist_clue_matze but not frequenz1982_proberaum when pickup limit is reached in Mystic branch', () => {
+    setupTestState({ trait: 'Mystic' });
+    const store = useStore.getState();
+    // Fill the pickup limit (default limit is 2 for Frequenzfragment)
+    store.addToInventory('Frequenzfragment');
+    store.addToInventory('Frequenzfragment');
+
+    const dialogue = buildMatze1982Dialogue();
+    const mysticOption = dialogue.options?.find(o => o.text.includes('[Mystic]'));
+    expect(mysticOption).toBeDefined();
+
+    executeDialogueOption(mysticOption!);
+
+    const stateAfter = useStore.getState();
+    expect(stateAfter.flags.bassist_clue_matze).toBe(true);
+    expect(stateAfter.flags.frequenz1982_proberaum).toBe(false);
+    expect(stateAfter.dialogue?.text).toContain('Das Fragment ist echt, aber du kannst gerade keins mehr tragen.');
   });
 });

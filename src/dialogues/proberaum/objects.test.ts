@@ -70,13 +70,12 @@ describe('Proberaum Objects Dialogues', () => {
       expect(options).toContain('Repariere den Amp.');
 
       const repairOption = dialogue.options?.find(o => o.text === 'Repariere den Amp.');
-      if (repairOption) {
-        executeDialogueOption(repairOption);
-        const state = useStore.getState();
-        expect(state.inventory).not.toContain('Lötkolben');
-        expect(state.inventory).not.toContain('Schrottmetall');
-        expect(state.flags.talkingAmpRepaired).toBe(true);
-      }
+      expect(repairOption).toBeDefined();
+      executeDialogueOption(repairOption!);
+      const state = useStore.getState();
+      expect(state.inventory).not.toContain('Lötkolben');
+      expect(state.inventory).not.toContain('Schrottmetall');
+      expect(state.flags.talkingAmpRepaired).toBe(true);
     });
 
     it('can start therapy when repaired', () => {

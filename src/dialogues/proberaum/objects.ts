@@ -209,6 +209,7 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
             const currentStore = game();
             const receivedCable = currentStore.addToInventory('Quanten-Kabel');
             if (receivedCable) {
+              currentStore.removeFromInventory('Verbotenes Riff');
               currentStore.completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
               currentStore.increaseBandMood(25);
               currentStore.increaseSkill('chaos', 10);
