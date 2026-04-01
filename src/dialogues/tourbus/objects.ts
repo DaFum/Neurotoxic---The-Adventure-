@@ -102,7 +102,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               currentStore.increaseSkill('social', 5);
               currentStore.setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
             } else {
-              currentStore.setDialogue('Geist: "Ich habe ein Geschenk für dich, aber dein Inventar ist voll. Mach Platz für den Schaltplan!"');
+              currentStore.setDialogue('Geist: "Ich habe ein Geschenk für dich, aber du kannst den Verstärker-Schaltplan nicht noch einmal aufnehmen. Dein Pickup-Limit ist erreicht."');
             }
           }
         }
@@ -120,6 +120,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
+            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(25);
             currentStore.discoverLore('ghost_legacy');
@@ -131,6 +132,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
+            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(20);
             currentStore.discoverLore('ghost_legacy');
@@ -171,13 +173,13 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           requiredTrait: 'Mystic',
           action: () => {
             const currentStore = game();
+            currentStore.setFlag('bassist_clue_ghost', true);
             const received = currentStore.addToInventory('Bassist-Saite');
             if (received) {
-              currentStore.setFlag('bassist_clue_ghost', true);
               currentStore.increaseBandMood(20);
               currentStore.setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
             } else {
-              currentStore.setDialogue('Geist: "Ich möchte dir etwas geben, aber du kannst gerade nichts mehr tragen. Komm wieder, wenn du Platz hast."');
+              currentStore.setDialogue('Geist: "Ich möchte dir etwas geben, aber du kannst es gerade nicht annehmen."');
             }
           }
         },

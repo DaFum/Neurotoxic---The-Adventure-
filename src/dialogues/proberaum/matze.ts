@@ -173,9 +173,9 @@ export function buildMatze1982Dialogue(): Dialogue {
           const currentStore = game();
           if (!currentStore.flags.frequenz1982_proberaum) {
             currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+              currentStore.setFlag('bassist_clue_matze', true);
             const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
             if (pickedUpFragment) {
-              currentStore.setFlag('bassist_clue_matze', true);
               currentStore.setFlag('matzeDeepTalk', true);
               currentStore.setFlag('frequenz1982_proberaum', true);
               currentStore.increaseBandMood(25, 'matze_frequenz1982');
@@ -196,10 +196,10 @@ export function buildMatze1982Dialogue(): Dialogue {
           const currentStore = game();
           if (!currentStore.flags.frequenz1982_proberaum) {
             currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-            const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
-            if (pickedUpFragment) {
               currentStore.setFlag('bassist_clue_matze', true);
               currentStore.setFlag('proberaum_brutalist_smash', true);
+            const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
+            if (pickedUpFragment) {
               currentStore.setFlag('matzeDeepTalk', true);
               currentStore.setFlag('frequenz1982_proberaum', true);
               currentStore.increaseBandMood(10, 'matze_frequenz1982');

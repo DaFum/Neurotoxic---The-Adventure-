@@ -25,8 +25,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
     * *Nach dem Aufwischen (Wasser aufgewischt):* Option "Erzähl mir von der Tour 1982." öffnet einen Unterdialog.
-        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (+25 BandMood, +4 Chaos, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `matzeDeepTalk`; **bei erfolgreicher Aufnahme zusätzlich** Erhalt: Frequenzfragment und `frequenz1982_proberaum`).
-        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (+10 BandMood, +3 Chaos, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `proberaum_brutalist_smash`, `matzeDeepTalk`; **bei erfolgreicher Aufnahme zusätzlich** Erhalt: Frequenzfragment und `frequenz1982_proberaum`).
+        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (Quest gestartet: `frequenz_1982`; **bei erfolgreicher Aufnahme:** +25 BandMood, +4 Chaos, Erhalt: Frequenzfragment, setzt `bassist_clue_matze`, `matzeDeepTalk`, `frequenz1982_proberaum`).
+        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (Quest gestartet: `frequenz_1982`; **bei erfolgreicher Aufnahme:** +10 BandMood, +3 Chaos, Erhalt: Frequenzfragment, setzt `bassist_clue_matze`, `proberaum_brutalist_smash`, `matzeDeepTalk`, `frequenz1982_proberaum`).
         * Zweig C (Trait: Visionary): "Ich sehe Muster im Lärm." (+30 BandMood, +5 Chaos, Lore: `matze_1982_truth`, setzt `matzeDeepTalk`).
         * Zweig D (Skill: Technical 5): Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
         * Zweig E (Skill: Social 3): Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
