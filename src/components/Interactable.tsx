@@ -10,7 +10,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -50,15 +50,15 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const instanceIdRef = useRef(`interactable-${Math.random().toString(36).slice(2, 10)}`);
   const handleInteractRef = useRef<() => void>(() => {});
   const emojiTextureRef = useRef<THREE.CanvasTexture | null>(null);
-  const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
+  const labelTextureInRangeRef = useRef<THREE.CanvasTexture | null>(null);
+  const labelTextureOutOfRangeRef = useRef<THREE.CanvasTexture | null>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
   const distanceRef = useRef(Infinity);
   const inRangeRef = useRef(false);
-  const [hovered, setHovered] = useState(false);
-  const [inRange, setInRange] = useState(false);
-  const [interacted, setInteracted] = useState(false);
+  const hoveredRef = useRef(false);
+  const interactedRef = useRef(false);
   const { register, unregister } = useKeyboardInteraction();
   const isPaused = useStore((state) => state.isPaused);
   const bandMood = useStore((state) => state.bandMood);
@@ -130,38 +130,43 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   }, [emoji]);
 
   useEffect(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 128;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const createLabelTexture = (isInRange: boolean) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(0,0,0,0.78)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#adff2f';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(0,0,0,0.78)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = '#adff2f';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
 
-    ctx.fillStyle = '#adff2f';
-    ctx.font = '700 36px "JetBrains Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(name.toUpperCase(), canvas.width / 2, 42);
+      ctx.fillStyle = '#adff2f';
+      ctx.font = '700 36px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(name.toUpperCase(), canvas.width / 2, 42);
 
-    ctx.fillStyle = inRange ? '#b3b3b3' : '#8b0000';
-    ctx.font = '600 22px "JetBrains Mono", monospace';
-    ctx.fillText(inRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', canvas.width / 2, 90);
+      ctx.fillStyle = isInRange ? '#b3b3b3' : '#8b0000';
+      ctx.font = '600 22px "JetBrains Mono", monospace';
+      ctx.fillText(isInRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', canvas.width / 2, 90);
 
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.needsUpdate = true;
-    labelTextureRef.current = texture;
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+      return texture;
+    };
+
+    labelTextureInRangeRef.current = createLabelTexture(true);
+    labelTextureOutOfRangeRef.current = createLabelTexture(false);
 
     if (labelSpriteRef.current) {
       const material = labelSpriteRef.current.material;
       if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
-        material.map = texture;
+        material.map = labelTextureOutOfRangeRef.current;
         material.needsUpdate = true;
       }
     }
@@ -169,24 +174,24 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     return () => {
       if (labelSpriteRef.current) {
         const material = labelSpriteRef.current.material;
-        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
+        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial &&
+           (material.map === labelTextureInRangeRef.current || material.map === labelTextureOutOfRangeRef.current)) {
           material.map = null;
           material.needsUpdate = true;
         }
       }
-      if (labelTextureRef.current === texture) {
-        labelTextureRef.current = null;
-      }
-      texture.dispose();
+
+      labelTextureInRangeRef.current?.dispose();
+      labelTextureOutOfRangeRef.current?.dispose();
+      labelTextureInRangeRef.current = null;
+      labelTextureOutOfRangeRef.current = null;
     };
-  }, [name, inRange]);
+  }, [name]);
 
   useEffect(() => {
     return () => {
       emojiTextureRef.current?.dispose();
       emojiTextureRef.current = null;
-      labelTextureRef.current?.dispose();
-      labelTextureRef.current = null;
     };
   }, []);
 
@@ -213,7 +218,6 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     const inRangeNow = distSq < 16.0; // 4.0 squared
     distanceRef.current = distSq; // keyboard interaction only compares relative distances, so squared is fine
     inRangeRef.current = inRangeNow;
-    setInRange((prev) => (prev === inRangeNow ? prev : inRangeNow));
 
     if (ref.current) {
       timeRef.current += delta;
@@ -234,13 +238,13 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     }
 
     if (spriteRef.current) {
-      const pulse = interacted ? 1.2 : hovered ? 1.08 : 1;
+      const pulse = interactedRef.current ? 1.2 : hoveredRef.current ? 1.08 : 1;
       spriteRef.current.scale.set(1.8 * scale * pulse, 1.8 * scale * pulse, 1);
     }
 
     if (ringRef.current) {
       ringRef.current.rotation.z += delta * (inRangeNow ? 2.8 : 1.4);
-      const ringScale = hovered ? 1.06 : 1;
+      const ringScale = hoveredRef.current ? 1.06 : 1;
       ringRef.current.scale.set(ringScale, ringScale, ringScale);
     }
 
@@ -250,7 +254,29 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
       coreRef.current.position.y = 0.26 * scale + Math.sin(time * 3.5) * 0.035 * scale;
       const material = coreRef.current.material;
       if (!Array.isArray(material) && material instanceof THREE.MeshStandardMaterial) {
-        material.emissiveIntensity = 0.45 + (hovered ? 0.35 : 0) + Math.abs(Math.sin(time * 6)) * 0.22;
+        material.emissiveIntensity = 0.45 + (hoveredRef.current ? 0.35 : 0) + Math.abs(Math.sin(time * 6)) * 0.22;
+      }
+    }
+
+    const showLabel = hoveredRef.current || inRangeNow;
+    if (labelSpriteRef.current) {
+      labelSpriteRef.current.visible = showLabel;
+      if (showLabel) {
+        labelSpriteRef.current.scale.set(
+          hoveredRef.current ? 2.8 * scale : 2.55 * scale,
+          hoveredRef.current ? 0.7 * scale : 0.64 * scale,
+          1
+        );
+        const material = labelSpriteRef.current.material;
+        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
+          material.opacity = hoveredRef.current ? 1 : 0.9;
+
+          const targetMap = inRangeNow ? labelTextureInRangeRef.current : labelTextureOutOfRangeRef.current;
+          if (material.map !== targetMap) {
+            material.map = targetMap;
+            material.needsUpdate = true;
+          }
+        }
       }
     }
   });
@@ -262,8 +288,8 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
       audio.playInteraction();
       setCameraShake(0.2);
       onInteract();
-      setInteracted(true);
-      setTimeout(() => setInteracted(false), 500);
+      interactedRef.current = true;
+      setTimeout(() => { interactedRef.current = false; }, 500);
     } else if (!currentIsPaused) {
       useStore.getState().setDialogue('OUT_OF_RANGE: Move closer to target.');
     }
@@ -311,30 +337,26 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
           ref={spriteRef}
           scale={[1.8 * scale, 1.8 * scale, 1]}
           renderOrder={30}
-          onPointerOver={() => setHovered(true)}
-          onPointerOut={() => setHovered(false)}
+          onPointerOver={() => { hoveredRef.current = true; }}
+          onPointerOut={() => { hoveredRef.current = false; }}
           onClick={(e) => {
             handleDomInteract(e);
           }}
         >
           <spriteMaterial map={emojiTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
         </sprite>
-        {(hovered || inRange) && (
-          <sprite
-            ref={labelSpriteRef}
-            position={[0, 1.35 * scale, 0]}
-            scale={[hovered ? 2.8 * scale : 2.55 * scale, hovered ? 0.7 * scale : 0.64 * scale, 1]}
-            renderOrder={31}
-          >
-            <spriteMaterial
-              map={labelTextureRef.current ?? undefined}
-              transparent
-              opacity={hovered ? 1 : 0.9}
-              depthWrite={false}
-              depthTest={false}
-            />
-          </sprite>
-        )}
+        <sprite
+          ref={labelSpriteRef}
+          position={[0, 1.35 * scale, 0]}
+          renderOrder={31}
+          visible={false}
+        >
+          <spriteMaterial
+            transparent
+            depthWrite={false}
+            depthTest={false}
+          />
+        </sprite>
       </group>
     </RigidBody>
   );
