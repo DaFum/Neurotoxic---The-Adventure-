@@ -214,7 +214,7 @@ export function Game() {
                             setSelectingTrait(true);
                           }
                         }}
-                        className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left"
+                        className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                       >
                         <span className="text-2xl font-black text-zinc-100 group-hover:text-black uppercase mb-2">
                           Continue
@@ -231,7 +231,7 @@ export function Game() {
                           setShowSavePrompt(false);
                           setSelectingTrait(true);
                         }}
-                        className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-red-500 border border-zinc-800 hover:border-red-500 transition-all text-left"
+                        className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-red-500 border border-zinc-800 hover:border-red-500 transition-all text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                       >
                         <span className="text-2xl font-black text-zinc-100 group-hover:text-black uppercase mb-2">
                           New Game
@@ -277,7 +277,7 @@ export function Game() {
                             setSelectingTrait(false);
                             setScene('proberaum');
                           }}
-                          className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left"
+                          className="group flex flex-col items-start p-6 bg-zinc-900 hover:bg-toxic border border-zinc-800 hover:border-toxic transition-all text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                         >
                           <span className="text-2xl font-black text-zinc-100 group-hover:text-black uppercase mb-2">
                             {t.id}
