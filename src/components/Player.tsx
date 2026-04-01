@@ -39,7 +39,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const shakeOffset = useRef(new THREE.Vector3()).current;
   const [, get] = useKeyboardControls();
   const setPlayerPos = useStore((state) => state.setPlayerPos);
-  const setCameraShake = useStore((state) => state.setCameraShake);
+  const cameraShakeRef = useRef(0);
 
   // Keep a live reference to the authoritative player position from the store.
   // This ensures external teleports (scene switches, rehydrates, cheats) are
@@ -198,7 +198,21 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
         }
       }
     );
-    return unsubscribe;
+
+    // Subscribe to camera shake kicks
+    const unsubscribeShake = useStore.subscribe(
+      (state) => state.cameraShakeKick,
+      (newKick) => {
+        if (newKick > 0) {
+          cameraShakeRef.current = useStore.getState().cameraShakeIntensity;
+        }
+      }
+    );
+
+    return () => {
+      unsubscribe();
+      unsubscribeShake();
+    };
   }, []);
 
   useFrame((state, delta) => {
@@ -267,7 +281,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     }
 
     // Camera follow with shake
-    const currentCameraShake = useStore.getState().cameraShake;
+    const currentCameraShake = cameraShakeRef.current;
 
     // Override the shakeOffset vector instead of creating a new one
     shakeOffset.set(
@@ -283,25 +297,25 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
     // Decay camera shake
     if (currentCameraShake > 0) {
-      setCameraShake(Math.max(0, currentCameraShake - delta * 2));
+      cameraShakeRef.current = Math.max(0, currentCameraShake - delta * 2);
     }
 
     if (spriteRef.current) {
-      const bounce = isMoving ? Math.abs(Math.sin(state.clock.elapsedTime * 10)) * 0.08 : 0;
+      const bounce = moving ? Math.abs(Math.sin(state.clock.elapsedTime * 10)) * 0.08 : 0;
       spriteRef.current.position.y = 1.05 + bounce;
       const dir = facingRight.current ? 1 : -1;
       spriteRef.current.scale.set(2.3 * dir, 2.3, 1);
     }
 
     if (modelRef.current) {
-      const sway = isMoving ? Math.sin(state.clock.elapsedTime * 12) * 0.08 : 0;
+      const sway = moving ? Math.sin(state.clock.elapsedTime * 12) * 0.08 : 0;
       modelRef.current.rotation.z = sway;
       modelRef.current.rotation.y = THREE.MathUtils.lerp(modelRef.current.rotation.y, facingRight.current ? 0 : Math.PI, 0.16);
     }
 
     if (ringRef.current) {
-      ringRef.current.rotation.z += delta * (isMoving ? 2.8 : 1.2);
-      const pulse = isMoving ? 1.08 : 1;
+      ringRef.current.rotation.z += delta * (moving ? 2.8 : 1.2);
+      const pulse = moving ? 1.08 : 1;
       ringRef.current.scale.set(pulse, pulse, pulse);
     }
   });
