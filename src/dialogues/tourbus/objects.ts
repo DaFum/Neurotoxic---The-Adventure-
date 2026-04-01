@@ -173,9 +173,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           requiredTrait: 'Mystic',
           action: () => {
             const currentStore = game();
-            currentStore.setFlag('bassist_clue_ghost', true);
             const received = currentStore.addToInventory('Bassist-Saite');
             if (received) {
+              currentStore.setFlag('bassist_clue_ghost', true);
               currentStore.increaseBandMood(20);
               currentStore.setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
             } else {

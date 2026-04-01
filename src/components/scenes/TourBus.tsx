@@ -279,6 +279,9 @@ export function TourBus() {
         idleType="headbang"
         onInteract={() => {
           const store = useStore.getState();
+          if (!store.hasItem('Marius Ego') && store.bandMood < 30 && !store.flags.marius_tourbus_doubt) {
+            store.setFlag('marius_tourbus_doubt', true);
+          }
           store.setDialogue(buildTourbusMariusDialogue());
         }}
       />

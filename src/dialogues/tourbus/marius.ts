@@ -7,10 +7,6 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
 
   const hasEgo = hasItem('Marius Ego');
 
-  if (!hasEgo && bandMood < 30 && !flags.marius_tourbus_doubt) {
-    store.setFlag('marius_tourbus_doubt', true);
-  }
-
   if (hasEgo) {
     return {
       text: 'Marius: "Ist das... mein Ego? Es fühlt sich so... klein an in deiner Tasche."',

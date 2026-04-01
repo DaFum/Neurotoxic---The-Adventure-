@@ -189,7 +189,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Geist eines Roadies:**
     * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe` (setzt Flag `ghostRecipeQuestStarted`).
     * *Aktive Rezept-Quest (Erinnerung, wenn Geister-Drink fehlt):* Zeigt direkten Reminder-Text ohne Auswahlmenü ("Hast du den Geister-Drink schon gemixt?"). *(Priorisiert über Lore-Text)*
-    * *Aktive Rezept-Quest (Hat Geister-Drink):* Rezept-Quest abschließen (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, setzt `ghostRecipeQuestCompleted`, entfernt Geister-Drink). *(Priorisiert über Lore-Text)*
+    * *Aktive Rezept-Quest (Hat Geister-Drink):* Rezept-Quest abschließen (**bei erfolgreichem Erhalt des Verstärker-Schaltplans:** +40 BandMood, +5 Social, Quest-Abschluss: `ghost_recipe`, setzt `ghostRecipeQuestCompleted`, entfernt Geister-Drink). *(Priorisiert über Lore-Text)*
     * *1982-Follow-up (Flag `askedAbout1982` gesetzt & `ghostSecretRevealed` nicht gesetzt):*
         * [Visionary]: "Erzähl mir alles." (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
         * [Technical 7]: "Anomalie analysieren." (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
@@ -198,7 +198,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * "Vielleicht später." (kein Mood-Effekt).
     * *bassist_clue_matze gesetzt & bassist_clue_ghost noch nicht gesetzt:*
         * Standard: "Matze hat geredet? Ich war dabei." (+15 BandMood, +3 Social, setzt `bassist_clue_ghost`).
-        * [Mystic]: "Ich spüre seine Präsenz." (+20 BandMood, setzt `bassist_clue_ghost`, Erhalt: Bassist-Saite).
+        * [Mystic]: "Ich spüre seine Präsenz." (**bei erfolgreichem Erhalt der Bassist-Saite:** +20 BandMood, setzt `bassist_clue_ghost`).
     * *Vertrauens-Pfad (Wenn ghostSecretRevealed gesetzt & ghostTrustEarned noch nicht):*
         * [Mystic]: "Ich will dir wirklich helfen" (+25 BandMood, Quest `ghost_trust` start+finish, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
         * [Social 7]: "Erzähl mir deine Geschichte" (+20 BandMood, Quest `ghost_trust` start+finish, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
