@@ -136,8 +136,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 
 * **Matze:**
     * *Ohne Kabel (BandMood < 20, Kabel noch nicht repariert):* Klagt über schlechte Laune (kein Mood-Effekt, kein Optionsmenü).
-    * *Ohne Kabel (BandMood >= 20, Kabel noch nicht repariert, kein Sabotage-Verdacht):*
-        * "Ich suche danach." (Quest hinzugefügt: `cable` "Repariere Matzes Kabel mit Klebeband und defektem Kabel").
+    * *Ohne Kabel (20 <= BandMood < 30, Kabel noch nicht repariert):* Klagt über das kaputte Kabel und die Stimmung (kein Mood-Effekt, kein Optionsmenü).
+    * *Ohne Kabel (BandMood >= 30, Kabel noch nicht repariert, kein Sabotage-Verdacht):*
+        * "Hast du Klebeband?" / "Ich suche danach." (Quest hinzugefügt: `cable` "Repariere Matzes Kabel mit Klebeband und defektem Kabel").
         * "Das Kabel wurde nicht gebrochen, es wurde durchtrennt." [Technical 5] (+20 BandMood, +5 Technical, setzt `tourbus_sabotage_discovered`, Lore: `tourbus_saboteur`, Quest gestartet: `tourbus_saboteur`).
         * "Vielleicht Schicksal." (-5 BandMood).
     * *Mit Repariertem Kabel (Angst vor Salzgitter?):*

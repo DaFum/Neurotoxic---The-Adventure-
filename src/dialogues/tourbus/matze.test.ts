@@ -13,6 +13,16 @@ describe('buildTourbusMatzeDialogue', () => {
     expect(getOptionTexts(dialogue)).toHaveLength(0);
   });
 
+  it('avoids early return when bandMood < 20 but cable is fixed (and not in inventory)', () => {
+    setupTestState({
+      bandMood: 10,
+      flags: { ...useStore.getState().flags, cableFixed: true }
+    });
+    const dialogue = buildTourbusMatzeDialogue();
+    expect(getDialogueText(dialogue)).not.toContain('Dieses kaputte Kabel ist das Ende der Band');
+    expect(getDialogueText(dialogue)).toContain('Aber wenigstens funktioniert das Kabel wieder');
+  });
+
   it('shows cable return options when player has Repariertes Kabel', () => {
     useStore.getState().addToInventory('Repariertes Kabel');
     const dialogue = buildTourbusMatzeDialogue();
