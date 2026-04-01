@@ -15,7 +15,6 @@ export function buildProberaumMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.completeQuestWithFlag('beer', 'gaveBeerToMarius');
-            currentStore.completeQuest('marius');
             currentStore.increaseBandMood(15);
             currentStore.setDialogue('Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"');
           }
@@ -49,7 +48,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."');
-            currentStore.completeQuestWithFlag('marius', 'mariusCalmedDown');
+            currentStore.setFlag('mariusCalmedDown', true);
             currentStore.increaseBandMood(15);
             currentStore.increaseSkill('social', 2);
           }

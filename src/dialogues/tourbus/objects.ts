@@ -33,27 +33,43 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
 }
 
 export function buildTourbusHiddenStashDialogue(): Dialogue | string {
+  const store = game();
   const options: import('../../store').DialogueOption[] = [];
-  if (!game().flags.tourbusHiddenStashTaken) {
+  if (!store.flags.tourbusHiddenStashTaken) {
     options.push({
       text: 'Notiz einstecken.',
       action: () => {
         const currentStore = game();
-        if (!currentStore.flags.tourbusHiddenStashTaken) {
-          const pickedUp = currentStore.addToInventory('Geheime Notiz');
-          if (pickedUp) {
-            currentStore.increaseSkill('social', 2);
-            currentStore.setFlag('tourbusHiddenStashTaken', true);
-            currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
-          } else {
-            currentStore.setDialogue('Du kannst die Notiz gerade nicht aufnehmen.');
-          }
-        } else {
+        const pickedUp = currentStore.addToInventory('Geheime Notiz');
+        if (pickedUp) {
+          currentStore.increaseSkill('social', 2);
+          currentStore.setFlag('tourbusHiddenStashTaken', true);
           currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
+        } else {
+          currentStore.setDialogue('Du kannst die Notiz gerade nicht aufnehmen.');
         }
       }
     });
   }
+  const frequenzQuest = store.quests.find(q => q.id === 'frequenz_1982');
+  if (!store.flags.frequenz1982_tourbus && frequenzQuest?.status === 'active') {
+    options.push({
+      text: 'Da steckt noch mehr dahinter... [Technical 3]',
+      requiredSkill: { name: 'technical', level: 3 },
+      action: () => {
+        const currentStore = game();
+        const pickedUp = currentStore.addToInventory('Frequenzfragment');
+        if (pickedUp) {
+          currentStore.setFlag('frequenz1982_tourbus', true);
+          currentStore.increaseBandMood(10, 'frequenz1982_tourbus_technical');
+          currentStore.setDialogue('Du analysierst das Versteck genauer und findest hinter der Notiz ein Frequenzfragment, das in der Wandverkleidung verborgen war.');
+        } else {
+          currentStore.setDialogue('Du spürst das Frequenzfragment, aber dein Inventar hat keinen Platz mehr.');
+        }
+      }
+    });
+  }
+
   options.push({
     text: 'Die Notiz ignorieren.',
     action: () => game().setDialogue('Du entscheidest dich, dass manche Geheimnisse besser unberührt bleiben.')
@@ -326,7 +342,6 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
           currentStore.setFlag('tourbusBandMeeting', true);
           currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(25);
-          currentStore.increaseSkill('social', 5);
         }
       },
       {

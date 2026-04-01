@@ -1,5 +1,5 @@
-export { buildProberaumMatzeDialogue } from './matze';
-export { buildProberaumLarsDialogue } from './lars';
+export { buildProberaumMatzeDialogue, buildMatze1982Dialogue } from './matze';
+export { buildProberaumLarsDialogue, buildLarsRhythmusPaktDialogue, buildLarsDrumPhilosophieDialogue } from './lars';
 export { buildProberaumMariusDialogue } from './marius';
 export {
   buildProberaumWallCracksDialogue,
