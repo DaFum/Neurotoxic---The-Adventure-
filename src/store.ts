@@ -1013,8 +1013,12 @@ export const useStore = create<GameState>()(
           return completed === true ? 'completed' : 'active';
         };
 
+        const persistedQuestsMap = new Map(
+          persistedQuests.map((pq) => [pq.id, pq])
+        );
+
         const mergedQuests = currentState.quests.map((q) => {
-          const persistedQuest = persistedQuests.find((pq) => pq.id === q.id);
+          const persistedQuest = persistedQuestsMap.get(q.id);
           if (!persistedQuest) return q;
           // Handle old saves (completed: boolean) and new saves (status: QuestStatus)
           const pq = persistedQuest as unknown as {
@@ -1029,8 +1033,10 @@ export const useStore = create<GameState>()(
           };
         });
 
+        const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
+
         const dynamicQuests = persistedQuests
-          .filter((pq) => !currentState.quests.find((q) => q.id === pq.id))
+          .filter((pq) => !currentQuestIds.has(pq.id))
           .map((pq) => {
             const p = pq as unknown as {
               id: string;
@@ -1047,8 +1053,10 @@ export const useStore = create<GameState>()(
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
+        const persistedLoreMap = new Map(persistedLore.map((pe) => [pe.id, pe]));
+
         const mergedLoreEntries = currentState.loreEntries.map((e) => {
-          const persistedEntry = persistedLore.find((pe) => pe.id === e.id);
+          const persistedEntry = persistedLoreMap.get(e.id);
           return persistedEntry
             ? { ...e, discovered: persistedEntry.discovered }
             : e;

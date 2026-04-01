@@ -19,3 +19,7 @@
 ## 2026-04-01 - [Eliminate React State from High-Frequency R3F Components]
 **Learning:** In React Three Fiber, using `useState` for values that change frequently (like player distance thresholds or hover states) causes severe performance issues because it triggers React re-renders and recreates expensive resources (like Canvas textures) mid-gameplay.
 **Action:** Pre-generate textures for all states once on mount, store mutable values in `useRef`, always mount sprites but toggle `visible` imperatively, and handle all visual updates (opacity, scale, texture swapping) directly via Three.js mutations inside `useFrame`.
+
+## 2026-04-05 - $O(N^2)$ Lookups in State Hydration
+**Learning:** Using `.find()` inside `.map()` or `.filter()` when merging or hydrating large state arrays (like Quest or Lore logs) in Zustand's `persist` middleware creates $O(N^2)$ complexity, leading to noticeable hitching or frame drops during initial game load or scene transitions.
+**Action:** Pre-index the persisted state into a `Map` or `Set` before the merge loop. This reduces the complexity to $O(N)$, ensuring smooth state hydration even with hundreds of entries.
