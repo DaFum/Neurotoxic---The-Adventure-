@@ -1,17 +1,3 @@
-/**
- * #1: UPDATES
- * - Integrated scene switching logic.
- * - Added trait selection system.
- * - Implemented keyboard controls for player movement.
- * 
- * #2: NEXT STEPS & IDEAS
- * - Add more scenes.
- * - Refine menu UI.
- * - Add more traits and skills.
- * 
- * #3: ERRORS & SOLUTIONS
- * - No major errors found.
- */
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { KeyboardControls } from '@react-three/drei';

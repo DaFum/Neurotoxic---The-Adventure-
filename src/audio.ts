@@ -1,16 +1,4 @@
 /**
- * #1: UPDATES
- * - Initialized audio engine for sound effects and ambient music.
- * 
- * #2: NEXT STEPS & IDEAS
- * - Add more complex music tracks.
- * - Implement volume control settings.
- * - Add sound effects for dialogue typing.
- * 
- * #3: ERRORS & SOLUTIONS
- * - No major errors found.
- */
-/**
  * A simple audio engine class for managing sound effects and ambient music
  * in the game using the Web Audio API. It supports synthesized sounds,
  * footsteps, interactions, ambient tracks, and basic music.
@@ -28,11 +16,15 @@ class AudioEngine {
    * Resumes the context if it is in a suspended state.
    */
   init() {
-    if (!this.ctx) {
-      this.ctx = new AudioContext();
-    }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    try {
+      if (!this.ctx) {
+        this.ctx = new AudioContext();
+      }
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume();
+      }
+    } catch (e) {
+      console.warn('AudioContext initialization failed:', e);
     }
   }
 
@@ -58,20 +50,24 @@ class AudioEngine {
    */
   playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
     if (!this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
     
     gain.gain.setValueAtTime(vol, this.ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
     
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    
-    osc.start();
-    osc.stop(this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {
+      console.warn('Error playing tone:', e);
+    }
   }
 
   /**
