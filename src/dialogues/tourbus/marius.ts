@@ -7,8 +7,19 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
 
   const hasEgo = hasItem('Marius Ego');
 
-  if (!hasEgo && bandMood < 30) {
-    store.setFlag('marius_tourbus_doubt', true);
+  if (!hasEgo && bandMood < 30 && !store.flags.marius_tourbus_doubt) {
+    return {
+      text: 'Marius starrt ins Leere. Er scheint an sich zu zweifeln.',
+      options: [
+        {
+          text: '(Nähern)',
+          action: () => {
+            game().setFlag('marius_tourbus_doubt', true);
+            game().setDialogue(buildTourbusMariusDialogue());
+          }
+        }
+      ]
+    };
   }
 
   if (hasEgo) {
@@ -79,19 +90,24 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
       return {
         text: moodText,
         options: [
-          {
-            text: 'Marius, dein Charisma funktioniert auch ohne Ego. [Performer]',
-            requiredTrait: 'Performer',
-            flagToSet: { flag: 'marius_tourbus_doubt', value: false },
-            nextDialogue: {
-              text: 'Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"',
-            },
-            action: () => {
-              const currentStore = game();
-              currentStore.increaseBandMood(15);
-              currentStore.increaseSkill('social', 3);
-            },
-          },
+          ...(!store.flags.marius_tourbus_performer_claimed
+            ? [
+                {
+                  text: 'Marius, dein Charisma funktioniert auch ohne Ego. [Performer]',
+                  requiredTrait: 'Performer' as const,
+                  flagToSet: { flag: 'marius_tourbus_doubt' as const, value: false },
+                  nextDialogue: {
+                    text: 'Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"',
+                  },
+                  action: () => {
+                    const currentStore = game();
+                    currentStore.setFlag('marius_tourbus_performer_claimed', true);
+                    currentStore.increaseBandMood(15);
+                    currentStore.increaseSkill('social', 3);
+                  },
+                },
+              ]
+            : []),
           {
             text: 'Wir sind auf dem Weg.',
             nextDialogue: { text: 'Marius: "Lass uns fahren."' },

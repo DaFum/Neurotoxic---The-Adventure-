@@ -39,7 +39,7 @@ describe('VoidStation object builders', () => {
     setupTestState({
       itemPickupCounts: {
         ...useStore.getState().itemPickupCounts,
-        'Dunkle Materie': 1,
+        'Dunkle Materie': Infinity,
       },
     });
 

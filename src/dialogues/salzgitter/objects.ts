@@ -283,15 +283,6 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     );
   }
 
-  if (!store.flags.salzgitter_finalized) {
-    store.completeQuestWithFlag(
-      'final',
-      'salzgitter_finalized',
-      true,
-      'Spiele das Finale in Salzgitter'
-    );
-  }
-
   let endingsCount = 0;
   if (store.flags.salzgitterBandUnited) endingsCount++;
   if (store.flags.fanMovement) endingsCount++;
@@ -299,58 +290,88 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
   if (store.flags.wirtLegacy1982) endingsCount++;
   if (store.flags.voidBassistSpoken) endingsCount++;
 
-  if (
-    store.flags.salzgitter_true_ending &&
-    store.flags.bassist_restored &&
-    store.flags.maschinen_seele_complete
-  ) {
-    store.increaseBandMood(100);
-    store.discoverLore('bassist_wahrheit');
-    store.discoverLore('maschinen_bewusstsein');
-    store.discoverLore('frequenz_1982_decoded');
-    return say(
-      'Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt - er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]'
-    );
-  }
+  return {
+    text: 'Die Bühne ist bereitet. Bist du bereit, das letzte Riff zu spielen?',
+    options: [
+      {
+        text: 'Beginne das Finale.',
+        action: () => {
+          const currentStore = game();
+          if (!currentStore.flags.salzgitter_finalized) {
+            currentStore.completeQuestWithFlag(
+              'final',
+              'salzgitter_finalized',
+              true,
+              'Spiele das Finale in Salzgitter'
+            );
+          }
 
-  if (store.flags.salzgitter_encore_unlocked) {
-    store.increaseBandMood(50);
-    return say(
-      'ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]'
-    );
-  }
+          if (
+            currentStore.flags.salzgitter_true_ending &&
+            currentStore.flags.bassist_restored &&
+            currentStore.flags.maschinen_seele_complete
+          ) {
+            currentStore.increaseBandMood(100);
+            currentStore.discoverLore('bassist_wahrheit');
+            currentStore.discoverLore('maschinen_bewusstsein');
+            currentStore.discoverLore('frequenz_1982_decoded');
+            currentStore.setDialogue(
+              'Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt - er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]'
+            );
+            return;
+          }
 
-  if (
-    endingsCount >= 4 ||
-    (frequenz1982Completed &&
-      store.flags.mariusConfidenceBoost &&
-      store.bandMood > 70)
-  ) {
-    let baseText =
-      'Die Frequenz von 1982 hat die Halle erfüllt. Der Sound war perfekt. Die Fans liegen sich heulend in den Armen. Ein meisterhafter Auftritt!';
-    if (endingsCount >= 4) {
-      baseText +=
-        ' Der Zyklus von 1982 ist geschlossen. Die Band ist eine Einheit. Der Lärm ist rein.';
-    }
-    if (store.flags.fanMovement && store.flags.salzgitterBandUnited) {
-      baseText += ' Eine wahre Fan-Bewegung ist entstanden!';
-    }
-    store.increaseBandMood(70);
-    return say(baseText + ' [BEST ENDING]');
-  }
+          if (currentStore.flags.salzgitter_encore_unlocked) {
+            currentStore.increaseBandMood(50);
+            currentStore.setDialogue(
+              'ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]'
+            );
+            return;
+          }
 
-  if (
-    endingsCount >= 2 ||
-    (store.bandMood > 70 && store.flags.mariusConfidenceBoost)
-  ) {
-    store.increaseBandMood(50);
-    return say(
-      'Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Band hat einiges zusammen durchgestanden. Die Tour ist ein Erfolg! [GOOD ENDING]'
-    );
-  }
+          if (
+            endingsCount >= 4 ||
+            (frequenz1982Completed &&
+              currentStore.flags.mariusConfidenceBoost &&
+              currentStore.bandMood > 70)
+          ) {
+            let baseText =
+              'Die Frequenz von 1982 hat die Halle erfüllt. Der Sound war perfekt. Die Fans liegen sich heulend in den Armen. Ein meisterhafter Auftritt!';
+            if (endingsCount >= 4) {
+              baseText +=
+                ' Der Zyklus von 1982 ist geschlossen. Die Band ist eine Einheit. Der Lärm ist rein.';
+            }
+            if (currentStore.flags.fanMovement && currentStore.flags.salzgitterBandUnited) {
+              baseText += ' Eine wahre Fan-Bewegung ist entstanden!';
+            }
+            currentStore.increaseBandMood(70);
+            currentStore.setDialogue(baseText + ' [BEST ENDING]');
+            return;
+          }
 
-  store.increaseBandMood(30);
-  return say(
-    'Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]'
-  );
+          if (
+            endingsCount >= 2 ||
+            (currentStore.bandMood > 70 && currentStore.flags.mariusConfidenceBoost)
+          ) {
+            currentStore.increaseBandMood(50);
+            currentStore.setDialogue(
+              'Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Band hat einiges zusammen durchgestanden. Die Tour ist ein Erfolg! [GOOD ENDING]'
+            );
+            return;
+          }
+
+          currentStore.increaseBandMood(30);
+          currentStore.setDialogue(
+            'Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]'
+          );
+        },
+      },
+      {
+        text: 'Wir brauchen noch Zeit.',
+        nextDialogue: {
+          text: 'Die Instrumente warten geduldig auf deinen Einsatz.'
+        }
+      }
+    ],
+  };
 }

@@ -62,7 +62,32 @@ export function buildBackstageLarsDialogue(): Dialogue {
       };
     }
 
-    return say('Lars: "VOLLGAS! Ich spüre die Farben der Musik!"');
+    const baseOptions: DialogueOption[] = [
+      {
+        text: 'Lass mich deine Becken nachziehen. [Technician]',
+        requiredTrait: 'Technician' as const,
+        action: () => {
+          const currentStore = game();
+          if (!currentStore.flags.backstage_lars_technician_claimed) {
+            currentStore.setFlag('backstage_lars_technician_claimed', true);
+            currentStore.setDialogue('Lars: "Ah, perfekt kalibriert. Die Becken singen wieder!"');
+            currentStore.increaseBandMood(15);
+            currentStore.increaseSkill('technical', 3);
+          } else {
+            currentStore.setDialogue('Lars: "Sie sind schon perfekt festgeschraubt."');
+          }
+        }
+      },
+      {
+        text: 'Rock on.',
+        action: () => game().setDialogue('Lars: "Immer!"')
+      }
+    ];
+
+    return {
+      text: 'Lars: "VOLLGAS! Ich spüre die Farben der Musik!"',
+      options: baseOptions
+    };
   }
 
   if (hasTurbo) {

@@ -5,7 +5,28 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
   const store = game();
 
   if (store.flags.kaminstube_lars_talked) {
-    return say('Lars: "Die Schmiede ruft. Ich habe den Takt verinnerlicht."');
+    return {
+      text: 'Lars: "Die Schmiede ruft. Ich habe den Takt verinnerlicht."',
+      options: [
+        ...(!store.flags.lars_drum_maintenance && store.hasItem('Lötkolben') ? [
+          {
+            text: 'Willst du deinen Hocker noch schweißen? [Lötkolben]',
+            consumeItems: ['Lötkolben'],
+            action: () => {
+              const currentStore = game();
+              currentStore.setFlag('lars_drum_maintenance', true);
+              currentStore.setDialogue('Lars: "Perfekt, der Hocker hat vorhin schon gewackelt wie ein Kuhschwanz. Jetzt ist er stabil!"');
+              currentStore.increaseBandMood(15);
+              currentStore.increaseSkill('technical', 2);
+            }
+          }
+        ] : []),
+        {
+          text: 'Gut so.',
+          action: () => game().setDialogue('Lars: "Immer bereit."')
+        }
+      ]
+    };
   }
 
   const options: DialogueOption[] = [

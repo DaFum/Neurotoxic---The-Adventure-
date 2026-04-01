@@ -65,30 +65,40 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
 
   if (store.flags.mariusConfidenceBoost) {
     const options: DialogueOption[] = [
-      {
-        text: 'Kanalisiere den Zorn. [Chaos 10]',
-        requiredSkill: { name: 'chaos', level: 10 },
-        action: () => {
-          const currentStore = game();
-          currentStore.setDialogue(
-            'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"'
-          );
-          currentStore.increaseBandMood(40);
-          currentStore.increaseSkill('chaos', 5);
-        },
-      },
-      {
-        text: 'Beruhige die Menge. [Social 10]',
-        requiredSkill: { name: 'social', level: 10 },
-        action: () => {
-          const currentStore = game();
-          currentStore.setDialogue(
-            'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."'
-          );
-          currentStore.increaseBandMood(30);
-          currentStore.increaseSkill('social', 5);
-        },
-      },
+      ...(!store.flags.salzgitter_marius_chaos_claimed
+        ? [
+            {
+              text: 'Kanalisiere den Zorn. [Chaos 10]',
+              requiredSkill: { name: 'chaos' as const, level: 10 },
+              action: () => {
+                const currentStore = game();
+                currentStore.setFlag('salzgitter_marius_chaos_claimed', true);
+                currentStore.setDialogue(
+                  'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"'
+                );
+                currentStore.increaseBandMood(40);
+                currentStore.increaseSkill('chaos', 5);
+              },
+            },
+          ]
+        : []),
+      ...(!store.flags.salzgitter_marius_social_claimed
+        ? [
+            {
+              text: 'Beruhige die Menge. [Social 10]',
+              requiredSkill: { name: 'social' as const, level: 10 },
+              action: () => {
+                const currentStore = game();
+                currentStore.setFlag('salzgitter_marius_social_claimed', true);
+                currentStore.setDialogue(
+                  'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."'
+                );
+                currentStore.increaseBandMood(30);
+                currentStore.increaseSkill('social', 5);
+              },
+            },
+          ]
+        : []),
       {
         text: 'Lass es raus!',
         action: () => {
@@ -110,12 +120,13 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
           currentStore.increaseBandMood(50);
         },
       });
-    } else if (store.flags.backstage_performer_speech) {
+    } else if (store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed) {
       options.unshift({
         text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
         requiredTrait: 'Performer',
         action: () => {
           const currentStore = game();
+          currentStore.setFlag('salzgitter_marius_performer_claimed', true);
           currentStore.setDialogue(
             'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"'
           );

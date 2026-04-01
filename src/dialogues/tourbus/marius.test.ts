@@ -17,7 +17,7 @@ describe('buildTourbusMariusDialogue', () => {
   });
 
   it('shows depression dialogue when bandMood is low without ego', () => {
-    setupTestState({ bandMood: 20 });
+    setupTestState({ bandMood: 20, flags: { marius_tourbus_doubt: true } as any });
     const dialogue = buildTourbusMariusDialogue();
     expect(getDialogueText(dialogue)).toContain('Ich bin ein Betrug. Ohne mein Ego bin ich nur ein Typ, der in ein Mikrofon schreit.');
     const options = getOptionTexts(dialogue);
