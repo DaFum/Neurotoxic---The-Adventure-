@@ -196,6 +196,22 @@ describe('useStore', () => {
       expect(quest?.text).toBe('New text');
     });
 
+    it('startQuestWithFlag should reopen a completed quest by resetting its status to active and updating text', () => {
+      let state = useStore.getState();
+      state.addQuest('test_quest_4', 'Old text');
+      state.completeQuest('test_quest_4');
+
+      state = useStore.getState();
+      expect(state.quests.find(q => q.id === 'test_quest_4')?.status).toBe('completed');
+
+      state.startQuestWithFlag('test_quest_4', 'New text', 'mariusCalmed');
+
+      state = useStore.getState();
+      const quest = state.quests.find(q => q.id === 'test_quest_4');
+      expect(quest?.status).toBe('active');
+      expect(quest?.text).toBe('New text');
+    });
+
     it('completeQuestWithFlag should complete an existing quest and set a flag', () => {
       let state = useStore.getState();
       state.addQuest('test_quest_3', 'Some text');
