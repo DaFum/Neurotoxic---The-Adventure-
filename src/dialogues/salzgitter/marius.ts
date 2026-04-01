@@ -1,0 +1,163 @@
+import { type Dialogue, type DialogueOption } from '../../store';
+import { game, say } from '../shared/helpers';
+
+export function buildSalzgitterMariusDialogue(): Dialogue {
+  const store = game();
+  const bandMood = store.bandMood;
+  const trait = store.trait;
+
+  if (trait === 'Performer' && !store.flags.salzgitter_performer_talked) {
+    return {
+      text: 'Marius: "Manager, schau dir diese Menge an! Sie warten nur darauf, dass ich sie mit meiner Stimme in Ekstase versetze. Hast du ein paar Tipps für den perfekten Auftritt?"',
+      options: [
+        {
+          text: 'Fokussiere dich auf die erste Reihe.',
+          action: () => {
+            const currentStore = game();
+            currentStore.setDialogue(
+              'Marius: "Gute Idee. Die erste Reihe ist der Anker für die gesamte Energie. Ich werde sie hypnotisieren!"'
+            );
+            currentStore.setFlag('salzgitter_performer_talked', true);
+            currentStore.increaseBandMood(30);
+            currentStore.increaseSkill('social', 5);
+          },
+        },
+      ],
+    };
+  }
+
+  if (
+    store.flags.mariusEgoStrategy &&
+    store.flags.mariusConfidenceBoost &&
+    store.flags.egoContained &&
+    !store.flags.salzgitterBandUnited
+  ) {
+    const bandReady =
+      store.flags.matzeDeepTalk && store.flags.larsDrumPhilosophy;
+    return {
+      text: 'Marius: "Du hast mich gerettet, Manager. Mein Ego, meine Angst... alles ist jetzt gebündelt in pure Energie. Wie stehen wir da?"',
+      options: [
+        bandReady
+          ? {
+              text: 'Die Band ist vereint.',
+              action: () => {
+                const currentStore = game();
+                currentStore.setDialogue(
+                  'Marius: "Wir sind eine Wand aus Lärm. Lasst uns die Welt niederreißen!"'
+                );
+                currentStore.setFlag('salzgitterBandUnited', true);
+                currentStore.startAndFinishQuest(
+                  'unite_band',
+                  'Vereinige die Band vor dem Finale in Salzgitter'
+                );
+                currentStore.increaseBandMood(30);
+              },
+            }
+          : {
+              text: 'Wir geben unser Bestes.',
+              action: () => {
+                game().setDialogue('Marius: "Ja, wir werden alles geben."');
+              },
+            },
+      ],
+    };
+  }
+
+  if (store.flags.mariusConfidenceBoost) {
+    const options: DialogueOption[] = [
+      {
+        text: 'Kanalisiere den Zorn. [Chaos 10]',
+        requiredSkill: { name: 'chaos', level: 10 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"'
+          );
+          currentStore.increaseBandMood(40);
+          currentStore.increaseSkill('chaos', 5);
+        },
+      },
+      {
+        text: 'Beruhige die Menge. [Social 10]',
+        requiredSkill: { name: 'social', level: 10 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."'
+          );
+          currentStore.increaseBandMood(30);
+          currentStore.increaseSkill('social', 5);
+        },
+      },
+      {
+        text: 'Lass es raus!',
+        action: () => {
+          game().setDialogue('Marius: "AAAAAAHHHHHHHH!!!!"');
+        },
+      },
+    ];
+
+    if (store.flags.egoContained && store.flags.bassist_contacted) {
+      options.unshift({
+        text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
+        requiredSkill: { name: 'social', level: 12 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"'
+          );
+          currentStore.setFlag('salzgitter_true_ending', true);
+          currentStore.increaseBandMood(50);
+        },
+      });
+    } else if (store.flags.backstage_performer_speech) {
+      options.unshift({
+        text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
+        requiredTrait: 'Performer',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"'
+          );
+          currentStore.increaseBandMood(30);
+          currentStore.increaseSkill('social', 5);
+        },
+      });
+    }
+
+    if (!store.flags.salzgitter_marius_greeted) {
+      options.unshift({
+        text: 'Gut, dass du bereit bist.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setFlag('salzgitter_marius_greeted', true);
+          currentStore.increaseBandMood(15);
+          currentStore.setDialogue(
+            'Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"'
+          );
+        },
+      });
+    }
+
+    return {
+      text: 'Marius: "Manager, danke für den Zuspruch im Backstage. Ich fühle mich unbesiegbar. Die Fans werden meine Stimme noch in 100 Jahren hören!"',
+      options,
+    };
+  }
+
+  if (bandMood > 90) {
+    return say(
+      'Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"'
+    );
+  }
+
+  if (bandMood > 50) {
+    return say(
+      'Marius: "Danke, dass du uns als Manager hierher gebracht hast! NEUROTOXIC RULES!"'
+    );
+  }
+
+  return say(
+    'Marius: "Ich bin nervös, aber wir ziehen das durch. Für den Metal!"'
+  );
+}
