@@ -159,9 +159,11 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
               currentStore.setDialogue(
                 'Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."'
               );
-              currentStore.increaseBandMood(40);
-              currentStore.increaseSkill('chaos', 5);
-              currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
+              if (!currentStore.flags.salzgitterMatzeDeepTalkDone) {
+                currentStore.increaseBandMood(40);
+                currentStore.increaseSkill('chaos', 5);
+                currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
+              }
             },
           },
           {
