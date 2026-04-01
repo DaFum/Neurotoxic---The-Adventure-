@@ -154,17 +154,17 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
         {
           text: 'Ich will dir wirklich helfen. [Mystic]',
           requiredTrait: 'Mystic',
+          questToAdd: {
+            id: 'ghost_trust',
+            text: 'Gewinne das Vertrauen des Geist-Roadies',
+          },
+          questToComplete: 'ghost_trust',
+          flagToSet: { flag: 'ghostTrustEarned', value: true },
+          nextDialogue: {
+            text: 'Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."'
-            );
-            currentStore.completeQuestWithFlag(
-              'ghost_trust',
-              'ghostTrustEarned',
-              true,
-              'Gewinne das Vertrauen des Geist-Roadies'
-            );
             currentStore.increaseBandMood(25);
             currentStore.discoverLore('ghost_legacy');
           },
@@ -172,17 +172,17 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
         {
           text: 'Erzähl mir deine Geschichte. [Social 7]',
           requiredSkill: { name: 'social', level: 7 },
+          questToAdd: {
+            id: 'ghost_trust',
+            text: 'Gewinne das Vertrauen des Geist-Roadies',
+          },
+          questToComplete: 'ghost_trust',
+          flagToSet: { flag: 'ghostTrustEarned', value: true },
+          nextDialogue: {
+            text: 'Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."'
-            );
-            currentStore.completeQuestWithFlag(
-              'ghost_trust',
-              'ghostTrustEarned',
-              true,
-              'Gewinne das Vertrauen des Geist-Roadies'
-            );
             currentStore.increaseBandMood(20);
             currentStore.discoverLore('ghost_legacy');
           },
@@ -359,10 +359,18 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           text: 'Für den Metal tue ich alles.',
           action: () => {
             const currentStore = game();
+            if (!currentStore.flags.tourbusGhostRiffUsed) {
+              currentStore.setFlag('tourbusGhostRiffUsed', true);
+              currentStore.increaseBandMood(10);
+              currentStore.setDialogue(
+                'Geist: "Ein mutiger Narr. Das Riff wird dich verändern. Aber der Gig wird unvergesslich."'
+              );
+              return;
+            }
+
             currentStore.setDialogue(
-              'Geist: "Ein mutiger Narr. Das Riff wird dich verändern. Aber der Gig wird unvergesslich."'
+              'Geist: "Du hast den Preis bereits akzeptiert. Jetzt liegt es an dir, den Ton zu treffen."'
             );
-            currentStore.increaseBandMood(10);
           },
         },
         {
@@ -384,44 +392,53 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           text: 'Wie überlebe ich?',
           action: () => {
             const currentStore = game();
+            if (!currentStore.flags.ghostAskedSurvive) {
+              currentStore.setFlag('ghostAskedSurvive', true);
+              currentStore.increaseBandMood(5);
+            }
             currentStore.setDialogue(
               'Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."'
             );
-            currentStore.increaseBandMood(5);
           },
         },
         {
           text: 'Wo ist das beste Bier?',
           action: () => {
             const currentStore = game();
+            if (!currentStore.flags.ghostAskedBeer) {
+              currentStore.setFlag('ghostAskedBeer', true);
+              currentStore.increaseBandMood(5);
+            }
             currentStore.setDialogue(
               'Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."'
             );
-            currentStore.increaseBandMood(5);
           },
         },
         {
           text: 'Wer bist du eigentlich?',
           action: () => {
             const currentStore = game();
+            if (!currentStore.flags.ghostAskedWho) {
+              currentStore.setFlag('ghostAskedWho', true);
+              currentStore.increaseBandMood(5);
+            }
             currentStore.setDialogue(
               'Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."'
             );
-            currentStore.increaseBandMood(5);
           },
         },
         {
           text: 'Kann ich dir irgendwie helfen?',
+          questToAdd: {
+            id: 'ghost_recipe',
+            text: 'Mixe den Geister-Drink für den Geist des Roadies',
+          },
+          flagToSet: { flag: 'ghostRecipeQuestStarted', value: true },
+          nextDialogue: {
+            text: 'Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."'
-            );
-            currentStore.startQuestWithFlag(
-              'ghost_recipe',
-              'Mixe den Geister-Drink für den Geist des Roadies',
-              'ghostRecipeQuestStarted'
-            );
             currentStore.increaseBandMood(5);
           },
         },
@@ -440,67 +457,67 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
       {
         text: 'Vermittle zwischen den Spannungen. [Diplomat]',
         requiredTrait: 'Diplomat',
+        questToAdd: {
+          id: 'band_meeting',
+          text: 'Halte eine Band-Besprechung im Tourbus ab',
+        },
+        questToComplete: 'band_meeting',
+        flagToSet: { flag: 'tourbusBandMeeting', value: true },
+        nextDialogue: {
+          text: 'Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.',
+        },
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue(
-            'Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.'
-          );
-          currentStore.completeQuestWithFlag(
-            'band_meeting',
-            'tourbusBandMeeting',
-            true,
-            'Halte eine Band-Besprechung im Tourbus ab'
-          );
           currentStore.increaseBandMood(30);
         },
       },
       {
         text: 'Reißt euch zusammen! [Brutalist]',
         requiredTrait: 'Brutalist',
+        questToAdd: {
+          id: 'band_meeting',
+          text: 'Halte eine Band-Besprechung im Tourbus ab',
+        },
+        questToComplete: 'band_meeting',
+        flagToSet: { flag: 'tourbusBandMeeting', value: true },
+        nextDialogue: {
+          text: 'Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"',
+        },
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue(
-            'Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"'
-          );
-          currentStore.completeQuestWithFlag(
-            'band_meeting',
-            'tourbusBandMeeting',
-            true,
-            'Halte eine Band-Besprechung im Tourbus ab'
-          );
           currentStore.increaseBandMood(20);
         },
       },
       {
         text: 'Motivationsrede halten. [Performer]',
         requiredTrait: 'Performer',
+        questToAdd: {
+          id: 'band_meeting',
+          text: 'Halte eine Band-Besprechung im Tourbus ab',
+        },
+        questToComplete: 'band_meeting',
+        flagToSet: { flag: 'tourbusBandMeeting', value: true },
+        nextDialogue: {
+          text: 'Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.',
+        },
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue(
-            'Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.'
-          );
-          currentStore.completeQuestWithFlag(
-            'band_meeting',
-            'tourbusBandMeeting',
-            true,
-            'Halte eine Band-Besprechung im Tourbus ab'
-          );
           currentStore.increaseBandMood(25);
         },
       },
       {
         text: 'Einfache Ansagen machen.',
+        questToAdd: {
+          id: 'band_meeting',
+          text: 'Halte eine Band-Besprechung im Tourbus ab',
+        },
+        questToComplete: 'band_meeting',
+        flagToSet: { flag: 'tourbusBandMeeting', value: true },
+        nextDialogue: {
+          text: 'Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"',
+        },
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue(
-            'Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"'
-          );
-          currentStore.completeQuestWithFlag(
-            'band_meeting',
-            'tourbusBandMeeting',
-            true,
-            'Halte eine Band-Besprechung im Tourbus ab'
-          );
           currentStore.increaseBandMood(10);
         },
       },

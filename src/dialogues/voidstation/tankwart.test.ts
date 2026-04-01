@@ -17,11 +17,9 @@ describe('buildVoidTankwartDialogue', () => {
       (entry) => entry.text === 'Ich suche die Wahrheit.'
     );
 
-    if (!option) {
-      throw new Error('Expected mystic truth option');
-    }
+    expect(option).toBeDefined();
 
-    executeDialogueOption(option);
+    executeDialogueOption(option!);
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.tankwartMysticDone).toBe(true);

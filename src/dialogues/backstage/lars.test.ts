@@ -80,16 +80,44 @@ describe('buildBackstageLarsDialogue', () => {
       (entry) => entry.text === 'Gib Lars den Energydrink.'
     );
 
-    if (!option) {
-      throw new Error('Expected energy drink option for Lars');
-    }
+    expect(option).toBeDefined();
 
-    executeDialogueOption(option);
+    executeDialogueOption(option!);
     const stateAfter = useStore.getState();
 
-    expect(dialogue.text).toContain('Nicht so gut wie Turbo-Koffein');
+    expect(stateAfter.dialogue?.text).toContain(
+      'Nicht so gut wie Turbo-Koffein'
+    );
     expect(stateAfter.flags.larsEnergized).toBe(true);
     expect(stateAfter.inventory).not.toContain('Energiedrink');
     expect(stateAfter.bandMood).toBe(moodBefore + 10);
+  });
+
+  it('consumes energy drink with rhythm pact bonus and uses pact-specific line', () => {
+    setupTestState({
+      flags: {
+        ...useStore.getState().flags,
+        larsRhythmPact: true,
+      },
+    });
+    useStore.getState().addToInventory('Energiedrink');
+    const moodBefore = useStore.getState().bandMood;
+
+    const dialogue = buildBackstageLarsDialogue();
+    const option = dialogue.options?.find(
+      (entry) => entry.text === 'Gib Lars den Energydrink.'
+    );
+
+    expect(option).toBeDefined();
+
+    executeDialogueOption(option!);
+    const stateAfter = useStore.getState();
+
+    expect(stateAfter.flags.larsEnergized).toBe(true);
+    expect(stateAfter.inventory).not.toContain('Energiedrink');
+    expect(stateAfter.bandMood).toBe(moodBefore + 35);
+    expect(stateAfter.dialogue?.text).toContain(
+      'Der Treibstoff für unseren Pakt'
+    );
   });
 });

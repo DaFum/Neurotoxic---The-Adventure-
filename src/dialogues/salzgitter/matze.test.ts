@@ -21,14 +21,14 @@ describe('buildSalzgitterMatzeDialogue', () => {
       entry.text.includes('[Chaos 10]')
     );
 
-    if (!option) throw new Error('Expected chaos option for void pick branch');
+    expect(option).toBeDefined();
 
-    executeDialogueOption(option);
+    executeDialogueOption(option!);
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.matzeRiffDialogueDone).toBe(true);
     expect(stateAfter.dialogue?.text).toContain(
-      'DER LARM WIRD UNSER GOTT SEIN'.replace('LARM', 'LÄRM')
+      'DER LÄRM WIRD UNSER GOTT SEIN'
     );
   });
 });

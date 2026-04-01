@@ -66,14 +66,12 @@ describe('buildBackstageRitualCircleDialogue', () => {
       (entry) => entry.text === 'Plasma-Zünder einsetzen.'
     );
 
-    if (!option) {
-      throw new Error('Expected plasma igniter option at ritual circle');
-    }
+    expect(option).toBeDefined();
 
-    executeDialogueOption(option);
+    executeDialogueOption(option!);
     const stateAfter = useStore.getState();
 
-    expect(dialogue.text).toContain('Du benutzt den Plasma-Zünder');
+    expect(stateAfter.dialogue?.text).toContain('Du benutzt den Plasma-Zünder');
     expect(stateAfter.inventory).not.toContain('Plasma-Zünder');
     expect(stateAfter.bandMood).toBe(moodBefore + 30);
   });

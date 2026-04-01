@@ -6,7 +6,9 @@ function handleMatzeConfession(text: string, moodDelta: number) {
   currentStore.setDialogue(text);
   currentStore.completeQuestWithFlag(
     'tourbus_saboteur',
-    'tourbus_matze_confession'
+    'tourbus_matze_confession',
+    true,
+    'Matze gesteht die Tourbus-Sabotage'
   );
   currentStore.increaseBandMood(moodDelta);
 }

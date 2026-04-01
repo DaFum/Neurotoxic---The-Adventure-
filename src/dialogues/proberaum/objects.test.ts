@@ -49,7 +49,7 @@ describe('Proberaum Objects Dialogues', () => {
       expect(getOptionTexts(dialogue)).toHaveLength(2);
     });
 
-    it('completes quest even when Quanten-Kabel pickup limit is exhausted', () => {
+    it('does not complete quest or grant rewards when Quanten-Kabel pickup limit is exhausted', () => {
       const store = useStore.getState();
       store.addToInventory('Verbotenes Riff');
       store.addQuest(
@@ -68,17 +68,17 @@ describe('Proberaum Objects Dialogues', () => {
       const feedOption = dialogue.options?.find(
         (o) => o.text === 'Ja, füttere deine Schaltkreise.'
       );
-      if (!feedOption) throw new Error('Feed option not found');
+      expect(feedOption).toBeDefined();
 
-      executeDialogueOption(feedOption);
+      executeDialogueOption(feedOption!);
       const state = useStore.getState();
 
-      expect(state.inventory).not.toContain('Verbotenes Riff');
-      expect(state.flags.drumMachineQuestCompleted).toBe(true);
+      expect(state.inventory).toContain('Verbotenes Riff');
+      expect(state.flags.drumMachineQuestCompleted).toBe(false);
       const quest = state.quests.find((q) => q.id === 'drum_machine');
-      expect(quest?.status).toBe('completed');
-      expect(state.bandMood).toBe(moodBefore + 25);
-      expect(state.skills.chaos).toBe(chaosBefore + 10);
+      expect(quest?.status).toBe('active');
+      expect(state.bandMood).toBe(moodBefore);
+      expect(state.skills.chaos).toBe(chaosBefore);
     });
 
     it('treats completed drum_machine quest as source of truth', () => {

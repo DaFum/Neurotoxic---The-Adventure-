@@ -397,19 +397,18 @@ export function VoidStation() {
       )}
 
       {/* Item: Liquid Darkness */}
-      {canPickupItem('Dunkle Materie') &&
-        !inventory.includes('Dunkle Materie') && (
-          <Interactable
-            position={[-5, 0, 5]}
-            emoji="🌑"
-            name="Dunkle Materie"
-            onInteract={() => {
-              useStore
-                .getState()
-                .setDialogue(buildVoidDarkMatterPickupDialogue());
-            }}
-          />
-        )}
+      {!inventory.includes('Dunkle Materie') && (
+        <Interactable
+          position={[-5, 0, 5]}
+          emoji="🌑"
+          name="Dunkle Materie"
+          onInteract={() => {
+            useStore
+              .getState()
+              .setDialogue(buildVoidDarkMatterPickupDialogue());
+          }}
+        />
+      )}
 
       {/* Exit to Kaminstube */}
       <Interactable
@@ -419,7 +418,7 @@ export function VoidStation() {
         onInteract={() => {
           const state = useStore.getState();
           state.setDialogue(buildVoidPortalDialogue());
-          if (flags.voidRefueled) {
+          if (state.flags.voidRefueled) {
             if (exitTimeoutRef.current !== null) {
               window.clearTimeout(exitTimeoutRef.current);
             }

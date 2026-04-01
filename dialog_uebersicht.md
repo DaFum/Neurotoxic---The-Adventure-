@@ -14,7 +14,7 @@ _Update 01.04.2026 (Kaminstube Refactor Slice): Weitere Kaminstube-Interaktionen
 _Update 01.04.2026 (Salzgitter Dialogue Refactor): Salzgitter-Dialoge (Matze, Lars, Marius, schwebender Bassist, Fan, Finale) wurden in dedizierte Builder unter `src/dialogues/salzgitter/` extrahiert. Kein inhaltlicher Unterschied in Dialogbäumen, Quest-Triggern, Flag-Namen oder BandMood-Deltas._
 _Update 01.04.2026 (VoidStation Dialogue Refactor): VoidStation-Dialoge (Kosmischer Tankwart, Altes Terminal, Kosmisches Echo, schwebender Bassist, Marius' Ego, Diplomaten-Interface, Magnetbänder, Frequenz-Detektor, Verbotene Inschrift) wurden in dedizierte Builder unter `src/dialogues/voidstation/` extrahiert. Zusätzlich gibt es explizites Inventar-Limit-Feedback bei `Dunkle Materie` und `Splitter der Leere` statt stiller Erfolgsannahme._
 
-> **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx`, `src/dialogues/**/*.ts` (einschließlich Dialogue-Builder-Funktionen in `src/dialogues/*/` Verzeichnissen) oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `src/components/scenes/`, `src/dialogues/proberaum/`, `src/dialogues/tourbus/`, `src/dialogues/backstage/`, `src/dialogues/kaminstube/`, `src/store.ts`.
+> **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx`, `src/dialogues/**/*.ts` (einschließlich Dialogue-Builder-Funktionen in `src/dialogues/*/` Verzeichnissen) oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `src/components/scenes/`, `src/dialogues/proberaum/`, `src/dialogues/tourbus/`, `src/dialogues/backstage/`, `src/dialogues/kaminstube/`, `src/dialogues/salzgitter/`, `src/dialogues/voidstation/`, `src/store.ts`.
 
 Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Einträge und deren Voraussetzungen (Traits, Skills, Items) aus allen Szenen zusammen.
 
@@ -291,8 +291,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Spezial (Trait: Performer, einmalig):_ "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social, setzt `tankwartBargain`).
   - _Item (Industrie-Talisman):_ "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
   - _Item (Verbotenes Riff):_ "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
-  - _Item (Dunkle Materie):_ Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss: `void`) ODER 432Hz (+10 BandMood, Quest-Abschluss: `void`).
-    - _Spezial (Trait: Mystic, Item: Resonanz-Kristall):_ "Betanke ihn mit der Frequenz des Resonanz-Kristalls." (+40 BandMood, setzt `tankwart_fuel_quest_started`, Quest-Abschluss: `void`, entfernt Dunkle Materie).
+  - _Item (Dunkle Materie):_ Van betanken mit 440Hz (+25 BandMood, Quest-Abschluss: `void`) ODER 432Hz (+10 BandMood, Quest-Abschluss: `void`) ODER _Spezial (Trait: Mystic + Item Resonanz-Kristall)_ (+40 BandMood, Quest-Abschluss: `void`).
+    - _Hinweis zur Item-Logik:_ `Dunkle Materie` wird in **allen drei** Betanken-Branches verbraucht (440Hz, 432Hz und Resonanz-Kristall/[Mystic]).
   - _Quest-Abhängigkeit (cosmic_echo abgeschlossen):_ Auf das Echo ansprechen (+15 BandMood, **Lore:** `cosmic_echo_decoded`, setzt `tankwartPhilosophy`).
   - _Standard-Dialog:_
     - "Nur Treibstoff" (kein Mood-Effekt).

@@ -35,7 +35,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
     const bandReady =
       store.flags.matzeDeepTalk &&
       store.flags.larsDrumPhilosophy &&
-      (store.flags.mariusCalmed || store.flags.mariusConfidenceBoost);
+      store.flags.mariusCalmed;
     return {
       text: 'Marius: "Du hast mich gerettet, Manager. Mein Ego, meine Angst... alles ist jetzt gebündelt in pure Energie. Wie stehen wir da?"',
       options: [
@@ -128,8 +128,17 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
     }
 
     if (!store.flags.salzgitter_marius_greeted) {
-      store.setFlag('salzgitter_marius_greeted', true);
-      store.increaseBandMood(15);
+      options.unshift({
+        text: 'Gut, dass du bereit bist.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setFlag('salzgitter_marius_greeted', true);
+          currentStore.increaseBandMood(15);
+          currentStore.setDialogue(
+            'Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"'
+          );
+        },
+      });
     }
 
     return {

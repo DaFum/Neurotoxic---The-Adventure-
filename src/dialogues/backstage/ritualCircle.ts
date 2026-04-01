@@ -106,26 +106,26 @@ export function buildBackstageRitualCircleDialogue(
         {
           text: 'Vollende die Frequenz von 1982. [Mystic]',
           requiredTrait: 'Mystic',
+          consumeItems: ['Resonanz-Kristall'],
+          nextDialogue: {
+            text: 'Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!'
-            );
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(50);
-            currentStore.removeFromInventory('Resonanz-Kristall');
           },
         },
         {
           text: 'Zerschmettere den Kristall im Zentrum! [Brutalist]',
           requiredTrait: 'Brutalist',
+          consumeItems: ['Resonanz-Kristall'],
+          nextDialogue: {
+            text: 'Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!'
-            );
-            currentStore.removeFromInventory('Resonanz-Kristall');
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40);
@@ -134,9 +134,7 @@ export function buildBackstageRitualCircleDialogue(
         },
         {
           text: 'Zurücktreten.',
-          action: () => {
-            game().setDialogue('Das ist zu gefährlich vor dem Gig.');
-          },
+          nextDialogue: { text: 'Das ist zu gefährlich vor dem Gig.' },
         },
       ],
     };
@@ -149,12 +147,12 @@ export function buildBackstageRitualCircleDialogue(
         {
           text: 'Erzwinge die Frequenz mit purer Kraft! [Brutalist]',
           requiredTrait: 'Brutalist',
+          consumeItems: ['Frequenzfragment'],
+          nextDialogue: {
+            text: 'Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!'
-            );
-            currentStore.removeFromInventory('Frequenzfragment');
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40);
@@ -163,9 +161,7 @@ export function buildBackstageRitualCircleDialogue(
         },
         {
           text: 'Zurücktreten.',
-          action: () => {
-            game().setDialogue('Das ist zu gefährlich vor dem Gig.');
-          },
+          nextDialogue: { text: 'Das ist zu gefährlich vor dem Gig.' },
         },
       ],
     };
@@ -173,14 +169,14 @@ export function buildBackstageRitualCircleDialogue(
 
   if (hasPlasmaZunder) {
     return {
-      text: 'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"',
+      text: 'Der Ritual-Kreis wartet auf einen Zündimpuls. Willst du den Plasma-Zünder einsetzen?',
       options: [
         {
           text: 'Plasma-Zünder einsetzen.',
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(30);
             currentStore.removeFromInventory('Plasma-Zünder');
+            currentStore.increaseBandMood(30);
             currentStore.setDialogue(
               'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"'
             );
@@ -190,18 +186,19 @@ export function buildBackstageRitualCircleDialogue(
     };
   }
 
-  if (hasForbiddenRiff) {
+  if (hasForbiddenRiff && !store.flags.backstageForbiddenRiffUsed) {
     return {
       text: 'Das Verbotene Riff resoniert mit dem Ritual-Kreis.',
       options: [
         {
           text: 'Lass das Riff durch den Kreis hallen.',
+          flagToSet: { flag: 'backstageForbiddenRiffUsed', value: true },
+          nextDialogue: {
+            text: 'Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"',
+          },
           action: () => {
             const currentStore = game();
             currentStore.increaseBandMood(15);
-            currentStore.setDialogue(
-              'Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"'
-            );
           },
         },
       ],

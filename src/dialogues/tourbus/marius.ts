@@ -17,21 +17,25 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
       options: [
         {
           text: 'Es ist jetzt sicher.',
+          nextDialogue: {
+            text: 'Marius: "Danke. Ich fühle mich wieder... vollständig. Und hungrig."',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Marius: "Danke. Ich fühle mich wieder... vollständig. Und hungrig."');
             currentStore.increaseBandMood(20);
-          }
+          },
         },
         {
           text: 'Ich behalte es als Pfand.',
+          nextDialogue: {
+            text: 'Marius: "Du bist grausam, Manager. Aber irgendwie respektiere ich das."',
+          },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Marius: "Du bist grausam, Manager. Aber irgendwie respektiere ich das."');
             currentStore.increaseBandMood(-10);
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   } else {
     if (bandMood < 30) {
@@ -41,50 +45,57 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
           {
             text: 'Du brauchst kein Ego, um zu schreien. Zeig es ihnen! [Social 7]',
             requiredSkill: { name: 'social', level: 7 },
+            nextDialogue: {
+              text: 'Marius: "Vielleicht... hast du recht. Die Kaminstube wird brennen!"',
+            },
             action: () => {
               const currentStore = game();
-              currentStore.setDialogue('Marius: "Vielleicht... hast du recht. Die Kaminstube wird brennen!"');
               currentStore.increaseBandMood(10);
-            }
+            },
           },
           {
             text: 'Die Band braucht dich, Marius. Bleib fokussiert. [Diplomat]',
             requiredTrait: 'Diplomat',
+            nextDialogue: {
+              text: 'Marius: "Ich werde sie nicht im Stich lassen. Danke, Manager."',
+            },
             action: () => {
               const currentStore = game();
-              currentStore.setDialogue('Marius: "Ich werde sie nicht im Stich lassen. Danke, Manager."');
               currentStore.increaseBandMood(15);
-            }
+            },
           },
           {
             text: 'Dann hör auf zu jammern.',
-            action: () => game().setDialogue('Marius: "Du verstehst mich nicht..."')
-          }
-        ]
+            nextDialogue: { text: 'Marius: "Du verstehst mich nicht..."' },
+          },
+        ],
       };
     } else {
-      const moodText = bandMood > 60
-        ? 'Marius: "Die Energie im Bus ist fantastisch! Tangermünde wird beben!"'
-        : 'Marius: "Nächster Halt: Tangermünde! Bist du bereit für die Kaminstube?"';
+      const moodText =
+        bandMood > 60
+          ? 'Marius: "Die Energie im Bus ist fantastisch! Tangermünde wird beben!"'
+          : 'Marius: "Nächster Halt: Tangermünde! Bist du bereit für die Kaminstube?"';
       return {
         text: moodText,
         options: [
           {
             text: 'Marius, dein Charisma funktioniert auch ohne Ego. [Performer]',
             requiredTrait: 'Performer',
+            flagToSet: { flag: 'marius_tourbus_doubt', value: false },
+            nextDialogue: {
+              text: 'Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"',
+            },
             action: () => {
               const currentStore = game();
-              currentStore.setDialogue('Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"');
-              currentStore.setFlag('marius_tourbus_doubt', false);
               currentStore.increaseBandMood(15);
               currentStore.increaseSkill('social', 3);
-            }
+            },
           },
           {
             text: 'Wir sind auf dem Weg.',
-            action: () => game().setDialogue('Marius: "Lass uns fahren."')
-          }
-        ]
+            nextDialogue: { text: 'Marius: "Lass uns fahren."' },
+          },
+        ],
       };
     }
   }
