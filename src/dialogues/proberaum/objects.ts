@@ -265,10 +265,17 @@ export function buildProberaumAmpDialogue(): Dialogue {
 export function buildProberaumDrumMachineDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
+  const drumMachineQuestStatus = store.quests.find(
+    (quest) => quest.id === 'drum_machine'
+  )?.status;
 
   const hasRiff = hasItem('Verbotenes Riff');
-  const questStarted = flags.drumMachineQuestStarted;
-  const questCompleted = flags.drumMachineQuestCompleted;
+  const questCompleted =
+    drumMachineQuestStatus === 'completed' || flags.drumMachineQuestCompleted;
+  const questStarted =
+    drumMachineQuestStatus === 'active' ||
+    drumMachineQuestStatus === 'completed' ||
+    flags.drumMachineQuestStarted;
 
   if (questCompleted) {
     return say(
@@ -375,8 +382,14 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
 export function buildProberaumMonitorDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
+  const feedbackMonitorQuestStatus = store.quests.find(
+    (quest) => quest.id === 'feedback_monitor'
+  )?.status;
+  const feedbackMonitorCompleted =
+    feedbackMonitorQuestStatus === 'completed' ||
+    flags.feedbackMonitorQuestCompleted;
 
-  if (flags.feedbackMonitorQuestCompleted) {
+  if (feedbackMonitorCompleted) {
     return say(
       'Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."'
     );
@@ -409,7 +422,7 @@ export function buildProberaumMonitorDialogue(): Dialogue {
     };
   }
 
-  if (hasItem('Quanten-Kabel') && !flags.feedbackMonitorQuestCompleted) {
+  if (hasItem('Quanten-Kabel') && !feedbackMonitorCompleted) {
     return {
       text: 'Monitor: "Das Quanten-Kabel! Meine Frequenzen... sie stabilisieren sich! Hier, nimm dieses Wissen über die 5. Dimension."',
       options: [

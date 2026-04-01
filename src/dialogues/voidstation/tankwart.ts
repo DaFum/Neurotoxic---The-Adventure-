@@ -165,7 +165,6 @@ export function buildVoidTankwartDialogue(): Dialogue {
             'Tankwart: "Die Frequenz von 1982... Du hast sie gefunden! Der Van wird nicht fahren, er wird DURCH die Realität schneiden. Salzgitter wird niemals wieder dasselbe sein."'
           );
           currentStore.removeFromInventory('Dunkle Materie');
-          currentStore.setFlag('tankwart_fuel_quest_started', true);
           currentStore.completeQuestWithFlag('void', 'voidRefueled');
           currentStore.increaseBandMood(40);
         },

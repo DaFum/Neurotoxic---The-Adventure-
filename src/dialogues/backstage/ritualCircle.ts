@@ -1,12 +1,32 @@
 import { type Dialogue } from '../../store';
 import { game, say } from '../shared/helpers';
 
+const FREQUENZ_1982_QUEST_ID = 'frequenz_1982';
+const FREQUENZ_1982_QUEST_TEXT = 'Sammle die Frequenzfragmente von 1982';
+
 type RitualActionWrapper = (
   mood: number,
   skillName: 'chaos' | 'social' | 'technical' | null,
   skillIncrease: number,
   dialogueText: string
 ) => void;
+
+function hasCompletedFrequenz1982Quest(): boolean {
+  const store = game();
+  const questStatus = store.quests.find(
+    (quest) => quest.id === FREQUENZ_1982_QUEST_ID
+  )?.status;
+  return questStatus === 'completed' || store.flags.frequenz1982_complete;
+}
+
+function completeFrequenz1982Quest(): void {
+  game().completeQuestWithFlag(
+    FREQUENZ_1982_QUEST_ID,
+    'frequenz1982_complete',
+    true,
+    FREQUENZ_1982_QUEST_TEXT
+  );
+}
 
 export function buildBackstageRitualCircleDialogue(
   ritualActionWrapper: RitualActionWrapper
@@ -71,7 +91,7 @@ export function buildBackstageRitualCircleDialogue(
     };
   }
 
-  if (store.flags.frequenz1982_complete) {
+  if (hasCompletedFrequenz1982Quest()) {
     return say(
       'Der Kreis leuchtet stetig im Takt von 1982. Die Realität hat hier einen Riss.'
     );
@@ -91,8 +111,7 @@ export function buildBackstageRitualCircleDialogue(
             currentStore.setDialogue(
               'Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!'
             );
-            currentStore.setFlag('frequenz1982_complete', true);
-            currentStore.completeQuest('frequenz_1982');
+            completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(50);
             currentStore.removeFromInventory('Resonanz-Kristall');
@@ -107,8 +126,7 @@ export function buildBackstageRitualCircleDialogue(
               'Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!'
             );
             currentStore.removeFromInventory('Resonanz-Kristall');
-            currentStore.setFlag('frequenz1982_complete', true);
-            currentStore.completeQuest('frequenz_1982');
+            completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40);
             currentStore.increaseSkill('chaos', 5);
@@ -137,8 +155,7 @@ export function buildBackstageRitualCircleDialogue(
               'Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!'
             );
             currentStore.removeFromInventory('Frequenzfragment');
-            currentStore.setFlag('frequenz1982_complete', true);
-            currentStore.completeQuest('frequenz_1982');
+            completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40);
             currentStore.increaseSkill('chaos', 5);

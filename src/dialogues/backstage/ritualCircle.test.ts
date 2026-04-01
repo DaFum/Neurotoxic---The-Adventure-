@@ -39,6 +39,23 @@ describe('buildBackstageRitualCircleDialogue', () => {
     expect(dialogue.options).toBeUndefined();
   });
 
+  it('returns completed frequency text when frequenz_1982 quest is completed', () => {
+    setupTestState({
+      quests: [
+        {
+          id: 'frequenz_1982',
+          text: 'Sammle die Frequenzfragmente von 1982',
+          status: 'completed',
+        },
+      ],
+    });
+
+    const dialogue = buildBackstageRitualCircleDialogue(vi.fn());
+
+    expect(dialogue.text).toContain('stetig im Takt von 1982');
+    expect(dialogue.options).toBeUndefined();
+  });
+
   it('consumes plasma igniter and grants mood when used at ritual circle', () => {
     const store = useStore.getState();
     store.addToInventory('Plasma-Zünder');

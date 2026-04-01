@@ -47,8 +47,12 @@ export function Kaminstube() {
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
   const inventory = useStore((state) => state.inventory);
+  const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
+  const forgottenLoreCompleted = quests.some(
+    (quest) => quest.id === 'forgotten_lore' && quest.status === 'completed'
+  );
 
   const pointLightRef = useRef<THREE.PointLight>(null);
   const dirLightRef = useRef<THREE.DirectionalLight>(null);
@@ -484,7 +488,7 @@ export function Kaminstube() {
       </group>
 
       {/* Quest: Forgotten Lore */}
-      {!flags.forgotten_lore && (
+      {!forgottenLoreCompleted && !flags.kaminFeuerPact && (
         <Interactable
           position={[-12, 0.5, 2]}
           emoji="📖"

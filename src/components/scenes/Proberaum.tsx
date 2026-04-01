@@ -46,12 +46,16 @@ export function Proberaum() {
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
   const inventory = useStore((state) => state.inventory);
+  const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const addQuest = useStore((state) => state.addQuest);
   const bandMood = useStore((state) => state.bandMood);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const discoverLore = useStore((state) => state.discoverLore);
+  const feedbackMonitorQuestCompleted =
+    quests.find((quest) => quest.id === 'feedback_monitor')?.status ===
+      'completed' || flags.feedbackMonitorQuestCompleted;
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -718,7 +722,7 @@ export function Proberaum() {
 
       {canPickupItem('Quanten-Kabel') &&
         !inventory.includes('Quanten-Kabel') &&
-        !flags.feedbackMonitorQuestCompleted && (
+        !feedbackMonitorQuestCompleted && (
           <Interactable
             position={[-10, 0.5, 5]}
             emoji="🔌"
@@ -744,7 +748,7 @@ export function Proberaum() {
       />
 
       {/* Absurd NPC: Talking Feedback Monitor */}
-      {!flags.feedbackMonitorQuestCompleted && (
+      {!feedbackMonitorQuestCompleted && (
         <Interactable
           position={[-6, 0.5, 5]}
           emoji="🎚️"

@@ -72,4 +72,22 @@ describe('Salzgitter object dialogues', () => {
       'Die Buhne schweigt'.replace('Buhne', 'Bühne')
     );
   });
+
+  it('returns finalized text when final quest is already completed', () => {
+    setupTestState({
+      quests: [
+        {
+          id: 'final',
+          text: 'Spiele das Finale in Salzgitter',
+          status: 'completed',
+        },
+      ],
+    });
+
+    const dialogue = buildSalzgitterFinaleDialogue();
+
+    expect(dialogue.text).toContain(
+      'Die Buhne schweigt'.replace('Buhne', 'Bühne')
+    );
+  });
 });

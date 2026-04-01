@@ -246,14 +246,25 @@ export function buildSalzgitterFanDialogue(): Dialogue {
 
 export function buildSalzgitterFinaleDialogue(): Dialogue {
   const store = game();
-  if (store.flags.salzgitter_finalized) {
+  const finalQuestCompleted =
+    store.quests.find((quest) => quest.id === 'final')?.status ===
+      'completed' || store.flags.salzgitter_finalized;
+  const frequenz1982Completed =
+    store.quests.find((quest) => quest.id === 'frequenz_1982')?.status ===
+      'completed' || store.flags.frequenz1982_complete;
+
+  if (finalQuestCompleted) {
     return say(
       'Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.'
     );
   }
 
-  store.startAndFinishQuest('final', 'Spiele das Finale in Salzgitter');
-  store.setFlag('salzgitter_finalized', true);
+  store.completeQuestWithFlag(
+    'final',
+    'salzgitter_finalized',
+    true,
+    'Spiele das Finale in Salzgitter'
+  );
 
   let endingsCount = 0;
   if (store.flags.salzgitterBandUnited) endingsCount++;
@@ -285,7 +296,7 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
 
   if (
     endingsCount >= 4 ||
-    (store.flags.frequenz1982_complete &&
+    (frequenz1982Completed &&
       store.flags.mariusConfidenceBoost &&
       store.bandMood > 70)
   ) {

@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { canSelectOption } from '../../dialogueEngine';
 import { executeDialogueOption } from '../../dialogueEngine';
 import { useStore } from '../../store';
 import { getOptionTexts, setupTestState } from '../shared/test-helpers';
@@ -42,9 +43,12 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     executeDialogueOption(option);
     const stateAfter = useStore.getState();
+    const loreQuest = stateAfter.quests.find(
+      (quest) => quest.id === 'forgotten_lore'
+    );
 
-    expect(stateAfter.flags.forgotten_lore).toBe(true);
     expect(stateAfter.flags.kaminFeuerPact).toBe(true);
+    expect(loreQuest?.status).toBe('completed');
     expect(stateAfter.bandMood).toBe(moodBefore + 20);
     expect(stateAfter.dialogue?.text).toContain(
       'Der Kamin flüstert von Salzgitter'
@@ -77,9 +81,47 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     executeDialogueOption(option);
     const stateAfter = useStore.getState();
+    const loreQuest = stateAfter.quests.find(
+      (quest) => quest.id === 'forgotten_lore'
+    );
 
-    expect(stateAfter.flags.forgotten_lore).toBe(true);
+    expect(loreQuest?.status).toBe('completed');
     expect(stateAfter.skills.chaos).toBe(chaosBefore + 3);
+  });
+
+  it('requires active forgotten_lore quest to select lore reward options', () => {
+    setupTestState({
+      trait: 'Mystic',
+    });
+
+    const withoutQuest = buildKaminstubeFireplaceDialogue();
+    const mysticWithoutQuest = withoutQuest.options?.find((entry) =>
+      entry.text.includes('[Mystic]')
+    );
+
+    if (!mysticWithoutQuest) {
+      throw new Error('Expected Mystic fireplace option without quest');
+    }
+
+    expect(canSelectOption(mysticWithoutQuest)).toBe(false);
+
+    useStore
+      .getState()
+      .addQuest(
+        'forgotten_lore',
+        'Entschlüssele die vergessene Lore in der Kaminstube'
+      );
+
+    const withActiveQuest = buildKaminstubeFireplaceDialogue();
+    const mysticWithActiveQuest = withActiveQuest.options?.find((entry) =>
+      entry.text.includes('[Mystic]')
+    );
+
+    if (!mysticWithActiveQuest) {
+      throw new Error('Expected Mystic fireplace option with active quest');
+    }
+
+    expect(canSelectOption(mysticWithActiveQuest)).toBe(true);
   });
 
   it('keeps lore reward options one-time after first completion', () => {
@@ -111,8 +153,11 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     const secondDialogue = buildKaminstubeFireplaceDialogue();
     const secondOptionTexts = getOptionTexts(secondDialogue);
+    const loreQuestAfterFirst = afterFirst.quests.find(
+      (quest) => quest.id === 'forgotten_lore'
+    );
 
-    expect(afterFirst.flags.forgotten_lore).toBe(true);
+    expect(loreQuestAfterFirst?.status).toBe('completed');
     expect(secondOptionTexts.some((text) => text.includes('[Mystic]'))).toBe(
       false
     );
