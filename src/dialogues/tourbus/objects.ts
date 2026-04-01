@@ -94,12 +94,16 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           text: 'Prost!',
           action: () => {
             const currentStore = game();
-            currentStore.removeFromInventory('Geister-Drink');
-            currentStore.completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
-            currentStore.increaseBandMood(40);
-            currentStore.increaseSkill('social', 5);
-            currentStore.setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
-            currentStore.addToInventory('Verstärker-Schaltplan');
+            const received = currentStore.addToInventory('Verstärker-Schaltplan');
+            if (received) {
+              currentStore.removeFromInventory('Geister-Drink');
+              currentStore.completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
+              currentStore.increaseBandMood(40);
+              currentStore.increaseSkill('social', 5);
+              currentStore.setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
+            } else {
+              currentStore.setDialogue('Geist: "Ich habe ein Geschenk für dich, aber dein Inventar ist voll. Mach Platz für den Schaltplan!"');
+            }
           }
         }
       ]
@@ -119,8 +123,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             currentStore.setFlag('ghostTrustEarned', true);
             currentStore.increaseBandMood(25);
             currentStore.discoverLore('ghost_legacy');
-            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.completeQuest('ghost_trust');
+            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
           }
         },
         {
@@ -132,8 +135,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             currentStore.setFlag('ghostTrustEarned', true);
             currentStore.increaseBandMood(20);
             currentStore.discoverLore('ghost_legacy');
-            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.completeQuest('ghost_trust');
+            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
           }
         },
         {
@@ -171,10 +173,14 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           requiredTrait: 'Mystic',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
-            currentStore.addToInventory('Bassist-Saite');
-            currentStore.setFlag('bassist_clue_ghost', true);
-            currentStore.increaseBandMood(20);
+            const received = currentStore.addToInventory('Bassist-Saite');
+            if (received) {
+              currentStore.setFlag('bassist_clue_ghost', true);
+              currentStore.increaseBandMood(20);
+              currentStore.setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
+            } else {
+              currentStore.setDialogue('Geist: "Ich möchte dir etwas geben, aber du kannst gerade nichts mehr tragen. Komm wieder, wenn du Platz hast."');
+            }
           }
         },
         {

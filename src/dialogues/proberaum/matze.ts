@@ -171,12 +171,12 @@ export function buildMatze1982Dialogue(): Dialogue {
         requiredTrait: 'Mystic',
         action: () => {
           const currentStore = game();
-          currentStore.setFlag('bassist_clue_matze', true);
+          currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
           const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
+            currentStore.setFlag('bassist_clue_matze', true);
             currentStore.setFlag('matzeDeepTalk', true);
             currentStore.setFlag('frequenz1982_proberaum', true);
-            currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
             currentStore.increaseBandMood(25, 'matze_frequenz1982');
             currentStore.increaseSkill('chaos', 4);
             currentStore.setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
@@ -190,13 +190,13 @@ export function buildMatze1982Dialogue(): Dialogue {
         requiredTrait: 'Brutalist',
         action: () => {
           const currentStore = game();
-          currentStore.setFlag('bassist_clue_matze', true);
+          currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
           const pickedUpFragment = currentStore.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
+            currentStore.setFlag('bassist_clue_matze', true);
             currentStore.setFlag('proberaum_brutalist_smash', true);
             currentStore.setFlag('matzeDeepTalk', true);
             currentStore.setFlag('frequenz1982_proberaum', true);
-            currentStore.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
             currentStore.increaseBandMood(10, 'matze_frequenz1982');
             currentStore.increaseSkill('chaos', 3);
             currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');

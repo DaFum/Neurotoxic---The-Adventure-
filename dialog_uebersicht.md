@@ -182,6 +182,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Rostiges Plektrum (Item, einmalig):**
     * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum, setzt `rostigesPlektrumCollected`).
 * **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
+    * *Interaktion:* Notiz einstecken — gibt "Geheime Notiz" (+2 Social, setzt `tourbusHiddenStashTaken`).
     * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` den Status `active` hat** (bei erfolgreicher Aufnahme: +10 BandMood, setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar (kein Mood-Effekt). Bei erreichtem Pickup-Limit erscheint ein Hinweistext ohne Flag-Set und ohne +10 BandMood.
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).

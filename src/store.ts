@@ -121,7 +121,8 @@ export type Flag =
   | 'matzeRiffDialogueDone'
   | 'matzePerformerTalk'
   | 'salzgitterMatzeWirtDone'
-  | 'rostigesPlektrumCollected';
+  | 'rostigesPlektrumCollected'
+  | 'tourbusHiddenStashTaken';
 
 /**
  * Defines the possible personality traits a player can select.
@@ -387,6 +388,7 @@ const initialState = {
     matzePerformerTalk: false,
     salzgitterMatzeWirtDone: false,
     rostigesPlektrumCollected: false,
+    tourbusHiddenStashTaken: false,
   },
 
 
