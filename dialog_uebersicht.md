@@ -10,7 +10,7 @@
 *Update 31.03.2026 (Dialogue Refactor): Proberaum-Dialoge (Matze, Lars, Marius, Objekte) aus `Proberaum.tsx` in dedizierte Builder-Funktionen unter `src/dialogues/proberaum/` extrahiert. Kein inhaltlicher Unterschied — alle Dialogbäume, Flags, Quest-Trigger und BandMood-Werte sind identisch. Neue Referenz-Dateien wurden dem Wartungshinweis hinzugefügt.*
 *Update 31.03.2026 (Scene Transition Pacing): Vorwärts-Übergänge zwischen Szenen (`Proberaum -> TourBus`, `Backstage -> VoidStation`, `VoidStation -> Kaminstube`, `Kaminstube -> Salzgitter`) nutzen nun einen kurzen Delay (1s) nach Exit-Dialog, inklusive Timeout-Cleanup beim Unmount, damit Übergänge nicht abrupt wirken.*
 
-> **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx` oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `src/components/scenes/`, `src/dialogues/`, `store.ts`.
+> **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx` oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `src/components/scenes/`, `src/dialogues/`, `src/store.ts`.
 
 Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Einträge und deren Voraussetzungen (Traits, Skills, Items) aus allen Szenen zusammen.
 
@@ -25,8 +25,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
     * *Nach dem Aufwischen (Wasser aufgewischt):* Option "Erzähl mir von der Tour 1982." öffnet einen Unterdialog.
-        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (+25 BandMood, +4 Chaos, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `matzeDeepTalk`; **bei erfolgreicher Aufnahme zusätzlich** Erhalt: Frequenzfragment und `frequenz1982_proberaum`).
-        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (+10 BandMood, +3 Chaos, Quest gestartet: `frequenz_1982`, setzt `bassist_clue_matze`, `proberaum_brutalist_smash`, `matzeDeepTalk`; **bei erfolgreicher Aufnahme zusätzlich** Erhalt: Frequenzfragment und `frequenz1982_proberaum`).
+        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (Quest gestartet: `frequenz_1982`; **bei erfolgreicher Aufnahme:** +25 BandMood, +4 Chaos, Erhalt: Frequenzfragment, setzt `bassist_clue_matze`, `matzeDeepTalk`, `frequenz1982_proberaum`).
+        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (Quest gestartet: `frequenz_1982`; **bei erfolgreicher Aufnahme:** +10 BandMood, +3 Chaos, Erhalt: Frequenzfragment, setzt `bassist_clue_matze`, `proberaum_brutalist_smash`, `matzeDeepTalk`, `frequenz1982_proberaum`).
         * Zweig C (Trait: Visionary): "Ich sehe Muster im Lärm." (+30 BandMood, +5 Chaos, Lore: `matze_1982_truth`, setzt `matzeDeepTalk`).
         * Zweig D (Skill: Technical 5): Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
         * Zweig E (Skill: Social 3): Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
@@ -35,7 +35,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Vor dem Aufwischen:* Bittet darum, das Wasser aufzuwischen.
         * "Ich kümmere mich darum" (kein Mood-Effekt).
         * "Neues Genre?" (-5 BandMood).
-    * *Spezial (Trait: Cynic):* Option, die Tour als „schlechten Witz" zu bezeichnen (+20 BandMood, +5 Chaos, setzt `matzeCynicOneShot`).
+    * *Spezial (Trait: Cynic):* Option, die Tour als "schlechten Witz" zu bezeichnen (+20 BandMood, +5 Chaos, setzt `matzeCynicOneShot`).
     * *Spezial (Trait: Performer):* "Zeig mir, wie du die Crowd liest." (+20 BandMood, +3 Social, setzt `matzePerformerTalk`). **Setzt NICHT `matzeDeepTalk`** — 1982-Unterdialog bleibt erreichbar.
     * *BandMood > 60 Bonus:* Matze ist hyped und will einen Power-Chord zeigen.
         * [Chaos 5]: Riss in der Wand (+15 BandMood, setzt `matzeRiffWarning`).
@@ -84,11 +84,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
             * Zweig B (Trait: Cynic): "Dein Ego ist zu groß" (+5 BandMood, +2 Chaos, setzt `mariusEgoComplimented`). Option verschwindet danach (forbiddenFlags).
             * Standard: "Bereit für den Gig?" (kein Effekt).
     * *Ohne Bier:* Fordert Bier.
-        * (Item: Bier) „Hier ist dein Bier": Konsumiert Item 'Bier' (+15 BandMood, beendet Quest `beer`, setzt `gaveBeerToMarius`). **Schließt Quest `marius` NICHT ab — dieser wird erst im Backstage abgeschlossen.**
-        * „Ich beeile mich" (kein Mood-Effekt).
-        * „Trink doch Wasser" (-5 BandMood).
-        * (Trait: Visionary): „Verstehe deine Vision" (+20 BandMood, +3 Social, setzt `mariusVisionShared`). Option verschwindet danach (forbiddenFlags).
-        * (Skill: Social 5): „Beruhige dich, Star" (+15 BandMood, +2 Social, setzt `mariusCalmedDown`). Option verschwindet danach (forbiddenFlags). **Schließt Quest `marius` NICHT ab — dieser wird erst im Backstage abgeschlossen.**
+        * (Item: Bier) "Hier ist dein Bier": Konsumiert Item 'Bier' (+15 BandMood, beendet Quest `beer`, setzt `gaveBeerToMarius`). **Schließt Quest `marius` NICHT ab — dieser wird erst im Backstage abgeschlossen.**
+        * "Ich beeile mich" (kein Mood-Effekt).
+        * "Trink doch Wasser" (-5 BandMood).
+        * (Trait: Visionary): "Verstehe deine Vision" (+20 BandMood, +3 Social, setzt `mariusVisionShared`). Option verschwindet danach (forbiddenFlags).
+        * (Skill: Social 5): "Beruhige dich, Star" (+15 BandMood, +2 Social, setzt `mariusCalmedDown`). Option verschwindet danach (forbiddenFlags). **Schließt Quest `marius` NICHT ab — dieser wird erst im Backstage abgeschlossen.**
 * **Wischmopp (Item):**
     * *Interaktion:* Aufheben (Erhalt: Mop).
 * **Risse in der Wand (Proberaum, nachdem Wasser aufgewischt wurde):**
@@ -107,7 +107,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Mysteriöse Pfütze:**
     * *Interaktion (Item: Mop):* Aufwischen (+20 BandMood, Quest-Abschluss: `water`).
 * **Sprechender Amp (Existenzielle Krise):**
-    * *Initial:* Erzählt von der 5. Dimension. Bei Auswahl von „Was brauchst du?" (+2 BandMood, setzt `talkingAmpHeard`, Quest hinzugefügt: `repair_amp`).
+    * *Initial:* Erzählt von der 5. Dimension. Bei Auswahl von "Was brauchst du?" (+2 BandMood, setzt `talkingAmpHeard`, Quest hinzugefügt: `repair_amp`).
     * *Nach Erstkontakt, vor Reparatur (Trait: Mystic, einmalig):* "Ich höre eine andere Stimme in dir." (+10 BandMood, +2 Chaos, setzt `maschinen_seele_amp`, startet Quest `maschinen_seele` falls noch nicht aktiv). **Option verschwindet nach einmaligem Auslösen.**
     * *Reparatur (Lötkolben + Schrottmetall):* Amp wird repariert (+20 BandMood, +5 Technical, Quest-Abschluss: `repair_amp`, setzt `talkingAmpRepaired`, entfernt Lötkolben, entfernt Schrottmetall). Zusätzliche Aufnahmen sind nur bis zum globalen Item-Limit möglich.
     * *Nach Reparatur:* Bietet Therapie-Sitzung an (setzt `ampTherapyStarted`, Quest hinzugefügt: `amp_therapy`).
@@ -182,13 +182,14 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 * **Rostiges Plektrum (Item, einmalig):**
     * *Interaktion:* Aufheben (Erhalt: Rostiges Plektrum, setzt `rostigesPlektrumCollected`).
 * **Verstecktes Fach (Nur nach Sabotage-Entdeckung):**
+    * *Interaktion:* Notiz einstecken — gibt "Geheime Notiz" (+2 Social, setzt `tourbusHiddenStashTaken`).
     * *Interaktion (Skill: Technical 3):* Öffnen — gibt Frequenzfragment **nur wenn Quest `frequenz_1982` den Status `active` hat** (bei erfolgreicher Aufnahme: +10 BandMood, setzt `frequenz1982_tourbus`). Ohne aktive Quest: nur Notiz lesbar (kein Mood-Effekt). Bei erreichtem Pickup-Limit erscheint ein Hinweistext ohne Flag-Set und ohne +10 BandMood.
 * **Batterie (Item):**
     * *Interaktion:* Aufheben (Erhalt: Batterie).
 * **Geist eines Roadies:**
     * *Standard-Interaktionen:* Fragen stellen (+5 BandMood). Option "Kann ich dir helfen?" startet Quest `ghost_recipe` (setzt Flag `ghostRecipeQuestStarted`).
     * *Aktive Rezept-Quest (Erinnerung, wenn Geister-Drink fehlt):* Zeigt direkten Reminder-Text ohne Auswahlmenü ("Hast du den Geister-Drink schon gemixt?"). *(Priorisiert über Lore-Text)*
-    * *Aktive Rezept-Quest (Hat Geister-Drink):* Rezept-Quest abschließen (+40 BandMood, +5 Social, Erhalt: Verstärker-Schaltplan, Quest-Abschluss: `ghost_recipe`, setzt `ghostRecipeQuestCompleted`, entfernt Geister-Drink). *(Priorisiert über Lore-Text)*
+    * *Aktive Rezept-Quest (Hat Geister-Drink):* Rezept-Quest abschließen (**bei erfolgreichem Erhalt des Verstärker-Schaltplans:** +40 BandMood, +5 Social, Quest-Abschluss: `ghost_recipe`, setzt `ghostRecipeQuestCompleted`, entfernt Geister-Drink). *(Priorisiert über Lore-Text)*
     * *1982-Follow-up (Flag `askedAbout1982` gesetzt & `ghostSecretRevealed` nicht gesetzt):*
         * [Visionary]: "Erzähl mir alles." (+30 BandMood, +5 Chaos, setzt `ghostSecretRevealed`).
         * [Technical 7]: "Anomalie analysieren." (+25 BandMood, +4 Technical, setzt `ghostSecretRevealed`).
@@ -197,7 +198,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
         * "Vielleicht später." (kein Mood-Effekt).
     * *bassist_clue_matze gesetzt & bassist_clue_ghost noch nicht gesetzt:*
         * Standard: "Matze hat geredet? Ich war dabei." (+15 BandMood, +3 Social, setzt `bassist_clue_ghost`).
-        * [Mystic]: "Ich spüre seine Präsenz." (+20 BandMood, setzt `bassist_clue_ghost`, Erhalt: Bassist-Saite).
+        * [Mystic]: "Ich spüre seine Präsenz." (**bei erfolgreichem Erhalt der Bassist-Saite:** +20 BandMood, setzt `bassist_clue_ghost`).
     * *Vertrauens-Pfad (Wenn ghostSecretRevealed gesetzt & ghostTrustEarned noch nicht):*
         * [Mystic]: "Ich will dir wirklich helfen" (+25 BandMood, Quest `ghost_trust` start+finish, Lore `ghost_legacy`, setzt `ghostTrustEarned`).
         * [Social 7]: "Erzähl mir deine Geschichte" (+20 BandMood, Quest `ghost_trust` start+finish, Lore `ghost_legacy`, setzt `ghostTrustEarned`).

@@ -94,12 +94,16 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           text: 'Prost!',
           action: () => {
             const currentStore = game();
-            currentStore.removeFromInventory('Geister-Drink');
-            currentStore.completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
-            currentStore.increaseBandMood(40);
-            currentStore.increaseSkill('social', 5);
-            currentStore.setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
-            currentStore.addToInventory('Verstärker-Schaltplan');
+            const received = currentStore.addToInventory('Verstärker-Schaltplan');
+            if (received) {
+              currentStore.removeFromInventory('Geister-Drink');
+              currentStore.completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
+              currentStore.increaseBandMood(40);
+              currentStore.increaseSkill('social', 5);
+              currentStore.setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
+            } else {
+              currentStore.setDialogue('Geist: "Ich habe ein Geschenk für dich, aber du kannst den Verstärker-Schaltplan nicht noch einmal aufnehmen. Dein Pickup-Limit ist erreicht."');
+            }
           }
         }
       ]
@@ -116,11 +120,10 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
-            currentStore.setFlag('ghostTrustEarned', true);
+            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
+            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(25);
             currentStore.discoverLore('ghost_legacy');
-            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.completeQuest('ghost_trust');
           }
         },
         {
@@ -129,11 +132,10 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
-            currentStore.setFlag('ghostTrustEarned', true);
+            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
+            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(20);
             currentStore.discoverLore('ghost_legacy');
-            currentStore.addQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.completeQuest('ghost_trust');
           }
         },
         {
@@ -171,10 +173,14 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           requiredTrait: 'Mystic',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
-            currentStore.addToInventory('Bassist-Saite');
-            currentStore.setFlag('bassist_clue_ghost', true);
-            currentStore.increaseBandMood(20);
+            const received = currentStore.addToInventory('Bassist-Saite');
+            if (received) {
+              currentStore.setFlag('bassist_clue_ghost', true);
+              currentStore.increaseBandMood(20);
+              currentStore.setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
+            } else {
+              currentStore.setDialogue('Geist: "Ich möchte dir etwas geben, aber du kannst es gerade nicht annehmen."');
+            }
           }
         },
         {
@@ -317,8 +323,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(30);
         }
       },
@@ -328,8 +333,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(20);
         }
       },
@@ -339,8 +343,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(25);
         }
       },
@@ -349,8 +352,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(10);
         }
       }

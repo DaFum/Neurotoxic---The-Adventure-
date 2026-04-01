@@ -6,7 +6,7 @@ import { useStore, type GameState, type Dialogue } from '../../store';
 export function setupTestState(partialState?: Partial<GameState>) {
   useStore.getState().resetGame();
   if (partialState) {
-    useStore.setState(partialState as GameState);
+    useStore.setState(partialState);
   }
 }
 

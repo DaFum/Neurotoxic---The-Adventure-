@@ -82,8 +82,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue('Matze: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..."');
-              currentStore.setFlag('tourbus_matze_confession', true);
-              currentStore.completeQuest('tourbus_saboteur');
+              currentStore.completeQuestWithFlag('tourbus_saboteur', 'tourbus_matze_confession', true);
               currentStore.increaseBandMood(10);
               currentStore.increaseSkill('social', 3);
             }
@@ -109,8 +108,14 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
   }
 
   if (bandMood < 30) {
+    if (flags.cableFixed) {
+      return say('Matze: "Alter, ich hab so schlechte Laune. Aber wenigstens funktioniert das Kabel wieder."');
+    }
     return say('Matze: "Alter, ich hab so schlechte Laune. Die Tour fängt ja super an... und mein Kabel ist auch noch im Eimer."');
   } else {
+    if (flags.cableFixed) {
+      return say('Matze: "Wir sind bereit. Die Bühne gehört uns."');
+    }
     return {
       text: 'Matze: "Geht schon. Aber mein Kabel ist im Eimer. Hast du Klebeband?"',
       options: [
