@@ -73,6 +73,8 @@ describe('TourBus Objects Dialogues', () => {
         'Mixe den Geister-Drink für den Geist des Roadies'
       );
       store.addToInventory('Geister-Drink');
+      const moodBefore = store.bandMood;
+      const socialBefore = store.skills.social;
 
       // Exhaust default pickup limit (1) for Verstärker-Schaltplan.
       store.addToInventory('Verstärker-Schaltplan');
@@ -91,6 +93,8 @@ describe('TourBus Objects Dialogues', () => {
       expect(state.flags.ghostRecipeQuestCompleted).toBe(true);
       const quest = state.quests.find((q) => q.id === 'ghost_recipe');
       expect(quest?.status).toBe('completed');
+      expect(state.bandMood).toBe(moodBefore);
+      expect(state.skills.social).toBe(socialBefore);
     });
 
     it('sets bassist clue even when Bassist-Saite pickup fails', () => {
@@ -137,6 +141,42 @@ describe('TourBus Objects Dialogues', () => {
       expect(getDialogueText(dialogue)).not.toContain(
         'Hast du den Geister-Drink schon gemixt?'
       );
+    });
+
+    it('applies forbidden riff mood bonus only once', () => {
+      const store = useStore.getState();
+      store.addToInventory('Verbotenes Riff');
+
+      const firstDialogue = buildTourbusGhostDialogue();
+      if (typeof firstDialogue === 'string') {
+        throw new Error('Expected dialogue object for forbidden riff branch');
+      }
+      const metalOption = firstDialogue.options?.find(
+        (o) => o.text === 'Für den Metal tue ich alles.'
+      );
+      if (!metalOption) throw new Error('Metal option not found');
+
+      const moodBefore = store.bandMood;
+      executeDialogueOption(metalOption);
+      const afterFirst = useStore.getState();
+      expect(afterFirst.flags.tourbusGhostRiffUsed).toBe(true);
+      expect(afterFirst.bandMood).toBe(moodBefore + 10);
+
+      const secondDialogue = buildTourbusGhostDialogue();
+      if (typeof secondDialogue === 'string') {
+        throw new Error('Expected dialogue object for forbidden riff branch');
+      }
+      const metalOptionAgain = secondDialogue.options?.find(
+        (o) => o.text === 'Für den Metal tue ich alles.'
+      );
+      if (!metalOptionAgain)
+        throw new Error('Metal option not found on second pass');
+
+      const moodBeforeSecond = useStore.getState().bandMood;
+      executeDialogueOption(metalOptionAgain);
+      const afterSecond = useStore.getState();
+      expect(afterSecond.bandMood).toBe(moodBeforeSecond);
+      expect(afterSecond.flags.tourbusGhostRiffUsed).toBe(true);
     });
   });
 

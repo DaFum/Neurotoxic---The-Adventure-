@@ -140,6 +140,8 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
   }
 
   if (store.flags.larsDrumPhilosophy) {
+    // Intentional encounter reward: this mirrors legacy onInteract behavior.
+    // Positive gains are one-shot per callsite via bandMoodGainClaims.
     store.increaseBandMood(5);
     return say(
       'Lars: "Ich denke an den Zorn der Maschinen. Jeder Schlag ist ein Urteil. Salzgitter wird beben!"'

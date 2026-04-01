@@ -33,9 +33,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
     !store.flags.salzgitterBandUnited
   ) {
     const bandReady =
-      store.flags.matzeDeepTalk &&
-      store.flags.larsDrumPhilosophy &&
-      store.flags.mariusCalmed;
+      store.flags.matzeDeepTalk && store.flags.larsDrumPhilosophy;
     return {
       text: 'Marius: "Du hast mich gerettet, Manager. Mein Ego, meine Angst... alles ist jetzt gebündelt in pure Energie. Wie stehen wir da?"',
       options: [

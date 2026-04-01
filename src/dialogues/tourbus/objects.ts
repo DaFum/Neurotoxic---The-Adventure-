@@ -130,9 +130,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               true,
               'Mixe den Geister-Drink für den Geist des Roadies'
             );
-            currentStore.increaseBandMood(40);
-            currentStore.increaseSkill('social', 5);
             if (received) {
+              currentStore.increaseBandMood(40);
+              currentStore.increaseSkill('social', 5);
               currentStore.setDialogue(
                 'Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."'
               );
