@@ -1,5 +1,5 @@
-import { type Dialogue, type DialogueOption } from '../../store';
-import { game, say } from '../shared/helpers';
+import { type Dialogue } from '../../store';
+import { game } from '../shared/helpers';
 
 export function buildTourbusMariusDialogue(): Dialogue | string {
   const store = game();
