@@ -371,6 +371,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Sabotage-Geständnis (Wenn Sabotage entdeckt & Amp repariert):_
     - (Trait: Diplomat): Vergeben (+30 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
     - (Trait: Brutalist): Warnen (+15 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
+    - (Trait: Cynic): "Nur jemand aus der Band hätte ein Motiv dafür." (+2 Chaos, setzt `matzeCynicOneShot`).
 - **Marius:**
   - _Reaktionen auf Zustände:_
     - (Wenn mariusEgoStrategy gesetzt): "Strategie funktioniert" (+10 BandMood).
@@ -390,6 +391,12 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Option (Trait: Diplomat):_ Sprache deuten (+20 BandMood).
 
 ## 6. Salzgitter (Das Finale)
+
+- **Das Finale (Bühnen-Objekt):**
+  - _Interaktion:_ Öffnet ein Options-Menü: "Die Bühne ist bereitet. Bist du bereit, das letzte Riff zu spielen?".
+  - _Aktion "Beginne das Finale":_ Triggert die End-Auswertung basierend auf dem Echtzeit-Status der Flags (z.B. BandUnited, fanMovement, ritualPerformed, frequenz1982_complete, etc.) und entscheidet dynamisch zwischen True Ending, Secret Encore, Best Ending, Good Ending oder Standard Ending.
+  - _Aktion "Wir brauchen noch Zeit":_ Bricht die Finalisierung ab und lässt den Spieler weiter interagieren.
+  - _Hinweis:_ Die Finalisierung (Setzen von `salzgitter_finalized` und Quests) geschieht nun ausschließlich beim bewussten Starten des Finales, nicht mehr beim bloßen Betrachten der Bühne.
 
 - **Matze:**
   - _Item (Verbotenes Riff + Void-Plektrum):_ Ultimativer Sound.
@@ -438,13 +445,16 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
   - _Wenn `mariusConfidenceBoost` & `egoContained` & `bassist_contacted`:_
     - (Skill: Social 12): "Sing für den Bassisten" (+50 BandMood, setzt `salzgitter_true_ending`).
   - _Wenn `backstage_performer_speech`:_
-    - (Trait: Performer): "Nimm die Halle" (+30 BandMood, +5 Social).
-  - _Standard Confidence Boost:_ Chaos 10 (+40 BandMood) oder Social 10 (+30 BandMood).
+    - (Trait: Performer): "Nimm die Halle" (Einmalig, +30 BandMood, +5 Social).
+  - _Standard Confidence Boost:_ Chaos 10 (Einmalig, +40 BandMood) oder Social 10 (Einmalig, +30 BandMood).
+  - _Hinweis:_ Die Skill- und Mood-Belohnungen wurden mit `_claimed`-Flags versehen, um unendliches Farming zu verhindern.
 - **Lars (Drummer):**
   - _Wenn `larsVibrating` & `larsDrumPhilosophy`:_
     - (Skill: Chaos 15): "Maschinen-Seele entfesseln" (+40 BandMood, +5 Chaos, setzt `salzgitter_encore_unlocked`).
     - (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
+  - _Wenn `larsVibrating`:_ "Synchronisiere die Frequenz" [Technical 10] (Einmalig, +30 BandMood, +5 Technical).
   - _Wenn `lars_paced`:_ (+25 BandMood).
+  - _Hinweis:_ Die Skill- und Mood-Belohnungen wurden mit `_claimed`-Flags versehen, um unendliches Farming zu verhindern.
 - **Schwebender Bassist** _(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):_
   - _Wenn `voidBassistSpoken` & `bassist_mystery` abgeschlossen & kein Bassist-Saite & kein Resonanz-Kristall im Inventar (Auto-Restore):_ "Erinnert sich" — +30 BandMood und `bassist_restored` werden via `(Weiter)`-Aktion gesetzt (nicht beim Öffnen des Dialogs).
   - _Wenn `voidBassistSpoken` gesetzt (aber Auto-Restore-Bedingungen nicht erfüllt — z.B. Quest noch offen oder Spezialitem im Inventar):_ Option "Du erinnerst dich an mich" (+20 BandMood, setzt **NICHT** `bassist_restored`).
