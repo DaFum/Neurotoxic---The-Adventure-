@@ -3,7 +3,11 @@ import { game, say } from '../shared/helpers';
 
 export function buildTourbusAmpDialogue(): Dialogue | string {
   const store = game();
-  const { trait } = store;
+  const { trait, flags } = store;
+
+  if (flags.tourbusAmpTechnician) {
+    return say('Du hast den Röhrenverstärker bereits repariert. Er klingt jetzt klar und deutlich.');
+  }
 
   if (trait === 'Technician') {
     return {
@@ -13,10 +17,12 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
           text: 'Repariere ihn schnell.',
           action: () => {
             const currentStore = game();
+            if (!currentStore.flags.tourbusAmpTechnician) {
+              currentStore.setFlag('tourbusAmpTechnician', true);
+              currentStore.increaseBandMood(20);
+              currentStore.increaseSkill('technical', 10);
+            }
             currentStore.setDialogue('Mit geübten Handgriffen lötest du die Verbindung nach. Der Verstärker klingt jetzt klarer als je zuvor!');
-            currentStore.setFlag('tourbusAmpTechnician', true);
-            currentStore.increaseBandMood(20);
-            currentStore.increaseSkill('technical', 10);
           }
         }
       ]
@@ -27,23 +33,51 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
 }
 
 export function buildTourbusHiddenStashDialogue(): Dialogue | string {
+  const store = game();
+  const options: import('../../store').DialogueOption[] = [];
+  if (!store.flags.tourbusHiddenStashTaken) {
+    options.push({
+      text: 'Notiz einstecken.',
+      action: () => {
+        const currentStore = game();
+        const pickedUp = currentStore.addToInventory('Geheime Notiz');
+        if (pickedUp) {
+          currentStore.increaseSkill('social', 2);
+          currentStore.setFlag('tourbusHiddenStashTaken', true);
+          currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
+        } else {
+          currentStore.setDialogue('Du kannst die Notiz gerade nicht aufnehmen.');
+        }
+      }
+    });
+  }
+  const frequenzQuest = store.quests.find(q => q.id === 'frequenz_1982');
+  if (!store.flags.frequenz1982_tourbus && frequenzQuest?.status === 'active') {
+    options.push({
+      text: 'Da steckt noch mehr dahinter... [Technical 3]',
+      requiredSkill: { name: 'technical', level: 3 },
+      action: () => {
+        const currentStore = game();
+        const pickedUp = currentStore.addToInventory('Frequenzfragment');
+        if (pickedUp) {
+          currentStore.setFlag('frequenz1982_tourbus', true);
+          currentStore.increaseBandMood(10, 'frequenz1982_tourbus_technical');
+          currentStore.setDialogue('Du analysierst das Versteck genauer und findest hinter der Notiz ein Frequenzfragment, das in der Wandverkleidung verborgen war.');
+        } else {
+          currentStore.setDialogue('Du spürst das Frequenzfragment, aber dein Inventar hat keinen Platz mehr.');
+        }
+      }
+    });
+  }
+
+  options.push({
+    text: 'Die Notiz ignorieren.',
+    action: () => game().setDialogue('Du entscheidest dich, dass manche Geheimnisse besser unberührt bleiben.')
+  });
+
   return {
     text: 'Ein kleines Geheimfach in der Wandverkleidung. Du findest eine Notiz in Matzes Handschrift: "Sie dürfen nicht nach Salzgitter. Die Frequenz wird ihn aufwecken."',
-    options: [
-      {
-        text: 'Notiz einstecken.',
-        action: () => {
-          const currentStore = game();
-          currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
-          currentStore.addToInventory('Geheime Notiz');
-          currentStore.increaseSkill('social', 2);
-        }
-      },
-      {
-        text: 'Die Notiz ignorieren.',
-        action: () => game().setDialogue('Du entscheidest dich, dass manche Geheimnisse besser unberührt bleiben.')
-      }
-    ]
+    options
   };
 }
 
@@ -271,6 +305,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
 }
 
 export function buildTourbusBandMeetingDialogue(): Dialogue | string {
+  if (game().flags.tourbusBandMeeting) {
+    return say('Die Bandbesprechung hat bereits stattgefunden.');
+  }
   return {
     text: 'Manager: "Zeit für eine kurze Band-Besprechung in der Mitte des Busses."',
     options: [
@@ -305,7 +342,6 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
           currentStore.setFlag('tourbusBandMeeting', true);
           currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(25);
-          currentStore.increaseSkill('social', 5);
         }
       },
       {

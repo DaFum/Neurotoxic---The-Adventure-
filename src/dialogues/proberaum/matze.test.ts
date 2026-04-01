@@ -44,6 +44,20 @@ describe('buildProberaumMatzeDialogue', () => {
     expect(options).toContain('Vielleicht ist es ein Zeichen für ein neues Genre?');
   });
 
+  it('returns medium mood water dialogue when bandMood is between 40 and 60', () => {
+    setupTestState({ bandMood: 50 });
+
+    const dialogue = buildProberaumMatzeDialogue();
+    expect(dialogue.text).toContain('Der Raum ist zwar nass, aber ich bin heiß wie Frittenfett!');
+  });
+
+  it('returns high mood water dialogue when bandMood is above 60', () => {
+    setupTestState({ bandMood: 65 });
+
+    const dialogue = buildProberaumMatzeDialogue();
+    expect(dialogue.text).toContain('Hey Manager! Ich hab ein paar neue Riffs geschrieben!');
+  });
+
   it('returns riff warning dialogue when water is cleaned and bandMood > 60', () => {
     setupTestState({
       flags: { ...useStore.getState().flags, waterCleaned: true },
@@ -83,7 +97,7 @@ describe('buildProberaumMatzeDialogue', () => {
         waterCleaned: true,
         matzeRiffWarning: true,
         matzePerformerTalk: true,
-        mariusEgoStrategy: true,
+        matzeCynicOneShot: true,
       },
       bandMood: 75,
     });

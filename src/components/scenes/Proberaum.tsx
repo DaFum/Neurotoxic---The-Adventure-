@@ -412,6 +412,7 @@ export function Proberaum() {
               store.setDialogue('Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.');
             } else {
               store.setDialogue(buildProberaumPuddleDialogue());
+              store.startQuestWithFlag('water', 'Wische die Wasserlache im Proberaum auf', 'waterCleaned', false);
             }
           }}
         />
@@ -423,13 +424,7 @@ export function Proberaum() {
         emoji="🔊"
         name="Sprechender Amp"
         onInteract={() => {
-          const store = useStore.getState();
-          const isFirstContact = !store.flags.talkingAmpHeard;
-          store.setDialogue(buildProberaumAmpDialogue());
-          if (isFirstContact) {
-            store.startQuestWithFlag('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall', 'talkingAmpHeard');
-            store.increaseBandMood(2);
-          }
+          useStore.getState().setDialogue(buildProberaumAmpDialogue());
         }}
       />
 

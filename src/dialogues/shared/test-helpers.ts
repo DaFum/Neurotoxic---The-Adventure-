@@ -14,6 +14,15 @@ export function setupTestState(partialState?: Partial<GameState>) {
  * Extracts all option texts from a Dialogue object.
  * Returns an empty array if no options exist, making assertions like `.toContain()` safe.
  */
-export function getOptionTexts(dialogue: Dialogue): string[] {
+export function getOptionTexts(dialogue: Dialogue | string): string[] {
+  if (typeof dialogue === 'string') return [];
   return dialogue.options?.map(o => o.text) || [];
+}
+
+/**
+ * Returns the text of a Dialogue object or the string itself.
+ */
+export function getDialogueText(dialogue: Dialogue | string): string {
+  if (typeof dialogue === 'string') return dialogue;
+  return dialogue.text;
 }

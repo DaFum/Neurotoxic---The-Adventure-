@@ -31,7 +31,6 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
     };
   } else {
     if (bandMood < 30) {
-      store.setFlag('marius_tourbus_doubt', true);
       return {
         text: 'Marius: "Ich bin ein Betrug. Ohne mein Ego bin ich nur ein Typ, der in ein Mikrofon schreit."',
         options: [

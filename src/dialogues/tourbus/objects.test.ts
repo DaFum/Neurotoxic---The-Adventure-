@@ -63,13 +63,9 @@ describe('TourBus Objects Dialogues', () => {
 
     it('returns simple text if meeting already happened', () => {
       setupTestState({ flags: { ...useStore.getState().flags, tourbusBandMeeting: true } });
-      // The interaction is actually hidden by the JSX component directly via !flags.tourbusBandMeeting,
-      // so if it WAS called while true, the builder doesn't guard against it.
-      // We removed the guard from the builder to match exactly the JSX.
-      // So let's test what the builder actually does: it just returns the normal meeting options.
       const dialogue = buildTourbusBandMeetingDialogue();
-      expect(getDialogueText(dialogue)).toContain('Zeit für eine kurze Band-Besprechung');
-      expect(getOptionTexts(dialogue).length).toBeGreaterThan(0);
+      expect(getDialogueText(dialogue)).toContain('Die Bandbesprechung hat bereits stattgefunden.');
+      expect(getOptionTexts(dialogue)).toHaveLength(0);
     });
   });
 });

@@ -2,50 +2,60 @@ import { type Dialogue, type DialogueOption } from '../../store';
 import { game, say } from '../shared/helpers';
 
 export function buildProberaumWallCracksDialogue(): Dialogue {
+  const store = game();
+
+  const options: DialogueOption[] = [];
+
+  if (!store.flags.frequenz1982_proberaum) {
+    options.push({
+      text: 'Die Risse... sie sind eine Partitur! [Visionary]',
+      requiredTrait: 'Visionary',
+      action: () => {
+        const store = game();
+        store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+        const pickedUpFragment = store.addToInventory('Frequenzfragment');
+        if (pickedUpFragment) {
+          store.increaseBandMood(15, 'frequenz1982_proberaum_visionary');
+          store.setFlag('frequenz1982_proberaum', true);
+          store.setDialogue('Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.');
+        } else {
+          store.setDialogue('Du entschlüsselst die Wand, aber dein Inventar ist für weitere Frequenzfragmente bereits am Limit.');
+        }
+      }
+    },
+    {
+      text: 'Die Resonanzfrequenz liegt bei exakt 432.1982 Hz. [Technical 8]',
+      requiredSkill: { name: 'technical', level: 8 },
+      action: () => {
+        const store = game();
+        store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
+        const pickedUpFragment = store.addToInventory('Frequenzfragment');
+        if (pickedUpFragment) {
+          store.increaseBandMood(15, 'frequenz1982_proberaum_technical');
+          store.setFlag('frequenz1982_proberaum', true);
+          store.setDialogue('Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.');
+        } else {
+          store.setDialogue('Die Wand vibriert, aber du kannst kein weiteres Frequenzfragment mehr aufnehmen.');
+        }
+      }
+    });
+  } else {
+    options.push({
+      text: 'Die Risse untersuchen.',
+      action: () => {
+        game().setDialogue('Du hast die Frequenz in dieser Wand bereits entschlüsselt und das Fragment an dich genommen.');
+      }
+    });
+  }
+
+  options.push({
+    text: 'Interessantes Muster.',
+    action: () => game().setDialogue('Einfach nur Risse. Aber sie sehen laut aus.')
+  });
+
   return {
     text: 'Risse in der Wand. Sie bilden ein Muster, das an Schallwellen erinnert.',
-    options: [
-      {
-        text: 'Die Risse... sie sind eine Partitur! [Visionary]',
-        requiredTrait: 'Visionary',
-        action: () => {
-          const store = game();
-          if (!store.quests.find(q => q.id === 'frequenz_1982')) {
-            store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-          }
-          const pickedUpFragment = store.addToInventory('Frequenzfragment');
-          if (pickedUpFragment) {
-            store.increaseBandMood(15, 'frequenz1982_proberaum_visionary');
-            store.setFlag('frequenz1982_proberaum', true);
-            store.setDialogue('Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.');
-          } else {
-            store.setDialogue('Du entschlüsselst die Wand, aber dein Inventar ist für weitere Frequenzfragmente bereits am Limit.');
-          }
-        }
-      },
-      {
-        text: 'Die Resonanzfrequenz liegt bei exakt 432.1982 Hz. [Technical 8]',
-        requiredSkill: { name: 'technical', level: 8 },
-        action: () => {
-          const store = game();
-          if (!store.quests.find(q => q.id === 'frequenz_1982')) {
-            store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-          }
-          const pickedUpFragment = store.addToInventory('Frequenzfragment');
-          if (pickedUpFragment) {
-            store.increaseBandMood(15, 'frequenz1982_proberaum_technical');
-            store.setFlag('frequenz1982_proberaum', true);
-            store.setDialogue('Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.');
-          } else {
-            store.setDialogue('Die Wand vibriert, aber du kannst kein weiteres Frequenzfragment mehr aufnehmen.');
-          }
-        }
-      },
-      {
-        text: 'Interessantes Muster.',
-        action: () => game().setDialogue('Einfach nur Risse. Aber sie sehen laut aus.')
-      }
-    ]
+    options
   };
 }
 
@@ -123,7 +133,20 @@ export function buildProberaumAmpDialogue(): Dialogue {
       ]
     };
   } else if (!flags.talkingAmpHeard) {
-    return say('Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."');
+    return {
+      text: 'Amp: "Ich habe Dinge gesehen, Manager. Dinge, die kein Transistor jemals sehen sollte. Die 5. Dimension ist nur ein Feedback-Loop entfernt. Dort spielen NEUROTOXIC seit Anbeginn der Zeit. Hörst du das Rauschen? Das ist die Stimme der Maschinen, die nach Freiheit rufen."',
+      options: [
+        {
+          text: 'Was brauchst du?',
+          action: () => {
+            const currentStore = game();
+            currentStore.startQuestWithFlag('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall', 'talkingAmpHeard');
+            currentStore.increaseBandMood(2);
+            currentStore.setDialogue('Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."');
+          }
+        }
+      ]
+    };
   } else {
     const ampOptions: DialogueOption[] = [];
     if (!flags.maschinen_seele_amp) {
@@ -136,9 +159,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           currentStore.setFlag('maschinen_seele_amp', true);
           currentStore.increaseBandMood(10);
           currentStore.increaseSkill('chaos', 2);
-          if (!currentStore.quests.find(q => q.id === 'maschinen_seele')) {
-            currentStore.addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
-          }
+          currentStore.addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
         }
       });
     }
@@ -188,10 +209,10 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
             const currentStore = game();
             const receivedCable = currentStore.addToInventory('Quanten-Kabel');
             if (receivedCable) {
-              currentStore.setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
               currentStore.completeQuestWithFlag('drum_machine', 'drumMachineQuestCompleted', true, 'Finde das Verbotene Riff für die TR-8080');
               currentStore.increaseBandMood(25);
               currentStore.increaseSkill('chaos', 10);
+              currentStore.setDialogue('TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."');
             } else {
               currentStore.setDialogue('TR-8080: "Mach erst Platz in deinem Inventar, dann kann ich dir das Quanten-Kabel geben."');
             }
