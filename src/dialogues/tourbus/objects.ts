@@ -95,11 +95,11 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             const received = currentStore.addToInventory('Verstärker-Schaltplan');
+            currentStore.removeFromInventory('Geister-Drink');
+            currentStore.completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
+            currentStore.increaseBandMood(40);
+            currentStore.increaseSkill('social', 5);
             if (received) {
-              currentStore.removeFromInventory('Geister-Drink');
-              currentStore.completeQuestWithFlag('ghost_recipe', 'ghostRecipeQuestCompleted', true, 'Mixe den Geister-Drink für den Geist des Roadies');
-              currentStore.increaseBandMood(40);
-              currentStore.increaseSkill('social', 5);
               currentStore.setDialogue('Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."');
             } else {
               currentStore.setDialogue('Geist: "Ich habe ein Geschenk für dich, aber du kannst den Verstärker-Schaltplan nicht noch einmal aufnehmen. Dein Pickup-Limit ist erreicht."');
@@ -120,8 +120,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
-            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.setFlag('ghostTrustEarned', true);
+            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(25);
             currentStore.discoverLore('ghost_legacy');
           }
@@ -132,8 +131,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
-            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
-            currentStore.setFlag('ghostTrustEarned', true);
+            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(20);
             currentStore.discoverLore('ghost_legacy');
           }
@@ -174,12 +172,12 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             const received = currentStore.addToInventory('Bassist-Saite');
+            currentStore.setFlag('bassist_clue_ghost', true);
+            currentStore.increaseBandMood(20);
             if (received) {
-              currentStore.setFlag('bassist_clue_ghost', true);
-              currentStore.increaseBandMood(20);
               currentStore.setDialogue('Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."');
             } else {
-              currentStore.setDialogue('Geist: "Ich möchte dir etwas geben, aber du kannst es gerade nicht annehmen."');
+              currentStore.setDialogue('Geist: "Du hast die Gabe. Ich kann dir die Saite gerade nicht geben, aber die Wahrheit gehört dir trotzdem."');
             }
           }
         },

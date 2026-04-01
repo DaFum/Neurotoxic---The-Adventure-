@@ -40,6 +40,33 @@ describe('Proberaum Objects Dialogues', () => {
       expect(dialogue.text).toContain('DIESE FREQUENZ! Es ist das Verbotene Riff!');
       expect(getOptionTexts(dialogue)).toHaveLength(2);
     });
+
+    it('completes quest even when Quanten-Kabel pickup limit is exhausted', () => {
+      const store = useStore.getState();
+      store.addToInventory('Verbotenes Riff');
+      store.addQuest('drum_machine', 'Finde das Verbotene Riff für die TR-8080');
+
+      // Exhaust default pickup limit (1) for Quanten-Kabel.
+      store.addToInventory('Quanten-Kabel');
+      store.removeFromInventory('Quanten-Kabel');
+
+      const moodBefore = store.bandMood;
+      const chaosBefore = store.skills.chaos;
+
+      const dialogue = buildProberaumDrumMachineDialogue();
+      const feedOption = dialogue.options?.find(o => o.text === 'Ja, füttere deine Schaltkreise.');
+      if (!feedOption) throw new Error('Feed option not found');
+
+      executeDialogueOption(feedOption);
+      const state = useStore.getState();
+
+      expect(state.inventory).not.toContain('Verbotenes Riff');
+      expect(state.flags.drumMachineQuestCompleted).toBe(true);
+      const quest = state.quests.find(q => q.id === 'drum_machine');
+      expect(quest?.status).toBe('completed');
+      expect(state.bandMood).toBe(moodBefore + 25);
+      expect(state.skills.chaos).toBe(chaosBefore + 10);
+    });
   });
 
   describe('Amp', () => {

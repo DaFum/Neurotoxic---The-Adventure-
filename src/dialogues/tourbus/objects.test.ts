@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from '../../store';
 import { buildTourbusAmpDialogue, buildTourbusHiddenStashDialogue, buildTourbusGhostDialogue, buildTourbusBandMeetingDialogue } from './objects';
 import { setupTestState, getOptionTexts, getDialogueText } from '../shared/test-helpers';
+import { executeDialogueOption } from '../../dialogueEngine';
 
 describe('TourBus Objects Dialogues', () => {
   beforeEach(() => setupTestState());
@@ -48,6 +49,51 @@ describe('TourBus Objects Dialogues', () => {
       const options = getOptionTexts(dialogue);
       expect(options).toHaveLength(1);
       expect(options).toContain('Prost!');
+    });
+
+    it('completes ghost recipe even when plan pickup limit is exhausted', () => {
+      const store = useStore.getState();
+      store.addQuest('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies');
+      store.addToInventory('Geister-Drink');
+
+      // Exhaust default pickup limit (1) for Verstärker-Schaltplan.
+      store.addToInventory('Verstärker-Schaltplan');
+      store.removeFromInventory('Verstärker-Schaltplan');
+
+      const dialogue = buildTourbusGhostDialogue();
+      if (typeof dialogue === 'string') throw new Error('Expected dialogue object for Geister-Drink branch');
+      const prostOption = dialogue.options?.find(o => o.text === 'Prost!');
+      if (!prostOption) throw new Error('Prost option not found');
+
+      executeDialogueOption(prostOption);
+      const state = useStore.getState();
+
+      expect(state.inventory).not.toContain('Geister-Drink');
+      expect(state.flags.ghostRecipeQuestCompleted).toBe(true);
+      const quest = state.quests.find(q => q.id === 'ghost_recipe');
+      expect(quest?.status).toBe('completed');
+    });
+
+    it('sets bassist clue even when Bassist-Saite pickup fails', () => {
+      setupTestState({ flags: { ...useStore.getState().flags, bassist_clue_matze: true }, trait: 'Mystic' });
+      const store = useStore.getState();
+
+      // Exhaust default pickup limit (1) for Bassist-Saite.
+      store.addToInventory('Bassist-Saite');
+      store.removeFromInventory('Bassist-Saite');
+
+      const moodBefore = store.bandMood;
+      const dialogue = buildTourbusGhostDialogue();
+      if (typeof dialogue === 'string') throw new Error('Expected dialogue object for bassist clue branch');
+      const mysticOption = dialogue.options?.find(o => o.text.includes('[Mystic]'));
+      if (!mysticOption) throw new Error('Mystic option not found');
+
+      executeDialogueOption(mysticOption);
+      const state = useStore.getState();
+
+      expect(state.flags.bassist_clue_ghost).toBe(true);
+      expect(state.bandMood).toBe(moodBefore + 20);
+      expect(state.inventory).not.toContain('Bassist-Saite');
     });
   });
 

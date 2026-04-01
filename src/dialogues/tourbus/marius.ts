@@ -3,9 +3,13 @@ import { game, say } from '../shared/helpers';
 
 export function buildTourbusMariusDialogue(): Dialogue | string {
   const store = game();
-  const { flags, bandMood, hasItem } = store;
+  const { bandMood, hasItem } = store;
 
   const hasEgo = hasItem('Marius Ego');
+
+  if (!hasEgo && bandMood < 30) {
+    store.setFlag('marius_tourbus_doubt', true);
+  }
 
   if (hasEgo) {
     return {

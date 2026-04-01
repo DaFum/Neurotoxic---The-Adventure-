@@ -22,7 +22,7 @@ describe('buildProberaumMariusDialogue', () => {
     expect(options).toContain('Hier ist dein Bier.');
   });
 
-  it('beer handover consumes Bier, completes beer quest, sets flag, boosts mood — does NOT complete marius quest', () => {
+  it('beer handover consumes Bier, completes beer quest, completes marius quest, sets flag, boosts mood', () => {
     useStore.getState().addToInventory('Bier');
     useStore.getState().addQuest('beer', 'Besorg Marius ein Bier');
     useStore.getState().addQuest('marius', 'Beruhige Marius vor dem Auftritt');
@@ -40,12 +40,11 @@ describe('buildProberaumMariusDialogue', () => {
     expect(state.bandMood).toBe(moodBefore + 15);
     const beerQuest = state.quests.find(q => q.id === 'beer');
     expect(beerQuest?.status).toBe('completed');
-    // marius quest must stay active — it resolves in Backstage
     const mariusQuest = state.quests.find(q => q.id === 'marius');
-    expect(mariusQuest?.status).toBe('active');
+    expect(mariusQuest?.status).toBe('completed');
   });
 
-  it('Social 5 calm-down sets mariusCalmedDown flag without completing marius quest', () => {
+  it('Social 5 calm-down sets mariusCalmedDown flag and completes marius quest', () => {
     setupTestState({ skills: { ...useStore.getState().skills, social: 5 } });
     useStore.getState().addQuest('marius', 'Beruhige Marius vor dem Auftritt');
 
@@ -58,7 +57,7 @@ describe('buildProberaumMariusDialogue', () => {
 
     expect(state.flags.mariusCalmedDown).toBe(true);
     const mariusQuest = state.quests.find(q => q.id === 'marius');
-    expect(mariusQuest?.status).toBe('active');
+    expect(mariusQuest?.status).toBe('completed');
   });
 
   it('shows trait options when conditions are met and no beer given', () => {
