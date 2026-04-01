@@ -272,6 +272,10 @@ export function buildProberaumMonitorDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
 
+  if (flags.feedbackMonitorQuestCompleted) {
+    return say('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
+  }
+
   if (!flags.feedbackMonitorTalked) {
     return {
       text: 'Monitor: "Manager... ich bin überlastet. Meine Schaltkreise sind mit dem Rauschen der Ewigkeit gefüllt. Kannst du mir helfen, mich zu entladen?"',
@@ -292,7 +296,7 @@ export function buildProberaumMonitorDialogue(): Dialogue {
     };
   }
 
-  if (hasItem('Quanten-Kabel')) {
+  if (hasItem('Quanten-Kabel') && !flags.feedbackMonitorQuestCompleted) {
     return {
       text: 'Monitor: "Das Quanten-Kabel! Meine Frequenzen... sie stabilisieren sich! Hier, nimm dieses Wissen über die 5. Dimension."',
       options: [

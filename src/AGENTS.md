@@ -1,13 +1,34 @@
 # src — Agent Instructions
 
+## Repo Policy
+All subdirectories that introduce new architectural concepts or domain rules must contain an `AGENTS.md` file.
+
+## Capabilities
+- Read and mutate the global game state using the `useStore` hook or the `game()` helper.
+- Update UI elements implicitly by mutating state (e.g., setting the active dialogue or scene).
+- Combine items and manage inventory constraints.
+- Complete, fail, or progress quests while keeping story flags in sync.
+
+## Responsibilities
+- **Never** add unverified generic flags or quest IDs without adding them to the `Flag` union or checking `dialog_uebersicht.md`.
+- **Never** bypass inventory limits; always check the boolean result of `addToInventory(item)` before granting rewards.
+- Ensure all dialogue branches use atomic helpers to prevent transient state desynchronization.
+- Maintain accurate documentation in `dialog_uebersicht.md` for any changes made to quests, dialogue trees, or item spawns.
+
+## Interfaces
+- **State Mutators:** Use `game()` (or `useStore.getState()`) to read/write state.
+- **Inventory:** `addToInventory(item: string): boolean` adds an item and returns false if the per-item limit is reached. Limits are persisted via `itemPickupCounts`.
+- **Quests & Flags:** `completeQuestWithFlag(id: string, flag: Flag, flagValue?: boolean, text?: string)` and `startQuestWithFlag(id: string, text: string, flag: Flag, flagValue?: boolean)` atomically update quests and their associated boolean flag.
+- **Flags:** All flags must be part of the `Flag` union in `store.ts`.
+
 ## Store (`store.ts`)
 - `setScene()` always resets `playerPos` to `[0, 1, 0]` — every scene must work with this spawn point
-- `addToInventory(item)` returns `false` for two independent reasons: inventory over capacity, OR the item has hit its per-item pickup limit (e.g. `Bier: 2`, `Frequenzfragment: 2` — see `ITEM_PICKUP_LIMITS` in store.ts). The limit is per-playthrough and persists across saves.
+- `addToInventory(item)` returns `false` only when the item has hit its per-item pickup limit (e.g. `Bier: 2`, `Frequenzfragment: 2` — see `ITEM_PICKUP_LIMITS` in store.ts). The limit is per-playthrough and persists across saves via `itemPickupCounts`.
 - `increaseBandMood(amount, sourceId?)` deduplicates positive increases by call site — a second call from the same source location is silently skipped. Pass an explicit `sourceId` string when you need multiple increases from the same function.
 - `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the `RECIPES` array defined above the store
 - `discoverLore()` is idempotent — calling it twice on the same ID is safe
 - Persistence uses a custom merge in `onRehydrateStorage` that preserves player progress when new quests/lore are added to code. Adding new initial quests or loreEntries won't wipe saved data.
-- Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. `scene`, `playerPos`, `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
+- Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`, `itemPickupCounts`, `bandMoodGainClaims`. `scene`, `playerPos`, `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
 
 ### Quest API
 

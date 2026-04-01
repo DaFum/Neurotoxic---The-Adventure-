@@ -96,11 +96,10 @@ describe('Proberaum Objects Dialogues', () => {
       expect(options.length).toBeGreaterThan(0);
 
       const brutalistOption = dialogue.options?.find(o => o.text.includes('Werkzeug'));
-      if (brutalistOption) {
-        executeDialogueOption(brutalistOption);
-        const state = useStore.getState();
-        expect(state.flags.ampTherapyCompleted).toBe(true);
-      }
+      expect(brutalistOption).toBeDefined();
+      executeDialogueOption(brutalistOption!);
+      const state = useStore.getState();
+      expect(state.flags.ampTherapyCompleted).toBe(true);
     });
 
     it('returns final text when therapy is completed', () => {

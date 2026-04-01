@@ -120,10 +120,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
-            currentStore.setFlag('ghostTrustEarned', true);
+            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(25);
             currentStore.discoverLore('ghost_legacy');
-            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
           }
         },
         {
@@ -132,10 +131,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
-            currentStore.setFlag('ghostTrustEarned', true);
+            currentStore.completeQuestWithFlag('ghost_trust', 'ghostTrustEarned', true, 'Gewinne das Vertrauen des Geist-Roadies');
             currentStore.increaseBandMood(20);
             currentStore.discoverLore('ghost_legacy');
-            currentStore.startAndFinishQuest('ghost_trust', 'Gewinne das Vertrauen des Geist-Roadies');
           }
         },
         {
@@ -323,8 +321,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(30);
         }
       },
@@ -334,8 +331,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(20);
         }
       },
@@ -345,8 +341,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(25);
         }
       },
@@ -355,8 +350,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
-          currentStore.setFlag('tourbusBandMeeting', true);
-          currentStore.startAndFinishQuest('band_meeting', 'Halte eine Band-Besprechung im Tourbus ab');
+          currentStore.completeQuestWithFlag('band_meeting', 'tourbusBandMeeting', true, 'Halte eine Band-Besprechung im Tourbus ab');
           currentStore.increaseBandMood(10);
         }
       }
