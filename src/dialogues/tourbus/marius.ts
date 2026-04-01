@@ -47,7 +47,7 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
             text: 'Du brauchst kein Ego, um zu schreien. Zeig es ihnen! [Social 7]',
             requiredSkill: { name: 'social', level: 7 },
             nextDialogue: {
-              text: 'Marius: "Vielleicht... hast du recht. Nächster Halt: Salzgitter! Bist du bereit für Backstage?"',
+              text: 'Marius: "Vielleicht... hast du recht. Ich muss nicht ich selbst sein — ich muss Marius sein. Die Kaminstube wird brennen!"',
             },
             action: () => {
               const currentStore = game();
