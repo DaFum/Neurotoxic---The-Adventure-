@@ -16,3 +16,6 @@
 ## 2026-03-31 - [Distance Calculation Optimization in useFrame]
 **Learning:** In Three.js/React Three Fiber high-frequency loops like `useFrame`, avoiding `THREE.Vector3.distanceTo()` prevents expensive `Math.sqrt()` calls for every object on every frame.
 **Action:** Use `.distanceToSquared()` with a squared threshold. When providing distances to `KeyboardInteractionManager`, squared distances are fully compatible since it only evaluates relative proximity to determine the closest interactable.
+## 2026-04-01 - [Eliminate React State from High-Frequency R3F Components]
+**Learning:** In React Three Fiber, using `useState` for values that change frequently (like player distance thresholds or hover states) causes severe performance issues because it triggers React re-renders and recreates expensive resources (like Canvas textures) mid-gameplay.
+**Action:** Pre-generate textures for all states once on mount, store mutable values in `useRef`, always mount sprites but toggle `visible` imperatively, and handle all visual updates (opacity, scale, texture swapping) directly via Three.js mutations inside `useFrame`.
