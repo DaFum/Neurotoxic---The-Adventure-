@@ -304,21 +304,17 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     store.flags.bassist_restored &&
     store.flags.maschinen_seele_complete
   ) {
-    if (!store.flags.salzgitter_finalized) {
-      store.increaseBandMood(100);
-      store.discoverLore('bassist_wahrheit');
-      store.discoverLore('maschinen_bewusstsein');
-      store.discoverLore('frequenz_1982_decoded');
-    }
+    store.increaseBandMood(100);
+    store.discoverLore('bassist_wahrheit');
+    store.discoverLore('maschinen_bewusstsein');
+    store.discoverLore('frequenz_1982_decoded');
     return say(
       'Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt - er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]'
     );
   }
 
   if (store.flags.salzgitter_encore_unlocked) {
-    if (!store.flags.salzgitter_finalized) {
-      store.increaseBandMood(50);
-    }
+    store.increaseBandMood(50);
     return say(
       'ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]'
     );
@@ -339,9 +335,7 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     if (store.flags.fanMovement && store.flags.salzgitterBandUnited) {
       baseText += ' Eine wahre Fan-Bewegung ist entstanden!';
     }
-    if (!store.flags.salzgitter_finalized) {
-      store.increaseBandMood(70);
-    }
+    store.increaseBandMood(70);
     return say(baseText + ' [BEST ENDING]');
   }
 
@@ -349,17 +343,13 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     endingsCount >= 2 ||
     (store.bandMood > 70 && store.flags.mariusConfidenceBoost)
   ) {
-    if (!store.flags.salzgitter_finalized) {
-      store.increaseBandMood(50);
-    }
+    store.increaseBandMood(50);
     return say(
       'Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Band hat einiges zusammen durchgestanden. Die Tour ist ein Erfolg! [GOOD ENDING]'
     );
   }
 
-  if (!store.flags.salzgitter_finalized) {
-    store.increaseBandMood(30);
-  }
+  store.increaseBandMood(30);
   return say(
     'Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]'
   );

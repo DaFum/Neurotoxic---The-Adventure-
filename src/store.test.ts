@@ -196,6 +196,23 @@ describe('useStore', () => {
       expect(quest?.text).toBe('New text');
     });
 
+    it('startQuestWithFlag should not reopen a completed quest and should update its text', () => {
+      let state = useStore.getState();
+      state.addQuest('test_quest_4', 'Old text');
+      state.completeQuest('test_quest_4');
+
+      state = useStore.getState();
+      expect(state.quests.find(q => q.id === 'test_quest_4')?.status).toBe('completed');
+
+      state.startQuestWithFlag('test_quest_4', 'New text', 'mariusCalmed');
+
+      state = useStore.getState();
+      const quest = state.quests.find(q => q.id === 'test_quest_4');
+      expect(state.flags.mariusCalmed).toBe(true);
+      expect(quest?.status).toBe('completed');
+      expect(quest?.text).toBe('New text');
+    });
+
     it('completeQuestWithFlag should complete an existing quest and set a flag', () => {
       let state = useStore.getState();
       state.addQuest('test_quest_3', 'Some text');

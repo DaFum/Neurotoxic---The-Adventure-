@@ -869,7 +869,7 @@ export const useStore = create<GameState>()(
                   ? {
                       ...q,
                       text,
-                      status: 'active',
+                      status: (existing.status === 'completed' ? 'completed' : 'active') as QuestStatus,
                     }
                   : q
               ),

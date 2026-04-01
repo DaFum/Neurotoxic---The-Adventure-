@@ -13,6 +13,7 @@ _Update 01.04.2026 (Dialogue Refactor): Backstage-Dialoge (Feedback-Monitor, Mar
 _Update 01.04.2026 (Kaminstube Refactor Slice): Weitere Kaminstube-Interaktionen (Matze, Crowd, kaputter Drum-Computer, Ersatzröhre, kaputter Amp) wurden in dedizierte Builder unter `src/dialogues/kaminstube/` extrahiert. Inhaltlich unverändert bis auf explizites Limit-Feedback beim Ersatzröhre-Pickup, falls keine weitere Aufnahme möglich ist._
 _Update 01.04.2026 (Salzgitter Dialogue Refactor): Salzgitter-Dialoge (Matze, Lars, Marius, schwebender Bassist, Fan, Finale) wurden in dedizierte Builder unter `src/dialogues/salzgitter/` extrahiert. Kein inhaltlicher Unterschied in Dialogbäumen, Quest-Triggern, Flag-Namen oder BandMood-Deltas._
 _Update 01.04.2026 (VoidStation Dialogue Refactor): VoidStation-Dialoge (Kosmischer Tankwart, Altes Terminal, Kosmisches Echo, schwebender Bassist, Marius' Ego, Diplomaten-Interface, Magnetbänder, Frequenz-Detektor, Verbotene Inschrift) wurden in dedizierte Builder unter `src/dialogues/voidstation/` extrahiert. Zusätzlich gibt es explizites Inventar-Limit-Feedback bei `Dunkle Materie` und `Splitter der Leere` statt stiller Erfolgsannahme._
+_Update 01.04.2026 (Dialogue Bug Fixes & Quest State): (1) Salzgitter Matze Deep-Talk-Branch (`matzeDeepTalk`) ist jetzt durch `salzgitterMatzeDeepTalkDone` einmalig (one-shot); +40/+10 BandMood und Skills werden nur beim ersten Ausführen vergeben. (2) Salzgitter Bassist Auto-Restore: +30 BandMood und `bassist_restored` werden jetzt via `(Weiter)`-Aktion statt beim Bauzeit-Aufruf gesetzt. (3) Salzgitter Fan Backstage-Rede: `salzgitter_fan_speech_heard` und +5 BandMood werden via `(Weiter)`-Aktion vergeben. (4) VoidStation Kosmisches Echo: Wenn `cosmic_echo`-Flag bereits gesetzt, wird die Quest via `startAndFinishQuest` nacherfasst (Backfill für alte Spielstände). (5) VoidStation Marius' Ego: Quest-Abschluss nutzt jetzt atomares `completeQuestWithFlag('ego', 'egoContained', true)`. (6) TourBus Marius Social-7-Antwort hat wieder einen eigenen emotionalen Text (unterscheidet sich jetzt vom Normal-Mood-Greeting). (7) `startQuestWithFlag` setzt `completed`-Quests nicht mehr auf `active` zurück — nur `failed`-Quests werden reaktiviert._
 
 > **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx`, `src/dialogues/**/*.ts` (einschließlich Dialogue-Builder-Funktionen in `src/dialogues/*/` Verzeichnissen) oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `src/components/scenes/`, `src/dialogues/proberaum/`, `src/dialogues/tourbus/`, `src/dialogues/backstage/`, `src/dialogues/kaminstube/`, `src/dialogues/salzgitter/`, `src/dialogues/voidstation/`, `src/store.ts`.
 
@@ -300,9 +301,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 - **Altes Terminal:**
   - _Interaktion:_ Logbuch lesen (+5 BandMood, **Lore:** `void_1982`).
 - **Kosmisches Echo:**
-  - _Option (Trait: Visionary):_ Nachricht entschlüsseln (+20 BandMood, Quest-Abschluss: `cosmic_echo`, **Lore:** `cosmic_echo_decoded`).
+  - _Wenn `cosmic_echo`-Flag beim Betreten bereits gesetzt (Backfill für alte Spielstände):_ Quest `cosmic_echo` wird via `startAndFinishQuest` nacherfasst.
+  - _Option (Trait: Visionary):_ Nachricht entschlüsseln (+20 BandMood, Quest-Abschluss: `cosmic_echo`, **Lore:** `cosmic_echo_decoded`, setzt `cosmic_echo`, `voidCosmicEchoRewarded`).
 - **Marius' Ego (Item):**
-  - _Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius' Ego" und schaltet **Lore:** `ego_philosophy` frei. Quest-Abschluss: `ego`._
+  - _Hinweis: Egal welche Option gewählt wird, man erhält das Item "Marius' Ego" und schaltet **Lore:** `ego_philosophy` frei. Quest-Abschluss: `ego` via atomarem `completeQuestWithFlag('ego', 'egoContained', true)`._
   - _Bonus (Wenn mariusEgoStrategy):_ "Wende unsere Strategie an." (+35 BandMood).
   - _Bonus (Wenn marius_tourbus_doubt) (Trait: Diplomat):_ "Marius glaubt nicht mehr an sich. Du musst ihn retten." (+40 BandMood, +5 Social, setzt `mariusConfidenceBoost`).
   - Option (Trait: Visionary): "Vision leitet uns" (+30 BandMood, +5 Chaos).
@@ -398,6 +400,10 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - Option (Skill: Chaos 10): (+50 BandMood, +5 Chaos).
     - Option (Skill: Technical 10): (+40 BandMood, +5 Technical).
     - Standard: (+20 BandMood).
+  - _Deep Talk (wenn `matzeDeepTalk` gesetzt, einmalig via `salzgitterMatzeDeepTalkDone`):_
+    - Option (Trait: Visionary): "Ich sehe die Muster." (+40 BandMood, +5 Chaos, setzt `salzgitterMatzeDeepTalkDone`).
+    - Standard: "Lass uns spielen." (+10 BandMood, setzt `salzgitterMatzeDeepTalkDone`).
+    - _Nach dem ersten Ausführen:_ Einfacher Satz ohne Optionen (kein weiterer Reward).
   - _Deep Talk & Wirt Legacy 1982:_
     - Option (Trait: Mystic): "Frequenzen sind bereit" (+40 BandMood bei `backstageRitualPerformed`, sonst +20).
     - Standard: "Wir brechen den Fluch" (+20 BandMood).
@@ -440,7 +446,7 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
     - (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
   - _Wenn `lars_paced`:_ (+25 BandMood).
 - **Schwebender Bassist** _(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):_
-  - _Wenn `voidBassistSpoken` & `bassist_mystery` abgeschlossen & kein Bassist-Saite & kein Resonanz-Kristall im Inventar (Auto-Restore):_ "Erinnert sich" (+30 BandMood, setzt `bassist_restored`).
+  - _Wenn `voidBassistSpoken` & `bassist_mystery` abgeschlossen & kein Bassist-Saite & kein Resonanz-Kristall im Inventar (Auto-Restore):_ "Erinnert sich" — +30 BandMood und `bassist_restored` werden via `(Weiter)`-Aktion gesetzt (nicht beim Öffnen des Dialogs).
   - _Wenn `voidBassistSpoken` gesetzt (aber Auto-Restore-Bedingungen nicht erfüllt — z.B. Quest noch offen oder Spezialitem im Inventar):_ Option "Du erinnerst dich an mich" (+20 BandMood, setzt **NICHT** `bassist_restored`).
   - _Item `Bassist-Saite` (Trait: Mystic):_ "Gib ihm die Bassist-Saite aus dem Echo" (+40 BandMood, entfernt `Bassist-Saite`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
   - _Item `Resonanz-Kristall`:_ "Nimm den Resonanz-Kristall. Vollende das Riff" (+30 BandMood, entfernt `Resonanz-Kristall`, setzt `bassist_restored`, **Lore:** `bassist_wahrheit`).
