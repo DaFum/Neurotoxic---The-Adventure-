@@ -12,9 +12,7 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
       requiredTrait: 'Visionary',
       action: () => {
         const store = game();
-        if (!store.quests.find(q => q.id === 'frequenz_1982')) {
-          store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-        }
+        store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
         const pickedUpFragment = store.addToInventory('Frequenzfragment');
         if (pickedUpFragment) {
           store.increaseBandMood(15, 'frequenz1982_proberaum_visionary');
@@ -30,9 +28,7 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
       requiredSkill: { name: 'technical', level: 8 },
       action: () => {
         const store = game();
-        if (!store.quests.find(q => q.id === 'frequenz_1982')) {
-          store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
-        }
+        store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
         const pickedUpFragment = store.addToInventory('Frequenzfragment');
         if (pickedUpFragment) {
           store.increaseBandMood(15, 'frequenz1982_proberaum_technical');
@@ -145,6 +141,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.startQuestWithFlag('repair_amp', 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall', 'talkingAmpHeard');
+            currentStore.increaseBandMood(2);
             currentStore.setDialogue('Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."');
           }
         }
@@ -162,9 +159,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           currentStore.setFlag('maschinen_seele_amp', true);
           currentStore.increaseBandMood(10);
           currentStore.increaseSkill('chaos', 2);
-          if (!currentStore.quests.find(q => q.id === 'maschinen_seele')) {
-            currentStore.addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
-          }
+          currentStore.addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
         }
       });
     }
