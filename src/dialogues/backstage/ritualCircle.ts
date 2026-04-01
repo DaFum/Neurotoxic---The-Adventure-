@@ -155,18 +155,40 @@ export function buildBackstageRitualCircleDialogue(
   }
 
   if (hasPlasmaZunder) {
-    store.increaseBandMood(30);
-    store.removeFromInventory('Plasma-Zünder');
-    return say(
-      'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"'
-    );
+    return {
+      text: 'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"',
+      options: [
+        {
+          text: 'Plasma-Zünder einsetzen.',
+          action: () => {
+            const currentStore = game();
+            currentStore.increaseBandMood(30);
+            currentStore.removeFromInventory('Plasma-Zünder');
+            currentStore.setDialogue(
+              'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"'
+            );
+          },
+        },
+      ],
+    };
   }
 
   if (hasForbiddenRiff) {
-    store.increaseBandMood(15);
-    return say(
-      'Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"'
-    );
+    return {
+      text: 'Das Verbotene Riff resoniert mit dem Ritual-Kreis.',
+      options: [
+        {
+          text: 'Lass das Riff durch den Kreis hallen.',
+          action: () => {
+            const currentStore = game();
+            currentStore.increaseBandMood(15);
+            currentStore.setDialogue(
+              'Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"'
+            );
+          },
+        },
+      ],
+    };
   }
 
   if (store.flags.backstageRitualPerformed) {

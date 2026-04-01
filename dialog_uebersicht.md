@@ -11,6 +11,8 @@ _Update 31.03.2026 (Dialogue Refactor): Proberaum-Dialoge (Matze, Lars, Marius, 
 _Update 31.03.2026 (Scene Transition Pacing): Vorwärts-Übergänge zwischen Szenen (`Proberaum -> TourBus`, `Backstage -> VoidStation`, `VoidStation -> Kaminstube`, `Kaminstube -> Salzgitter`) nutzen nun einen kurzen Delay (1s) nach Exit-Dialog, inklusive Timeout-Cleanup beim Unmount, damit Übergänge nicht abrupt wirken._
 _Update 01.04.2026 (Dialogue Refactor): Backstage-Dialoge (Feedback-Monitor, Marius, Lars, Ritual-Kreis) sowie Kaminstube-Dialoge (Flüsternder Kamin, Wirt, Lars, Marius) wurden in dedizierte Builder unter `src/dialogues/backstage/` und `src/dialogues/kaminstube/` extrahiert. Kein inhaltlicher Unterschied — Dialogbäume, Quest-Trigger, Flag-Namen und BandMood-Werte bleiben identisch._
 _Update 01.04.2026 (Kaminstube Refactor Slice): Weitere Kaminstube-Interaktionen (Matze, Crowd, kaputter Drum-Computer, Ersatzröhre, kaputter Amp) wurden in dedizierte Builder unter `src/dialogues/kaminstube/` extrahiert. Inhaltlich unverändert bis auf explizites Limit-Feedback beim Ersatzröhre-Pickup, falls keine weitere Aufnahme möglich ist._
+_Update 01.04.2026 (Salzgitter Dialogue Refactor): Salzgitter-Dialoge (Matze, Lars, Marius, schwebender Bassist, Fan, Finale) wurden in dedizierte Builder unter `src/dialogues/salzgitter/` extrahiert. Kein inhaltlicher Unterschied in Dialogbäumen, Quest-Triggern, Flag-Namen oder BandMood-Deltas._
+_Update 01.04.2026 (VoidStation Dialogue Refactor): VoidStation-Dialoge (Kosmischer Tankwart, Altes Terminal, Kosmisches Echo, schwebender Bassist, Marius' Ego, Diplomaten-Interface, Magnetbänder, Frequenz-Detektor, Verbotene Inschrift) wurden in dedizierte Builder unter `src/dialogues/voidstation/` extrahiert. Zusätzlich gibt es explizites Inventar-Limit-Feedback bei `Dunkle Materie` und `Splitter der Leere` statt stiller Erfolgsannahme._
 
 > **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx`, `src/dialogues/**/*.ts` (einschließlich Dialogue-Builder-Funktionen in `src/dialogues/*/` Verzeichnissen) oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `src/components/scenes/`, `src/dialogues/proberaum/`, `src/dialogues/tourbus/`, `src/dialogues/backstage/`, `src/dialogues/kaminstube/`, `src/store.ts`.
 
@@ -151,9 +153,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - "Ein bisschen schon" (kein BandMood).
     - "Lass uns die Bühne abreißen!" (+10 BandMood).
   - _Sabotage entdeckt & kein Geständnis (`tourbus_sabotage_discovered && !tourbus_matze_confession`):_
-    - [Social 5]: \"Matze, ich glaube Marius zweifelt an der Band.\" – Matze gesteht: \"Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter...\" (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur` mit Text \"Finde heraus, wer das Kabel sabotiert hat\").
-    - [Brutalist]: \"Wer auch immer das war, kriegt eine Abreibung.\" – Matze schaut ertappt weg und schweigt schuldbewusst (-5 BandMood, keine Flag-Änderung, Quest bleibt offen).
-    - Neutral: \"Wir finden den Schuldigen.\" – Matze antwortet: \"Ja... genau. Wir suchen weiter.\" (kein Mood-Effekt, keine Flag-Änderung, Quest bleibt offen).
+    - [Social 5]: "Matze, ich glaube Marius zweifelt an der Band." – Matze gesteht: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..." (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur` mit Text "Finde heraus, wer das Kabel sabotiert hat").
+    - [Brutalist]: "Wer auch immer das war, kriegt eine Abreibung." – Matze schaut ertappt weg und schweigt schuldbewusst (-5 BandMood, keine Flag-Änderung, Quest bleibt offen).
+    - Neutral: "Wir finden den Schuldigen." – Matze antwortet: "Ja... genau. Wir suchen weiter." (kein Mood-Effekt, keine Flag-Änderung, Quest bleibt offen).
   - _Kabel repariert (BandMood < 30):_ Klagt über schlechte Laune, ist aber froh, dass das Kabel funktioniert (kein Mood-Effekt, kein Optionsmenü).
   - _Kabel repariert (BandMood >= 30):_ Freut sich auf den Gig: "Wir sind bereit. Die Bühne gehört uns." (kein Mood-Effekt, kein Optionsmenü).
 - **Band-Besprechung (Mitte des Busses, nachdem Sabotage entdeckt wurde, einmalig):**
@@ -164,13 +166,14 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - Standard: Einfache Ansagen (+10 BandMood).
 - **Marius:**
   - _Item (Marius Ego):_ Ego übergeben (+20 BandMood) ODER Ego behalten (-10 BandMood).
-  - _BandMood < 30 (kein Ego):_ Nervenzusammenbruch — `marius_tourbus_doubt` wird beim Öffnen des Dialogs via `onInteract` gesetzt (nicht im Builder).
+  - _BandMood < 30 (kein Ego):_ Nervenzusammenbruch — `marius_tourbus_doubt` wird in `src/dialogues/tourbus/marius.ts` innerhalb von `buildTourbusMariusDialogue()` gesetzt; `TourBus.tsx` ruft nur `setDialogue(buildTourbusMariusDialogue())` auf.
     - [Social 7]: Aufmuntern (+10 BandMood).
     - [Diplomat]: Fokussieren (+15 BandMood).
     - Standard: kein Effekt.
   - _BandMood >= 30 (kein Ego):_
     - [Performer]: Baut Selbstbewusstsein auf (+15 BandMood, +3 Social, setzt `marius_tourbus_doubt: false`).
     - Standard: kein Effekt.
+  - _Wartungshinweis:_ Bei Änderungen an Dialogen, Quests, Item-Interaktionen oder BandMood in den TourBus-Marius-Pfaden `dialog_uebersicht.md` und `src/dialogues/tourbus/marius.ts` gemeinsam aktualisieren.
 - **Defekter Verstärker (Trait: Technician, einmalig):**
   - _Spezial-Option:_ Lötstelle reparieren (+20 BandMood, +10 Technical, setzt `tourbusAmpTechnician`).
 - **Klebeband (Item):**

@@ -26,6 +26,20 @@ describe('buildKaminstubeMariusDialogue', () => {
     expect(dialogue.text).toContain('Unsere Strategie funktioniert');
   });
 
+  it('keeps strategy precedence over egoContained when both flags are set', () => {
+    setupTestState({
+      flags: {
+        ...useStore.getState().flags,
+        ampFixed: true,
+        mariusEgoStrategy: true,
+        egoContained: true,
+      },
+    });
+
+    const dialogue = buildKaminstubeMariusDialogue();
+    expect(dialogue.text).toContain('Unsere Strategie funktioniert');
+  });
+
   it('returns the ego contained line when ego is contained without strategy flag', () => {
     setupTestState({
       flags: {

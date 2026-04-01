@@ -1,6 +1,16 @@
 import { type Dialogue } from '../../store';
 import { game, say } from '../shared/helpers';
 
+function handleMatzeConfession(text: string, moodDelta: number) {
+  const currentStore = game();
+  currentStore.setDialogue(text);
+  currentStore.completeQuestWithFlag(
+    'tourbus_saboteur',
+    'tourbus_matze_confession'
+  );
+  currentStore.increaseBandMood(moodDelta);
+}
+
 export function buildKaminstubeMatzeDialogue(): Dialogue {
   const store = game();
 
@@ -29,30 +39,20 @@ export function buildKaminstubeMatzeDialogue(): Dialogue {
         text: 'Wir stehen das gemeinsam durch. [Diplomat]',
         requiredTrait: 'Diplomat',
         action: () => {
-          const currentStore = game();
-          currentStore.setDialogue(
-            'Matze: "Danke. Ich werde dich nicht enttäuschen. Die Röhren glühen wieder."'
+          handleMatzeConfession(
+            'Matze: "Danke. Ich werde dich nicht enttäuschen. Die Röhren glühen wieder."',
+            30
           );
-          currentStore.completeQuestWithFlag(
-            'tourbus_saboteur',
-            'tourbus_matze_confession'
-          );
-          currentStore.increaseBandMood(30);
         },
       },
       {
         text: 'Kein Fehler mehr, oder du fliegst. [Brutalist]',
         requiredTrait: 'Brutalist',
         action: () => {
-          const currentStore = game();
-          currentStore.setDialogue(
-            'Matze: "Verstanden. Nur noch Hass und Lärm."'
+          handleMatzeConfession(
+            'Matze: "Verstanden. Nur noch Hass und Lärm."',
+            15
           );
-          currentStore.completeQuestWithFlag(
-            'tourbus_saboteur',
-            'tourbus_matze_confession'
-          );
-          currentStore.increaseBandMood(15);
         },
       },
     ],

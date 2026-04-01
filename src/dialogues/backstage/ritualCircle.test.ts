@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { executeDialogueOption } from '../../dialogueEngine';
 import { useStore } from '../../store';
 import { getOptionTexts, setupTestState } from '../shared/test-helpers';
 import { buildBackstageRitualCircleDialogue } from './ritualCircle';
@@ -44,6 +45,15 @@ describe('buildBackstageRitualCircleDialogue', () => {
     const moodBefore = store.bandMood;
 
     const dialogue = buildBackstageRitualCircleDialogue(vi.fn());
+    const option = dialogue.options?.find(
+      (entry) => entry.text === 'Plasma-Zünder einsetzen.'
+    );
+
+    if (!option) {
+      throw new Error('Expected plasma igniter option at ritual circle');
+    }
+
+    executeDialogueOption(option);
     const stateAfter = useStore.getState();
 
     expect(dialogue.text).toContain('Du benutzt den Plasma-Zünder');

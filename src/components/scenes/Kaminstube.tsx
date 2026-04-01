@@ -42,7 +42,6 @@ export function Kaminstube() {
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
-  const canPickupItem = useStore((state) => state.canPickupItem);
   const removeFromInventory = useStore((state) => state.removeFromInventory);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
@@ -550,21 +549,19 @@ export function Kaminstube() {
       />
 
       {/* Items */}
-      {canPickupItem('Röhre') &&
-        !inventory.includes('Röhre') &&
-        !flags.ampFixed && (
-          <Interactable
-            position={[8, 0.5, 2]}
-            emoji="🔌"
-            name="Ersatzröhre"
-            scale={0.6}
-            onInteract={() => {
-              useStore
-                .getState()
-                .setDialogue(buildKaminstubeTubePickupDialogue());
-            }}
-          />
-        )}
+      {!inventory.includes('Röhre') && !flags.ampFixed && (
+        <Interactable
+          position={[8, 0.5, 2]}
+          emoji="🔌"
+          name="Ersatzröhre"
+          scale={0.6}
+          onInteract={() => {
+            useStore
+              .getState()
+              .setDialogue(buildKaminstubeTubePickupDialogue());
+          }}
+        />
+      )}
 
       {/* The Amp Interaction */}
       {!flags.ampFixed && (

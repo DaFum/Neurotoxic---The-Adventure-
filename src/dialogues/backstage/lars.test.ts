@@ -76,6 +76,15 @@ describe('buildBackstageLarsDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildBackstageLarsDialogue();
+    const option = dialogue.options?.find(
+      (entry) => entry.text === 'Gib Lars den Energydrink.'
+    );
+
+    if (!option) {
+      throw new Error('Expected energy drink option for Lars');
+    }
+
+    executeDialogueOption(option);
     const stateAfter = useStore.getState();
 
     expect(dialogue.text).toContain('Nicht so gut wie Turbo-Koffein');

@@ -81,4 +81,53 @@ describe('buildKaminstubeFireplaceDialogue', () => {
     expect(stateAfter.flags.forgotten_lore).toBe(true);
     expect(stateAfter.skills.chaos).toBe(chaosBefore + 3);
   });
+
+  it('keeps lore reward options one-time after first completion', () => {
+    setupTestState({
+      trait: 'Mystic',
+    });
+    useStore
+      .getState()
+      .addQuest(
+        'forgotten_lore',
+        'Entschlüssele die vergessene Lore in der Kaminstube'
+      );
+
+    const firstDialogue = buildKaminstubeFireplaceDialogue();
+    const firstOption = firstDialogue.options?.find((entry) =>
+      entry.text.includes('[Mystic]')
+    );
+
+    if (!firstOption) {
+      throw new Error('Expected first-run Mystic reward option');
+    }
+
+    executeDialogueOption(firstOption);
+    const afterFirst = useStore.getState();
+    const moodAfterFirst = afterFirst.bandMood;
+    const socialAfterFirst = afterFirst.skills.social;
+    const technicalAfterFirst = afterFirst.skills.technical;
+    const chaosAfterFirst = afterFirst.skills.chaos;
+
+    const secondDialogue = buildKaminstubeFireplaceDialogue();
+    const secondOptionTexts = getOptionTexts(secondDialogue);
+
+    expect(afterFirst.flags.forgotten_lore).toBe(true);
+    expect(secondOptionTexts.some((text) => text.includes('[Mystic]'))).toBe(
+      false
+    );
+    expect(secondOptionTexts.some((text) => text.includes('[Chaos 7]'))).toBe(
+      false
+    );
+    expect(
+      secondOptionTexts.some((text) => text.includes('[Technical 8]'))
+    ).toBe(false);
+    expect(secondOptionTexts.some((text) => text.includes('[Diplomat]'))).toBe(
+      false
+    );
+    expect(useStore.getState().bandMood).toBe(moodAfterFirst);
+    expect(useStore.getState().skills.social).toBe(socialAfterFirst);
+    expect(useStore.getState().skills.technical).toBe(technicalAfterFirst);
+    expect(useStore.getState().skills.chaos).toBe(chaosAfterFirst);
+  });
 });

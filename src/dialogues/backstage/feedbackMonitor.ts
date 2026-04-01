@@ -158,10 +158,11 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           );
           currentStore.increaseBandMood(25);
           currentStore.increaseSkill('technical', 5);
-          currentStore.setFlag('feedbackMonitorBackstageQuestStarted', true);
-          currentStore.addQuest(
+          currentStore.startQuestWithFlag(
             'feedback_monitor_backstage',
-            'Finde den Verstärker-Schaltplan für den Feedback-Monitor'
+            'Finde den Verstärker-Schaltplan für den Feedback-Monitor',
+            'feedbackMonitorBackstageQuestStarted',
+            true
           );
         },
       });
@@ -173,10 +174,11 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           currentStore.setDialogue(
             'Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."'
           );
-          currentStore.setFlag('feedbackMonitorBackstageQuestStarted', true);
-          currentStore.addQuest(
+          currentStore.startQuestWithFlag(
             'feedback_monitor_backstage',
-            'Finde den Verstärker-Schaltplan für den Feedback-Monitor'
+            'Finde den Verstärker-Schaltplan für den Feedback-Monitor',
+            'feedbackMonitorBackstageQuestStarted',
+            true
           );
         },
       });
@@ -205,13 +207,11 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
                   nestedStore.setDialogue(
                     'Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."'
                   );
-                  nestedStore.setFlag(
+                  nestedStore.startQuestWithFlag(
+                    'feedback_monitor_backstage',
+                    'Finde den Verstärker-Schaltplan für den Feedback-Monitor',
                     'feedbackMonitorBackstageQuestStarted',
                     true
-                  );
-                  nestedStore.addQuest(
-                    'feedback_monitor_backstage',
-                    'Finde den Verstärker-Schaltplan für den Feedback-Monitor'
                   );
                 },
               },

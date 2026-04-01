@@ -30,9 +30,10 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
                     currentStore.setDialogue(
                       'Wirt: "Na gut. Er machte einen Pakt mit der Void. Der Bassist war der Preis für den ultimativen Riff. Salzgitter war nur der Anfang. Passt auf euch auf."'
                     );
-                    currentStore.setFlag('wirtLegacy1982', true);
-                    currentStore.startAndFinishQuest(
+                    currentStore.completeQuestWithFlag(
                       'wirt_legacy',
+                      'wirtLegacy1982',
+                      true,
                       'Erfahre die vollständige Geschichte von 1982 vom Wirt'
                     );
                     currentStore.increaseBandMood(25);
@@ -47,9 +48,10 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
                     currentStore.setDialogue(
                       'Wirt: "Für die Band... okay. Der Manager verkaufte den Bassisten an die Leere, um den perfekten Industrial-Sound zu erschaffen. Begeht nicht den gleichen Fehler."'
                     );
-                    currentStore.setFlag('wirtLegacy1982', true);
-                    currentStore.startAndFinishQuest(
+                    currentStore.completeQuestWithFlag(
                       'wirt_legacy',
+                      'wirtLegacy1982',
+                      true,
                       'Erfahre die vollständige Geschichte von 1982 vom Wirt'
                     );
                     currentStore.increaseBandMood(20);
@@ -64,9 +66,10 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
                     currentStore.setDialogue(
                       'Wirt: "Schrei nicht so! Okay, okay. Der Manager hat den Bassisten geopfert. An die Frequenz! Zufrieden?! Jetzt geh spielen!"'
                     );
-                    currentStore.setFlag('wirtLegacy1982', true);
-                    currentStore.startAndFinishQuest(
+                    currentStore.completeQuestWithFlag(
                       'wirt_legacy',
+                      'wirtLegacy1982',
+                      true,
                       'Erfahre die vollständige Geschichte von 1982 vom Wirt'
                     );
                     currentStore.increaseBandMood(15);
@@ -95,9 +98,10 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
             currentStore.setDialogue(
               'Wirt: "Der Roadie?! Er ist noch da... dann weißt du es schon. Der Manager hat den Bassisten geopfert. Er hat einen Pakt mit der Void geschlossen. Passt auf, dass euch in Salzgitter nicht dasselbe passiert."'
             );
-            currentStore.setFlag('wirtLegacy1982', true);
-            currentStore.startAndFinishQuest(
+            currentStore.completeQuestWithFlag(
               'wirt_legacy',
+              'wirtLegacy1982',
+              true,
               'Erfahre die vollständige Geschichte von 1982 vom Wirt'
             );
             currentStore.increaseBandMood(30);

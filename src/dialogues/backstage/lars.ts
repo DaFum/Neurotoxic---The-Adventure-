@@ -1,9 +1,22 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, say } from '../shared/helpers';
 
+export function applyLarsEnergyDrinkEffects() {
+  const currentStore = game();
+  const energyText = currentStore.flags.larsRhythmPact
+    ? 'Lars: "JA! Der Treibstoff für unseren Pakt! Der Rhythmus explodiert in mir!"'
+    : 'Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."';
+
+  currentStore.setDialogue(energyText);
+  currentStore.removeFromInventory('Energiedrink');
+  currentStore.setFlag('larsEnergized', true);
+  currentStore.increaseBandMood(currentStore.flags.larsRhythmPact ? 35 : 10);
+}
+
 export function buildBackstageLarsDialogue(): Dialogue {
   const store = game();
   const hasTurbo = store.hasItem('Turbo-Koffein');
+  const hasEnergyDrink = store.hasItem('Energiedrink');
 
   if (store.flags.larsEnergized) {
     if (store.flags.larsVibrating) {
@@ -135,16 +148,28 @@ export function buildBackstageLarsDialogue(): Dialogue {
     };
   }
 
-  if (store.hasItem('Energiedrink')) {
+  if (hasEnergyDrink) {
     const energyText = store.flags.larsRhythmPact
       ? 'Lars: "JA! Der Treibstoff für unseren Pakt! Der Rhythmus explodiert in mir!"'
       : 'Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."';
 
-    store.removeFromInventory('Energiedrink');
-    store.setFlag('larsEnergized', true);
-    store.increaseBandMood(store.flags.larsRhythmPact ? 35 : 10);
-
-    return { text: energyText };
+    return {
+      text: energyText,
+      options: [
+        {
+          text: 'Gib Lars den Energydrink.',
+          action: () => {
+            applyLarsEnergyDrinkEffects();
+          },
+        },
+        {
+          text: 'Lieber später.',
+          action: () => {
+            game().setDialogue('Lars: "Okay... aber ich kippe gleich um."');
+          },
+        },
+      ],
+    };
   }
 
   return say(
