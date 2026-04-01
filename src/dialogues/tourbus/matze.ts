@@ -5,7 +5,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
   const store = game();
   const { flags, bandMood, hasItem } = store;
 
-  if (bandMood < 20 && !hasItem('Repariertes Kabel') && !flags.tourbus_sabotage_discovered) {
+  if (bandMood < 20 && !hasItem('Repariertes Kabel') && !flags.cableFixed && !flags.tourbus_sabotage_discovered) {
     return say('Matze: "Lass mich in Ruhe. Dieses kaputte Kabel ist das Ende der Band."');
   }
 

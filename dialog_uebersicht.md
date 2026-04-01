@@ -25,8 +25,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Interaktion:* Finden des Riffs (+15 BandMood, **Lore:** `forbidden_riff`, Erhalt: Verbotenes Riff).
 * **Matze (Gitarrist):**
     * *Nach dem Aufwischen (Wasser aufgewischt):* Option "Erzähl mir von der Tour 1982." öffnet einen Unterdialog.
-        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (Quest gestartet: `frequenz_1982`; **bei erfolgreicher Aufnahme:** +25 BandMood, +4 Chaos, Erhalt: Frequenzfragment, setzt `bassist_clue_matze`, `matzeDeepTalk`, `frequenz1982_proberaum`).
-        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (Quest gestartet: `frequenz_1982`; **bei erfolgreicher Aufnahme:** +10 BandMood, +3 Chaos, Erhalt: Frequenzfragment, setzt `bassist_clue_matze`, `proberaum_brutalist_smash`, `matzeDeepTalk`, `frequenz1982_proberaum`).
+        * Zweig A (Trait: Mystic): "Ich spüre eine Frequenz in den Wänden..." (Quest gestartet: `frequenz_1982`, setzt **immer** `bassist_clue_matze`; **bei erfolgreicher Aufnahme:** +25 BandMood, +4 Chaos, Erhalt: Frequenzfragment, setzt `matzeDeepTalk`, `frequenz1982_proberaum`).
+        * Zweig B (Trait: Brutalist): "Lass mich die Wand einschlagen..." (Quest gestartet: `frequenz_1982`, setzt **immer** `bassist_clue_matze`; **bei erfolgreicher Aufnahme:** +10 BandMood, +3 Chaos, Erhalt: Frequenzfragment, setzt `proberaum_brutalist_smash`, `matzeDeepTalk`, `frequenz1982_proberaum`).
         * Zweig C (Trait: Visionary): "Ich sehe Muster im Lärm." (+30 BandMood, +5 Chaos, Lore: `matze_1982_truth`, setzt `matzeDeepTalk`).
         * Zweig D (Skill: Technical 5): Frequenz-Analyse (+20 BandMood, +3 Technical, setzt `matzeDeepTalk`).
         * Zweig E (Skill: Social 3): Beruhigen (+15 BandMood, +2 Social, setzt `matzeDeepTalk`).
@@ -135,8 +135,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 ## 2. TourBus (Unterwegs)
 
 * **Matze:**
-    * *Ohne Kabel (BandMood < 20):* Klagt über schlechte Laune (kein Mood-Effekt, kein Optionsmenü).
-    * *Ohne Kabel (BandMood >= 20, kein Sabotage-Verdacht):*
+    * *Ohne Kabel (BandMood < 20, Kabel noch nicht repariert):* Klagt über schlechte Laune (kein Mood-Effekt, kein Optionsmenü).
+    * *Ohne Kabel (BandMood >= 20, Kabel noch nicht repariert, kein Sabotage-Verdacht):*
         * "Ich suche danach." (Quest hinzugefügt: `cable` "Repariere Matzes Kabel mit Klebeband und defektem Kabel").
         * "Das Kabel wurde nicht gebrochen, es wurde durchtrennt." [Technical 5] (+20 BandMood, +5 Technical, setzt `tourbus_sabotage_discovered`, Lore: `tourbus_saboteur`, Quest gestartet: `tourbus_saboteur`).
         * "Vielleicht Schicksal." (-5 BandMood).
@@ -150,6 +150,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     * *Sabotage entdeckt & `marius_tourbus_doubt` (Marius-Zweifel) gesetzt & kein Geständnis:*
         * [Social 5]: Matze gesteht Sabotage (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
         * [Brutalist]: Schweigend ertappt (-5 BandMood).
+    * *Kabel repariert (BandMood < 30):* Klagt über schlechte Laune, ist aber froh, dass das Kabel funktioniert (kein Mood-Effekt, kein Optionsmenü).
+    * *Kabel repariert (BandMood >= 30):* Freut sich auf den Gig: "Wir sind bereit. Die Bühne gehört uns." (kein Mood-Effekt, kein Optionsmenü).
 * **Band-Besprechung (Mitte des Busses, nachdem Sabotage entdeckt wurde, einmalig):**
     * *Startet und beendet Quest `band_meeting`, setzt Flag `tourbusBandMeeting`:*
     * (Trait: Diplomat): Vermitteln (+30 BandMood).
