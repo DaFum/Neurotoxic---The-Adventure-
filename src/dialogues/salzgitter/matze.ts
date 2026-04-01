@@ -171,8 +171,10 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue('Matze: "Ja. Der Stahl wartet."');
-              currentStore.increaseBandMood(10);
-              currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
+              if (!currentStore.flags.salzgitterMatzeDeepTalkDone) {
+                currentStore.increaseBandMood(10);
+                currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
+              }
             },
           },
         ],

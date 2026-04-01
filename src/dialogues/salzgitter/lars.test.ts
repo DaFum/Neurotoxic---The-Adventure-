@@ -23,10 +23,8 @@ describe('buildSalzgitterLarsDialogue', () => {
     const pacedOption = dialogue.options?.find(
       (o) => o.text === 'Halte den Puls.'
     );
-    expect(pacedOption).toBeDefined();
-    if (pacedOption) {
-      executeDialogueOption(pacedOption);
-    }
+    if (!pacedOption) throw new Error('Expected "Halte den Puls." option in lars dialogue');
+    executeDialogueOption(pacedOption);
 
     const stateAfter = useStore.getState();
     expect(stateAfter.flags.salzgitter_lars_paced_talked).toBe(true);

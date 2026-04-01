@@ -33,9 +33,8 @@ describe('Salzgitter object dialogues', () => {
     expect(dialogue.text).toContain('Ich segne diesen Gig');
 
     const option = dialogue.options?.find((entry) => entry.text === '(Weiter)');
-    if (option) {
-      executeDialogueOption(option);
-    }
+    if (!option) throw new Error('Expected "(Weiter)" option in bassist dialogue');
+    executeDialogueOption(option);
 
     const stateAfter = useStore.getState();
     expect(stateAfter.flags.bassist_restored).toBe(true);
