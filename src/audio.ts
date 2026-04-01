@@ -21,7 +21,9 @@ class AudioEngine {
         this.ctx = new AudioContext();
       }
       if (this.ctx.state === 'suspended') {
-        this.ctx.resume();
+        this.ctx.resume().catch((e) => {
+          console.warn('AudioContext resume failed:', e);
+        });
       }
     } catch (e) {
       console.warn('AudioContext initialization failed:', e);
@@ -56,10 +58,10 @@ class AudioEngine {
 
       osc.type = type;
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-    
-    gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-    
+
+      gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+
       osc.connect(gain);
       gain.connect(this.ctx.destination);
 
@@ -145,26 +147,30 @@ class AudioEngine {
         this.playTone(20 + Math.random() * 30, 'square', 0.2, 0.05);
       } else if (type === 'kaminstube') {
         // Fire crackling (noise bursts)
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        const filter = this.ctx.createBiquadFilter();
-        
-        filter.type = 'bandpass';
-        filter.frequency.value = 1000 + Math.random() * 2000;
-        filter.Q.value = 10;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
 
-        osc.type = 'sawtooth';
-        osc.frequency.value = 100;
-        
-        gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+          filter.type = 'bandpass';
+          filter.frequency.value = 1000 + Math.random() * 2000;
+          filter.Q.value = 10;
 
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.ctx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.value = 100;
 
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.05);
+        } catch (e) {
+          console.warn('Error playing kaminstube ambient:', e);
+        }
       } else if (type === 'salzgitter') {
         // Distant city hum
         this.playTone(60, 'sine', 1.0, 0.01);
@@ -213,16 +219,20 @@ class AudioEngine {
       
       // Play kick drum (low sine sweep)
       if (step % 2 === 0) {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.1);
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.1);
+        } catch (e) {
+          console.warn('Error playing kick drum:', e);
+        }
       }
 
       // Play snare (noise burst)
