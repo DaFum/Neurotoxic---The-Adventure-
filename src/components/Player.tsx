@@ -219,7 +219,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     velocity.z += touchInput.z;
 
     // Update facing direction from combined input
-    // ⚡ Bolt Optimization: Only update state if value actually changed to prevent unnecessary re-renders in useFrame
+    // ⚡ Bolt Optimization: Only update the facingRight ref when the value actually changes to avoid redundant work in useFrame
     if (velocity.x < -0.1 && facingRight.current) facingRight.current = false;
     else if (velocity.x > 0.1 && !facingRight.current) facingRight.current = true;
 
