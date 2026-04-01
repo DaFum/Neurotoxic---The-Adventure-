@@ -18,11 +18,21 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
     !store.hasItem('Bassist-Saite') &&
     !store.hasItem('Resonanz-Kristall')
   ) {
-    store.increaseBandMood(30);
-    store.setFlag('bassist_restored', true);
-    return say(
-      'Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."'
-    );
+    return {
+      text: 'Bassist: "Du erinnerst dich an mich. Du hast die Frequenz verstanden. Ich segne diesen Gig mit der Kraft der 432 Hz."',
+      options: [
+        {
+          text: '(Weiter)',
+          action: () => {
+            const currentStore = game();
+            if (!currentStore.flags.bassist_restored) {
+              currentStore.increaseBandMood(30);
+              currentStore.setFlag('bassist_restored', true);
+            }
+          },
+        },
+      ],
+    };
   }
 
   const options: DialogueOption[] = [
@@ -144,8 +154,21 @@ export function buildSalzgitterFanDialogue(): Dialogue {
 
   if (store.flags.backstage_performer_speech) {
     if (!store.flags.salzgitter_fan_speech_heard) {
-      store.setFlag('salzgitter_fan_speech_heard', true);
-      store.increaseBandMood(5);
+      return {
+        text: 'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"',
+        options: [
+          {
+            text: '(Weiter)',
+            action: () => {
+              const currentStore = game();
+              if (!currentStore.flags.salzgitter_fan_speech_heard) {
+                currentStore.setFlag('salzgitter_fan_speech_heard', true);
+                currentStore.increaseBandMood(5);
+              }
+            },
+          },
+        ],
+      };
     }
     return say(
       'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"'
@@ -260,12 +283,14 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
     );
   }
 
-  store.completeQuestWithFlag(
-    'final',
-    'salzgitter_finalized',
-    true,
-    'Spiele das Finale in Salzgitter'
-  );
+  if (!store.flags.salzgitter_finalized) {
+    store.completeQuestWithFlag(
+      'final',
+      'salzgitter_finalized',
+      true,
+      'Spiele das Finale in Salzgitter'
+    );
+  }
 
   let endingsCount = 0;
   if (store.flags.salzgitterBandUnited) endingsCount++;

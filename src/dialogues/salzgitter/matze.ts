@@ -147,31 +147,40 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
   }
 
   if (store.flags.matzeDeepTalk) {
-    return {
-      text: 'Matze: "Ich hab über das nachgedacht, was du über den Lärm gesagt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"',
-      options: [
-        {
-          text: 'Ich sehe die Muster. [Visionary]',
-          requiredTrait: 'Visionary',
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."'
-            );
-            currentStore.increaseBandMood(40);
-            currentStore.increaseSkill('chaos', 5);
+    if (!store.flags.salzgitterMatzeDeepTalkDone) {
+      return {
+        text: 'Matze: "Ich hab über das nachgedacht, was du über den Lärm gesagt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"',
+        options: [
+          {
+            text: 'Ich sehe die Muster. [Visionary]',
+            requiredTrait: 'Visionary',
+            action: () => {
+              const currentStore = game();
+              currentStore.setDialogue(
+                'Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."'
+              );
+              if (!currentStore.flags.salzgitterMatzeDeepTalkDone) {
+                currentStore.increaseBandMood(40);
+                currentStore.increaseSkill('chaos', 5);
+                currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
+              }
+            },
           },
-        },
-        {
-          text: 'Lass uns spielen.',
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue('Matze: "Ja. Der Stahl wartet."');
-            currentStore.increaseBandMood(10);
+          {
+            text: 'Lass uns spielen.',
+            action: () => {
+              const currentStore = game();
+              currentStore.setDialogue('Matze: "Ja. Der Stahl wartet."');
+              currentStore.increaseBandMood(10);
+              currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
+            },
           },
-        },
-      ],
-    };
+        ],
+      };
+    }
+    return say(
+      'Matze: "Ich hab über das nachgedacht, was du über den Lärm gesagt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"'
+    );
   }
 
   if (store.flags.askedAbout1982) {

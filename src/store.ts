@@ -129,6 +129,7 @@ export type Flag =
   | 'matzeRiffDialogueDone'
   | 'matzePerformerTalk'
   | 'salzgitterMatzeWirtDone'
+  | 'salzgitterMatzeDeepTalkDone'
   | 'rostigesPlektrumCollected'
   | 'tourbusHiddenStashTaken'
   | 'voidBassistMoodGiven'
@@ -422,6 +423,7 @@ const initialState = {
     matzeRiffDialogueDone: false,
     matzePerformerTalk: false,
     salzgitterMatzeWirtDone: false,
+    salzgitterMatzeDeepTalkDone: false,
     rostigesPlektrumCollected: false,
     tourbusHiddenStashTaken: false,
     voidBassistMoodGiven: false,
@@ -867,10 +869,7 @@ export const useStore = create<GameState>()(
                   ? {
                       ...q,
                       text,
-                      status:
-                        existing.status === 'failed'
-                          ? 'active'
-                          : existing.status,
+                      status: (existing.status === 'completed' ? 'completed' : 'active') as QuestStatus,
                     }
                   : q
               ),

@@ -37,6 +37,10 @@ export function buildVoidTerminalDialogue(): Dialogue {
 export function buildVoidCosmicEchoDialogue(): Dialogue {
   const store = game();
   if (store.flags.cosmic_echo) {
+    store.startAndFinishQuest(
+      'cosmic_echo',
+      'Untersuche das kosmische Echo in der Void Station'
+    );
     return say(
       'Das kosmische Echo ist bereits entschlüsselt. Die Koordinaten nach Salzgitter stehen fest.'
     );
@@ -184,8 +188,11 @@ export function buildVoidEgoDialogue(): Dialogue {
       return false;
     }
 
-    currentStore.setFlag('egoContained', true);
-    currentStore.completeQuest('ego');
+    currentStore.completeQuestWithFlag(
+      'ego',
+      'egoContained',
+      true
+    );
     return true;
   };
 

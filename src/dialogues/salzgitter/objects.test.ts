@@ -27,11 +27,19 @@ describe('Salzgitter object dialogues', () => {
       ],
     });
 
+    const moodBefore = useStore.getState().bandMood;
     const dialogue = buildSalzgitterBassistDialogue();
-    const stateAfter = useStore.getState();
 
+    // The side-effects are now moved to the dialogue option.
     expect(dialogue.text).toContain('Ich segne diesen Gig');
+
+    const option = dialogue.options?.find((entry) => entry.text === '(Weiter)');
+    if (!option) throw new Error('Expected "(Weiter)" option in bassist dialogue');
+    executeDialogueOption(option);
+
+    const stateAfter = useStore.getState();
     expect(stateAfter.flags.bassist_restored).toBe(true);
+    expect(stateAfter.bandMood).toBe(moodBefore + 30);
   });
 
   it('starts fan movement via social option', () => {

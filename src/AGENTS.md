@@ -12,7 +12,7 @@
 ### Quest API
 
 - `addQuest(id, text)` — if a quest with that id already exists, updates its display text while preserving its current status. Never reopens a completed quest. For scene-entry objectives call it inside a mount `useEffect(() => { addQuest(...); }, [])`.
-- `startQuestWithFlag(id, text, flag, flagValue?)` — atomic helper that adds/updates a quest and sets a boolean flag in one step, guaranteeing they stay in sync. Upserts the quest to `active`.
+- `startQuestWithFlag(id, text, flag, flagValue?)` — atomic helper that adds/updates a quest and sets a boolean flag in one step, guaranteeing they stay in sync. Sets status to `active` for new or `failed` quests; preserves `completed` status (only updates the text).
 - `startAndFinishQuest(id, text)` — records a milestone as completed in one step. If the quest already exists as 'active', transitions it to 'completed'. No-op if already completed or failed. Safe to call regardless of whether the quest was previously registered. Use for one-shot events (band meeting, fan movement, bassist contact, etc.).
 - `completeQuest(id, text?)` — call this when resolving a quest. If the quest is not registered, it will auto-register and complete it if `text` is provided, otherwise it logs a development warning and returns unmodified state.
 - `completeQuestWithFlag(id, flag, flagValue?, text?)` — atomic helper that completes a quest and sets a boolean flag in one step. Accepts optional `text` to auto-register missing quests.
