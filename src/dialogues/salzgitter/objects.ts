@@ -273,22 +273,12 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
   const finalQuestCompleted =
     store.quests.find((quest) => quest.id === 'final')?.status ===
       'completed' || store.flags.salzgitter_finalized;
-  const frequenz1982Completed =
-    store.quests.find((quest) => quest.id === 'frequenz_1982')?.status ===
-      'completed' || store.flags.frequenz1982_complete;
 
   if (finalQuestCompleted) {
     return say(
       'Die Bühne schweigt. Das Riff hallt noch immer nach. Es war das Größte, das je gespielt wurde.'
     );
   }
-
-  let endingsCount = 0;
-  if (store.flags.salzgitterBandUnited) endingsCount++;
-  if (store.flags.fanMovement) endingsCount++;
-  if (store.flags.backstageRitualPerformed) endingsCount++;
-  if (store.flags.wirtLegacy1982) endingsCount++;
-  if (store.flags.voidBassistSpoken) endingsCount++;
 
   return {
     text: 'Die Bühne ist bereitet. Bist du bereit, das letzte Riff zu spielen?',
@@ -297,6 +287,17 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
         text: 'Beginne das Finale.',
         action: () => {
           const currentStore = game();
+          const frequenz1982Completed =
+            currentStore.quests.find((quest) => quest.id === 'frequenz_1982')?.status ===
+              'completed' || currentStore.flags.frequenz1982_complete;
+
+          let endingsCount = 0;
+          if (currentStore.flags.salzgitterBandUnited) endingsCount++;
+          if (currentStore.flags.fanMovement) endingsCount++;
+          if (currentStore.flags.backstageRitualPerformed) endingsCount++;
+          if (currentStore.flags.wirtLegacy1982) endingsCount++;
+          if (currentStore.flags.voidBassistSpoken) endingsCount++;
+
           if (!currentStore.flags.salzgitter_finalized) {
             currentStore.completeQuestWithFlag(
               'final',

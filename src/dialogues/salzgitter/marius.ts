@@ -120,7 +120,9 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
           currentStore.increaseBandMood(50);
         },
       });
-    } else if (store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed) {
+    }
+
+    if (store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed) {
       options.unshift({
         text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
         requiredTrait: 'Performer',
