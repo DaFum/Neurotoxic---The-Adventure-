@@ -207,7 +207,7 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
     return () => unregister(id);
   }, [register, unregister]);
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (isPaused) return;
 
     const playerPos = useStore.getState().playerPos;

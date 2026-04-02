@@ -61,7 +61,7 @@ export function Kaminstube() {
     };
   }, []);
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (flags.ampFixed) {
       // Dynamic lighting when the amp is fixed (show starts)
       tRef.current += delta || 0;

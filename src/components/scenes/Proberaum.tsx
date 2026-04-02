@@ -16,7 +16,6 @@
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { useStore } from '../../store';
-import type { DialogueOption } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import {
@@ -49,9 +48,6 @@ export function Proberaum() {
   const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
-  const addQuest = useStore((state) => state.addQuest);
-  const bandMood = useStore((state) => state.bandMood);
-  const removeFromInventory = useStore((state) => state.removeFromInventory);
   const discoverLore = useStore((state) => state.discoverLore);
   const feedbackMonitorQuestCompleted =
     quests.find((quest) => quest.id === 'feedback_monitor')?.status ===
