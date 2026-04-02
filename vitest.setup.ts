@@ -47,3 +47,19 @@ const localStorageMock = (function () {
 Object.defineProperty(global, 'window', {
   value: { localStorage: localStorageMock }
 });
+
+// Mock console.error to silence react-three-fiber and jsdom warnings about custom elements
+const originalError = console.error;
+console.error = (...args) => {
+  if (
+    typeof args[0] === 'string' &&
+    (args[0].includes('is using incorrect casing') ||
+      args[0].includes('is unrecognized in this browser') ||
+      args[0].includes('React does not recognize the') ||
+      args[0].includes('Not implemented: HTMLCanvasElement') ||
+      args[0].includes('Received `true` for a non-boolean attribute'))
+  ) {
+    return;
+  }
+  originalError(...args);
+};
