@@ -1,16 +1,23 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { touchInput } from './touchInput';
 
-describe('touchInput singleton', () => {
-  beforeEach(() => {
-    // Reset to initial state before each test because it's a mutable singleton
-    touchInput.x = 0;
-    touchInput.z = 0;
+describe('touchInput initialization', () => {
+  it('should have initial values of 0', async () => {
+    vi.resetModules();
+    const { touchInput: freshTouchInput } = await import('./touchInput');
+    expect(freshTouchInput.x).toBe(0);
+    expect(freshTouchInput.z).toBe(0);
   });
+});
 
-  it('should have initial values of 0', () => {
-    expect(touchInput.x).toBe(0);
-    expect(touchInput.z).toBe(0);
+describe('touchInput singleton', () => {
+  const initialState = { ...touchInput };
+
+  beforeEach(() => {
+    for (const key of Object.keys(touchInput)) {
+      delete (touchInput as any)[key];
+    }
+    Object.assign(touchInput, initialState);
   });
 
   it('should allow updating x and z values', () => {
