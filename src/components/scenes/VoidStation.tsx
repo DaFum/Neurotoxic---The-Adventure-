@@ -25,6 +25,7 @@ import {
 } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
+import { audio } from '../../audio';
 import {
   buildVoidBassistEncounterDialogue,
   buildVoidCosmicEchoDialogue,
@@ -72,6 +73,7 @@ export function VoidStation() {
   }, [addQuest, startAndFinishQuest]);
 
   useEffect(() => {
+    audio.startAmbient('void_station');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);

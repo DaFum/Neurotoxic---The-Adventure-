@@ -21,6 +21,7 @@ import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
+import { audio } from '../../audio';
 import {
   buildKaminstubeAmpDialogue,
   buildKaminstubeCrowdDialogue,
@@ -53,6 +54,7 @@ export function Kaminstube() {
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
+    audio.startAmbient('kaminstube');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);

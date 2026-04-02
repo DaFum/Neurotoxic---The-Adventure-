@@ -26,6 +26,8 @@ export function MainMenu() {
   ];
 
   useEffect(() => {
+    audio.stopAmbient();
+
     if (useStore.getState().trait !== null) {
       setHasSavedGame(true);
       return;
