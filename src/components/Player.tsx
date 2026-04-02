@@ -32,6 +32,19 @@ interface PlayerProps {
  * @param props.bounds - The soft clamping boundaries for the player in the current scene.
  * @returns A 3D RigidBody containing the player's mesh, sprites, and colliders.
  */
+export function clampPlayerPosition(
+  pos: { x: number; y: number; z: number },
+  bounds: { x: [number, number]; z: [number, number] }
+) {
+  let clampedX = pos.x;
+  let clampedZ = pos.z;
+  if (pos.x < bounds.x[0] || pos.x > bounds.x[1] || pos.z < bounds.z[0] || pos.z > bounds.z[1]) {
+    clampedX = THREE.MathUtils.clamp(pos.x, bounds.x[0], bounds.x[1]);
+    clampedZ = THREE.MathUtils.clamp(pos.z, bounds.z[0], bounds.z[1]);
+  }
+  return { clampedX, clampedZ };
+}
+
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);
   const modelRef = useRef<THREE.Group>(null);
@@ -256,11 +269,8 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     const pos = bodyRef.current.translation();
     
     // Manual bounds clamping
-    let clampedX = pos.x;
-    let clampedZ = pos.z;
-    if (pos.x < bounds.x[0] || pos.x > bounds.x[1] || pos.z < bounds.z[0] || pos.z > bounds.z[1]) {
-      clampedX = THREE.MathUtils.clamp(pos.x, bounds.x[0], bounds.x[1]);
-      clampedZ = THREE.MathUtils.clamp(pos.z, bounds.z[0], bounds.z[1]);
+    const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
+    if (clampedX !== pos.x || clampedZ !== pos.z) {
       bodyRef.current.setTranslation({ x: clampedX, y: pos.y, z: clampedZ }, true);
     }
 
