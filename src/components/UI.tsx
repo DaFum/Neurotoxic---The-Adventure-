@@ -133,13 +133,10 @@ export function UI() {
     return counts;
   }, [selectedItems]);
 
-  const discoveredLoreCount = useMemo(() => {
-    let count = 0;
-    for (let i = 0; i < loreEntries.length; i++) {
-      if (loreEntries[i].discovered) count++;
-    }
-    return count;
-  }, [loreEntries]);
+  const discoveredLoreCount = useMemo(
+    () => loreEntries.reduce((count, entry) => (entry.discovered ? count + 1 : count), 0),
+    [loreEntries]
+  );
 
   useEffect(() => {
     setSelectedItems((prev) => {

@@ -19,6 +19,7 @@ import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
 import { touchInput } from '../touchInput';
+import { clampPlayerPosition } from '../utils/math';
 
 interface PlayerProps {
   bounds?: { x: [number, number]; z: [number, number] };
@@ -32,19 +33,6 @@ interface PlayerProps {
  * @param props.bounds - The soft clamping boundaries for the player in the current scene.
  * @returns A 3D RigidBody containing the player's mesh, sprites, and colliders.
  */
-export function clampPlayerPosition(
-  pos: { x: number; y: number; z: number },
-  bounds: { x: [number, number]; z: [number, number] }
-) {
-  let clampedX = pos.x;
-  let clampedZ = pos.z;
-  if (pos.x < bounds.x[0] || pos.x > bounds.x[1] || pos.z < bounds.z[0] || pos.z > bounds.z[1]) {
-    clampedX = THREE.MathUtils.clamp(pos.x, bounds.x[0], bounds.x[1]);
-    clampedZ = THREE.MathUtils.clamp(pos.z, bounds.z[0], bounds.z[1]);
-  }
-  return { clampedX, clampedZ };
-}
-
 export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const bodyRef = useRef<RapierRigidBody>(null);
   const modelRef = useRef<THREE.Group>(null);
