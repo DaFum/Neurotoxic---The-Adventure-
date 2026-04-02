@@ -106,7 +106,7 @@ export function UI() {
   const [compactHudTab, setCompactHudTab] = useState<'status' | 'inventory' | 'quests'>('status');
   const hasSyncedViewportRef = useRef(false);
 
-  const openQuestCount = useMemo(() => quests.filter((q) => q.status === 'active').length, [quests]);
+  const openQuestCount = useMemo(() => quests.reduce((acc, q) => acc + (q.status === 'active' ? 1 : 0), 0), [quests]);
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
 
