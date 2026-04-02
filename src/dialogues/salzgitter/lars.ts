@@ -113,18 +113,23 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
     return {
       text: 'Lars: "ICH BIN DIE MASCHINE! MEIN HERZ IST EIN DIESELMOTOR! ICH SEHE DIE SOUNDWELLEN ALS PHYSISCHE OBJEKTE!"',
       options: [
-        {
-          text: 'Synchronisiere die Frequenz. [Technical 10]',
-          requiredSkill: { name: 'technical', level: 10 },
-          nextDialogue: {
-            text: 'Lars: "SYNC_COMPLETE! ICH BIN JETZT EIN TEIL DES NETZWERKS! DER BEAT IST ABSOLUT!"',
-          },
-          action: () => {
-            const currentStore = game();
-            currentStore.increaseBandMood(30);
-            currentStore.increaseSkill('technical', 5);
-          },
-        },
+        ...(!store.flags.salzgitter_lars_technical_claimed
+          ? [
+              {
+                text: 'Synchronisiere die Frequenz. [Technical 10]',
+                requiredSkill: { name: 'technical' as const, level: 10 },
+                nextDialogue: {
+                  text: 'Lars: "SYNC_COMPLETE! ICH BIN JETZT EIN TEIL DES NETZWERKS! DER BEAT IST ABSOLUT!"',
+                },
+                action: () => {
+                  const currentStore = game();
+                  currentStore.setFlag('salzgitter_lars_technical_claimed', true);
+                  currentStore.increaseBandMood(30);
+                  currentStore.increaseSkill('technical', 5);
+                },
+              },
+            ]
+          : []),
         {
           text: 'Halt durch, Lars!',
           action: () => {

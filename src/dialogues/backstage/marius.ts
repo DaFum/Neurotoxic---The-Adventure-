@@ -140,7 +140,22 @@ export function buildBackstageMariusDialogue(): Dialogue {
         const currentStore = game();
         currentStore.increaseBandMood(10);
       },
-    }
+    },
+    ...(!flags.backstage_marius_diplomat_claimed && store.trait === 'Diplomat' ? [
+      {
+        text: 'Lass uns die Setlist durchgehen. Wir haben das alles geprobt. [Diplomat]',
+        requiredTrait: 'Diplomat' as const,
+        action: () => {
+          const currentStore = game();
+          currentStore.setFlag('backstage_marius_diplomat_claimed', true);
+          currentStore.setDialogue(
+            'Marius: "Die Setlist... ja, du hast recht. Wenn wir uns an den Plan halten, kann nichts schiefgehen."'
+          );
+          currentStore.increaseBandMood(15);
+          currentStore.increaseSkill('social', 3);
+        }
+      }
+    ] : [])
   );
 
   if (flags.mariusEgoStrategy) {

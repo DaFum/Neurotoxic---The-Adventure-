@@ -35,17 +35,27 @@ describe('VoidStation object builders', () => {
     ).toBe('completed');
   });
 
-  it('returns explicit dark-matter pickup failure on item limit', () => {
+  it('allows picking up dark matter multiple times', () => {
     setupTestState({
       itemPickupCounts: {
         ...useStore.getState().itemPickupCounts,
-        'Dunkle Materie': 1,
+        'Dunkle Materie': 999,
       },
     });
 
     const dialogue = buildVoidDarkMatterPickupDialogue();
+    expect(dialogue.options).toBeDefined();
 
-    expect(dialogue.text).toContain('keinen weiteren Klumpen');
+    // Simulate picking it up
+    const pickupOption = dialogue.options!.find(o => o.text === 'Aufheben');
+    expect(pickupOption).toBeDefined();
+
+    executeDialogueOption(pickupOption!);
+
+    const stateAfter = useStore.getState();
+    expect(stateAfter.dialogue?.text).toContain('aufgehoben');
+    expect(stateAfter.dialogue?.text).not.toContain('keinen weiteren Klumpen');
+    expect(stateAfter.inventory).toContain('Dunkle Materie');
   });
 
   it('handles ego strategy branch and marks ego contained', () => {

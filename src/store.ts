@@ -140,7 +140,15 @@ export type Flag =
   | 'backstageForbiddenRiffUsed'
   | 'voidTerminalRead'
   | 'voidCosmicEchoRewarded'
-  | 'voidBassistRewarded';
+  | 'voidBassistRewarded'
+  | 'marius_tourbus_performer_claimed'
+  | 'salzgitter_marius_chaos_claimed'
+  | 'salzgitter_marius_social_claimed'
+  | 'salzgitter_marius_performer_claimed'
+  | 'salzgitter_lars_technical_claimed'
+  | 'backstage_marius_diplomat_claimed'
+  | 'backstage_lars_technician_claimed'
+  | 'lars_drum_maintenance';
 
 /**
  * Defines the possible personality traits a player can select.
@@ -296,8 +304,9 @@ export interface GameState {
   bandMood: number;
   increaseBandMood: (amount: number, sourceId?: string) => void;
   bandMoodGainClaims: Record<string, boolean>;
-  cameraShake: number;
-  setCameraShake: (shake: number) => void;
+  cameraShakeIntensity: number;
+  cameraShakeKick: number;
+  setCameraShake: (intensity: number) => void;
   loreEntries: LoreEntry[];
   discoverLore: (id: string) => void;
   resetGame: () => void;
@@ -393,6 +402,14 @@ const initialState = {
     salzgitter_true_ending: false,
     salzgitter_finalized: false,
     salzgitter_marius_greeted: false,
+    marius_tourbus_performer_claimed: false,
+    salzgitter_marius_chaos_claimed: false,
+    salzgitter_marius_social_claimed: false,
+    salzgitter_marius_performer_claimed: false,
+    salzgitter_lars_technical_claimed: false,
+    backstage_marius_diplomat_claimed: false,
+    backstage_lars_technician_claimed: false,
+    lars_drum_maintenance: false,
     lars_proberaum_secret: false,
     lars_paced: false,
     marius_tourbus_doubt: false,
@@ -614,7 +631,8 @@ const initialState = {
   ],
   bandMood: 20,
   bandMoodGainClaims: {},
-  cameraShake: 0,
+  cameraShakeIntensity: 0,
+  cameraShakeKick: 0,
 };
 
 interface Recipe {
@@ -654,6 +672,7 @@ const ITEM_PICKUP_LIMITS: Record<string, number> = {
   Lötkolben: 3,
   Schrottmetall: 2,
   Frequenzfragment: 2,
+  'Dunkle Materie': Infinity,
 };
 
 const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
@@ -684,7 +703,7 @@ export const useStore = create<GameState>()(
   persist(
     (set, get) => ({
       ...initialState,
-      setScene: (scene) => set({ scene, playerPos: [0, 1, 0] }),
+      setScene: (scene) => set({ scene, playerPos: [0, 1, 0], dialogue: null }),
       setTrait: (trait) => set({ trait }),
       increaseSkill: (skill, amount) =>
         set((state) => ({
@@ -946,7 +965,7 @@ export const useStore = create<GameState>()(
 
           return { bandMood: nextMood };
         }),
-      setCameraShake: (cameraShake) => set({ cameraShake }),
+      setCameraShake: (cameraShakeIntensity) => set((state) => ({ cameraShakeIntensity, cameraShakeKick: state.cameraShakeKick + 1 })),
       discoverLore: (id) =>
         set((state) => {
           const entry = state.loreEntries.find((e) => e.id === id);
@@ -1013,9 +1032,10 @@ export const useStore = create<GameState>()(
           return completed === true ? 'completed' : 'active';
         };
 
-        const persistedQuestsMap = new Map(
-          persistedQuests.map((pq) => [pq.id, pq])
-        );
+        const persistedQuestsMap = new Map<string, any>();
+        for (const pq of persistedQuests) {
+          if (pq?.id) persistedQuestsMap.set(pq.id, pq);
+        }
 
         const mergedQuests = currentState.quests.map((q) => {
           const persistedQuest = persistedQuestsMap.get(q.id);
@@ -1036,7 +1056,7 @@ export const useStore = create<GameState>()(
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
         const dynamicQuests = persistedQuests
-          .filter((pq) => !currentQuestIds.has(pq.id))
+          .filter((pq: any) => pq?.id && !currentQuestIds.has(pq.id))
           .map((pq) => {
             const p = pq as unknown as {
               id: string;
@@ -1053,7 +1073,10 @@ export const useStore = create<GameState>()(
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
-        const persistedLoreMap = new Map(persistedLore.map((pe) => [pe.id, pe]));
+        const persistedLoreMap = new Map<string, any>();
+        for (const pe of persistedLore) {
+          if (pe?.id) persistedLoreMap.set(pe.id, pe);
+        }
 
         const mergedLoreEntries = currentState.loreEntries.map((e) => {
           const persistedEntry = persistedLoreMap.get(e.id);
