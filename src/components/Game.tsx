@@ -1,15 +1,17 @@
-import { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store';
-import { Proberaum } from './scenes/Proberaum';
-import { TourBus } from './scenes/TourBus';
-import { Backstage } from './scenes/Backstage';
-import { VoidStation } from './scenes/VoidStation';
-import { Kaminstube } from './scenes/Kaminstube';
-import { Salzgitter } from './scenes/Salzgitter';
+
+const Proberaum = React.lazy(() => import('./scenes/Proberaum').then(m => ({ default: m.Proberaum })));
+const TourBus = React.lazy(() => import('./scenes/TourBus').then(m => ({ default: m.TourBus })));
+const Backstage = React.lazy(() => import('./scenes/Backstage').then(m => ({ default: m.Backstage })));
+const VoidStation = React.lazy(() => import('./scenes/VoidStation').then(m => ({ default: m.VoidStation })));
+const Kaminstube = React.lazy(() => import('./scenes/Kaminstube').then(m => ({ default: m.Kaminstube })));
+const Salzgitter = React.lazy(() => import('./scenes/Salzgitter').then(m => ({ default: m.Salzgitter })));
+
 import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
 import { VirtualJoystick } from './VirtualJoystick';
