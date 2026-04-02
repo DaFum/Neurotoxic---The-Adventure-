@@ -681,18 +681,20 @@ const deriveBandMoodGainSource = (): string => {
   const stack = new Error().stack;
   if (!stack) return 'unknown_source';
 
-  const lines = stack.split('\n').map((line) => line.trim());
-  const sourceLine = lines.find(
-    (line) =>
+  const lines = stack.split('\n');
+  const sourceLine = lines.find((rawLine) => {
+    const line = rawLine.trim();
+    return (
       line &&
       !line.includes('deriveBandMoodGainSource') &&
       !line.includes('increaseBandMood') &&
       !line.includes('store.ts') &&
       !line.includes('zustand') &&
       !line.includes('at set')
-  );
+    );
+  });
 
-  return sourceLine ?? 'unknown_source';
+  return sourceLine ? sourceLine.trim() : 'unknown_source';
 };
 
 /**
