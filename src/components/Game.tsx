@@ -35,6 +35,7 @@ export function Game() {
     } else {
       audio.stopAmbient();
     }
+    return () => audio.stopAmbient();
   }, [scene]);
 
   useEffect(() => {
