@@ -1,5 +1,9 @@
 export type AmbientScene = 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
 
+export const isAmbientScene = (scene: string): scene is AmbientScene => {
+  return ['proberaum', 'tourbus', 'backstage', 'void_station', 'kaminstube', 'salzgitter'].includes(scene);
+};
+
 /**
  * A simple audio engine class for managing sound effects and ambient music
  * in the game using the Web Audio API. It supports synthesized sounds,

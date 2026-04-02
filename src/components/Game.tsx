@@ -13,13 +13,9 @@ import { Salzgitter } from './scenes/Salzgitter';
 import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
 import { VirtualJoystick } from './VirtualJoystick';
-import { audio, AmbientScene } from '../audio';
+import { audio, isAmbientScene } from '../audio';
 import { KeyboardInteractionProvider } from './KeyboardInteractionManager';
 import { MainMenu } from './MainMenu';
-
-const isAmbientScene = (scene: string): scene is AmbientScene => {
-  return ['proberaum', 'tourbus', 'backstage', 'void_station', 'kaminstube', 'salzgitter'].includes(scene);
-};
 
 /**
  * The main 3D Game component that sets up the Canvas, physics engine, and scene routing.
