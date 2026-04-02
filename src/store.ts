@@ -1034,7 +1034,9 @@ export const useStore = create<GameState>()(
 
         const persistedQuestsMap = new Map<string, any>();
         for (const pq of persistedQuests) {
-          if (pq?.id) persistedQuestsMap.set(pq.id, pq);
+          if (pq?.id && typeof pq.id === 'string' && typeof pq.text === 'string') {
+            persistedQuestsMap.set(pq.id, pq);
+          }
         }
 
         const mergedQuests = currentState.quests.map((q) => {
@@ -1056,7 +1058,13 @@ export const useStore = create<GameState>()(
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
         const dynamicQuests = persistedQuests
-          .filter((pq: any) => pq?.id && !currentQuestIds.has(pq.id))
+          .filter(
+            (pq: any) =>
+              pq?.id &&
+              typeof pq.id === 'string' &&
+              typeof pq.text === 'string' &&
+              !currentQuestIds.has(pq.id)
+          )
           .map((pq) => {
             const p = pq as unknown as {
               id: string;
@@ -1103,11 +1111,33 @@ export const useStore = create<GameState>()(
           );
         }
 
+        const whitelistedState: Partial<GameState> = {};
+        const allowedKeys: (keyof GameState)[] = [
+          'inventory',
+          'flags',
+          'quests',
+          'bandMood',
+          'loreEntries',
+          'trait',
+          'skills',
+          'itemPickupCounts',
+          'bandMoodGainClaims',
+        ];
+
+        for (const key of allowedKeys) {
+          if (typedPersistedState[key] !== undefined) {
+            // @ts-expect-error - dynamic assignment for whitelisting
+            whitelistedState[key] = typedPersistedState[key];
+          }
+        }
+
         return {
           ...currentState,
-          ...typedPersistedState,
+          ...whitelistedState,
           scene: currentState.scene,
           playerPos: currentState.playerPos,
+          cameraShakeIntensity: currentState.cameraShakeIntensity,
+          cameraShakeKick: currentState.cameraShakeKick,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           itemPickupCounts: mergedPickupCounts,
