@@ -3,11 +3,11 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'node',
-    // @ts-ignore
+    // @ts-expect-error: environmentMatchGlobs is missing from InlineConfig in this version of vitest
     environmentMatchGlobs: [
       ['**/*.test.tsx', 'jsdom'],
       ['**/*.spec.tsx', 'jsdom'],
-    ] as any,
+    ],
     setupFiles: ['./vitest.setup.ts'],
   },
 });

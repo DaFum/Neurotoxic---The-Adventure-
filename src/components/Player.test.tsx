@@ -16,12 +16,12 @@ let mockStoreState = {
 vi.mock('../store', () => {
   const useStore = vi.fn((selector) => {
     return selector ? selector(mockStoreState) : mockStoreState;
-  }) as any;
-  useStore.getState = vi.fn(() => mockStoreState);
+  }) as unknown as typeof import('../store').useStore;
+  useStore.getState = vi.fn(() => mockStoreState) as any;
   useStore.subscribe = vi.fn((cb) => {
     mockStoreSubscriptions.push(cb);
     return vi.fn();
-  });
+  }) as any;
   return { useStore };
 });
 

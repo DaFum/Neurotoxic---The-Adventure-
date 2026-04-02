@@ -20,7 +20,6 @@ import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
-import { audio } from '../../audio';
 import {
   buildBackstageFeedbackMonitorDialogue,
   buildBackstageLarsDialogue,
@@ -39,10 +38,8 @@ export function Backstage() {
   const setScene = useStore((state) => state.setScene);
   const flags = useStore(useShallow((state) => ({
     setlistFound: state.flags.setlistFound,
-    backstageRitualPerformed: state.flags.backstageRitualPerformed,
     tourbus_sabotage_discovered: state.flags.tourbus_sabotage_discovered,
-    backstage_blueprint_found: state.flags.backstage_blueprint_found,
-    mariusCalmed: state.flags.mariusCalmed
+    backstage_blueprint_found: state.flags.backstage_blueprint_found
   })));
   const setFlag = useStore((state) => state.setFlag);
   const addQuest = useStore((state) => state.addQuest);
@@ -82,8 +79,6 @@ export function Backstage() {
         'Führe ein Bandritual vor dem Auftritt durch'
       );
     }
-
-    audio.startAmbient('backstage');
 
     return () => {
       if (exitTimeoutRef.current !== null) {

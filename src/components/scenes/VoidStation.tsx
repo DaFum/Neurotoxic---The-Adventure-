@@ -26,7 +26,6 @@ import {
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
-import { audio } from '../../audio';
 import {
   buildVoidBassistEncounterDialogue,
   buildVoidCosmicEchoDialogue,
@@ -50,7 +49,6 @@ export function VoidStation() {
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
   const flags = useStore(useShallow((state) => ({
-    voidRefueled: state.flags.voidRefueled,
     egoContained: state.flags.egoContained,
     cosmic_echo: state.flags.cosmic_echo,
     bassist_clue_matze: state.flags.bassist_clue_matze,
@@ -81,7 +79,6 @@ export function VoidStation() {
   }, [addQuest, startAndFinishQuest]);
 
   useEffect(() => {
-    audio.startAmbient('void_station');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);

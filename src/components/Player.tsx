@@ -177,8 +177,8 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     const unsubscribe = useStore.subscribe(
       (state) => {
         const newPos = state.playerPos;
-        // Optimization: only process if the playerPos array reference changed
-        if (newPos[0] === prevPos[0] && newPos[1] === prevPos[1] && newPos[2] === prevPos[2]) return;
+        // Optimization: only process if the playerPos array reference changed, meaning a teleport/reset occurred
+        if (newPos === prevPos) return;
         prevPos = newPos;
 
         if (!bodyRef.current) return;

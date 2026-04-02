@@ -1,24 +1,21 @@
-import { Suspense, useEffect, lazy } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store';
+import { Proberaum } from './scenes/Proberaum';
+import { TourBus } from './scenes/TourBus';
+import { Backstage } from './scenes/Backstage';
+import { VoidStation } from './scenes/VoidStation';
+import { Kaminstube } from './scenes/Kaminstube';
+import { Salzgitter } from './scenes/Salzgitter';
 import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
 import { VirtualJoystick } from './VirtualJoystick';
 import { audio } from '../audio';
 import { KeyboardInteractionProvider } from './KeyboardInteractionManager';
 import { MainMenu } from './MainMenu';
-
-// ⚡ Bolt Optimization: Lazy load heavy 3D scene components to reduce initial bundle size
-// and speed up initial application load time.
-const Proberaum = lazy(() => import('./scenes/Proberaum').then(module => ({ default: module.Proberaum })));
-const TourBus = lazy(() => import('./scenes/TourBus').then(module => ({ default: module.TourBus })));
-const Backstage = lazy(() => import('./scenes/Backstage').then(module => ({ default: module.Backstage })));
-const VoidStation = lazy(() => import('./scenes/VoidStation').then(module => ({ default: module.VoidStation })));
-const Kaminstube = lazy(() => import('./scenes/Kaminstube').then(module => ({ default: module.Kaminstube })));
-const Salzgitter = lazy(() => import('./scenes/Salzgitter').then(module => ({ default: module.Salzgitter })));
 
 /**
  * The main 3D Game component that sets up the Canvas, physics engine, and scene routing.
@@ -31,7 +28,9 @@ export function Game() {
   const setPaused = useStore((state) => state.setPaused);
 
   useEffect(() => {
-    if (scene === 'menu') {
+    if (scene !== 'menu') {
+      audio.startAmbient(scene as any);
+    } else {
       audio.stopAmbient();
     }
   }, [scene]);

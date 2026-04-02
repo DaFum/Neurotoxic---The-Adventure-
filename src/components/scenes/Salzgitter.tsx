@@ -12,7 +12,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
@@ -21,7 +21,6 @@ import { Player } from '../Player';
 import { ContactShadows } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
-import { audio } from '../../audio';
 import {
   buildSalzgitterBassistDialogue,
   buildSalzgitterFanDialogue,
@@ -37,10 +36,6 @@ import {
  */
 export function Salzgitter() {
   const bassist_contacted = useStore((state) => state.flags.bassist_contacted);
-
-  useEffect(() => {
-    audio.startAmbient('salzgitter');
-  }, []);
 
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);

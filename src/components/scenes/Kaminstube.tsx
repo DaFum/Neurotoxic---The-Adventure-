@@ -22,7 +22,6 @@ import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
-import { audio } from '../../audio';
 import {
   buildKaminstubeAmpDialogue,
   buildKaminstubeCrowdDialogue,
@@ -43,8 +42,7 @@ import {
 export function Kaminstube() {
   const flags = useStore(useShallow((state) => ({
     ampFixed: state.flags.ampFixed,
-    kaminFeuerPact: state.flags.kaminFeuerPact,
-    kaminstubeDrumLoreHeard: state.flags.kaminstubeDrumLoreHeard
+    kaminFeuerPact: state.flags.kaminFeuerPact
   })));
   const hasRoehre = useStore((state) => state.inventory.includes('Röhre'));
   const quests = useStore((state) => state.quests);
@@ -59,7 +57,6 @@ export function Kaminstube() {
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    audio.startAmbient('kaminstube');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);
