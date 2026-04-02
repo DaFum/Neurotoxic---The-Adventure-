@@ -89,10 +89,6 @@ export function Backstage() {
     };
   }, [addQuest, startAndFinishQuest]);
 
-  useEffect(() => {
-    audio.startAmbient('backstage');
-  }, []);
-
   const ritualActionWrapper = useCallback(
     (
       mood: number,
