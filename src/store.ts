@@ -689,7 +689,7 @@ const deriveBandMoodGainSource = (): string => {
       (line.startsWith('at ') || line.includes('@')) &&
       !line.includes('deriveBandMoodGainSource') &&
       !line.includes('increaseBandMood') &&
-      !line.includes('store.ts') &&
+      !line.includes('store.') &&
       !line.includes('zustand') &&
       !line.includes('at set')
     ) {
