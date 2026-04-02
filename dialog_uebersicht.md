@@ -156,6 +156,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Sabotage entdeckt & kein Geständnis (`tourbus_sabotage_discovered && !tourbus_matze_confession`):_
     - [Social 5]: "Matze, ich glaube Marius zweifelt an der Band." – Matze gesteht: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..." (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur` mit Text "Finde heraus, wer das Kabel sabotiert hat").
     - [Brutalist]: "Wer auch immer das war, kriegt eine Abreibung." – Matze schaut ertappt weg und schweigt schuldbewusst (-5 BandMood, keine Flag-Änderung, Quest bleibt offen).
+    - [Cynic]: "Nur jemand aus der Band hätte ein Motiv dafür." (+2 Chaos, setzt `matzeCynicOneShot`).
     - Neutral: "Wir finden den Schuldigen." – Matze antwortet: "Ja... genau. Wir suchen weiter." (kein Mood-Effekt, keine Flag-Änderung, Quest bleibt offen).
   - _Kabel repariert (BandMood < 30):_ Klagt über schlechte Laune, ist aber froh, dass das Kabel funktioniert (kein Mood-Effekt, kein Optionsmenü).
   - _Kabel repariert (BandMood >= 30):_ Freut sich auf den Gig: "Wir sind bereit. Die Bühne gehört uns." (kein Mood-Effekt, kein Optionsmenü).
@@ -245,6 +246,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - (Trait: Brutalist): "Angst ist Schwäche. Zerstöre sie" (+20 BandMood, +3 Chaos). **Hinweis: setzt NICHT `mariusConfidenceBoost`.**
     - (Flag `askedAbout1982` gesetzt): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`).
     - "Lego-Trick" (+10 BandMood).
+    - (Trait: Diplomat): "Lass uns die Setlist durchgehen." (Einmalig, +15 BandMood, +3 Social, setzt `backstage_marius_diplomat_claimed`).
 - **Lars (Energie-Mangel):**
   - _Item (Turbo-Koffein):_
     - _Bonus (Wenn larsRhythmPact gesetzt):_
@@ -254,6 +256,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - Nur ein Schluck (Trait: Diplomat): (+30 BandMood, +3 Social, setzt `lars_paced`, `larsEnergized`).
     - Nur ein Schluck (Standard): (+20 BandMood, setzt `larsEnergized`).
   - _Item (Energiedrink):_ (+10 BandMood, setzt `larsEnergized`). **Wenn `larsRhythmPact` gesetzt:** insgesamt +35 BandMood.
+  - _Nach Erhalt von Energie (larsEnergized gesetzt):_
+    - (Trait: Technician): "Lass mich deine Becken nachziehen." (Einmalig, +15 BandMood, +3 Technical, setzt `backstage_lars_technician_claimed`).
   - _Wenn Lars Vibriert:_
     - (Skill: Chaos 5): "Chaos" (+20 BandMood, +3 Chaos, setzt `larsDrumPhilosophy`).
     - (Skill: Technical 5): "Metronom" (+10 BandMood, setzt `larsDrumPhilosophy`).
@@ -371,7 +375,6 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Sabotage-Geständnis (Wenn Sabotage entdeckt & Amp repariert):_
     - (Trait: Diplomat): Vergeben (+30 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
     - (Trait: Brutalist): Warnen (+15 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
-    - (Trait: Cynic): "Nur jemand aus der Band hätte ein Motiv dafür." (+2 Chaos, setzt `matzeCynicOneShot`).
 - **Marius:**
   - _Reaktionen auf Zustände:_
     - (Wenn mariusEgoStrategy gesetzt): "Strategie funktioniert" (+10 BandMood).
