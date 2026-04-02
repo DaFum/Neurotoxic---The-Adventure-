@@ -1034,7 +1034,7 @@ export const useStore = create<GameState>()(
 
         const persistedQuestsMap = new Map<string, any>();
         for (const pq of persistedQuests) {
-          if (pq?.id) persistedQuestsMap.set(pq.id, pq);
+          if (pq?.id && typeof pq.id === 'string' && typeof pq.text === 'string') persistedQuestsMap.set(pq.id, pq);
         }
 
         const mergedQuests = currentState.quests.map((q) => {
@@ -1056,7 +1056,7 @@ export const useStore = create<GameState>()(
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
         const dynamicQuests = persistedQuests
-          .filter((pq: any) => pq?.id && !currentQuestIds.has(pq.id))
+          .filter((pq: any) => pq?.id && typeof pq.id === 'string' && typeof pq.text === 'string' && !currentQuestIds.has(pq.id))
           .map((pq) => {
             const p = pq as unknown as {
               id: string;
@@ -1105,9 +1105,11 @@ export const useStore = create<GameState>()(
 
         return {
           ...currentState,
-          ...typedPersistedState,
-          scene: currentState.scene,
-          playerPos: currentState.playerPos,
+          // Whitelist persisted keys explicitly instead of spreading typedPersistedState
+          ...(typedPersistedState.inventory && { inventory: typedPersistedState.inventory }),
+          ...(typedPersistedState.bandMood !== undefined && { bandMood: typedPersistedState.bandMood }),
+          ...(typedPersistedState.trait !== undefined && { trait: typedPersistedState.trait }),
+          ...(typedPersistedState.skills && { skills: typedPersistedState.skills }),
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           itemPickupCounts: mergedPickupCounts,
@@ -1123,6 +1125,9 @@ export const useStore = create<GameState>()(
             ...currentState.flags,
             ...persistedFlags,
           },
+          // Explicitly override or reset runtime-only fields back to current in-memory values
+          cameraShakeIntensity: currentState.cameraShakeIntensity,
+          cameraShakeKick: currentState.cameraShakeKick,
         };
       },
       onRehydrateStorage: () => (state) => {
