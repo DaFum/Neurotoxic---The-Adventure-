@@ -385,6 +385,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - _Bonus (Wenn larsRhythmPact):_ "Ort hat eigenen Rhythmus." (+10 BandMood, setzt `kaminstube_lars_talked`).
     - (Skill: Technical 5): 120 BPM (+15 BandMood, +3 Technical, setzt `kaminstube_lars_talked`) ODER "Akustik perfekt" (+10 BandMood, +2 Technical).
     - (Skill: Chaos 5): Polyrhythmus (+20 BandMood, +3 Chaos, setzt `kaminstube_lars_talked`).
+  - _Nach Gespräch (`kaminstube_lars_talked` gesetzt):_
+    - _Item (Lötkolben, einmalig — `lars_drum_maintenance`):_ "Willst du deinen Hocker noch schweißen?" (+15 BandMood, +2 Technical, entfernt Lötkolben).
+    - Standard: "Gut so." (kein Mood-Effekt).
 - **Crowd:**
   - _Menge anheizen:_
     - (Skill: Social 5): (+20 BandMood, +3 Social, setzt `kaminstube_crowd_rallied`).
