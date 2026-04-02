@@ -139,6 +139,14 @@ export function UI() {
     return counts;
   }, [selectedItems]);
 
+  const questDictionary = useMemo(() => {
+    const dict = new Map<string, string>();
+    for (const q of quests) {
+      if (q?.id) dict.set(q.id, q.text);
+    }
+    return dict;
+  }, [quests]);
+
   const discoveredLoreCount = useMemo(
     () => loreEntries.reduce((count, entry) => (entry.discovered ? count + 1 : count), 0),
     [loreEntries]
@@ -918,10 +926,10 @@ export function UI() {
                               {traitReq && `[ REQ: ${traitReq.toUpperCase()} ] `}
                               {questDeps && questDeps.map((dep, depIdx) => {
                                 if (typeof dep === 'string') {
-                                  const questTitle = quests.find(q => q.id === dep)?.text || dep;
+                                  const questTitle = questDictionary.get(dep) || dep;
                                   return <span key={`dep-${depIdx}`}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
                                 } else {
-                                  const questTitle = quests.find(q => q.id === dep.id)?.text || dep.id;
+                                  const questTitle = questDictionary.get(dep.id) || dep.id;
                                   return <span key={`dep-${depIdx}`}>[ REQ: QUEST {dep.status.toUpperCase()}: {questTitle} ] </span>
                                 }
                               })}
