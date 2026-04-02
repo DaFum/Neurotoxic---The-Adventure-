@@ -142,7 +142,7 @@ export function UI() {
   const questDictionary = useMemo(() => {
     const dict = new Map<string, string>();
     for (const q of quests) {
-      if (q?.id) dict.set(q.id, q.text);
+      if (q.id !== undefined) dict.set(q.id, q.text);
     }
     return dict;
   }, [quests]);
