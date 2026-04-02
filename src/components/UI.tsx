@@ -133,13 +133,10 @@ export function UI() {
     return counts;
   }, [selectedItems]);
 
-  const discoveredLoreCount = useMemo(() => {
-    let count = 0;
-    for (let i = 0; i < loreEntries.length; i++) {
-      if (loreEntries[i].discovered) count++;
-    }
-    return count;
-  }, [loreEntries]);
+  const discoveredLoreCount = useMemo(
+    () => loreEntries.reduce((count, entry) => (entry.discovered ? count + 1 : count), 0),
+    [loreEntries]
+  );
 
   useEffect(() => {
     setSelectedItems((prev) => {
@@ -410,7 +407,7 @@ export function UI() {
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setCompactHudTab('status')}
-                className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors ${
+                className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'status' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
               >
@@ -418,7 +415,7 @@ export function UI() {
               </button>
               <button
                 onClick={() => setCompactHudTab('inventory')}
-                className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors ${
+                className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'inventory' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
               >
@@ -426,7 +423,7 @@ export function UI() {
               </button>
               <button
                 onClick={() => setCompactHudTab('quests')}
-                className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors ${
+                className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'quests' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
               >
@@ -496,7 +493,7 @@ export function UI() {
                     {selectedItems.length === 2 && (
                       <button
                         onClick={handleCombine}
-                        className="w-full mt-1 bg-toxic hover:bg-toxic/80 text-black font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-transform active:scale-95"
+                        className="w-full mt-1 bg-toxic hover:bg-toxic/80 text-black font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-transform active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                       >
                         <Plus size={14} />
                         Execute_Merge
@@ -674,7 +671,7 @@ export function UI() {
                   {selectedItems.length === 2 && (
                     <button
                       onClick={handleCombine}
-                      className="w-full mt-2 bg-toxic hover:bg-toxic/80 text-black font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-transform active:scale-95"
+                      className="w-full mt-2 bg-toxic hover:bg-toxic/80 text-black font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-transform active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                     >
                       <Plus size={14} />
                       Execute_Merge
@@ -886,15 +883,19 @@ export function UI() {
                       return (
                         <button
                           key={option.id || idx}
-                          disabled={isLocked || isResolving}
+                          aria-disabled={isLocked || isResolving}
                           onClick={() => {
-                            if (isResolvingRef.current) return;
+                            if (isLocked || isResolving || isResolvingRef.current) return;
+                            const currentDialogue = useStore.getState().dialogue;
                             isResolvingRef.current = true;
                             setIsResolving(true);
                             executeDialogueOption(option);
-                            // isResolving is reset in the dialogue useEffect
+                            if (useStore.getState().dialogue === currentDialogue) {
+                              isResolvingRef.current = false;
+                              setIsResolving(false);
+                            }
                           }}
-                          className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all ${
+                          className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                             isLocked || isResolving
                             ? 'bg-zinc-900/50 border-zinc-800 text-zinc-600 cursor-not-allowed grayscale' 
                             : 'bg-zinc-900 hover:bg-toxic text-zinc-400 hover:text-black border-zinc-800 hover:border-toxic'
@@ -945,7 +946,7 @@ export function UI() {
                           setDialogue(null);
                         }
                       }}
-                      className="bg-toxic/10 hover:bg-toxic text-toxic hover:text-black px-6 py-2 font-black uppercase tracking-[0.2em] text-[10px] transition-all border border-toxic/30"
+                      className="bg-toxic/10 hover:bg-toxic text-toxic hover:text-black px-6 py-2 font-black uppercase tracking-[0.2em] text-[10px] transition-all border border-toxic/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
                     >
                       {displayedText.length < (dialogue?.text.length || 0) ? 'SKIP_DATA' : 'ACKNOWLEDGE'}
                     </button>

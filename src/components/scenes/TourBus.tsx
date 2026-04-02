@@ -11,9 +11,6 @@
  * - Refine NPC dialogue and lore.
  * - Introduce scene-specific quests for remaining scenes.
  * - Integrate character traits/skills deeper into dialogue.
- * 
- * #3: ERRORS & SOLUTIONS
- * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
@@ -38,19 +35,12 @@ import { audio } from '../../audio';
  */
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
-  const setScene = useStore((state) => state.setScene);
-  const bandMood = useStore((state) => state.bandMood);
   const flags = useStore((state) => state.flags);
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
   const canPickupItem = useStore((state) => state.canPickupItem);
-  const removeFromInventory = useStore((state) => state.removeFromInventory);
-  const hasItem = useStore((state) => state.hasItem);
   const inventory = useStore((state) => state.inventory);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
-  const addQuest = useStore((state) => state.addQuest);
-  const completeQuest = useStore((state) => state.completeQuest);
-  const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {

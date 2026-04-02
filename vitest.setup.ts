@@ -44,13 +44,18 @@ const localStorageMock = (function () {
   };
 })();
 
-Object.defineProperty(global, 'window', {
-  value: { localStorage: localStorageMock }
+const g: any = global as any;
+if (!g.window) {
+  g.window = {};
+}
+Object.defineProperty(g.window, 'localStorage', {
+  value: localStorageMock,
+  configurable: true
 });
 
 // Mock console.error to silence react-three-fiber and jsdom warnings about custom elements
 const originalError = console.error;
-console.error = (...args) => {
+vi.spyOn(console, 'error').mockImplementation((...args) => {
   if (
     typeof args[0] === 'string' &&
     (args[0].includes('is using incorrect casing') ||
@@ -61,5 +66,5 @@ console.error = (...args) => {
   ) {
     return;
   }
-  originalError(...args);
-};
+  originalError.apply(console, args);
+});

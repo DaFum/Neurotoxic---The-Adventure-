@@ -36,7 +36,6 @@ import {
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function Salzgitter() {
-  const setDialogue = useStore((state) => state.setDialogue);
   const flags = useStore((state) => state.flags);
 
   useEffect(() => {
@@ -48,7 +47,7 @@ export function Salzgitter() {
   const spotLight3Ref = useRef<THREE.SpotLight>(null);
   const tRef = useRef(0);
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     tRef.current += delta || 0;
     const t = tRef.current;
     const beat = Math.abs(Math.sin(t * 4)); // Simple beat sync
