@@ -16,7 +16,7 @@ let mockStoreState = {
 vi.mock('../store', () => {
   const useStore = vi.fn((selector) => {
     return selector ? selector(mockStoreState) : mockStoreState;
-  });
+  }) as any;
   useStore.getState = vi.fn(() => mockStoreState);
   useStore.subscribe = vi.fn((cb) => {
     mockStoreSubscriptions.push(cb);

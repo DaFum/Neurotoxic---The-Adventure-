@@ -29,19 +29,35 @@ import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useEffect, useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 /**
  * Renders the 3D scene environment and logic for Proberaum.
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function Proberaum() {
-  const flags = useStore((state) => state.flags);
+  const flags = useStore(useShallow((state) => ({
+    feedbackMonitorQuestCompleted: state.flags.feedbackMonitorQuestCompleted,
+    waterCleaned: state.flags.waterCleaned,
+    posterLoreRead: state.flags.posterLoreRead,
+    frequenz1982_proberaum: state.flags.frequenz1982_proberaum,
+    gaveBeerToMarius: state.flags.gaveBeerToMarius,
+    forbiddenRiffFound: state.flags.forbiddenRiffFound
+  })));
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
   const canPickupItem = useStore((state) => state.canPickupItem);
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
-  const inventory = useStore((state) => state.inventory);
+  const inventoryIncludes = useStore(useShallow((state) => ({
+    Mop: state.inventory.includes('Mop'),
+    Autoschlüssel: state.inventory.includes('Autoschlüssel'),
+    Bier: state.inventory.includes('Bier'),
+    Lötkolben: state.inventory.includes('Lötkolben'),
+    Schrottmetall: state.inventory.includes('Schrottmetall'),
+    Batterie: state.inventory.includes('Batterie'),
+    'Quanten-Kabel': state.inventory.includes('Quanten-Kabel')
+  })));
   const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
@@ -565,7 +581,7 @@ export function Proberaum() {
         />
       )}
 
-      {canPickupItem('Mop') && !inventory.includes('Mop') && (
+      {canPickupItem('Mop') && !inventoryIncludes['Mop'] && (
         <Interactable
           position={[-8, 0.5, 3]}
           emoji="🧹"
@@ -581,7 +597,7 @@ export function Proberaum() {
       )}
 
       {canPickupItem('Autoschlüssel') &&
-        !inventory.includes('Autoschlüssel') && (
+        !inventoryIncludes['Autoschlüssel'] && (
           <Interactable
             position={[-10, 0.5, -4]}
             emoji="🔑"
@@ -600,7 +616,7 @@ export function Proberaum() {
 
       {!flags.gaveBeerToMarius &&
         canPickupItem('Bier') &&
-        !inventory.includes('Bier') && (
+        !inventoryIncludes['Bier'] && (
           <Interactable
             position={[8, 0.5, -5]}
             emoji="🍺"
@@ -669,7 +685,7 @@ export function Proberaum() {
         />
       )}
 
-      {canPickupItem('Lötkolben') && !inventory.includes('Lötkolben') && (
+      {canPickupItem('Lötkolben') && !inventoryIncludes['Lötkolben'] && (
         <Interactable
           position={[8, 0.5, -1]}
           emoji="🛠️"
@@ -683,7 +699,7 @@ export function Proberaum() {
       )}
 
       {canPickupItem('Schrottmetall') &&
-        !inventory.includes('Schrottmetall') && (
+        !inventoryIncludes['Schrottmetall'] && (
           <Interactable
             position={[10, 0.5, -2]}
             emoji="🔩"
@@ -698,7 +714,7 @@ export function Proberaum() {
           />
         )}
 
-      {canPickupItem('Batterie') && !inventory.includes('Batterie') && (
+      {canPickupItem('Batterie') && !inventoryIncludes['Batterie'] && (
         <Interactable
           position={[-12, 0.5, 4]}
           emoji="🔋"
@@ -714,7 +730,7 @@ export function Proberaum() {
       )}
 
       {canPickupItem('Quanten-Kabel') &&
-        !inventory.includes('Quanten-Kabel') &&
+        !inventoryIncludes['Quanten-Kabel'] &&
         !feedbackMonitorQuestCompleted && (
           <Interactable
             position={[-10, 0.5, 5]}

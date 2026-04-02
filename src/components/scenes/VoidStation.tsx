@@ -25,6 +25,7 @@ import {
 } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
+import { useShallow } from 'zustand/react/shallow';
 import {
   buildVoidBassistEncounterDialogue,
   buildVoidCosmicEchoDialogue,
@@ -47,9 +48,16 @@ export function VoidStation() {
   const canPickupItem = useStore((state) => state.canPickupItem);
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
-  const flags = useStore((state) => state.flags);
+  const flags = useStore(useShallow((state) => ({
+    voidRefueled: state.flags.voidRefueled,
+    egoContained: state.flags.egoContained,
+    cosmic_echo: state.flags.cosmic_echo,
+    bassist_clue_matze: state.flags.bassist_clue_matze,
+    bassist_clue_ghost: state.flags.bassist_clue_ghost,
+    bassist_contacted: state.flags.bassist_contacted
+  })));
   const addQuest = useStore((state) => state.addQuest);
-  const inventory = useStore((state) => state.inventory);
+  const hasDunkleMaterie = useStore((state) => state.inventory.includes('Dunkle Materie'));
   const exitTimeoutRef = useRef<number | null>(null);
 
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
@@ -397,7 +405,7 @@ export function VoidStation() {
       )}
 
       {/* Item: Liquid Darkness */}
-      {!inventory.includes('Dunkle Materie') && (
+      {!hasDunkleMaterie && (
         <Interactable
           position={[-5, 0, 5]}
           emoji="🌑"

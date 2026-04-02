@@ -35,7 +35,7 @@ import {
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function Salzgitter() {
-  const flags = useStore((state) => state.flags);
+  const bassist_contacted = useStore((state) => state.flags.bassist_contacted);
 
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
@@ -523,7 +523,7 @@ export function Salzgitter() {
       />
 
       {/* Lore: Floating Bassist */}
-      {flags.bassist_contacted && (
+      {bassist_contacted && (
         <Interactable
           position={[0, 8, -5]}
           emoji="🎸"
