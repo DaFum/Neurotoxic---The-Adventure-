@@ -40,16 +40,9 @@ import {
  */
 export function Kaminstube() {
   const flags = useStore((state) => state.flags);
-  const setFlag = useStore((state) => state.setFlag);
-  const addToInventory = useStore((state) => state.addToInventory);
-  const removeFromInventory = useStore((state) => state.removeFromInventory);
-  const addQuest = useStore((state) => state.addQuest);
-  const completeQuest = useStore((state) => state.completeQuest);
-  const hasItem = useStore((state) => state.hasItem);
   const inventory = useStore((state) => state.inventory);
   const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
-  const increaseBandMood = useStore((state) => state.increaseBandMood);
   const forgottenLoreCompleted = quests.some(
     (quest) => quest.id === 'forgotten_lore' && quest.status === 'completed'
   );
