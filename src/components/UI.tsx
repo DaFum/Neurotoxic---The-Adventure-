@@ -133,6 +133,14 @@ export function UI() {
     return counts;
   }, [selectedItems]);
 
+  const discoveredLoreCount = useMemo(() => {
+    let count = 0;
+    for (let i = 0; i < loreEntries.length; i++) {
+      if (loreEntries[i].discovered) count++;
+    }
+    return count;
+  }, [loreEntries]);
+
   useEffect(() => {
     setSelectedItems((prev) => {
       const counts = new Map<string, number>();
@@ -763,7 +771,7 @@ export function UI() {
               className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <BookOpen size={18} />
-              LORE_CODEX ({loreEntries.filter(e => e.discovered).length}/{loreEntries.length})
+              LORE_CODEX ({discoveredLoreCount}/{loreEntries.length})
             </button>
 
             <button
@@ -795,7 +803,7 @@ export function UI() {
                 <div className="flex justify-between items-center mb-4 md:mb-8 border-b border-toxic/30 pb-4">
                   <div>
                     <h2 id="lore-codex-title" className="text-2xl md:text-3xl font-display text-toxic tracking-tighter">LORE_CODEX</h2>
-                    <p className="text-zinc-500 font-mono text-xs uppercase">Discovered Data: {loreEntries.filter(e => e.discovered).length} / {loreEntries.length}</p>
+                    <p className="text-zinc-500 font-mono text-xs uppercase">Discovered Data: {discoveredLoreCount} / {loreEntries.length}</p>
                   </div>
                   <button
                     ref={closeLoreBtnRef}
