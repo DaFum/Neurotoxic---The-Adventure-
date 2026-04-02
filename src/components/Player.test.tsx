@@ -1,9 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as React from 'react';
+/**
+ * @vitest-environment jsdom
+ */
 import { render } from '@testing-library/react';
 import { Player } from './Player';
 
-let storeSubscriptions: ((state: any) => void)[] = [];
+let mockStoreSubscriptions: ((state: any) => void)[] = [];
 let mockStoreState = {
   playerPos: [1, 2, 3],
   cameraShakeKick: 0,
@@ -16,7 +19,7 @@ vi.mock('../store', () => {
   });
   useStore.getState = vi.fn(() => mockStoreState);
   useStore.subscribe = vi.fn((cb) => {
-    storeSubscriptions.push(cb);
+    mockStoreSubscriptions.push(cb);
     return vi.fn();
   });
   return { useStore };
@@ -38,8 +41,8 @@ let mockBodyMethods = {
   translation: vi.fn(() => ({ x: 0, y: 0, z: 0 })),
 };
 
-vi.mock('@react-three/rapier', () => {
-  const React = require('react');
+vi.mock('@react-three/rapier', async () => {
+  const React = await import('react');
   return {
     RigidBody: React.forwardRef(({ children }: any, ref: React.Ref<any>) => {
       React.useImperativeHandle(ref, () => mockBodyMethods);
@@ -60,7 +63,7 @@ vi.mock('../touchInput', () => ({
 describe('Player Rigidbody Initialization Error Handling', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    storeSubscriptions = [];
+    mockStoreSubscriptions = [];
     mockBodyMethods = {
       setTranslation: vi.fn(),
       setLinvel: vi.fn(),
@@ -106,7 +109,7 @@ describe('Player Rigidbody Initialization Error Handling', () => {
     });
 
     // Now trigger the store subscription with a new position
-    const posSubscription = storeSubscriptions[0];
+    const posSubscription = mockStoreSubscriptions[0];
 
     expect(() => posSubscription({ ...mockStoreState, playerPos: [10, 10, 10] })).not.toThrow();
 
