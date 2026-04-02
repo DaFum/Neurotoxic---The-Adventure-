@@ -40,6 +40,8 @@ const QUEST_STATUS_ORDER: Record<QuestStatus, number> = {
   completed: 2,
 };
 
+const METER_SEGMENTS = Array.from({ length: 20 }, (_, i) => i);
+
 const getQuestStatusMeta = (status: QuestStatus) => {
   if (status === 'active') {
     return {
@@ -438,7 +440,7 @@ export function UI() {
                   <span className="text-zinc-400">Mood {bandMood}%</span>
                 </div>
                 <div className="mt-2 h-1.5 bg-zinc-900 overflow-hidden flex gap-0.5">
-                  {Array.from({ length: 20 }).map((_, i) => (
+                  {METER_SEGMENTS.map((i) => (
                     <div
                       key={i}
                       className={`h-full w-full ${(i / 20) * 100 < bandMood ? (bandMood > 70 ? 'bg-toxic' : bandMood > 40 ? 'bg-yellow-500' : 'bg-blood') : 'bg-zinc-800'}`}
@@ -565,7 +567,7 @@ export function UI() {
                 <span className="text-[10px] font-mono text-toxic">{bandMood}%</span>
               </div>
               <div className="w-full h-1.5 bg-zinc-900 overflow-hidden flex gap-0.5">
-                {Array.from({ length: 20 }).map((_, i) => (
+                {METER_SEGMENTS.map((i) => (
                   <div
                     key={i}
                     className={`h-full w-full transition-colors duration-500 ${

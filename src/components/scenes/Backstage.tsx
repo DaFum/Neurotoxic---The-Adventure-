@@ -19,6 +19,7 @@ import { Stars, Float, Text, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
+import { audio } from '../../audio';
 import { useShallow } from 'zustand/react/shallow';
 import {
   buildBackstageFeedbackMonitorDialogue,
