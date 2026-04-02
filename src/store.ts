@@ -1034,7 +1034,7 @@ export const useStore = create<GameState>()(
 
         const persistedQuestsMap = new Map<string, any>();
         for (const pq of persistedQuests) {
-          if (pq?.id && typeof pq.id === 'string' && typeof pq.text === 'string') {
+          if (pq?.id && typeof pq.id === 'string') {
             persistedQuestsMap.set(pq.id, pq);
           }
         }
@@ -1111,48 +1111,26 @@ export const useStore = create<GameState>()(
           );
         }
 
-        const whitelistedState: Partial<GameState> = {};
-        const allowedKeys: (keyof GameState)[] = [
-          'inventory',
-          'flags',
-          'quests',
-          'bandMood',
-          'loreEntries',
-          'trait',
-          'skills',
-          'itemPickupCounts',
-          'bandMoodGainClaims',
-        ];
-
-        for (const key of allowedKeys) {
-          if (typedPersistedState[key] !== undefined) {
-            // @ts-expect-error - dynamic assignment for whitelisting
-            whitelistedState[key] = typedPersistedState[key];
-          }
-        }
+        const sanitizedInventory = persistedInventory.filter((item) => typeof item === 'string');
 
         return {
           ...currentState,
-          ...whitelistedState,
           scene: currentState.scene,
           playerPos: currentState.playerPos,
           cameraShakeIntensity: currentState.cameraShakeIntensity,
           cameraShakeKick: currentState.cameraShakeKick,
+          inventory: sanitizedInventory,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           itemPickupCounts: mergedPickupCounts,
-          bandMoodGainClaims:
-            typedPersistedState.bandMoodGainClaims !== null &&
-            typeof typedPersistedState.bandMoodGainClaims === 'object'
-              ? (typedPersistedState.bandMoodGainClaims as Record<
-                  string,
-                  boolean
-                >)
-              : currentState.bandMoodGainClaims,
           flags: {
             ...currentState.flags,
             ...persistedFlags,
           },
+          ...(typedPersistedState.bandMoodGainClaims !== undefined && { bandMoodGainClaims: typedPersistedState.bandMoodGainClaims as Record<string, boolean> }),
+          ...(typedPersistedState.bandMood !== undefined && { bandMood: typedPersistedState.bandMood }),
+          ...(typedPersistedState.trait !== undefined && { trait: typedPersistedState.trait }),
+          ...(typedPersistedState.skills !== undefined && { skills: typedPersistedState.skills }),
         };
       },
       onRehydrateStorage: () => (state) => {
