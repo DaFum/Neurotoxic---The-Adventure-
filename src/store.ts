@@ -1034,7 +1034,9 @@ export const useStore = create<GameState>()(
 
         const persistedQuestsMap = new Map<string, any>();
         for (const pq of persistedQuests) {
-          if (pq?.id) persistedQuestsMap.set(pq.id, pq);
+          if (pq?.id && typeof pq.id === 'string') {
+            persistedQuestsMap.set(pq.id, pq);
+          }
         }
 
         const mergedQuests = currentState.quests.map((q) => {
@@ -1056,7 +1058,13 @@ export const useStore = create<GameState>()(
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
         const dynamicQuests = persistedQuests
-          .filter((pq: any) => pq?.id && !currentQuestIds.has(pq.id))
+          .filter(
+            (pq: any) =>
+              pq?.id &&
+              typeof pq.id === 'string' &&
+              typeof pq.text === 'string' &&
+              !currentQuestIds.has(pq.id)
+          )
           .map((pq) => {
             const p = pq as unknown as {
               id: string;
@@ -1103,26 +1111,26 @@ export const useStore = create<GameState>()(
           );
         }
 
+        const sanitizedInventory = persistedInventory.filter((item) => typeof item === 'string');
+
         return {
           ...currentState,
-          ...typedPersistedState,
           scene: currentState.scene,
           playerPos: currentState.playerPos,
+          cameraShakeIntensity: currentState.cameraShakeIntensity,
+          cameraShakeKick: currentState.cameraShakeKick,
+          inventory: sanitizedInventory,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           itemPickupCounts: mergedPickupCounts,
-          bandMoodGainClaims:
-            typedPersistedState.bandMoodGainClaims !== null &&
-            typeof typedPersistedState.bandMoodGainClaims === 'object'
-              ? (typedPersistedState.bandMoodGainClaims as Record<
-                  string,
-                  boolean
-                >)
-              : currentState.bandMoodGainClaims,
           flags: {
             ...currentState.flags,
             ...persistedFlags,
           },
+          ...(typedPersistedState.bandMoodGainClaims !== null && typeof typedPersistedState.bandMoodGainClaims === 'object' && { bandMoodGainClaims: typedPersistedState.bandMoodGainClaims as Record<string, boolean> }),
+          ...(typeof typedPersistedState.bandMood === 'number' && { bandMood: typedPersistedState.bandMood }),
+          ...((typeof typedPersistedState.trait === 'string' || typedPersistedState.trait === null) && { trait: typedPersistedState.trait }),
+          ...(typedPersistedState.skills !== null && typeof typedPersistedState.skills === 'object' && { skills: typedPersistedState.skills as Skills }),
         };
       },
       onRehydrateStorage: () => (state) => {
