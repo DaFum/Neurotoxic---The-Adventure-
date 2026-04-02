@@ -17,7 +17,8 @@ describe('buildKaminstubeLarsDialogue', () => {
 
     const dialogue = buildKaminstubeLarsDialogue();
     expect(dialogue.text).toContain('Die Schmiede ruft');
-    expect(dialogue.options).toBeUndefined();
+    expect(dialogue.options).toBeDefined();
+    expect(getOptionTexts(dialogue)).toContain('Gut so.');
   });
 
   it('prepends rhythm pact option when pact flag is set', () => {

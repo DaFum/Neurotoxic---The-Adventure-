@@ -26,12 +26,23 @@ export function buildVoidTerminalDialogue(): Dialogue {
     );
   }
 
-  store.setFlag('voidTerminalRead', true);
-  store.discoverLore('void_1982');
-  store.increaseBandMood(5);
-  return say(
-    'Ein flackerndes Terminal zeigt Logbucheinträge einer vergessenen Tour von 1982. Log: "Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback."'
-  );
+  return {
+    text: 'Ein flackerndes Terminal zeigt Logbucheinträge einer vergessenen Tour von 1982.',
+    options: [
+      {
+        text: 'Logs lesen',
+        action: () => {
+          const currentStore = game();
+          currentStore.setFlag('voidTerminalRead', true);
+          currentStore.discoverLore('void_1982');
+          currentStore.increaseBandMood(5);
+          currentStore.setDialogue(
+            'Log: "Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback."'
+          );
+        }
+      }
+    ]
+  };
 }
 
 export function buildVoidCosmicEchoDialogue(): Dialogue {
@@ -361,18 +372,34 @@ export function buildVoidEgoDialogue(): Dialogue {
 }
 
 export function buildVoidDarkMatterPickupDialogue(): Dialogue {
-  const store = game();
-  const pickedUpDarkMatter = store.addToInventory('Dunkle Materie');
+  return {
+    text: 'Vor dir schwebt ein Klumpen Dunkle Materie. Er saugt das Licht aus deiner Umgebung.',
+    options: [
+      {
+        text: 'Aufheben',
+        action: () => {
+          const currentStore = game();
+          const pickedUpDarkMatter = currentStore.addToInventory('Dunkle Materie');
 
-  if (pickedUpDarkMatter) {
-    return say(
-      'Du hast einen Klumpen Dunkle Materie aufgehoben. Er saugt das Licht aus deiner Umgebung.'
-    );
-  }
-
-  return say(
-    'Die Dunkle Materie entgleitet dir. Du kannst gerade keinen weiteren Klumpen tragen.'
-  );
+          if (pickedUpDarkMatter) {
+            currentStore.setDialogue(
+              'Du hast einen Klumpen Dunkle Materie aufgehoben. Er saugt das Licht aus deiner Umgebung.'
+            );
+          } else {
+            currentStore.setDialogue(
+              'Die Dunkle Materie entgleitet dir. Du kannst gerade keinen weiteren Klumpen tragen.'
+            );
+          }
+        },
+      },
+      {
+        text: 'Liegen lassen',
+        nextDialogue: {
+          text: 'Du lässt die Dunkle Materie dort schweben.'
+        }
+      }
+    ],
+  };
 }
 
 export function buildVoidPortalDialogue(): Dialogue {
@@ -466,9 +493,22 @@ export function buildVoidMagnetbandDialogue(): Dialogue {
 
 export function buildVoidDetektorDialogue(): Dialogue {
   const store = game();
+
   if (!store.flags.frequenzDetektorRead) {
-    store.setFlag('frequenzDetektorRead', true);
-    store.discoverLore('frequenz_anomaly');
+    return {
+      text: 'Ein seltsames Gerät piept rhythmisch. Es warnt vor einer "Resonanz-Anomalie".',
+      options: [
+        {
+          text: 'Untersuchen',
+          action: () => {
+            const currentStore = game();
+            currentStore.setFlag('frequenzDetektorRead', true);
+            currentStore.discoverLore('frequenz_anomaly');
+            currentStore.setDialogue(buildVoidDetektorDialogue());
+          }
+        }
+      ]
+    };
   }
 
   return {

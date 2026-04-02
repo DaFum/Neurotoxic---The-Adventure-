@@ -140,7 +140,15 @@ export type Flag =
   | 'backstageForbiddenRiffUsed'
   | 'voidTerminalRead'
   | 'voidCosmicEchoRewarded'
-  | 'voidBassistRewarded';
+  | 'voidBassistRewarded'
+  | 'marius_tourbus_performer_claimed'
+  | 'salzgitter_marius_chaos_claimed'
+  | 'salzgitter_marius_social_claimed'
+  | 'salzgitter_marius_performer_claimed'
+  | 'salzgitter_lars_technical_claimed'
+  | 'backstage_marius_diplomat_claimed'
+  | 'backstage_lars_technician_claimed'
+  | 'lars_drum_maintenance';
 
 /**
  * Defines the possible personality traits a player can select.
@@ -394,6 +402,14 @@ const initialState = {
     salzgitter_true_ending: false,
     salzgitter_finalized: false,
     salzgitter_marius_greeted: false,
+    marius_tourbus_performer_claimed: false,
+    salzgitter_marius_chaos_claimed: false,
+    salzgitter_marius_social_claimed: false,
+    salzgitter_marius_performer_claimed: false,
+    salzgitter_lars_technical_claimed: false,
+    backstage_marius_diplomat_claimed: false,
+    backstage_lars_technician_claimed: false,
+    lars_drum_maintenance: false,
     lars_proberaum_secret: false,
     lars_paced: false,
     marius_tourbus_doubt: false,
@@ -656,6 +672,7 @@ const ITEM_PICKUP_LIMITS: Record<string, number> = {
   Lötkolben: 3,
   Schrottmetall: 2,
   Frequenzfragment: 2,
+  'Dunkle Materie': Infinity,
 };
 
 const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
@@ -686,7 +703,7 @@ export const useStore = create<GameState>()(
   persist(
     (set, get) => ({
       ...initialState,
-      setScene: (scene) => set({ scene, playerPos: [0, 1, 0] }),
+      setScene: (scene) => set({ scene, playerPos: [0, 1, 0], dialogue: null }),
       setTrait: (trait) => set({ trait }),
       increaseSkill: (skill, amount) =>
         set((state) => ({

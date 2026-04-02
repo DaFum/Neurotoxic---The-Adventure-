@@ -200,14 +200,14 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     );
 
     // Subscribe to camera shake kicks
-    const unsubscribeShake = useStore.subscribe(
-      (state) => state.cameraShakeKick,
-      (newKick) => {
-        if (newKick > 0) {
-          cameraShakeRef.current = useStore.getState().cameraShakeIntensity;
-        }
+    let prevKick = useStore.getState().cameraShakeKick;
+    const unsubscribeShake = useStore.subscribe((state) => {
+      const newKick = state.cameraShakeKick;
+      if (newKick > 0 && newKick !== prevKick) {
+        cameraShakeRef.current = state.cameraShakeIntensity;
       }
-    );
+      prevKick = newKick;
+    });
 
     return () => {
       unsubscribe();

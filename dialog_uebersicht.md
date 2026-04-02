@@ -156,6 +156,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Sabotage entdeckt & kein Geständnis (`tourbus_sabotage_discovered && !tourbus_matze_confession`):_
     - [Social 5]: "Matze, ich glaube Marius zweifelt an der Band." – Matze gesteht: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..." (+10 BandMood, +3 Social, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur` mit Text "Finde heraus, wer das Kabel sabotiert hat").
     - [Brutalist]: "Wer auch immer das war, kriegt eine Abreibung." – Matze schaut ertappt weg und schweigt schuldbewusst (-5 BandMood, keine Flag-Änderung, Quest bleibt offen).
+    - [Cynic]: "Nur jemand aus der Band hätte ein Motiv dafür." (+2 Chaos, setzt `matzeCynicOneShot`).
     - Neutral: "Wir finden den Schuldigen." – Matze antwortet: "Ja... genau. Wir suchen weiter." (kein Mood-Effekt, keine Flag-Änderung, Quest bleibt offen).
   - _Kabel repariert (BandMood < 30):_ Klagt über schlechte Laune, ist aber froh, dass das Kabel funktioniert (kein Mood-Effekt, kein Optionsmenü).
   - _Kabel repariert (BandMood >= 30):_ Freut sich auf den Gig: "Wir sind bereit. Die Bühne gehört uns." (kein Mood-Effekt, kein Optionsmenü).
@@ -245,6 +246,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - (Trait: Brutalist): "Angst ist Schwäche. Zerstöre sie" (+20 BandMood, +3 Chaos). **Hinweis: setzt NICHT `mariusConfidenceBoost`.**
     - (Flag `askedAbout1982` gesetzt): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`).
     - "Lego-Trick" (+10 BandMood).
+    - (Trait: Diplomat): "Lass uns die Setlist durchgehen." (Einmalig, +15 BandMood, +3 Social, setzt `backstage_marius_diplomat_claimed`).
 - **Lars (Energie-Mangel):**
   - _Item (Turbo-Koffein):_
     - _Bonus (Wenn larsRhythmPact gesetzt):_
@@ -254,6 +256,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - Nur ein Schluck (Trait: Diplomat): (+30 BandMood, +3 Social, setzt `lars_paced`, `larsEnergized`).
     - Nur ein Schluck (Standard): (+20 BandMood, setzt `larsEnergized`).
   - _Item (Energiedrink):_ (+10 BandMood, setzt `larsEnergized`). **Wenn `larsRhythmPact` gesetzt:** insgesamt +35 BandMood.
+  - _Nach Erhalt von Energie (larsEnergized gesetzt):_
+    - (Trait: Technician): "Lass mich deine Becken nachziehen." (Einmalig, +15 BandMood, +3 Technical, setzt `backstage_lars_technician_claimed`).
   - _Wenn Lars Vibriert:_
     - (Skill: Chaos 5): "Chaos" (+20 BandMood, +3 Chaos, setzt `larsDrumPhilosophy`).
     - (Skill: Technical 5): "Metronom" (+10 BandMood, setzt `larsDrumPhilosophy`).
@@ -314,7 +318,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - Option (Trait: Diplomat): "Verhandeln wir." (+25 BandMood, +3 Social).
   - Standard: "Komm einfach mit" (+10 BandMood).
 - **Dunkle Materie (Item):**
-  - _Interaktion:_ Aufheben (Erhalt: Dunkle Materie).
+  - _Interaktion:_ Option "Aufheben" (Erhalt: Dunkle Materie). _Hinweis: Das Item ist nun unendlich oft aufnehmbar (`Infinity` Pickup-Limit), um Softlocks bei der Van-Betankung zu vermeiden._
 - **Schwebender Bassist** _(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):_
   - _Option (Skill: Social 8):_ "Die Band vermisst dich" (+25 BandMood, +3 Social, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).
   - _Option (Skill: Technical 8):_ "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).
@@ -381,6 +385,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - _Bonus (Wenn larsRhythmPact):_ "Ort hat eigenen Rhythmus." (+10 BandMood, setzt `kaminstube_lars_talked`).
     - (Skill: Technical 5): 120 BPM (+15 BandMood, +3 Technical, setzt `kaminstube_lars_talked`) ODER "Akustik perfekt" (+10 BandMood, +2 Technical).
     - (Skill: Chaos 5): Polyrhythmus (+20 BandMood, +3 Chaos, setzt `kaminstube_lars_talked`).
+  - _Nach Gespräch (`kaminstube_lars_talked` gesetzt):_
+    - _Item (Lötkolben, einmalig — `lars_drum_maintenance`):_ "Willst du deinen Hocker noch schweißen?" (+15 BandMood, +2 Technical, entfernt Lötkolben).
+    - Standard: "Gut so." (kein Mood-Effekt).
 - **Crowd:**
   - _Menge anheizen:_
     - (Skill: Social 5): (+20 BandMood, +3 Social, setzt `kaminstube_crowd_rallied`).
@@ -390,6 +397,12 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Option (Trait: Diplomat):_ Sprache deuten (+20 BandMood).
 
 ## 6. Salzgitter (Das Finale)
+
+- **Das Finale (Bühnen-Objekt):**
+  - _Interaktion:_ Öffnet ein Options-Menü: "Die Bühne ist bereitet. Bist du bereit, das letzte Riff zu spielen?".
+  - _Aktion "Beginne das Finale":_ Triggert die End-Auswertung basierend auf dem Echtzeit-Status der Flags (z.B. BandUnited, fanMovement, ritualPerformed, frequenz1982_complete, etc.) und entscheidet dynamisch zwischen True Ending, Secret Encore, Best Ending, Good Ending oder Standard Ending.
+  - _Aktion "Wir brauchen noch Zeit":_ Bricht die Finalisierung ab und lässt den Spieler weiter interagieren.
+  - _Hinweis:_ Die Finalisierung (Setzen von `salzgitter_finalized` und Quests) geschieht nun ausschließlich beim bewussten Starten des Finales, nicht mehr beim bloßen Betrachten der Bühne.
 
 - **Matze:**
   - _Item (Verbotenes Riff + Void-Plektrum):_ Ultimativer Sound.
@@ -438,13 +451,16 @@ Das Finale in Salzgitter reagiert auf alle gesammelten Flags, Items und Skills. 
   - _Wenn `mariusConfidenceBoost` & `egoContained` & `bassist_contacted`:_
     - (Skill: Social 12): "Sing für den Bassisten" (+50 BandMood, setzt `salzgitter_true_ending`).
   - _Wenn `backstage_performer_speech`:_
-    - (Trait: Performer): "Nimm die Halle" (+30 BandMood, +5 Social).
-  - _Standard Confidence Boost:_ Chaos 10 (+40 BandMood) oder Social 10 (+30 BandMood).
+    - (Trait: Performer): "Nimm die Halle" (Einmalig, +30 BandMood, +5 Social).
+  - _Standard Confidence Boost:_ Chaos 10 (Einmalig, +40 BandMood) oder Social 10 (Einmalig, +30 BandMood).
+  - _Hinweis:_ Die Skill- und Mood-Belohnungen wurden mit `_claimed`-Flags versehen, um unendliches Farming zu verhindern.
 - **Lars (Drummer):**
   - _Wenn `larsVibrating` & `larsDrumPhilosophy`:_
     - (Skill: Chaos 15): "Maschinen-Seele entfesseln" (+40 BandMood, +5 Chaos, setzt `salzgitter_encore_unlocked`).
     - (Skill: Technical 12): "Kinetische Energie" (+40 BandMood, +5 Technical, setzt `salzgitter_encore_unlocked`).
+  - _Wenn `larsVibrating`:_ "Synchronisiere die Frequenz" [Technical 10] (Einmalig, +30 BandMood, +5 Technical).
   - _Wenn `lars_paced`:_ (+25 BandMood).
+  - _Hinweis:_ Die Skill- und Mood-Belohnungen wurden mit `_claimed`-Flags versehen, um unendliches Farming zu verhindern.
 - **Schwebender Bassist** _(erscheint wenn `bassist_contacted` gesetzt, verschwindet nach `bassist_restored`):_
   - _Wenn `voidBassistSpoken` & `bassist_mystery` abgeschlossen & kein Bassist-Saite & kein Resonanz-Kristall im Inventar (Auto-Restore):_ "Erinnert sich" — +30 BandMood und `bassist_restored` werden via `(Weiter)`-Aktion gesetzt (nicht beim Öffnen des Dialogs).
   - _Wenn `voidBassistSpoken` gesetzt (aber Auto-Restore-Bedingungen nicht erfüllt — z.B. Quest noch offen oder Spezialitem im Inventar):_ Option "Du erinnerst dich an mich" (+20 BandMood, setzt **NICHT** `bassist_restored`).

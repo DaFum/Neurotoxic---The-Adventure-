@@ -117,6 +117,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
   }
 
   if (flags.tourbus_sabotage_discovered && !flags.tourbus_matze_confession) {
+    const { trait } = store;
     return {
       text: 'Matze: "Das zerschnittene Kabel... okay, ich geb\'s ja zu. Irgendwas stimmt nicht."',
       options: [
@@ -149,6 +150,20 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             currentStore.increaseBandMood(-5);
           },
         },
+        ...(!flags.matzeCynicOneShot && trait === 'Cynic' ? [
+          {
+            text: 'Nur jemand aus der Band hätte ein Motiv dafür. [Cynic]',
+            requiredTrait: 'Cynic' as const,
+            action: () => {
+              const currentStore = game();
+              currentStore.setFlag('matzeCynicOneShot', true);
+              currentStore.setDialogue(
+                'Matze: "Wie kommst du denn darauf?! Du kannst uns doch nicht einfach verdächtigen..."'
+              );
+              currentStore.increaseSkill('chaos', 2);
+            }
+          }
+        ] : []),
         {
           text: 'Wir finden den Schuldigen.',
           action: () =>

@@ -40,7 +40,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
           text: 'Lass uns einen Rhythmus-Pakt schließen.',
           action: () => game().setDialogue(buildLarsRhythmusPaktDialogue())
         },
-        ...when(hasBeer && !flags.gaveBeerToLars, {
+        ...(hasBeer && !flags.gaveBeerToLars ? [{
           text: 'Hier, lass dir dieses kühle Blonde schmecken.',
           action: () => {
             const currentStore = game();
@@ -49,7 +49,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
             currentStore.setFlag('gaveBeerToLars', true);
             currentStore.increaseBandMood(20);
           }
-        } as DialogueOption),
+        }] : []),
         {
           text: 'Ein andermal.',
           action: () => game().setDialogue('Lars: "Dann trommle ich eben alleine weiter."')
@@ -72,10 +72,10 @@ export function buildProberaumLarsDialogue(): Dialogue {
             currentStore.increaseBandMood(20);
           }
         },
-        {
+        ...(!flags.larsDrumPhilosophy ? [{
           text: 'Was ist deine Drum-Philosophie?',
           action: () => game().setDialogue(buildLarsDrumPhilosophieDialogue())
-        },
+        }] : []),
         {
           text: 'Das ist für Marius.',
           action: () => game().setDialogue('Lars: "Marius? Der hat doch schon genug Ego. Na gut, ich trommel weiter auf dem Trockenen."')
