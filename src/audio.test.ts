@@ -49,13 +49,11 @@ describe('AudioEngine', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.stubGlobal('AudioContext', MockAudioContext);
-    vi.stubGlobal('window', {
-      setInterval: vi.fn((cb, time) => setInterval(cb, time)),
-      clearInterval: vi.fn((id) => clearInterval(id)),
-    });
+    vi.stubGlobal('window', globalThis);
     audio.ctx = null;
     audio.isPlayingMusic = false;
     audio.currentAmbient = null;
+    audio.tempo = 250;
     if (audio.musicInterval) clearInterval(audio.musicInterval);
     if (audio.ambientInterval) clearInterval(audio.ambientInterval);
     audio.musicInterval = null;
@@ -63,6 +61,7 @@ describe('AudioEngine', () => {
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.restoreAllMocks();
     vi.useRealTimers();
   });
