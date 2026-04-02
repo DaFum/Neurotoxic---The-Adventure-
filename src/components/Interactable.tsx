@@ -69,7 +69,10 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
   const targetPosVector = useRef(new THREE.Vector3(...position)).current;
 
   const palette = useMemo(() => {
-    const seed = name.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    let seed = 0;
+    for (let i = 0; i < name.length; i++) {
+      seed += name.charCodeAt(i);
+    }
     const hue = (seed * 37) % 360;
     return {
       accent: `hsl(${hue} 88% 62%)`,
