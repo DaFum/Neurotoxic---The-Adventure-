@@ -106,7 +106,14 @@ export function UI() {
   const [compactHudTab, setCompactHudTab] = useState<'status' | 'inventory' | 'quests'>('status');
   const hasSyncedViewportRef = useRef(false);
 
-  const openQuestCount = useMemo(() => quests.filter((q) => q.status === 'active').length, [quests]);
+  const openQuestCount = useMemo(
+    () =>
+      quests.reduce(
+        (acc, quest) => acc + (quest.status === 'active' ? 1 : 0),
+        0
+      ),
+    [quests]
+  );
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
 
@@ -142,7 +149,7 @@ export function UI() {
   const questDictionary = useMemo(() => {
     const dict = new Map<string, string>();
     for (const q of quests) {
-      if (q?.id) dict.set(q.id, q.text);
+      if (q.id !== undefined) dict.set(q.id, q.text);
     }
     return dict;
   }, [quests]);
