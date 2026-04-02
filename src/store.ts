@@ -1127,10 +1127,10 @@ export const useStore = create<GameState>()(
             ...currentState.flags,
             ...persistedFlags,
           },
-          ...(typedPersistedState.bandMoodGainClaims !== undefined && { bandMoodGainClaims: typedPersistedState.bandMoodGainClaims as Record<string, boolean> }),
-          ...(typedPersistedState.bandMood !== undefined && { bandMood: typedPersistedState.bandMood }),
-          ...(typedPersistedState.trait !== undefined && { trait: typedPersistedState.trait }),
-          ...(typedPersistedState.skills !== undefined && { skills: typedPersistedState.skills }),
+          ...(typedPersistedState.bandMoodGainClaims !== null && typeof typedPersistedState.bandMoodGainClaims === 'object' && { bandMoodGainClaims: typedPersistedState.bandMoodGainClaims as Record<string, boolean> }),
+          ...(typeof typedPersistedState.bandMood === 'number' && { bandMood: typedPersistedState.bandMood }),
+          ...((typeof typedPersistedState.trait === 'string' || typedPersistedState.trait === null) && { trait: typedPersistedState.trait }),
+          ...(typedPersistedState.skills !== null && typeof typedPersistedState.skills === 'object' && { skills: typedPersistedState.skills as Skills }),
         };
       },
       onRehydrateStorage: () => (state) => {
