@@ -27,7 +27,7 @@ import { Sparkles, Float, Text } from '@react-three/drei';
 import { useRef, useEffect } from 'react';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
-import { audio } from '../../audio';
+import { useShallow } from 'zustand/react/shallow';
 
 /**
  * Renders the 3D scene environment and logic for TourBus.
@@ -35,16 +35,31 @@ import { audio } from '../../audio';
  */
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
-  const flags = useStore((state) => state.flags);
+  const flags = useStore(useShallow((state) => ({
+    tourbusBandMeeting: state.flags.tourbusBandMeeting,
+    tourbus_sabotage_discovered: state.flags.tourbus_sabotage_discovered,
+    tourbusAmpTechnician: state.flags.tourbusAmpTechnician,
+    tourbusCoffeeCollected: state.flags.tourbusCoffeeCollected,
+    tourbusEnergyDrinkCollected: state.flags.tourbusEnergyDrinkCollected,
+    tourbusBeerCollected: state.flags.tourbusBeerCollected,
+    rostigesPlektrumCollected: state.flags.rostigesPlektrumCollected
+  })));
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
   const canPickupItem = useStore((state) => state.canPickupItem);
-  const inventory = useStore((state) => state.inventory);
+  const inventoryIncludes = useStore(useShallow((state) => ({
+    Klebeband: state.inventory.includes('Klebeband'),
+    'Repariertes Kabel': state.inventory.includes('Repariertes Kabel'),
+    'Defektes Kabel': state.inventory.includes('Defektes Kabel'),
+    Kaffee: state.inventory.includes('Kaffee'),
+    Energiedrink: state.inventory.includes('Energiedrink'),
+    Bier: state.inventory.includes('Bier'),
+    Batterie: state.inventory.includes('Batterie')
+  })));
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    audio.startAmbient('tourbus');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);
@@ -301,7 +316,7 @@ export function TourBus() {
       )}
 
       {/* Bus Items */}
-      {canPickupItem('Klebeband') && !inventory.includes('Klebeband') && !inventory.includes('Repariertes Kabel') && (
+      {canPickupItem('Klebeband') && !inventoryIncludes['Klebeband'] && !inventoryIncludes['Repariertes Kabel'] && (
         <Interactable
           position={[-5, 0.5, 2]}
           emoji="🩹"
@@ -313,7 +328,7 @@ export function TourBus() {
         />
       )}
 
-      {canPickupItem('Defektes Kabel') && !inventory.includes('Defektes Kabel') && !inventory.includes('Repariertes Kabel') && (
+      {canPickupItem('Defektes Kabel') && !inventoryIncludes['Defektes Kabel'] && !inventoryIncludes['Repariertes Kabel'] && (
         <Interactable
           position={[5, 0.5, 2]}
           emoji="🔌"
@@ -325,7 +340,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusCoffeeCollected && canPickupItem('Kaffee') && !inventory.includes('Kaffee') && (
+      {!flags.tourbusCoffeeCollected && canPickupItem('Kaffee') && !inventoryIncludes['Kaffee'] && (
         <Interactable
           position={[0, 0.5, -3]}
           emoji="☕"
@@ -338,7 +353,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusEnergyDrinkCollected && canPickupItem('Energiedrink') && !inventory.includes('Energiedrink') && (
+      {!flags.tourbusEnergyDrinkCollected && canPickupItem('Energiedrink') && !inventoryIncludes['Energiedrink'] && (
         <Interactable
           position={[-1, 0.5, -3]}
           emoji="🥤"
@@ -351,7 +366,7 @@ export function TourBus() {
         />
       )}
 
-      {!flags.tourbusBeerCollected && canPickupItem('Bier') && !inventory.includes('Bier') && (
+      {!flags.tourbusBeerCollected && canPickupItem('Bier') && !inventoryIncludes['Bier'] && (
         <Interactable
           position={[2, 0.5, 3]}
           emoji="🍺"
@@ -409,7 +424,7 @@ export function TourBus() {
         />
       )}
 
-      {canPickupItem('Batterie') && !inventory.includes('Batterie') && (
+      {canPickupItem('Batterie') && !inventoryIncludes['Batterie'] && (
         <Interactable
           position={[-3, 0.5, 4]}
           emoji="🔋"

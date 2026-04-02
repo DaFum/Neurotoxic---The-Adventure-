@@ -177,7 +177,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     const unsubscribe = useStore.subscribe(
       (state) => {
         const newPos = state.playerPos;
-        // Optimization: only process if the playerPos array reference changed
+        // Optimization: only process if the playerPos array reference changed, meaning a teleport/reset occurred
         if (newPos === prevPos) return;
         prevPos = newPos;
 
@@ -270,12 +270,12 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
     // ~0.05 squared distance is about 0.22 units, small enough not to break interactions
     if (dx * dx + dy * dy + dz * dz > 0.05) {
-      setPlayerPos([clampedX, pos.y, clampedZ]);
       lastSentPosRef.set(clampedX, pos.y, clampedZ);
+      setPlayerPos([clampedX, pos.y, clampedZ]);
     } else if (!moving && (lastSentPosRef.x !== clampedX || lastSentPosRef.y !== pos.y || lastSentPosRef.z !== clampedZ)) {
       // Fallback flush: always update to exact resting position when player stops moving
-      setPlayerPos([clampedX, pos.y, clampedZ]);
       lastSentPosRef.set(clampedX, pos.y, clampedZ);
+      setPlayerPos([clampedX, pos.y, clampedZ]);
     }
 
     // Camera follow with shake

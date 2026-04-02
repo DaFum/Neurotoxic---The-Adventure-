@@ -1,3 +1,9 @@
+export type AmbientScene = 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
+
+export const isAmbientScene = (scene: string): scene is AmbientScene => {
+  return ['proberaum', 'tourbus', 'backstage', 'void_station', 'kaminstube', 'salzgitter'].includes(scene);
+};
+
 /**
  * A simple audio engine class for managing sound effects and ambient music
  * in the game using the Web Audio API. It supports synthesized sounds,
@@ -123,7 +129,7 @@ class AudioEngine {
    * Starts a looping ambient background track specific to the given scene.
    * @param type - The identifier of the scene to load ambient audio for.
    */
-  startAmbient(type: 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter') {
+  startAmbient(type: AmbientScene) {
     this.init();
     if (this.currentAmbient === type) return;
     this.stopAmbient();

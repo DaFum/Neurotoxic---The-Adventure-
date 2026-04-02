@@ -21,7 +21,7 @@ import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
-import { audio } from '../../audio';
+import { useShallow } from 'zustand/react/shallow';
 import {
   buildKaminstubeAmpDialogue,
   buildKaminstubeCrowdDialogue,
@@ -40,8 +40,11 @@ import {
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function Kaminstube() {
-  const flags = useStore((state) => state.flags);
-  const inventory = useStore((state) => state.inventory);
+  const flags = useStore(useShallow((state) => ({
+    ampFixed: state.flags.ampFixed,
+    kaminFeuerPact: state.flags.kaminFeuerPact
+  })));
+  const hasRoehre = useStore((state) => state.inventory.includes('Röhre'));
   const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
   const forgottenLoreCompleted = quests.some(
@@ -54,7 +57,6 @@ export function Kaminstube() {
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    audio.startAmbient('kaminstube');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);
@@ -548,7 +550,7 @@ export function Kaminstube() {
       />
 
       {/* Items */}
-      {!inventory.includes('Röhre') && !flags.ampFixed && (
+      {!hasRoehre && !flags.ampFixed && (
         <Interactable
           position={[8, 0.5, 2]}
           emoji="🔌"

@@ -1,24 +1,23 @@
-import { Suspense, useEffect, lazy } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../store';
+
+const Proberaum = React.lazy(() => import('./scenes/Proberaum').then(m => ({ default: m.Proberaum })));
+const TourBus = React.lazy(() => import('./scenes/TourBus').then(m => ({ default: m.TourBus })));
+const Backstage = React.lazy(() => import('./scenes/Backstage').then(m => ({ default: m.Backstage })));
+const VoidStation = React.lazy(() => import('./scenes/VoidStation').then(m => ({ default: m.VoidStation })));
+const Kaminstube = React.lazy(() => import('./scenes/Kaminstube').then(m => ({ default: m.Kaminstube })));
+const Salzgitter = React.lazy(() => import('./scenes/Salzgitter').then(m => ({ default: m.Salzgitter })));
+
 import { WorldEvents } from './WorldEvents';
 import { UI } from './UI';
 import { VirtualJoystick } from './VirtualJoystick';
-import { audio } from '../audio';
+import { audio, isAmbientScene } from '../audio';
 import { KeyboardInteractionProvider } from './KeyboardInteractionManager';
 import { MainMenu } from './MainMenu';
-
-// ⚡ Bolt Optimization: Lazy load heavy 3D scene components to reduce initial bundle size
-// and speed up initial application load time.
-const Proberaum = lazy(() => import('./scenes/Proberaum').then(module => ({ default: module.Proberaum })));
-const TourBus = lazy(() => import('./scenes/TourBus').then(module => ({ default: module.TourBus })));
-const Backstage = lazy(() => import('./scenes/Backstage').then(module => ({ default: module.Backstage })));
-const VoidStation = lazy(() => import('./scenes/VoidStation').then(module => ({ default: module.VoidStation })));
-const Kaminstube = lazy(() => import('./scenes/Kaminstube').then(module => ({ default: module.Kaminstube })));
-const Salzgitter = lazy(() => import('./scenes/Salzgitter').then(module => ({ default: module.Salzgitter })));
 
 /**
  * The main 3D Game component that sets up the Canvas, physics engine, and scene routing.
@@ -31,9 +30,12 @@ export function Game() {
   const setPaused = useStore((state) => state.setPaused);
 
   useEffect(() => {
-    if (scene === 'menu') {
+    if (scene !== 'menu' && isAmbientScene(scene)) {
+      audio.startAmbient(scene);
+    } else {
       audio.stopAmbient();
     }
+    return () => audio.stopAmbient();
   }, [scene]);
 
   useEffect(() => {

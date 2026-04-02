@@ -10,7 +10,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -43,7 +43,7 @@ interface InteractableProps {
  * @param props.idleType - The type of idle animation to play if it is a band member.
  * @returns A 3D group containing the collision mesh and visual label.
  */
-export function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
+export const Interactable = React.memo(function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);
   const labelSpriteRef = useRef<THREE.Sprite>(null);
@@ -363,4 +363,4 @@ export function Interactable({ position, emoji, name, onInteract, scale = 1, isB
       </group>
     </RigidBody>
   );
-}
+});

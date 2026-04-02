@@ -19,7 +19,7 @@ import { Stars, Float, Text, Sparkles } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
-import { audio } from '../../audio';
+import { useShallow } from 'zustand/react/shallow';
 import {
   buildBackstageFeedbackMonitorDialogue,
   buildBackstageLarsDialogue,
@@ -36,14 +36,22 @@ export function Backstage() {
   const canPickupItem = useStore((state) => state.canPickupItem);
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
-  const flags = useStore((state) => state.flags);
+  const flags = useStore(useShallow((state) => ({
+    setlistFound: state.flags.setlistFound,
+    tourbus_sabotage_discovered: state.flags.tourbus_sabotage_discovered,
+    backstage_blueprint_found: state.flags.backstage_blueprint_found
+  })));
   const setFlag = useStore((state) => state.setFlag);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const increaseSkill = useStore((state) => state.increaseSkill);
-  const inventory = useStore((state) => state.inventory);
+  const inventoryIncludes = useStore(useShallow((state) => ({
+    Setliste: state.inventory.includes('Setliste'),
+    Stift: state.inventory.includes('Stift'),
+    Lötkolben: state.inventory.includes('Lötkolben')
+  })));
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -71,8 +79,6 @@ export function Backstage() {
         'Führe ein Bandritual vor dem Auftritt durch'
       );
     }
-
-    audio.startAmbient('backstage');
 
     return () => {
       if (exitTimeoutRef.current !== null) {
@@ -598,7 +604,7 @@ export function Backstage() {
       {/* Items */}
       {!flags.setlistFound &&
         canPickupItem('Setliste') &&
-        !inventory.includes('Setliste') && (
+        !inventoryIncludes['Setliste'] && (
           <Interactable
             position={[0, 0, -2]}
             emoji="📜"
@@ -614,7 +620,7 @@ export function Backstage() {
           />
         )}
 
-      {canPickupItem('Stift') && !inventory.includes('Stift') && (
+      {canPickupItem('Stift') && !inventoryIncludes['Stift'] && (
         <Interactable
           position={[8, 0, 2]}
           emoji="🖊️"
@@ -628,7 +634,7 @@ export function Backstage() {
         />
       )}
 
-      {canPickupItem('Lötkolben') && !inventory.includes('Lötkolben') && (
+      {canPickupItem('Lötkolben') && !inventoryIncludes['Lötkolben'] && (
         <Interactable
           position={[12, 0, -5]}
           emoji="🔌"
