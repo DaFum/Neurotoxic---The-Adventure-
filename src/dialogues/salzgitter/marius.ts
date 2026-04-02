@@ -107,21 +107,6 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
       },
     ];
 
-    if (store.flags.egoContained && store.flags.bassist_contacted) {
-      options.unshift({
-        text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
-        requiredSkill: { name: 'social', level: 12 },
-        action: () => {
-          const currentStore = game();
-          currentStore.setDialogue(
-            'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"'
-          );
-          currentStore.setFlag('salzgitter_true_ending', true);
-          currentStore.increaseBandMood(50);
-        },
-      });
-    }
-
     if (store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed) {
       options.unshift({
         text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
@@ -134,6 +119,21 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
           );
           currentStore.increaseBandMood(30);
           currentStore.increaseSkill('social', 5);
+        },
+      });
+    }
+
+    if (store.flags.egoContained && store.flags.bassist_contacted) {
+      options.unshift({
+        text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
+        requiredSkill: { name: 'social', level: 12 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"'
+          );
+          currentStore.setFlag('salzgitter_true_ending', true);
+          currentStore.increaseBandMood(50);
         },
       });
     }

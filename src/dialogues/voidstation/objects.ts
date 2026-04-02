@@ -372,18 +372,34 @@ export function buildVoidEgoDialogue(): Dialogue {
 }
 
 export function buildVoidDarkMatterPickupDialogue(): Dialogue {
-  const store = game();
-  const pickedUpDarkMatter = store.addToInventory('Dunkle Materie');
+  return {
+    text: 'Vor dir schwebt ein Klumpen Dunkle Materie. Er saugt das Licht aus deiner Umgebung.',
+    options: [
+      {
+        text: 'Aufheben',
+        action: () => {
+          const currentStore = game();
+          const pickedUpDarkMatter = currentStore.addToInventory('Dunkle Materie');
 
-  if (pickedUpDarkMatter) {
-    return say(
-      'Du hast einen Klumpen Dunkle Materie aufgehoben. Er saugt das Licht aus deiner Umgebung.'
-    );
-  }
-
-  return say(
-    'Die Dunkle Materie entgleitet dir. Du kannst gerade keinen weiteren Klumpen tragen.'
-  );
+          if (pickedUpDarkMatter) {
+            currentStore.setDialogue(
+              'Du hast einen Klumpen Dunkle Materie aufgehoben. Er saugt das Licht aus deiner Umgebung.'
+            );
+          } else {
+            currentStore.setDialogue(
+              'Die Dunkle Materie entgleitet dir. Du kannst gerade keinen weiteren Klumpen tragen.'
+            );
+          }
+        },
+      },
+      {
+        text: 'Liegen lassen',
+        nextDialogue: {
+          text: 'Du lässt die Dunkle Materie dort schweben.'
+        }
+      }
+    ],
+  };
 }
 
 export function buildVoidPortalDialogue(): Dialogue {

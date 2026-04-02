@@ -318,7 +318,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - Option (Trait: Diplomat): "Verhandeln wir." (+25 BandMood, +3 Social).
   - Standard: "Komm einfach mit" (+10 BandMood).
 - **Dunkle Materie (Item):**
-  - _Interaktion:_ Aufheben (Erhalt: Dunkle Materie).
+  - _Interaktion:_ Option "Aufheben" (Erhalt: Dunkle Materie). _Hinweis: Das Item ist nun unendlich oft aufnehmbar (`Infinity` Pickup-Limit), um Softlocks bei der Van-Betankung zu vermeiden._
 - **Schwebender Bassist** _(erscheint nur wenn `bassist_clue_matze` & `bassist_clue_ghost` gesetzt und `bassist_contacted` noch nicht gesetzt):_
   - _Option (Skill: Social 8):_ "Die Band vermisst dich" (+25 BandMood, +3 Social, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).
   - _Option (Skill: Technical 8):_ "Ich kann deine Frequenz messen" (+50 BandMood, +3 Technical, setzt `bassist_contacted`, `voidBassistSpoken`, Quest `bassist_mystery`, Lore `bassist_wahrheit`).

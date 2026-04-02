@@ -44,9 +44,18 @@ describe('VoidStation object builders', () => {
     });
 
     const dialogue = buildVoidDarkMatterPickupDialogue();
+    expect(dialogue.options).toBeDefined();
 
-    expect(dialogue.text).toContain('aufgehoben');
-    expect(dialogue.text).not.toContain('keinen weiteren Klumpen');
+    // Simulate picking it up
+    const pickupOption = dialogue.options!.find(o => o.text === 'Aufheben');
+    expect(pickupOption).toBeDefined();
+
+    executeDialogueOption(pickupOption!);
+
+    const stateAfter = useStore.getState();
+    expect(stateAfter.dialogue?.text).toContain('aufgehoben');
+    expect(stateAfter.dialogue?.text).not.toContain('keinen weiteren Klumpen');
+    expect(stateAfter.inventory).toContain('Dunkle Materie');
   });
 
   it('handles ego strategy branch and marks ego contained', () => {
