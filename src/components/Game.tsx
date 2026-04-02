@@ -31,9 +31,7 @@ export function Game() {
   const setPaused = useStore((state) => state.setPaused);
 
   useEffect(() => {
-    if (scene !== 'menu') {
-      audio.startAmbient(scene as any);
-    } else {
+    if (scene === 'menu') {
       audio.stopAmbient();
     }
   }, [scene]);

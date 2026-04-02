@@ -30,6 +30,7 @@ import { Sparkles, Float, Text } from '@react-three/drei';
 import { useRef, useEffect } from 'react';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
+import { audio } from '../../audio';
 
 /**
  * Renders the 3D scene environment and logic for TourBus.
@@ -53,6 +54,7 @@ export function TourBus() {
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
+    audio.startAmbient('tourbus');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);

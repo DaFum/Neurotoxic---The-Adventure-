@@ -17,6 +17,7 @@
  */
 import { useStore } from '../../store';
 import type { DialogueOption } from '../../store';
+import { audio } from '../../audio';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import {
@@ -59,6 +60,7 @@ export function Proberaum() {
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
+    audio.startAmbient('proberaum');
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);
