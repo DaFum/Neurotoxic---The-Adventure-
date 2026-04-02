@@ -20,6 +20,7 @@ import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
+import { audio } from '../../audio';
 import {
   buildBackstageFeedbackMonitorDialogue,
   buildBackstageLarsDialogue,
@@ -81,6 +82,8 @@ export function Backstage() {
         'Führe ein Bandritual vor dem Auftritt durch'
       );
     }
+
+    audio.startAmbient('backstage');
 
     return () => {
       if (exitTimeoutRef.current !== null) {
