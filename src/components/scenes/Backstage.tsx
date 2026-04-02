@@ -72,8 +72,6 @@ export function Backstage() {
       );
     }
 
-    audio.startAmbient('backstage');
-
     return () => {
       if (exitTimeoutRef.current !== null) {
         window.clearTimeout(exitTimeoutRef.current);
@@ -81,6 +79,10 @@ export function Backstage() {
       }
     };
   }, [addQuest, startAndFinishQuest]);
+
+  useEffect(() => {
+    audio.startAmbient('backstage');
+  }, []);
 
   const ritualActionWrapper = useCallback(
     (
