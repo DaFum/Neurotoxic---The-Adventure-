@@ -45,9 +45,7 @@ export function Backstage() {
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const increaseSkill = useStore((state) => state.increaseSkill);
-  const hasItem = useStore((state) => state.hasItem);
   const inventory = useStore((state) => state.inventory);
-  const removeFromInventory = useStore((state) => state.removeFromInventory);
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
