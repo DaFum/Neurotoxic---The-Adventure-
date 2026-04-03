@@ -152,7 +152,7 @@ export function UI() {
 
       let changed = false;
       const newSelected: string[] = [];
-      const usedCounts: Record<string, number> = {};
+      const usedCounts: Record<string, number> = Object.create(null);
 
       for (const item of prev) {
         const used = usedCounts[item] ?? 0;
