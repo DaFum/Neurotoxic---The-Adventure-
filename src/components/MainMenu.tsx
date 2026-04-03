@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useStore, Trait, Skills } from '../store';
+import { useStore, Trait, Skills, STORAGE_KEY } from '../store';
 import { audio } from '../audio';
-
-const STORAGE_KEY = 'neurotoxic-game-storage';
+import { checkHasSavedGame } from '../utils/saveGame';
 
 export function MainMenu() {
   const trait = useStore((state) => state.trait);
@@ -33,58 +32,7 @@ export function MainMenu() {
 
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        setHasSavedGame(false);
-        return;
-      }
-
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(raw);
-      } catch {
-        setHasSavedGame(false);
-        return;
-      }
-
-      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-        setHasSavedGame(false);
-        return;
-      }
-      const parsedRecord = parsed as Record<string, unknown>;
-      const saved = parsedRecord.state;
-      if (!saved || typeof saved !== 'object' || Array.isArray(saved)) {
-        setHasSavedGame(false);
-        return;
-      }
-      const savedRecord = saved as Record<string, unknown>;
-
-      const hasTrait = savedRecord.trait !== null && savedRecord.trait !== undefined;
-      const hasInventory = Array.isArray(savedRecord.inventory) && savedRecord.inventory.length > 0;
-      const hasCompletedQuest = Array.isArray(savedRecord.quests) && savedRecord.quests.some((q: unknown) => {
-        if (typeof q === 'object' && q !== null) {
-          const quest = q as { status?: unknown, completed?: unknown };
-          return quest.status === 'completed' || quest.completed === true;
-        }
-        return false;
-      });
-      const hasLoreProgress = Array.isArray(savedRecord.loreEntries) && savedRecord.loreEntries.some((e: unknown) => {
-        if (typeof e === 'object' && e !== null) {
-          return (e as { discovered?: unknown }).discovered === true;
-        }
-        return false;
-      });
-      const skills = typeof savedRecord.skills === 'object' && savedRecord.skills !== null
-        ? savedRecord.skills as Record<string, unknown>
-        : undefined;
-      const hasMoodOrSkillProgress =
-        savedRecord.bandMood !== undefined && typeof savedRecord.bandMood === 'number' && (
-          savedRecord.bandMood !== 20 ||
-          (typeof skills?.technical === 'number' && skills.technical > 0) ||
-          (typeof skills?.social === 'number' && skills.social > 0) ||
-          (typeof skills?.chaos === 'number' && skills.chaos > 0)
-        );
-
-      setHasSavedGame(Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress));
+      setHasSavedGame(checkHasSavedGame(raw));
     } catch {
       setHasSavedGame(false);
     }
