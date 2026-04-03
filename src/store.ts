@@ -726,6 +726,9 @@ export const useStore = create<GameState>()(
           set({ dialogue: { text: dialogue } });
         } else {
           set({ dialogue });
+          if (dialogue?.visualEffect === 'shake') {
+            get().setCameraShake(0.5);
+          }
         }
       },
       addToInventory: (item) => {
