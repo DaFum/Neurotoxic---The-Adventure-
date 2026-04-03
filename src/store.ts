@@ -680,29 +680,6 @@ const ITEM_PICKUP_LIMITS: Record<string, number> = {
 
 const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
 
-const deriveBandMoodGainSource = (): string => {
-  const stack = new Error().stack;
-  if (!stack) return 'unknown_source';
-
-  const lines = stack.split('\n');
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (
-      line &&
-      (line.startsWith('at ') || line.includes('@')) &&
-      !line.includes('deriveBandMoodGainSource') &&
-      !line.includes('increaseBandMood') &&
-      !line.match(/\/store\.[jt]sx?:/i) &&
-      !line.includes('zustand') &&
-      !line.includes('at set')
-    ) {
-      return line;
-    }
-  }
-
-  return 'unknown_source';
-};
-
 /**
  * The Zustand hook for accessing and mutating the global game state.
  * Automatically persists the state to localStorage.
@@ -988,17 +965,18 @@ export const useStore = create<GameState>()(
           const nextMood = Math.max(0, Math.min(100, state.bandMood + amount));
 
           if (amount > 0) {
-            const gainSource = sourceId ?? deriveBandMoodGainSource();
-            if (state.bandMoodGainClaims[gainSource]) {
+            if (sourceId && state.bandMoodGainClaims[sourceId]) {
               return state;
             }
-            return {
-              bandMood: nextMood,
-              bandMoodGainClaims: {
-                ...state.bandMoodGainClaims,
-                [gainSource]: true,
-              },
-            };
+            if (sourceId) {
+              return {
+                bandMood: nextMood,
+                bandMoodGainClaims: {
+                  ...state.bandMoodGainClaims,
+                  [sourceId]: true,
+                },
+              };
+            }
           }
 
           return { bandMood: nextMood };

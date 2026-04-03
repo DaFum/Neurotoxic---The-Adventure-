@@ -586,7 +586,7 @@ export function Kaminstube() {
           const store = useStore.getState();
           store.setDialogue(buildKaminstubeDrumMachineDialogue());
           if (!store.flags.kaminstubeDrumLoreHeard) {
-            store.increaseBandMood(10);
+            store.increaseBandMood(10, 'components_scenes_Kaminstubex_589');
             store.setFlag('kaminstubeDrumLoreHeard', true);
           }
         }}

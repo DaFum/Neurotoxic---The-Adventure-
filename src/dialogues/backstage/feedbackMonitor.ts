@@ -40,7 +40,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(40);
+              currentStore.increaseBandMood(40, 'dialogues_backstage_feedbackMonitor_43');
               currentStore.increaseSkill('chaos', 5);
             },
           },
@@ -59,7 +59,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(30);
+              currentStore.increaseBandMood(30, 'dialogues_backstage_feedbackMonitor_62');
               currentStore.increaseSkill('technical', 5);
             },
           },
@@ -77,7 +77,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(20);
+              currentStore.increaseBandMood(20, 'dialogues_backstage_feedbackMonitor_80');
             },
           },
           {
@@ -114,7 +114,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'dialogues_backstage_feedbackMonitor_117');
             currentStore.increaseSkill('technical', 5);
           },
         },
@@ -136,7 +136,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(40);
+            currentStore.increaseBandMood(40, 'dialogues_backstage_feedbackMonitor_139');
             currentStore.increaseSkill('chaos', 5);
           },
         },
@@ -157,7 +157,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'dialogues_backstage_feedbackMonitor_160');
           },
         },
       ],
@@ -190,7 +190,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(25);
+          currentStore.increaseBandMood(25, 'dialogues_backstage_feedbackMonitor_193');
           currentStore.increaseSkill('technical', 5);
         },
       });
@@ -244,7 +244,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(5);
+          currentStore.increaseBandMood(5, 'dialogues_backstage_feedbackMonitor_247');
         },
       },
       {

@@ -25,7 +25,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(40);
+            currentStore.increaseBandMood(40, 'dialogues_salzgitter_lars_28');
             currentStore.increaseSkill('chaos', 5);
           },
         },
@@ -38,7 +38,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(40);
+            currentStore.increaseBandMood(40, 'dialogues_salzgitter_lars_41');
             currentStore.increaseSkill('technical', 5);
           },
         },
@@ -62,7 +62,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setFlag('salzgitter_lars_paced_talked', true);
-              currentStore.increaseBandMood(25);
+              currentStore.increaseBandMood(25, 'dialogues_salzgitter_lars_65');
               currentStore.setDialogue(
                 'Lars: "Ich halte den Puls. Keine Verschwendung, nur Präzision."'
               );
@@ -88,7 +88,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(50);
+          currentStore.increaseBandMood(50, 'dialogues_salzgitter_lars_91');
           currentStore.increaseSkill('chaos', 5);
         },
       });
@@ -99,7 +99,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
         nextDialogue: { text: 'Lars: "Jeder Schlag ein Beben."' },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(30);
+          currentStore.increaseBandMood(30, 'dialogues_salzgitter_lars_102');
         },
       });
     }
@@ -125,7 +125,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
                 action: () => {
                   const currentStore = game();
                   currentStore.setFlag('salzgitter_lars_technical_claimed', true);
-                  currentStore.increaseBandMood(30);
+                  currentStore.increaseBandMood(30, 'dialogues_salzgitter_lars_128');
                   currentStore.increaseSkill('technical', 5);
                 },
               },
@@ -135,7 +135,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
           text: 'Halt durch, Lars!',
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(10);
+            currentStore.increaseBandMood(10, 'dialogues_salzgitter_lars_138');
             currentStore.setDialogue(
               'Lars: "KEINE ZEIT FÜR PAUSEN! NUR NOCH LÄRM!"'
             );
@@ -148,7 +148,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
   if (store.flags.larsDrumPhilosophy) {
     // Intentional encounter reward: this mirrors legacy onInteract behavior.
     // Positive gains are one-shot per callsite via bandMoodGainClaims.
-    store.increaseBandMood(5);
+    store.increaseBandMood(5, 'dialogues_salzgitter_lars_151');
     return say(
       'Lars: "Ich denke an den Zorn der Maschinen. Jeder Schlag ist ein Urteil. Salzgitter wird beben!"'
     );

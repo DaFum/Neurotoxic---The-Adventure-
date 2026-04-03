@@ -35,7 +35,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
             BACKSTAGE_MARIUS_QUEST_TEXT
           );
           currentStore.setFlag('mariusConfidenceBoost', true);
-          currentStore.increaseBandMood(25);
+          currentStore.increaseBandMood(25, 'dialogues_backstage_marius_38');
           return;
         }
 
@@ -43,7 +43,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
           'Marius: "1982? Da war ich noch nicht mal in der Band. Wovon redest du? Das macht mich nur noch nervöser!"'
         );
         currentStore.setFlag('askedAbout1982Attempted', true);
-        currentStore.increaseBandMood(-5);
+        currentStore.increaseBandMood(-5, 'dialogues_backstage_marius_46');
       },
     });
   }
@@ -64,7 +64,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
-        currentStore.increaseBandMood(30);
+        currentStore.increaseBandMood(30, 'dialogues_backstage_marius_67');
         currentStore.increaseSkill('social', 3);
       },
     },
@@ -84,7 +84,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
         currentStore.setFlag('backstage_performer_speech', true);
-        currentStore.increaseBandMood(30);
+        currentStore.increaseBandMood(30, 'dialogues_backstage_marius_87');
         currentStore.increaseSkill('social', 3);
       },
     },
@@ -102,7 +102,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       action: () => {
         const currentStore = game();
-        currentStore.increaseBandMood(20);
+        currentStore.increaseBandMood(20, 'dialogues_backstage_marius_105');
         currentStore.increaseSkill('chaos', 3);
       },
     },
@@ -121,7 +121,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
-        currentStore.increaseBandMood(25);
+        currentStore.increaseBandMood(25, 'dialogues_backstage_marius_124');
         currentStore.increaseSkill('chaos', 3);
       },
     },
@@ -138,7 +138,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       action: () => {
         const currentStore = game();
-        currentStore.increaseBandMood(10);
+        currentStore.increaseBandMood(10, 'dialogues_backstage_marius_141');
       },
     },
     ...(!flags.backstage_marius_diplomat_claimed && store.trait === 'Diplomat' ? [
@@ -151,7 +151,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
           currentStore.setDialogue(
             'Marius: "Die Setlist... ja, du hast recht. Wenn wir uns an den Plan halten, kann nichts schiefgehen."'
           );
-          currentStore.increaseBandMood(15);
+          currentStore.increaseBandMood(15, 'dialogues_backstage_marius_154');
           currentStore.increaseSkill('social', 3);
         }
       }
@@ -173,7 +173,7 @@ export function buildBackstageMariusDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
-        currentStore.increaseBandMood(35);
+        currentStore.increaseBandMood(35, 'dialogues_backstage_marius_176');
         currentStore.increaseSkill('social', 5);
       },
     });

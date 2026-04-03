@@ -114,7 +114,7 @@ export function buildBackstageRitualCircleDialogue(
             const currentStore = game();
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
-            currentStore.increaseBandMood(50);
+            currentStore.increaseBandMood(50, 'dialogues_backstage_ritualCircle_117');
           },
         },
         {
@@ -128,7 +128,7 @@ export function buildBackstageRitualCircleDialogue(
             const currentStore = game();
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
-            currentStore.increaseBandMood(40);
+            currentStore.increaseBandMood(40, 'dialogues_backstage_ritualCircle_131');
             currentStore.increaseSkill('chaos', 5);
           },
         },
@@ -155,7 +155,7 @@ export function buildBackstageRitualCircleDialogue(
             const currentStore = game();
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
-            currentStore.increaseBandMood(40);
+            currentStore.increaseBandMood(40, 'dialogues_backstage_ritualCircle_158');
             currentStore.increaseSkill('chaos', 5);
           },
         },
@@ -176,7 +176,7 @@ export function buildBackstageRitualCircleDialogue(
           action: () => {
             const currentStore = game();
             currentStore.removeFromInventory('Plasma-Zünder');
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'dialogues_backstage_ritualCircle_179');
             currentStore.setDialogue(
               'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"'
             );
@@ -198,7 +198,7 @@ export function buildBackstageRitualCircleDialogue(
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'dialogues_backstage_ritualCircle_201');
           },
         },
       ],

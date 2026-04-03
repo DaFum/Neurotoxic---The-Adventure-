@@ -22,7 +22,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
                 text: 'Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"',
                 visualEffect: 'glitch',
               });
-              currentStore.increaseBandMood(70);
+              currentStore.increaseBandMood(70, 'dialogues_salzgitter_matze_25');
               currentStore.increaseSkill('chaos', 5);
               currentStore.setFlag('matzeRiffDialogueDone', true);
             },
@@ -35,7 +35,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
               currentStore.setDialogue(
                 'Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."'
               );
-              currentStore.increaseBandMood(60);
+              currentStore.increaseBandMood(60, 'dialogues_salzgitter_matze_38');
               currentStore.increaseSkill('technical', 5);
               currentStore.setFlag('matzeRiffDialogueDone', true);
             },
@@ -47,7 +47,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
               currentStore.setDialogue(
                 'Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."'
               );
-              currentStore.increaseBandMood(20);
+              currentStore.increaseBandMood(20, 'dialogues_salzgitter_matze_50');
               currentStore.setFlag('matzeRiffDialogueDone', true);
             },
           },
@@ -68,7 +68,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
                 text: 'Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"',
                 visualEffect: 'glitch',
               });
-              currentStore.increaseBandMood(50);
+              currentStore.increaseBandMood(50, 'dialogues_salzgitter_matze_71');
               currentStore.increaseSkill('chaos', 5);
               currentStore.setFlag('matzeRiffDialogueDone', true);
             },
@@ -81,7 +81,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
               currentStore.setDialogue(
                 'Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."'
               );
-              currentStore.increaseBandMood(40);
+              currentStore.increaseBandMood(40, 'dialogues_salzgitter_matze_84');
               currentStore.increaseSkill('technical', 5);
               currentStore.setFlag('matzeRiffDialogueDone', true);
             },
@@ -93,7 +93,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
               currentStore.setDialogue(
                 'Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."'
               );
-              currentStore.increaseBandMood(20);
+              currentStore.increaseBandMood(20, 'dialogues_salzgitter_matze_96');
               currentStore.setFlag('matzeRiffDialogueDone', true);
             },
           },
@@ -123,12 +123,12 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
               currentStore.setDialogue(
                 'Matze: "Unser Ritual hat die Frequenzen besiegelt. Wir sind unaufhaltsam!"'
               );
-              currentStore.increaseBandMood(40);
+              currentStore.increaseBandMood(40, 'dialogues_salzgitter_matze_126');
             } else {
               currentStore.setDialogue(
                 'Matze: "Ich spüre es. Die Luft flirrt."'
               );
-              currentStore.increaseBandMood(20);
+              currentStore.increaseBandMood(20, 'dialogues_salzgitter_matze_131');
             }
             currentStore.setFlag('salzgitterMatzeWirtDone', true);
           },
@@ -140,7 +140,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             currentStore.setDialogue(
               'Matze: "Mit jedem Akkord ein Stück mehr. Für den Metal!"'
             );
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_salzgitter_matze_143');
             currentStore.setFlag('salzgitterMatzeWirtDone', true);
           },
         },
@@ -162,7 +162,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
                 'Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."'
               );
               if (!currentStore.flags.salzgitterMatzeDeepTalkDone) {
-                currentStore.increaseBandMood(40);
+                currentStore.increaseBandMood(40, 'dialogues_salzgitter_matze_165');
                 currentStore.increaseSkill('chaos', 5);
                 currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
               }
@@ -173,7 +173,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue('Matze: "Ja. Der Stahl wartet."');
-              currentStore.increaseBandMood(10);
+              currentStore.increaseBandMood(10, 'dialogues_salzgitter_matze_176');
               currentStore.setFlag('salzgitterMatzeDeepTalkDone', true);
             },
           },
@@ -194,7 +194,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Matze: "Genau. Für den Lärm."');
-            currentStore.increaseBandMood(10);
+            currentStore.increaseBandMood(10, 'dialogues_salzgitter_matze_197');
           },
         },
         {
@@ -202,7 +202,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Matze: "Ja. Der Stahl wartet."');
-            currentStore.increaseBandMood(10);
+            currentStore.increaseBandMood(10, 'dialogues_salzgitter_matze_205');
           },
         },
       ],

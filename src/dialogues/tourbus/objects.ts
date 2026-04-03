@@ -21,7 +21,7 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
             const currentStore = game();
             if (!currentStore.flags.tourbusAmpTechnician) {
               currentStore.setFlag('tourbusAmpTechnician', true);
-              currentStore.increaseBandMood(20);
+              currentStore.increaseBandMood(20, 'dialogues_tourbus_objects_24');
               currentStore.increaseSkill('technical', 10);
             }
             currentStore.setDialogue(
@@ -132,7 +132,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
                 true,
                 'Mixe den Geister-Drink für den Geist des Roadies'
               );
-              currentStore.increaseBandMood(40);
+              currentStore.increaseBandMood(40, 'dialogues_tourbus_objects_135');
               currentStore.increaseSkill('social', 5);
               currentStore.setDialogue(
                 'Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."'
@@ -167,7 +167,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(25);
+            currentStore.increaseBandMood(25, 'dialogues_tourbus_objects_170');
             currentStore.discoverLore('ghost_legacy');
           },
         },
@@ -185,7 +185,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_tourbus_objects_188');
             currentStore.discoverLore('ghost_legacy');
           },
         },
@@ -224,7 +224,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               'Geist: "Dabei? Ich war derjenige, der sein Kabel eingesteckt hat. Das letzte Kabel, das er je brauchte. Die Frequenz... sie hat ihn einfach verschluckt."'
             );
             currentStore.setFlag('bassist_clue_ghost', true);
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'dialogues_tourbus_objects_227');
             currentStore.increaseSkill('social', 3);
           },
         },
@@ -235,7 +235,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             const currentStore = game();
             const received = currentStore.addToInventory('Bassist-Saite');
             currentStore.setFlag('bassist_clue_ghost', true);
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_tourbus_objects_238');
             if (received) {
               currentStore.setDialogue(
                 'Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."'
@@ -271,7 +271,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               'Geist: "Du siehst die Muster, nicht wahr? Er ist nicht einfach verschwunden. Er wurde Teil der Frequenz. Er ist jetzt der Lärm, den ihr in Salzgitter spielen werdet. Er wartet auf euch."'
             );
             currentStore.setFlag('ghostSecretRevealed', true);
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'dialogues_tourbus_objects_274');
             currentStore.increaseSkill('chaos', 5);
           },
         },
@@ -284,7 +284,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               'Geist: "Die Frequenzverschiebung war massiv. 1982 gab es einen Riss im Raum-Zeit-Gefüge der Gießerei. Er wurde in die Oberschwingungen gesaugt. Faszinierend, oder?"'
             );
             currentStore.setFlag('ghostSecretRevealed', true);
-            currentStore.increaseBandMood(25);
+            currentStore.increaseBandMood(25, 'dialogues_tourbus_objects_287');
             currentStore.increaseSkill('technical', 4);
           },
         },
@@ -298,7 +298,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             );
             currentStore.setFlag('ghostSecretRevealed', true);
             currentStore.discoverLore('roadie_bassist');
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_tourbus_objects_301');
             currentStore.increaseSkill('social', 3);
           },
         },
@@ -310,7 +310,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               'Geist: "Er ist nicht einfach verschwunden. Er wurde Teil der Frequenz. Er ist jetzt der Lärm, den ihr in Salzgitter spielen werdet. Er wartet auf euch."'
             );
             currentStore.setFlag('ghostSecretRevealed', true);
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_tourbus_objects_313');
           },
         },
         {
@@ -336,7 +336,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               'Geist: "Der Sound war so perfekt, dass er ein Tor öffnete. Er ist nicht verschwunden... er ist Teil des Feedbacks geworden. Er IST jetzt der Lärm. Wenn ihr in Salzgitter spielt, werdet ihr ihn hören."'
             );
             currentStore.setFlag('ghostSecretRevealed', true);
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_tourbus_objects_339');
           },
         },
         {
@@ -347,7 +347,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               'Geist: "Vielleicht hast du recht. Aber der Lärm findet immer einen Weg."'
             );
             if (!currentStore.flags.ghostSecretRevealed) {
-              currentStore.increaseBandMood(5);
+              currentStore.increaseBandMood(5, 'dialogues_tourbus_objects_350');
               currentStore.setFlag('ghostSecretRevealed', true);
             }
           },
@@ -366,7 +366,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             const currentStore = game();
             if (!currentStore.flags.tourbusGhostRiffUsed) {
               currentStore.setFlag('tourbusGhostRiffUsed', true);
-              currentStore.increaseBandMood(10);
+              currentStore.increaseBandMood(10, 'dialogues_tourbus_objects_369');
               currentStore.setDialogue(
                 'Geist: "Ein mutiger Narr. Das Riff wird dich verändern. Aber der Gig wird unvergesslich."'
               );
@@ -399,7 +399,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             const currentStore = game();
             if (!currentStore.flags.ghostAskedSurvive) {
               currentStore.setFlag('ghostAskedSurvive', true);
-              currentStore.increaseBandMood(5);
+              currentStore.increaseBandMood(5, 'dialogues_tourbus_objects_402');
             }
             currentStore.setDialogue(
               'Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."'
@@ -412,7 +412,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             const currentStore = game();
             if (!currentStore.flags.ghostAskedBeer) {
               currentStore.setFlag('ghostAskedBeer', true);
-              currentStore.increaseBandMood(5);
+              currentStore.increaseBandMood(5, 'dialogues_tourbus_objects_415');
             }
             currentStore.setDialogue(
               'Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."'
@@ -425,7 +425,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             const currentStore = game();
             if (!currentStore.flags.ghostAskedWho) {
               currentStore.setFlag('ghostAskedWho', true);
-              currentStore.increaseBandMood(5);
+              currentStore.increaseBandMood(5, 'dialogues_tourbus_objects_428');
             }
             currentStore.setDialogue(
               'Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."'
@@ -444,7 +444,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(5);
+            currentStore.increaseBandMood(5, 'dialogues_tourbus_objects_447');
           },
         },
       ],
@@ -473,7 +473,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(30);
+          currentStore.increaseBandMood(30, 'dialogues_tourbus_objects_476');
         },
       },
       {
@@ -490,7 +490,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(20);
+          currentStore.increaseBandMood(20, 'dialogues_tourbus_objects_493');
         },
       },
       {
@@ -507,7 +507,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(25);
+          currentStore.increaseBandMood(25, 'dialogues_tourbus_objects_510');
         },
       },
       {
@@ -523,7 +523,7 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(10);
+          currentStore.increaseBandMood(10, 'dialogues_tourbus_objects_526');
         },
       },
     ],

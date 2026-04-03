@@ -526,7 +526,7 @@ export function Proberaum() {
             );
             setFlag('posterLoreRead', true);
             discoverLore('poster_lore');
-            increaseBandMood(5);
+            increaseBandMood(5, 'components_scenes_Proberaumx_529');
           } else {
             setDialogue(
               'Das Plakat erinnert dich an die chaotischen Anfänge. Der Edding-Spruch scheint sich bei jedem Hinsehen leicht zu verändern.'
@@ -606,7 +606,7 @@ export function Proberaum() {
             onInteract={() => {
               addToInventory('Autoschlüssel');
               completeQuest('keys');
-              increaseBandMood(10);
+              increaseBandMood(10, 'components_scenes_Proberaumx_609');
               setDialogue(
                 'Die Schlüssel zum "Schwarzen Sarg", eurem treuen Tourbus. Er läuft mit Diesel und purer Verzweiflung.'
               );
@@ -640,7 +640,7 @@ export function Proberaum() {
             const store = useStore.getState();
             if (store.hasItem('Mop')) {
               store.completeQuestWithFlag('water', 'waterCleaned');
-              store.increaseBandMood(20);
+              store.increaseBandMood(20, 'components_scenes_Proberaumx_643');
               store.setDialogue(
                 'Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.'
               );
@@ -680,7 +680,7 @@ export function Proberaum() {
             addToInventory('Verbotenes Riff');
             setFlag('forbiddenRiffFound', true);
             discoverLore('forbidden_riff');
-            increaseBandMood(15);
+            increaseBandMood(15, 'components_scenes_Proberaumx_683');
           }}
         />
       )}

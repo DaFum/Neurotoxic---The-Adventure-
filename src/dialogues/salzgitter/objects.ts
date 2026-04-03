@@ -26,7 +26,7 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             if (!currentStore.flags.bassist_restored) {
-              currentStore.increaseBandMood(30);
+              currentStore.increaseBandMood(30, 'dialogues_salzgitter_objects_29');
               currentStore.setFlag('bassist_restored', true);
             }
           },
@@ -54,7 +54,7 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.discoverLore('bassist_wahrheit');
-        currentStore.increaseBandMood(40);
+        currentStore.increaseBandMood(40, 'dialogues_salzgitter_objects_57');
       },
     });
   }
@@ -70,7 +70,7 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.discoverLore('bassist_wahrheit');
-        currentStore.increaseBandMood(30);
+        currentStore.increaseBandMood(30, 'dialogues_salzgitter_objects_73');
       },
     });
   }
@@ -84,7 +84,7 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         if (!currentStore.flags.voidBassistMoodGiven) {
-          currentStore.increaseBandMood(20);
+          currentStore.increaseBandMood(20, 'dialogues_salzgitter_objects_87');
           currentStore.setFlag('voidBassistMoodGiven', true);
         }
       },
@@ -117,7 +117,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
             text: 'Fan: "Ich werde ihn in Ehren halten! Du bist der beste Manager der Welt! Ich spüre die pure Kraft des Stahls!"',
           },
           action: () => {
-            game().increaseBandMood(40);
+            game().increaseBandMood(40, 'dialogues_salzgitter_objects_120');
           },
         },
       ],
@@ -135,7 +135,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
             text: 'Fan: "Du riechst nach Erfolg und... altem Kaffee. Danke!"',
           },
           action: () => {
-            game().increaseBandMood(25);
+            game().increaseBandMood(25, 'dialogues_salzgitter_objects_138');
           },
         },
         {
@@ -145,7 +145,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
             text: 'Fan: "Verstehe. Die Aura eines Managers ist zu stark. Danke für die Liste!"',
           },
           action: () => {
-            game().increaseBandMood(15);
+            game().increaseBandMood(15, 'dialogues_salzgitter_objects_148');
           },
         },
       ],
@@ -163,7 +163,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
               const currentStore = game();
               if (!currentStore.flags.salzgitter_fan_speech_heard) {
                 currentStore.setFlag('salzgitter_fan_speech_heard', true);
-                currentStore.increaseBandMood(5);
+                currentStore.increaseBandMood(5, 'dialogues_salzgitter_objects_166');
               }
             },
           },
@@ -196,7 +196,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Du reißt die Arme hoch und beginnst einen Rhythmus. Der Fan stimmt ein, dann die Menge. Ein epischer Chor entsteht!',
     },
     action: () => {
-      game().increaseBandMood(35);
+      game().increaseBandMood(35, 'dialogues_salzgitter_objects_199');
     },
   });
   options.push({
@@ -212,7 +212,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Ein Chor aus hunderten Kehlen beginnt das Intro eures größten Hits zu singen. Die Energie ist greifbar!',
     },
     action: () => {
-      game().increaseBandMood(30);
+      game().increaseBandMood(30, 'dialogues_salzgitter_objects_215');
     },
   });
   options.push({
@@ -228,7 +228,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Der Fan weint vor Ergriffenheit. "Ja... wir sind eins!" Er reicht die Botschaft an die Menge weiter.',
     },
     action: () => {
-      game().increaseBandMood(25);
+      game().increaseBandMood(25, 'dialogues_salzgitter_objects_231');
     },
   });
 
@@ -241,7 +241,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
         text: 'Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"',
       },
       action: () => {
-        game().increaseBandMood(20);
+        game().increaseBandMood(20, 'dialogues_salzgitter_objects_244');
       },
     });
   }
@@ -258,7 +258,7 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"',
     },
     action: () => {
-      game().increaseBandMood(-2);
+      game().increaseBandMood(-2, 'dialogues_salzgitter_objects_261');
     },
   });
 
@@ -312,7 +312,7 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
             currentStore.flags.bassist_restored &&
             currentStore.flags.maschinen_seele_complete
           ) {
-            currentStore.increaseBandMood(100);
+            currentStore.increaseBandMood(100, 'dialogues_salzgitter_objects_315');
             currentStore.discoverLore('bassist_wahrheit');
             currentStore.discoverLore('maschinen_bewusstsein');
             currentStore.discoverLore('frequenz_1982_decoded');
@@ -323,7 +323,7 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
           }
 
           if (currentStore.flags.salzgitter_encore_unlocked) {
-            currentStore.increaseBandMood(50);
+            currentStore.increaseBandMood(50, 'dialogues_salzgitter_objects_326');
             currentStore.setDialogue(
               'ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]'
             );
@@ -345,7 +345,7 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
             if (currentStore.flags.fanMovement && currentStore.flags.salzgitterBandUnited) {
               baseText += ' Eine wahre Fan-Bewegung ist entstanden!';
             }
-            currentStore.increaseBandMood(70);
+            currentStore.increaseBandMood(70, 'dialogues_salzgitter_objects_348');
             currentStore.setDialogue(baseText + ' [BEST ENDING]');
             return;
           }
@@ -354,14 +354,14 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
             endingsCount >= 2 ||
             (currentStore.bandMood > 70 && currentStore.flags.mariusConfidenceBoost)
           ) {
-            currentStore.increaseBandMood(50);
+            currentStore.increaseBandMood(50, 'dialogues_salzgitter_objects_357');
             currentStore.setDialogue(
               'Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Band hat einiges zusammen durchgestanden. Die Tour ist ein Erfolg! [GOOD ENDING]'
             );
             return;
           }
 
-          currentStore.increaseBandMood(30);
+          currentStore.increaseBandMood(30, 'dialogues_salzgitter_objects_364');
           currentStore.setDialogue(
             'Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]'
           );

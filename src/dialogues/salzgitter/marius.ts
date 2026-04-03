@@ -18,7 +18,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
               'Marius: "Gute Idee. Die erste Reihe ist der Anker für die gesamte Energie. Ich werde sie hypnotisieren!"'
             );
             currentStore.setFlag('salzgitter_performer_talked', true);
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'dialogues_salzgitter_marius_21');
             currentStore.increaseSkill('social', 5);
           },
         },
@@ -50,7 +50,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
                   'unite_band',
                   'Vereinige die Band vor dem Finale in Salzgitter'
                 );
-                currentStore.increaseBandMood(30);
+                currentStore.increaseBandMood(30, 'dialogues_salzgitter_marius_53');
               },
             }
           : {
@@ -76,7 +76,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
                 currentStore.setDialogue(
                   'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"'
                 );
-                currentStore.increaseBandMood(40);
+                currentStore.increaseBandMood(40, 'dialogues_salzgitter_marius_79');
                 currentStore.increaseSkill('chaos', 5);
               },
             },
@@ -93,7 +93,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
                 currentStore.setDialogue(
                   'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."'
                 );
-                currentStore.increaseBandMood(30);
+                currentStore.increaseBandMood(30, 'dialogues_salzgitter_marius_96');
                 currentStore.increaseSkill('social', 5);
               },
             },
@@ -117,7 +117,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
           currentStore.setDialogue(
             'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"'
           );
-          currentStore.increaseBandMood(30);
+          currentStore.increaseBandMood(30, 'dialogues_salzgitter_marius_120');
           currentStore.increaseSkill('social', 5);
         },
       });
@@ -133,7 +133,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
             'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"'
           );
           currentStore.setFlag('salzgitter_true_ending', true);
-          currentStore.increaseBandMood(50);
+          currentStore.increaseBandMood(50, 'dialogues_salzgitter_marius_136');
         },
       });
     }
@@ -144,7 +144,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setFlag('salzgitter_marius_greeted', true);
-          currentStore.increaseBandMood(15);
+          currentStore.increaseBandMood(15, 'dialogues_salzgitter_marius_147');
           currentStore.setDialogue(
             'Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"'
           );

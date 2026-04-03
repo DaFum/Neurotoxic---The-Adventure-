@@ -24,7 +24,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
             );
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_confession');
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_kaminstube_wirtPrelude_27');
             currentStore.increaseSkill('social', 5);
           },
         },
@@ -38,7 +38,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
             );
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_vergangenheit');
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'dialogues_kaminstube_wirtPrelude_41');
             currentStore.increaseSkill('chaos', 5);
           },
         },
@@ -53,7 +53,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_vergangenheit');
             currentStore.addToInventory('Turbo-Koffein');
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'dialogues_kaminstube_wirtPrelude_56');
           },
         },
       ],
@@ -79,7 +79,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
             );
             currentStore.addToInventory('Altes Plektrum');
             currentStore.setFlag('wirtSecretItem', true);
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'dialogues_kaminstube_wirtPrelude_82');
           },
         },
       ],
