@@ -1,6 +1,10 @@
 import { useStore } from './store';
 import type { DialogueOption } from './store';
 
+// Cache for O(1) quest lookups
+let lastQuestsRef: any[] | null = null;
+const cachedQuestsMap = new Map<string, any>();
+
 /**
  * Checks whether a dialogue option's requirements are currently satisfied.
  * Returns true if the option can be selected; false if it is locked.
@@ -18,12 +22,20 @@ export function canSelectOption(option: DialogueOption): boolean {
   }
 
   if (option.questDependencies) {
+    if (quests !== lastQuestsRef) {
+      cachedQuestsMap.clear();
+      for (let i = 0; i < quests.length; i++) {
+        cachedQuestsMap.set(quests[i].id, quests[i]);
+      }
+      lastQuestsRef = quests;
+    }
+
     for (const dep of option.questDependencies) {
       if (typeof dep === 'string') {
-        const q = quests.find(q => q.id === dep);
+        const q = cachedQuestsMap.get(dep);
         if (!q || q.status !== 'completed') return false;
       } else {
-        const q = quests.find(q => q.id === dep.id);
+        const q = cachedQuestsMap.get(dep.id);
         if (!q || q.status !== dep.status) return false;
       }
     }
