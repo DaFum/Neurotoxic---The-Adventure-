@@ -1,5 +1,5 @@
 import { type Dialogue, type DialogueOption } from '../../store';
-import { game, say } from '../shared/helpers';
+import { game } from '../shared/helpers';
 
 export function buildKaminstubeLarsDialogue(): Dialogue {
   const store = game();

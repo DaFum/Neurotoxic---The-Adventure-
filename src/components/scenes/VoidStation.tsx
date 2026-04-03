@@ -17,7 +17,6 @@ import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import {
   Float,
-  Text,
   MeshDistortMaterial,
   MeshWobbleMaterial,
   Sparkles,
@@ -45,8 +44,6 @@ import {
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function VoidStation() {
-  const canPickupItem = useStore((state) => state.canPickupItem);
-  const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
   const flags = useStore(useShallow((state) => ({
     egoContained: state.flags.egoContained,

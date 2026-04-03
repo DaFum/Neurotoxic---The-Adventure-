@@ -4,28 +4,19 @@
  * - Integrated "Ghostly Roadie's Lost Recipe" quest in TourBus.
  * - Added Geister-Drink item combination.
  * - Added Rostiges Plektrum item.
+ * - Enhanced dialogue system with visual feedback for locked options.
+ * - Options now grey out and disable if requirements are not met.
+ * - Added skill/trait requirement labels to locked options.
  * 
  * #2: NEXT STEPS & IDEAS
  * - Expand questlines with branching outcomes.
  * - Refine NPC dialogue and lore.
  * - Introduce scene-specific quests for remaining scenes.
  * - Integrate character traits/skills deeper into dialogue.
+ * - Add more complex dialogue branching and visual effects.
  * 
  * #3: ERRORS & SOLUTIONS
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
- */
-/**
- * #1: UPDATES
- * - Enhanced dialogue system with visual feedback for locked options.
- * - Options now grey out and disable if requirements are not met.
- * - Added skill/trait requirement labels to locked options.
- * 
- * #2: NEXT STEPS & IDEAS
- * - Add more complex dialogue branching.
- * - Implement more visual effects for dialogue.
- * 
- * #3: ERRORS & SOLUTIONS
- * - No major errors found.
  */
 import { type QuestStatus, useStore } from '../store';
 import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
