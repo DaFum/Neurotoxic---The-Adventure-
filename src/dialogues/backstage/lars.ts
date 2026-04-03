@@ -8,7 +8,7 @@ function applyLarsEnergyDrinkEffects() {
     : 'Lars: "JA! Das ist der Treibstoff, den ich brauche! Nicht so gut wie Turbo-Koffein, aber es reicht."';
 
   currentStore.setDialogue(energyText);
-  currentStore.increaseBandMood(currentStore.flags.larsRhythmPact ? 35 : 10, 'dialogues_backstage_lars_11');
+  currentStore.increaseBandMood(currentStore.flags.larsRhythmPact ? 35 : 10, 'id_a0592899');
 }
 
 export function buildBackstageLarsDialogue(): Dialogue {
@@ -36,7 +36,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
             },
             action: () => {
               const currentStore = game();
-              currentStore.increaseBandMood(20, 'dialogues_backstage_lars_39');
+              currentStore.increaseBandMood(20, 'id_e6a8a82d');
               currentStore.increaseSkill('chaos', 3);
             },
           },
@@ -49,7 +49,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
             },
             action: () => {
               const currentStore = game();
-              currentStore.increaseBandMood(10, 'dialogues_backstage_lars_52');
+              currentStore.increaseBandMood(10, 'id_506435a1');
             },
           },
           {
@@ -71,7 +71,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
           if (!currentStore.flags.backstage_lars_technician_claimed) {
             currentStore.setFlag('backstage_lars_technician_claimed', true);
             currentStore.setDialogue('Lars: "Ah, perfekt kalibriert. Die Becken singen wieder!"');
-            currentStore.increaseBandMood(15, 'dialogues_backstage_lars_74');
+            currentStore.increaseBandMood(15, 'id_125363be');
             currentStore.increaseSkill('technical', 3);
           } else {
             currentStore.setDialogue('Lars: "Sie sind schon perfekt festgeschraubt."');
@@ -102,7 +102,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setFlag('larsVibrating', true);
-          currentStore.increaseBandMood(40, 'dialogues_backstage_lars_105');
+          currentStore.increaseBandMood(40, 'id_45157c22');
         },
       },
       {
@@ -116,7 +116,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setFlag('lars_paced', true);
-          currentStore.increaseBandMood(30, 'dialogues_backstage_lars_119');
+          currentStore.increaseBandMood(30, 'id_5ff6a60f');
           currentStore.increaseSkill('social', 3);
         },
       },
@@ -129,7 +129,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(20, 'dialogues_backstage_lars_132');
+          currentStore.increaseBandMood(20, 'id_432b4fc4');
         },
       },
     ];
@@ -144,7 +144,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(40, 'dialogues_backstage_lars_147');
+          currentStore.increaseBandMood(40, 'id_5ea33fb8');
         },
       });
       options.unshift({
@@ -158,7 +158,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setFlag('larsVibrating', true);
-          currentStore.increaseBandMood(50, 'dialogues_backstage_lars_161');
+          currentStore.increaseBandMood(50, 'id_c77c699e');
         },
       });
     }

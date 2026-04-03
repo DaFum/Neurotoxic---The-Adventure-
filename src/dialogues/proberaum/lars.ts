@@ -19,7 +19,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
               currentStore.setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
               currentStore.removeFromInventory('Bier');
               currentStore.setFlag('gaveBeerToLars', true);
-              currentStore.increaseBandMood(20, 'dialogues_proberaum_lars_22');
+              currentStore.increaseBandMood(20, 'id_c76ea67f');
             }
           },
           {
@@ -47,7 +47,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
             currentStore.setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
             currentStore.removeFromInventory('Bier');
             currentStore.setFlag('gaveBeerToLars', true);
-            currentStore.increaseBandMood(20, 'dialogues_proberaum_lars_50');
+            currentStore.increaseBandMood(20, 'id_a734099e');
           }
         }] : []),
         {
@@ -69,7 +69,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
             currentStore.setDialogue('Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"');
             currentStore.removeFromInventory('Bier');
             currentStore.setFlag('gaveBeerToLars', true);
-            currentStore.increaseBandMood(20, 'dialogues_proberaum_lars_72');
+            currentStore.increaseBandMood(20, 'id_7d90b169');
           }
         },
         ...(!flags.larsDrumPhilosophy ? [{
@@ -109,7 +109,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
             const currentStore = game();
             currentStore.setDialogue('Lars: "Boom-Tchak! Der Bassist hat meine Drums früher vor jeder Show gestimmt..."');
             currentStore.setFlag('lars_proberaum_secret', true);
-            currentStore.increaseBandMood(15, 'dialogues_proberaum_lars_112');
+            currentStore.increaseBandMood(15, 'id_0b489973');
             currentStore.increaseSkill('social', 3);
           }
         },
@@ -120,7 +120,7 @@ export function buildProberaumLarsDialogue(): Dialogue {
             const currentStore = game();
             currentStore.setDialogue('Lars: "Hey, das klingt besser! Die TR-8080 hat übrigens Teile vom alten Amp des Bassisten in sich..."');
             currentStore.setFlag('lars_proberaum_secret', true);
-            currentStore.increaseBandMood(10, 'dialogues_proberaum_lars_123');
+            currentStore.increaseBandMood(10, 'id_e1f424a3');
             currentStore.increaseSkill('technical', 3);
             if (currentStore.flags.talkingAmpHeard) {
               currentStore.addQuest('maschinen_seele', 'Entdecke die Verbindung zwischen den Maschinen');
@@ -146,7 +146,7 @@ export function buildLarsRhythmusPaktDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Lars: "JA! Wir werden die Zeit selbst zertrümmern!"');
-          currentStore.increaseBandMood(25, 'dialogues_proberaum_lars_149');
+          currentStore.increaseBandMood(25, 'id_f92eaafd');
           currentStore.increaseSkill('chaos', 5);
           currentStore.setFlag('larsRhythmPact', true);
           currentStore.startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
@@ -159,7 +159,7 @@ export function buildLarsRhythmusPaktDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Lars: "Ein perfektes Uhrwerk. Der Rhythmus wird uns leiten."');
-          currentStore.increaseBandMood(20, 'dialogues_proberaum_lars_162');
+          currentStore.increaseBandMood(20, 'id_3e363b55');
           currentStore.increaseSkill('social', 5);
           currentStore.setFlag('larsRhythmPact', true);
           currentStore.startAndFinishQuest('rhythm_pact', 'Schließe einen Rhythmus-Pakt mit Lars');
@@ -189,7 +189,7 @@ export function buildLarsDrumPhilosophieDialogue(): Dialogue {
           const currentStore = game();
           currentStore.setDialogue('Lars: "Der Beat kommt nicht aus den Armen, er kommt aus dem Zorn. Wenn du in Salzgitter spielst, denk an den Zorn der Maschinen. Du hast das Potenzial, Manager."');
           currentStore.setFlag('larsDrumPhilosophy', true);
-          currentStore.increaseBandMood(20, 'dialogues_proberaum_lars_192');
+          currentStore.increaseBandMood(20, 'id_92a8213c');
           currentStore.increaseSkill('chaos', 2);
         }
       },
@@ -200,7 +200,7 @@ export function buildLarsDrumPhilosophieDialogue(): Dialogue {
           const currentStore = game();
           currentStore.setDialogue('Lars: "Exakt 120 Newton pro Schlag. Du hast ein Auge für die Mechanik. Das gefällt mir."');
           currentStore.setFlag('larsDrumPhilosophy', true);
-          currentStore.increaseBandMood(15, 'dialogues_proberaum_lars_203');
+          currentStore.increaseBandMood(15, 'id_14916f14');
           currentStore.increaseSkill('technical', 2);
         }
       },

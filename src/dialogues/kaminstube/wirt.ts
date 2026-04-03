@@ -36,7 +36,7 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
                       true,
                       'Erfahre die vollständige Geschichte von 1982 vom Wirt'
                     );
-                    currentStore.increaseBandMood(25, 'dialogues_kaminstube_wirt_39');
+                    currentStore.increaseBandMood(25, 'id_400587e0');
                     currentStore.increaseSkill('social', 5);
                   },
                 },
@@ -54,7 +54,7 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
                       true,
                       'Erfahre die vollständige Geschichte von 1982 vom Wirt'
                     );
-                    currentStore.increaseBandMood(20, 'dialogues_kaminstube_wirt_57');
+                    currentStore.increaseBandMood(20, 'id_10f1e0b8');
                     currentStore.increaseSkill('social', 3);
                   },
                 },
@@ -72,7 +72,7 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
                       true,
                       'Erfahre die vollständige Geschichte von 1982 vom Wirt'
                     );
-                    currentStore.increaseBandMood(15, 'dialogues_kaminstube_wirt_75');
+                    currentStore.increaseBandMood(15, 'id_de677e46');
                     currentStore.increaseSkill('chaos', 3);
                   },
                 },
@@ -104,7 +104,7 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
               true,
               'Erfahre die vollständige Geschichte von 1982 vom Wirt'
             );
-            currentStore.increaseBandMood(30, 'dialogues_kaminstube_wirt_107');
+            currentStore.increaseBandMood(30, 'id_f77e6a44');
           },
         });
       }
@@ -127,7 +127,7 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
             currentStore.setDialogue(
               'Wirt: "Es war laut. So laut, dass die Fenster in ganz Tangermünde zersprangen. Der Manager verschwand im Feedback. Manche sagen, er ist immer noch da draußen."'
             );
-            currentStore.increaseBandMood(10, 'dialogues_kaminstube_wirt_130');
+            currentStore.increaseBandMood(10, 'id_2826501b');
           },
         },
         {

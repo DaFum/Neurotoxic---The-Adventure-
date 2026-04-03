@@ -13,7 +13,7 @@ const bassistActionWrapper = (
     return;
   }
   store.setFlag('voidBassistRewarded', true);
-  store.increaseBandMood(mood, 'dialogues_voidstation_objects_16');
+  store.increaseBandMood(mood, 'id_2cecf9c5');
   store.discoverLore('bassist_wahrheit');
   store.increaseSkill(skillName, skillIncrease);
 };
@@ -35,7 +35,7 @@ export function buildVoidTerminalDialogue(): Dialogue {
           const currentStore = game();
           currentStore.setFlag('voidTerminalRead', true);
           currentStore.discoverLore('void_1982');
-          currentStore.increaseBandMood(5, 'dialogues_voidstation_objects_38');
+          currentStore.increaseBandMood(5, 'id_15515ca2');
           currentStore.setDialogue(
             'Log: "Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback."'
           );
@@ -82,7 +82,7 @@ export function buildVoidCosmicEchoDialogue(): Dialogue {
           if (!currentStore.flags.voidCosmicEchoRewarded) {
             currentStore.setFlag('voidCosmicEchoRewarded', true);
             currentStore.discoverLore('cosmic_echo_decoded');
-            currentStore.increaseBandMood(20, 'dialogues_voidstation_objects_85');
+            currentStore.increaseBandMood(20, 'id_0ea02c8e');
           }
         },
       },
@@ -223,7 +223,7 @@ export function buildVoidEgoDialogue(): Dialogue {
         currentStore.setDialogue(
           'Marius\' Ego: "Endlich jemand, der meine wahre Bedeutung versteht! Die Vision ist zu groß für die Leere. Ich kehre zurück, um die Welt zu erleuchten."'
         );
-        currentStore.increaseBandMood(30, 'dialogues_voidstation_objects_226');
+        currentStore.increaseBandMood(30, 'id_b603686a');
         currentStore.increaseSkill('chaos', 5);
       }),
     },
@@ -242,7 +242,7 @@ export function buildVoidEgoDialogue(): Dialogue {
         currentStore.setDialogue(
           'Marius\' Ego: "Instabil?! Ich bin die perfekte Schwingung! ... Warte, du hast recht. Die Entropie hier draußen zersetzt meine Brillanz. Schnell, fang mich ein!"'
         );
-        currentStore.increaseBandMood(20, 'dialogues_voidstation_objects_245');
+        currentStore.increaseBandMood(20, 'id_b9a8043e');
         currentStore.increaseSkill('technical', 5);
       }),
     },
@@ -261,7 +261,7 @@ export function buildVoidEgoDialogue(): Dialogue {
         currentStore.setDialogue(
           'Marius\' Ego: "Die Fans... ja. Meine Anbetung ist hier draußen so... abstrakt. Ich brauche den Schweiß und die Tränen der ersten Reihe. Bring mich zurück!"'
         );
-        currentStore.increaseBandMood(25, 'dialogues_voidstation_objects_264');
+        currentStore.increaseBandMood(25, 'id_fc8b8d21');
         currentStore.increaseSkill('social', 5);
       }),
     },
@@ -279,7 +279,7 @@ export function buildVoidEgoDialogue(): Dialogue {
         currentStore.setDialogue(
           'Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."'
         );
-        currentStore.increaseBandMood(10, 'dialogues_voidstation_objects_282');
+        currentStore.increaseBandMood(10, 'id_f9e2d024');
       }),
     },
     {
@@ -297,7 +297,7 @@ export function buildVoidEgoDialogue(): Dialogue {
         currentStore.setDialogue(
           "Du packst die leuchtende Sphäre mit roher Gewalt. Marius' Ego wimmert und fügt sich."
         );
-        currentStore.increaseBandMood(15, 'dialogues_voidstation_objects_300');
+        currentStore.increaseBandMood(15, 'id_5c92986e');
         currentStore.increaseSkill('chaos', 3);
       }),
     },
@@ -316,7 +316,7 @@ export function buildVoidEgoDialogue(): Dialogue {
         currentStore.setDialogue(
           'Marius\' Ego: "Eine Verhandlung? Endlich jemand mit Kultur. Ich stimme den Konditionen zu."'
         );
-        currentStore.increaseBandMood(25, 'dialogues_voidstation_objects_319');
+        currentStore.increaseBandMood(25, 'id_1b23de68');
         currentStore.increaseSkill('social', 3);
       }),
     },
@@ -337,7 +337,7 @@ export function buildVoidEgoDialogue(): Dialogue {
         currentStore.setDialogue(
           'Marius\' Ego: "Ah, die Strategie! Perfekte Synthese. Ich füge mich nahtlos ein!"'
         );
-        currentStore.increaseBandMood(35, 'dialogues_voidstation_objects_340');
+        currentStore.increaseBandMood(35, 'id_93b03b84');
       }),
     });
   }
@@ -359,7 +359,7 @@ export function buildVoidEgoDialogue(): Dialogue {
           'Marius\' Ego: "Was?! Dieser weinerliche Fleischsack verzweifelt ohne mich?! Das kann ich nicht zulassen! Ich bin der Gott des Lärms, nicht der Gott des Jammers! Fang mich ein, schnell!"'
         );
         currentStore.setFlag('mariusConfidenceBoost', true);
-        currentStore.increaseBandMood(40, 'dialogues_voidstation_objects_362');
+        currentStore.increaseBandMood(40, 'id_087e60e5');
         currentStore.increaseSkill('social', 5);
       }),
     });
@@ -434,7 +434,7 @@ export function buildVoidDiplomatenInterfaceDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('schaltpult_record');
-              currentStore.increaseBandMood(30, 'dialogues_voidstation_objects_437');
+              currentStore.increaseBandMood(30, 'id_91b76ef4');
               currentStore.increaseSkill('social', 5);
             },
           },
@@ -477,7 +477,7 @@ export function buildVoidMagnetbandDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('magnetband_session');
-              currentStore.increaseBandMood(10, 'dialogues_voidstation_objects_480');
+              currentStore.increaseBandMood(10, 'id_74124307');
               currentStore.increaseSkill('technical', 3);
             },
           },
@@ -530,7 +530,7 @@ export function buildVoidDetektorDialogue(): Dialogue {
             },
             action: () => {
               const currentStore = game();
-              currentStore.increaseBandMood(15, 'dialogues_voidstation_objects_533');
+              currentStore.increaseBandMood(15, 'id_a59ff433');
               currentStore.increaseSkill('technical', 4);
             },
           },
@@ -564,7 +564,7 @@ export function buildVoidInschriftDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('inschrift_warning');
-              currentStore.increaseBandMood(20, 'dialogues_voidstation_objects_567');
+              currentStore.increaseBandMood(20, 'id_6275141e');
             },
           },
       {

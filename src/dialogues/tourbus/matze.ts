@@ -32,7 +32,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             currentStore.setDialogue(
               'Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen." (Kabel übergeben)'
             );
-            currentStore.increaseBandMood(15, 'dialogues_tourbus_matze_35');
+            currentStore.increaseBandMood(15, 'id_99fa66c6');
             currentStore.completeQuestWithFlag(
               'cable',
               'cableFixed',
@@ -50,7 +50,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             currentStore.setDialogue(
               'Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält." (Kabel übergeben)'
             );
-            currentStore.increaseBandMood(20, 'dialogues_tourbus_matze_53');
+            currentStore.increaseBandMood(20, 'id_cb57edaa');
             currentStore.increaseSkill('technical', 3);
             currentStore.completeQuestWithFlag(
               'cable',
@@ -69,7 +69,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             currentStore.setDialogue(
               'Matze: "Zusammen... ja. Wir sind eine verdammte Einheit." (Kabel übergeben)'
             );
-            currentStore.increaseBandMood(15, 'dialogues_tourbus_matze_72');
+            currentStore.increaseBandMood(15, 'id_53d710dc');
             currentStore.increaseSkill('social', 3);
             currentStore.completeQuestWithFlag(
               'cable',
@@ -100,7 +100,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           consumeItems: ['Repariertes Kabel'],
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(10, 'dialogues_tourbus_matze_103');
+            currentStore.increaseBandMood(10, 'id_9cf52b53');
             currentStore.setDialogue(
               'Matze: "Das ist die richtige Einstellung!" (Kabel übergeben)'
             );
@@ -135,7 +135,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
               true,
               'Finde heraus, wer das Kabel sabotiert hat'
             );
-            currentStore.increaseBandMood(10, 'dialogues_tourbus_matze_138');
+            currentStore.increaseBandMood(10, 'id_788b2926');
             currentStore.increaseSkill('social', 3);
           },
         },
@@ -147,7 +147,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             currentStore.setDialogue(
               'Matze schaut ertappt weg und schweigt schuldbewusst.'
             );
-            currentStore.increaseBandMood(-5, 'dialogues_tourbus_matze_150');
+            currentStore.increaseBandMood(-5, 'id_9d560307');
           },
         },
         ...(!flags.matzeCynicOneShot && trait === 'Cynic' ? [
@@ -217,7 +217,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
               true
             );
             currentStore.discoverLore('tourbus_saboteur');
-            currentStore.increaseBandMood(20, 'dialogues_tourbus_matze_220');
+            currentStore.increaseBandMood(20, 'id_4be83c44');
             currentStore.increaseSkill('technical', 5);
           },
         },
@@ -228,7 +228,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             currentStore.setDialogue(
               'Matze: "Schicksal? Das ist Sabotage! Such das Tape!"'
             );
-            currentStore.increaseBandMood(-5, 'dialogues_tourbus_matze_231');
+            currentStore.increaseBandMood(-5, 'id_83dd2627');
           },
         },
       ],

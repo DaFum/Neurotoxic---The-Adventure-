@@ -965,6 +965,11 @@ export const useStore = create<GameState>()(
           const nextMood = Math.max(0, Math.min(100, state.bandMood + amount));
 
           if (amount > 0) {
+            if (!sourceId && process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+              console.warn(
+                `increaseBandMood called with a positive amount (${amount}) but no sourceId. This will allow infinite farming of this reward.`
+              );
+            }
             if (sourceId && state.bandMoodGainClaims[sourceId]) {
               return state;
             }

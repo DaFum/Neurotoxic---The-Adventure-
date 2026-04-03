@@ -19,7 +19,7 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
           );
           const pickedUpFragment = store.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
-            store.increaseBandMood(15, 'frequenz1982_proberaum_visionary');
+            store.increaseBandMood(15, 'id_b5b87115');
             store.setFlag('frequenz1982_proberaum', true);
             store.setDialogue(
               'Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.'
@@ -42,7 +42,7 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
           );
           const pickedUpFragment = store.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
-            store.increaseBandMood(15, 'frequenz1982_proberaum_technical');
+            store.increaseBandMood(15, 'id_715484e6');
             store.setFlag('frequenz1982_proberaum', true);
             store.setDialogue(
               'Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.'
@@ -110,7 +110,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setFlag('ampSentient', true);
-            currentStore.increaseBandMood(20, 'dialogues_proberaum_objects_113');
+            currentStore.increaseBandMood(20, 'id_ba40c619');
           },
         },
         {
@@ -127,7 +127,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(30, 'dialogues_proberaum_objects_130');
+            currentStore.increaseBandMood(30, 'id_1a39e6b3');
           },
         },
         {
@@ -144,7 +144,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(10, 'dialogues_proberaum_objects_147');
+            currentStore.increaseBandMood(10, 'id_91b5381f');
           },
         },
         {
@@ -195,7 +195,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
             text: 'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
           },
           action: () => {
-            game().increaseBandMood(2, 'dialogues_proberaum_objects_198');
+            game().increaseBandMood(2, 'id_0a6f2302');
           },
         },
       ],
@@ -216,7 +216,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(10, 'dialogues_proberaum_objects_219');
+          currentStore.increaseBandMood(10, 'id_d3a45839');
           currentStore.increaseSkill('chaos', 2);
         },
       });
@@ -236,7 +236,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(20, 'dialogues_proberaum_objects_239');
+          currentStore.increaseBandMood(20, 'id_f3211ce8');
           currentStore.increaseSkill('technical', 5);
         },
       });
@@ -294,7 +294,7 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
                 true,
                 'Finde das Verbotene Riff für die TR-8080'
               );
-              currentStore.increaseBandMood(25, 'dialogues_proberaum_objects_297');
+              currentStore.increaseBandMood(25, 'id_7935aed1');
               currentStore.increaseSkill('chaos', 10);
               currentStore.setDialogue(
                 'TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."'
@@ -351,7 +351,7 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(10, 'dialogues_proberaum_objects_354');
+          currentStore.increaseBandMood(10, 'id_8947463e');
           currentStore.increaseSkill('technical', 3);
         },
       });
@@ -427,7 +427,7 @@ export function buildProberaumMonitorDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(20, 'dialogues_proberaum_objects_430');
+            currentStore.increaseBandMood(20, 'id_7702e666');
             currentStore.increaseSkill('technical', 5);
           },
         },

@@ -105,7 +105,7 @@ export function Backstage() {
         'Führe ein Bandritual vor dem Auftritt durch'
       );
       completeQuest('backstage_ritual');
-      increaseBandMood(mood, 'components_scenes_Backstagex_108');
+      increaseBandMood(mood, 'id_da78bc93');
       if (skillName) {
         increaseSkill(skillName, skillIncrease);
       }

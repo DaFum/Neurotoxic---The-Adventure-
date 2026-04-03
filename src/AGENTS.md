@@ -3,7 +3,7 @@
 ## Store (`store.ts`)
 - `setScene()` always resets `playerPos` to `[0, 1, 0]` — every scene must work with this spawn point
 - `addToInventory(item)` returns `false` only when the item has hit its per-item pickup limit (e.g. `Bier: 2`, `Frequenzfragment: 2` — see `ITEM_PICKUP_LIMITS` in store.ts). The limit is per-playthrough and persists across saves via `itemPickupCounts`.
-- `increaseBandMood(amount, sourceId?)` deduplicates positive increases by call site — a second call from the same source location is silently skipped. Pass an explicit `sourceId` string when you need multiple increases from the same function.
+- `increaseBandMood(amount, sourceId?)` deduplicates positive increases explicitly — a second call with the same `sourceId` is silently skipped. Omitting `sourceId` entirely bypasses deduplication, allowing infinite repeated gains (which may be intended for certain interactions but should generally be avoided). Always pass a stable `sourceId` string for narrative dialogue rewards to prevent infinite mood farming.
 - `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the `RECIPES` array defined above the store
 - `discoverLore()` is idempotent — calling it twice on the same ID is safe
 - Persistence uses a custom merge in `onRehydrateStorage` that preserves player progress when new quests/lore are added to code. Adding new initial quests or loreEntries won't wipe saved data.
