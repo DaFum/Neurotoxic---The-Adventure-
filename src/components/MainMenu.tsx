@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useStore, Trait, Skills } from '../store';
+import { useStore, Trait, Skills, STORAGE_KEY } from '../store';
 import { audio } from '../audio';
 import { checkHasSavedGame } from '../utils/saveGame';
-
-export const STORAGE_KEY = 'neurotoxic-game-storage';
 
 export function MainMenu() {
   const trait = useStore((state) => state.trait);

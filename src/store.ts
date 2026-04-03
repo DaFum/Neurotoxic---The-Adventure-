@@ -686,6 +686,8 @@ const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
  * The Zustand hook for accessing and mutating the global game state.
  * Automatically persists the state to localStorage.
  */
+export const STORAGE_KEY = 'neurotoxic-game-storage';
+
 export const useStore = create<GameState>()(
   persist(
     (set, get) => ({
@@ -1004,7 +1006,7 @@ export const useStore = create<GameState>()(
       resetGame: () => set(initialState),
     }),
     {
-      name: 'neurotoxic-game-storage',
+      name: STORAGE_KEY,
       partialize: (state) => ({
         inventory: state.inventory,
         itemPickupCounts: state.itemPickupCounts,
