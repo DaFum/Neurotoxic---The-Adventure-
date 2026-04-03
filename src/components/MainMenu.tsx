@@ -50,22 +50,24 @@ export function MainMenu() {
         setHasSavedGame(false);
         return;
       }
-      const saved = (parsed as { state?: any }).state;
+      const parsedRecord = parsed as Record<string, unknown>;
+      const saved = parsedRecord.state;
       if (!saved || typeof saved !== 'object' || Array.isArray(saved)) {
         setHasSavedGame(false);
         return;
       }
+      const savedRecord = saved as Record<string, unknown>;
 
-      const hasTrait = saved.trait !== null && saved.trait !== undefined;
-      const hasInventory = Array.isArray(saved.inventory) && saved.inventory.length > 0;
-      const hasCompletedQuest = Array.isArray(saved.quests) && saved.quests.some((q: any) => q?.status === 'completed' || q?.completed === true);
-      const hasLoreProgress = Array.isArray(saved.loreEntries) && saved.loreEntries.some((e: any) => e?.discovered);
+      const hasTrait = savedRecord.trait !== null && savedRecord.trait !== undefined;
+      const hasInventory = Array.isArray(savedRecord.inventory) && savedRecord.inventory.length > 0;
+      const hasCompletedQuest = Array.isArray(savedRecord.quests) && savedRecord.quests.some((q: any) => q?.status === 'completed' || q?.completed === true);
+      const hasLoreProgress = Array.isArray(savedRecord.loreEntries) && savedRecord.loreEntries.some((e: any) => e?.discovered);
       const hasMoodOrSkillProgress =
-        saved.bandMood !== undefined && typeof saved.bandMood === 'number' && (
-          saved.bandMood !== 20 ||
-          saved.skills?.technical > 0 ||
-          saved.skills?.social > 0 ||
-          saved.skills?.chaos > 0
+        savedRecord.bandMood !== undefined && typeof savedRecord.bandMood === 'number' && (
+          savedRecord.bandMood !== 20 ||
+          (savedRecord.skills as Record<string, number>)?.technical > 0 ||
+          (savedRecord.skills as Record<string, number>)?.social > 0 ||
+          (savedRecord.skills as Record<string, number>)?.chaos > 0
         );
 
       setHasSavedGame(Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress));
