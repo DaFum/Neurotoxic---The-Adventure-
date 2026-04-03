@@ -148,24 +148,24 @@ export function UI() {
 
   useEffect(() => {
     setSelectedItems((prev) => {
-      const counts = new Map<string, number>();
-      for (const item in inventoryCounts) {
-        counts.set(item, inventoryCounts[item]);
-      }
+      if (prev.length === 0) return prev;
 
+      let changed = false;
       const newSelected: string[] = [];
+      const usedCounts: Record<string, number> = {};
+
       for (const item of prev) {
-        const available = counts.get(item) ?? 0;
-        if (available > 0) {
+        const used = usedCounts[item] ?? 0;
+        const available = inventoryCounts[item] ?? 0;
+        if (used < available) {
           newSelected.push(item);
-          counts.set(item, available - 1);
+          usedCounts[item] = used + 1;
+        } else {
+          changed = true;
         }
       }
 
-      if (newSelected.length !== prev.length) {
-        return newSelected;
-      }
-      return prev;
+      return changed ? newSelected : prev;
     });
   }, [inventoryCounts]);
   const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
