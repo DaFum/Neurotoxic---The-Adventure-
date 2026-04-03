@@ -272,6 +272,7 @@ export interface GameState {
   dialogue: Dialogue | null;
   setDialogue: (dialogue: Dialogue | string | null) => void;
   inventory: string[];
+  inventoryCounts: Record<string, number>;
   addToInventory: (item: string) => boolean;
   removeFromInventory: (item: string) => void;
   hasItem: (item: string) => boolean;
@@ -322,6 +323,7 @@ const initialState = {
   },
   dialogue: null,
   inventory: [],
+  inventoryCounts: {} as Record<string, number>,
   itemPickupCounts: {} as Record<string, number>,
   flags: {
     waterCleaned: false,
@@ -735,6 +737,10 @@ export const useStore = create<GameState>()(
           didAdd = true;
           return {
             inventory: [...state.inventory, item],
+            inventoryCounts: {
+              ...state.inventoryCounts,
+              [item]: (state.inventoryCounts[item] ?? 0) + 1,
+            },
             itemPickupCounts: {
               ...state.itemPickupCounts,
               [item]: pickedCount + 1,
@@ -752,7 +758,13 @@ export const useStore = create<GameState>()(
           if (index !== -1) {
             const newInventory = [...state.inventory];
             newInventory.splice(index, 1);
-            return { inventory: newInventory };
+            const newCounts = { ...state.inventoryCounts };
+            if (newCounts[item] > 1) {
+              newCounts[item]--;
+            } else {
+              delete newCounts[item];
+            }
+            return { inventory: newInventory, inventoryCounts: newCounts };
           }
           console.warn(
             `Attempted to remove item from inventory that does not exist: ${item}`
@@ -760,7 +772,7 @@ export const useStore = create<GameState>()(
           return state;
         });
       },
-      hasItem: (item) => get().inventory.includes(item),
+      hasItem: (item) => (get().inventoryCounts[item] ?? 0) > 0,
       canPickupItem: (item) => {
         const state = get();
         const pickedCount = state.itemPickupCounts[item] ?? 0;
@@ -795,8 +807,25 @@ export const useStore = create<GameState>()(
           newInventory.splice(lower, 1);
           newInventory.push(recipe.result);
 
+          const newCounts = { ...state.inventoryCounts };
+          // Decrement item1
+          if (newCounts[item1] > 1) {
+            newCounts[item1]--;
+          } else {
+            delete newCounts[item1];
+          }
+          // Decrement item2
+          if (newCounts[item2] > 1) {
+            newCounts[item2]--;
+          } else {
+            delete newCounts[item2];
+          }
+          // Increment result
+          newCounts[recipe.result] = (newCounts[recipe.result] ?? 0) + 1;
+
           return {
             inventory: newInventory,
+            inventoryCounts: newCounts,
             ...(recipe.flagToSet && {
               flags: { ...state.flags, [recipe.flagToSet]: true },
             }),
@@ -1098,13 +1127,14 @@ export const useStore = create<GameState>()(
             : e;
         });
 
-        const inventoryCounts = persistedInventory.reduce<
-          Record<string, number>
-        >((acc, item) => {
-          if (typeof item !== 'string') return acc;
-          acc[item] = (acc[item] ?? 0) + 1;
-          return acc;
-        }, {});
+        const sanitizedInventory = persistedInventory.filter(
+          (item) => typeof item === 'string'
+        );
+
+        const inventoryCounts: Record<string, number> = {};
+        for (const item of sanitizedInventory) {
+          inventoryCounts[item] = (inventoryCounts[item] ?? 0) + 1;
+        }
 
         const mergedPickupCounts: Record<string, number> = {
           ...persistedPickupCounts,
@@ -1116,8 +1146,6 @@ export const useStore = create<GameState>()(
           );
         }
 
-        const sanitizedInventory = persistedInventory.filter((item) => typeof item === 'string');
-
         return {
           ...currentState,
           scene: currentState.scene,
@@ -1125,6 +1153,7 @@ export const useStore = create<GameState>()(
           cameraShakeIntensity: currentState.cameraShakeIntensity,
           cameraShakeKick: currentState.cameraShakeKick,
           inventory: sanitizedInventory,
+          inventoryCounts,
           quests: allQuests,
           loreEntries: mergedLoreEntries,
           itemPickupCounts: mergedPickupCounts,
