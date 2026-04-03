@@ -21,6 +21,7 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
           flagToSet: { flag: 'salzgitter_encore_unlocked', value: true },
           nextDialogue: {
             text: 'Lars: "JAAAAAAAAA! DIE DRUMS BRENNEN! DIE REALITÄT KOCHT! DAS IST DER ULTIMATIVE BEAT!"',
+            visualEffect: 'shake',
           },
           action: () => {
             const currentStore = game();

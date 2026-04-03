@@ -96,6 +96,9 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   // 3. Custom action logic
   option.action?.();
 
+  // 3.5. Visual effects are now evaluated centrally inside useStore.setDialogue(),
+  // based exclusively on the `visualEffect` property of the `Dialogue` object.
+
   const postActionDialogue = useStore.getState().dialogue;
 
   if (option.nextDialogue && option.action && preActionDialogue !== postActionDialogue) {

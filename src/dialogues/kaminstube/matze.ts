@@ -48,6 +48,17 @@ export function buildKaminstubeMatzeDialogue(): Dialogue {
         },
       },
       {
+        text: 'Angst ist Treibstoff. Spiel sie laut! [Chaos 8]',
+        requiredSkill: { name: 'chaos', level: 8 },
+        action: () => {
+          handleMatzeConfession(
+            'Matze: "Du hast Recht... ich werde meine Angst in jedem verdammten Akkord spielen!"',
+            25
+          );
+          game().increaseSkill('chaos', 3);
+        },
+      },
+      {
         text: 'Kein Fehler mehr, oder du fliegst. [Brutalist]',
         requiredTrait: 'Brutalist',
         action: () => {

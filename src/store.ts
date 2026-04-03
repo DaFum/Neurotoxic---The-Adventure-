@@ -225,6 +225,7 @@ export interface Dialogue {
   text: string;
   options?: DialogueOption[];
   urgency?: 1 | 2 | 3;
+  visualEffect?: 'shake' | 'glitch';
 }
 
 /**
@@ -722,6 +723,9 @@ export const useStore = create<GameState>()(
           set({ dialogue: { text: dialogue } });
         } else {
           set({ dialogue });
+          if (dialogue?.visualEffect === 'shake') {
+            get().setCameraShake(0.5);
+          }
         }
       },
       addToInventory: (item) => {

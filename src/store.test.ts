@@ -20,6 +20,19 @@ describe('useStore', () => {
     });
   });
 
+  describe('Dialogue Actions', () => {
+    it('should trigger camera shake when visualEffect is "shake"', () => {
+      const state = useStore.getState();
+      const initialKick = state.cameraShakeKick;
+
+      state.setDialogue({ text: 'Boom', visualEffect: 'shake' });
+
+      const newState = useStore.getState();
+      expect(newState.cameraShakeIntensity).toBe(0.5);
+      expect(newState.cameraShakeKick).toBe(initialKick + 1);
+    });
+  });
+
   describe('Lore', () => {
     it('should unlock lore entries correctly', () => {
       const state = useStore.getState();
