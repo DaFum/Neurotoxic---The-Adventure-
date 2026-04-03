@@ -168,7 +168,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
       bodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
       try { (bodyRef.current as any).setAngvel?.({ x: 0, y: 0, z: 0 }, true); } catch {}
       lastSentPosRef.set(initialPos[0], initialPos[1], initialPos[2]);
-    } catch (e) {
+    } catch {
       // Rapier body may not be initialized yet; ignore.
     }
 
@@ -194,7 +194,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
             try { (bodyRef.current as any).setAngvel?.({ x: 0, y: 0, z: 0 }, true); } catch {}
             lastSentPosRef.set(newPos[0], newPos[1], newPos[2]);
           }
-        } catch (e) {
+        } catch {
           // Rapier body may not be initialized yet
         }
       }
