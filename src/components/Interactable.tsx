@@ -10,7 +10,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useId } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -47,7 +47,8 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);
   const labelSpriteRef = useRef<THREE.Sprite>(null);
-  const instanceIdRef = useRef(`interactable-${Math.random().toString(36).slice(2, 10)}`);
+  const id = useId();
+  const instanceIdRef = useRef(`interactable-${id}`);
   const handleInteractRef = useRef<() => void>(() => {});
   const emojiTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const labelTextureInRangeRef = useRef<THREE.CanvasTexture | null>(null);
