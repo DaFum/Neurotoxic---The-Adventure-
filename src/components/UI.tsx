@@ -402,7 +402,7 @@ export function UI() {
             <span className="text-toxic font-bold">{sceneLabel}</span>
             <span className="text-zinc-400">Mood {bandMood}%</span>
             <span className="text-zinc-400">Open Quests {openQuestCount}</span>
-            <span className="text-zinc-400">Inventory {useStore.getState().inventory.length}</span>
+            <span className="text-zinc-400">Inventory {Object.values(inventoryCounts).reduce((sum, count) => sum + count, 0)}</span>
           </div>
         </div>
       </div>
