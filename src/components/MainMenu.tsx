@@ -60,14 +60,26 @@ export function MainMenu() {
 
       const hasTrait = savedRecord.trait !== null && savedRecord.trait !== undefined;
       const hasInventory = Array.isArray(savedRecord.inventory) && savedRecord.inventory.length > 0;
-      const hasCompletedQuest = Array.isArray(savedRecord.quests) && savedRecord.quests.some((q: any) => q?.status === 'completed' || q?.completed === true);
-      const hasLoreProgress = Array.isArray(savedRecord.loreEntries) && savedRecord.loreEntries.some((e: any) => e?.discovered);
+      const hasCompletedQuest = Array.isArray(savedRecord.quests) && savedRecord.quests.some((q: unknown) => {
+        if (typeof q === 'object' && q !== null) {
+          const quest = q as { status?: unknown, completed?: unknown };
+          return quest.status === 'completed' || quest.completed === true;
+        }
+        return false;
+      });
+      const hasLoreProgress = Array.isArray(savedRecord.loreEntries) && savedRecord.loreEntries.some((e: unknown) => {
+        if (typeof e === 'object' && e !== null) {
+          return (e as { discovered?: unknown }).discovered === true;
+        }
+        return false;
+      });
+      const skills = savedRecord.skills as Record<string, number>;
       const hasMoodOrSkillProgress =
         savedRecord.bandMood !== undefined && typeof savedRecord.bandMood === 'number' && (
           savedRecord.bandMood !== 20 ||
-          (savedRecord.skills as Record<string, number>)?.technical > 0 ||
-          (savedRecord.skills as Record<string, number>)?.social > 0 ||
-          (savedRecord.skills as Record<string, number>)?.chaos > 0
+          skills?.technical > 0 ||
+          skills?.social > 0 ||
+          skills?.chaos > 0
         );
 
       setHasSavedGame(Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress));
