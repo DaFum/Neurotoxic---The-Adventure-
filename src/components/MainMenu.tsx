@@ -124,7 +124,7 @@ export function MainMenu() {
             }
             setSelectingTrait(true);
           }}
-          className="group relative px-12 py-6 bg-toxic hover:bg-white text-black font-black text-2xl uppercase tracking-[0.3em] transition-all brutal-border-toxic hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[8px_8px_0px_#adff2f]"
+          className="group relative px-12 py-6 bg-toxic hover:bg-white text-black font-black text-2xl uppercase tracking-[0.3em] transition-all brutal-border-toxic hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[8px_8px_0px_#adff2f] focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           Initialize_Tour
         </motion.button>
@@ -190,7 +190,7 @@ export function MainMenu() {
               <button
                 aria-label="Cancel save prompt"
                 onClick={() => setShowSavePrompt(false)}
-                className="mt-6 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest"
+                className="mt-6 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 [ Cancel ]
               </button>
@@ -237,7 +237,7 @@ export function MainMenu() {
               <button
                 aria-label="Back to main terminal"
                 onClick={() => setSelectingTrait(false)}
-                className="mt-8 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest"
+                className="mt-8 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 [ Back_To_Main_Terminal ]
               </button>
