@@ -16,11 +16,13 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
           {
             text: 'Kanalisiere den Chaos-Faktor. [Chaos 10]',
             requiredSkill: { name: 'chaos', level: 10 },
+            visualEffect: 'glitch',
             action: () => {
               const currentStore = game();
-              currentStore.setDialogue(
-                'Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"'
-              );
+              currentStore.setDialogue({
+                text: 'Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"',
+                visualEffect: 'glitch',
+              });
               currentStore.increaseBandMood(70);
               currentStore.increaseSkill('chaos', 5);
               currentStore.setFlag('matzeRiffDialogueDone', true);
@@ -61,11 +63,13 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
           {
             text: 'Kanalisiere den Chaos-Faktor. [Chaos 10]',
             requiredSkill: { name: 'chaos', level: 10 },
+            visualEffect: 'glitch',
             action: () => {
               const currentStore = game();
-              currentStore.setDialogue(
-                'Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"'
-              );
+              currentStore.setDialogue({
+                text: 'Matze: "DU HAST RECHT! ICH WERDE DIE REALE WELT ZERREISSEN! DER LÄRM WIRD UNSER GOTT SEIN!"',
+                visualEffect: 'glitch',
+              });
               currentStore.increaseBandMood(50);
               currentStore.increaseSkill('chaos', 5);
               currentStore.setFlag('matzeRiffDialogueDone', true);

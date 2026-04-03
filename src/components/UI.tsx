@@ -854,7 +854,7 @@ export function UI() {
               initial={{ opacity: 0, y: 50, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              className="bg-black/95 brutal-border-toxic p-8 relative overflow-hidden"
+              className={`bg-black/95 brutal-border-toxic p-8 relative overflow-hidden ${dialogue.visualEffect === 'glitch' ? 'animate-glitch border-red-500 shadow-[0_0_20px_red]' : ''}`}
             >
               {/* Decorative corner accents */}
               <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-toxic" />

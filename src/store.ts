@@ -219,12 +219,14 @@ export interface DialogueOption {
   requiredItems?: string[];
   consumeItems?: string[];
   id?: string;
+  visualEffect?: 'shake' | 'glitch';
 }
 
 export interface Dialogue {
   text: string;
   options?: DialogueOption[];
   urgency?: 1 | 2 | 3;
+  visualEffect?: 'shake' | 'glitch';
 }
 
 /**

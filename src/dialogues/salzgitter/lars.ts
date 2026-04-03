@@ -19,8 +19,10 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
           text: 'Lars, entfessle die Maschinen-Seele! [Chaos 15]',
           requiredSkill: { name: 'chaos', level: 15 },
           flagToSet: { flag: 'salzgitter_encore_unlocked', value: true },
+          visualEffect: 'shake',
           nextDialogue: {
             text: 'Lars: "JAAAAAAAAA! DIE DRUMS BRENNEN! DIE REALITÄT KOCHT! DAS IST DER ULTIMATIVE BEAT!"',
+            visualEffect: 'shake',
           },
           action: () => {
             const currentStore = game();
