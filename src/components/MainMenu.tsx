@@ -38,10 +38,10 @@ export function MainMenu() {
         return;
       }
 
-      let parsed;
+      let parsed: unknown;
       try {
         parsed = JSON.parse(raw);
-      } catch (e) {
+      } catch {
         setHasSavedGame(false);
         return;
       }
@@ -50,7 +50,7 @@ export function MainMenu() {
         setHasSavedGame(false);
         return;
       }
-      const saved = parsed.state;
+      const saved = (parsed as { state?: any }).state;
       if (!saved || typeof saved !== 'object' || Array.isArray(saved)) {
         setHasSavedGame(false);
         return;

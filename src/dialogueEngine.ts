@@ -1,15 +1,20 @@
 import { useStore } from './store';
-import type { DialogueOption } from './store';
+import type { DialogueOption, Quest } from './store';
 
 // Cache for O(1) quest lookups
-let lastQuestsRef: any[] | null = null;
-const cachedQuestsMap = new Map<string, any>();
+let lastQuestsRef: Quest[] | null = null;
+const cachedQuestsMap = new Map<string, Quest>();
+
+export function clearQuestCache() {
+  cachedQuestsMap.clear();
+  lastQuestsRef = null;
+}
 
 /**
  * Checks whether a dialogue option's requirements are currently satisfied.
  * Returns true if the option can be selected; false if it is locked.
  *
- * Used by the UI to determine disabled/locked state without executing side-effects.
+ * Used by the UI to determine disabled/locked state without executing game-state side-effects.
  */
 export function canSelectOption(option: DialogueOption): boolean {
   const { trait, skills, quests, flags, inventoryCounts } = useStore.getState();

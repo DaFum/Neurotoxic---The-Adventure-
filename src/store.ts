@@ -16,6 +16,8 @@ type Scene =
  */
 export type QuestStatus = 'active' | 'completed' | 'failed';
 
+export type Quest = { id: string; text: string; status: QuestStatus };
+
 /**
  * All known boolean game flags. Using a union type here gives autocomplete
  * and catches typos at compile time when calling setFlag().
@@ -286,7 +288,7 @@ export interface GameState {
   setPlayerPos: (pos: [number, number, number]) => void;
   isPaused: boolean;
   setPaused: (paused: boolean) => void;
-  quests: { id: string; text: string; status: QuestStatus }[];
+  quests: Quest[];
   addQuest: (id: string, text: string) => void;
   completeQuest: (id: string, text?: string) => void;
   failQuest: (id: string, text?: string) => void;
