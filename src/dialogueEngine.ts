@@ -8,7 +8,7 @@ import type { DialogueOption } from './store';
  * Used by the UI to determine disabled/locked state without executing side-effects.
  */
 export function canSelectOption(option: DialogueOption): boolean {
-  const { trait, skills, quests, flags, inventory } = useStore.getState();
+  const { trait, skills, quests, flags, inventoryCounts } = useStore.getState();
 
   if (option.requiredTrait && trait !== option.requiredTrait) return false;
 
@@ -39,24 +39,26 @@ export function canSelectOption(option: DialogueOption): boolean {
 
   if (option.requiredItems || option.consumeItems) {
     // Inventory needs to support multiple of the same item if `requiredItems` or `consumeItems` specifies duplicates
-    const counts: Record<string, number> = {};
-    for (const item of inventory) counts[item] = (counts[item] || 0) + 1;
-
-    // Build separate tallies: the player must have max(requiredCount, consumeCount) of each item.
-    // Summing the two would double-count items listed in both arrays.
-    const requiredCounts: Record<string, number> = {};
+    // the player must have max(requiredCount, consumeCount) of each item.
+    const neededCounts: Record<string, number> = {};
     if (option.requiredItems) {
-      for (const item of option.requiredItems) requiredCounts[item] = (requiredCounts[item] || 0) + 1;
+      for (const item of option.requiredItems) {
+        neededCounts[item] = (neededCounts[item] || 0) + 1;
+      }
     }
-    const consumeCounts: Record<string, number> = {};
     if (option.consumeItems) {
-      for (const item of option.consumeItems) consumeCounts[item] = (consumeCounts[item] || 0) + 1;
+      const consumeTallies: Record<string, number> = {};
+      for (const item of option.consumeItems) {
+        const c = (consumeTallies[item] || 0) + 1;
+        consumeTallies[item] = c;
+        if (c > (neededCounts[item] || 0)) {
+          neededCounts[item] = c;
+        }
+      }
     }
 
-    const allItems = new Set([...Object.keys(requiredCounts), ...Object.keys(consumeCounts)]);
-    for (const item of allItems) {
-      const needed = Math.max(requiredCounts[item] || 0, consumeCounts[item] || 0);
-      if ((counts[item] || 0) < needed) return false;
+    for (const item in neededCounts) {
+      if ((inventoryCounts[item] || 0) < neededCounts[item]) return false;
     }
   }
 

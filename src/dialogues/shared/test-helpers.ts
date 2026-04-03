@@ -6,7 +6,15 @@ import { useStore, type GameState, type Dialogue } from '../../store';
 export function setupTestState(partialState?: Partial<GameState>) {
   useStore.getState().resetGame();
   if (partialState) {
-    useStore.setState(partialState);
+    const newState = { ...partialState };
+    if (partialState.inventory && !partialState.inventoryCounts) {
+      const inventoryCounts: Record<string, number> = {};
+      for (const item of partialState.inventory) {
+        inventoryCounts[item] = (inventoryCounts[item] || 0) + 1;
+      }
+      newState.inventoryCounts = inventoryCounts;
+    }
+    useStore.setState(newState);
   }
 }
 

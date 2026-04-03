@@ -80,7 +80,7 @@ const getQuestStatusMeta = (status: QuestStatus) => {
 export function UI() {
   const dialogue = useStore((state) => state.dialogue);
   const setDialogue = useStore((state) => state.setDialogue);
-  const inventory = useStore((state) => state.inventory);
+  const inventoryCounts = useStore((state) => state.inventoryCounts);
   const combineItems = useStore((state) => state.combineItems);
   const quests = useStore((state) => state.quests);
   const bandMood = useStore((state) => state.bandMood);
@@ -128,16 +128,12 @@ export function UI() {
       .map(({ quest }) => quest);
   }, [quests, scene, openQuestCount]);
   const inventoryStacks = useMemo(() => {
-    const stackMap = new Map<string, number>();
-    for (const item of inventory) {
-      stackMap.set(item, (stackMap.get(item) ?? 0) + 1);
-    }
     const result = [];
-    for (const [item, count] of stackMap.entries()) {
-      result.push({ item, count });
+    for (const item in inventoryCounts) {
+      result.push({ item, count: inventoryCounts[item] });
     }
     return result;
-  }, [inventory]);
+  }, [inventoryCounts]);
   const selectedItemCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const item of selectedItems) {
@@ -162,8 +158,8 @@ export function UI() {
   useEffect(() => {
     setSelectedItems((prev) => {
       const counts = new Map<string, number>();
-      for (const item of inventory) {
-        counts.set(item, (counts.get(item) ?? 0) + 1);
+      for (const item in inventoryCounts) {
+        counts.set(item, inventoryCounts[item]);
       }
 
       const newSelected: string[] = [];
@@ -180,7 +176,7 @@ export function UI() {
       }
       return prev;
     });
-  }, [inventory]);
+  }, [inventoryCounts]);
   const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
   const loreCodexContainerRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
@@ -408,7 +404,7 @@ export function UI() {
             <span className="text-toxic font-bold">{sceneLabel}</span>
             <span className="text-zinc-400">Mood {bandMood}%</span>
             <span className="text-zinc-400">Open Quests {openQuestCount}</span>
-            <span className="text-zinc-400">Inventory {inventory.length}</span>
+            <span className="text-zinc-400">Inventory {Object.values(inventoryCounts).reduce((sum, count) => sum + count, 0)}</span>
           </div>
         </div>
       </div>
@@ -487,7 +483,7 @@ export function UI() {
                   <Backpack size={14} />
                   Cargo_Manifest
                 </div>
-                {inventory.length === 0 ? (
+                {inventoryStacks.length === 0 ? (
                   <div className="text-[10px] text-zinc-600 font-mono uppercase">No assets detected</div>
                 ) : (
                   <div className="flex flex-col gap-3">
@@ -665,7 +661,7 @@ export function UI() {
                 <Backpack size={14} />
                 Cargo_Manifest
               </div>
-              {inventory.length === 0 ? (
+              {inventoryStacks.length === 0 ? (
                 <div className="text-[10px] text-zinc-600 font-mono uppercase">No assets detected</div>
               ) : (
                 <div className="flex flex-col gap-3 w-full">
