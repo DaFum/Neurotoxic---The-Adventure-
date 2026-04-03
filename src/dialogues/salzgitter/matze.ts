@@ -16,7 +16,6 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
           {
             text: 'Kanalisiere den Chaos-Faktor. [Chaos 10]',
             requiredSkill: { name: 'chaos', level: 10 },
-            visualEffect: 'glitch',
             action: () => {
               const currentStore = game();
               currentStore.setDialogue({
@@ -63,7 +62,6 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
           {
             text: 'Kanalisiere den Chaos-Faktor. [Chaos 10]',
             requiredSkill: { name: 'chaos', level: 10 },
-            visualEffect: 'glitch',
             action: () => {
               const currentStore = game();
               currentStore.setDialogue({

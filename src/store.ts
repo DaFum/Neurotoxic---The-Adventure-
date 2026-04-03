@@ -87,7 +87,6 @@ export type Flag =
   | 'salzgitter_fan_speech_heard'
   | 'tankwart_fuel_quest_started'
   | 'proberaum_brutalist_smash'
-  | 'marius_mystic_calm'
   | 'tourbus_sabotage_discovered'
   | 'tourbus_matze_confession'
   | 'backstage_blueprint_found'
@@ -220,7 +219,6 @@ export interface DialogueOption {
   requiredItems?: string[];
   consumeItems?: string[];
   id?: string;
-  visualEffect?: 'shake' | 'glitch';
 }
 
 export interface Dialogue {
@@ -395,7 +393,6 @@ const initialState = {
     salzgitter_fan_speech_heard: false,
     tankwart_fuel_quest_started: false,
     proberaum_brutalist_smash: false,
-    marius_mystic_calm: false,
     tourbus_sabotage_discovered: false,
     tourbus_matze_confession: false,
     backstage_blueprint_found: false,

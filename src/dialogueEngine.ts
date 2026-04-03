@@ -96,10 +96,8 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   // 3. Custom action logic
   option.action?.();
 
-  // 3.5. Trigger visual effects
-  if (option.visualEffect === 'shake') {
-    useStore.getState().setCameraShake(0.5);
-  }
+  // 3.5. Visual effects are now evaluated centrally inside useStore.setDialogue(),
+  // based exclusively on the `visualEffect` property of the `Dialogue` object.
 
   const postActionDialogue = useStore.getState().dialogue;
 
