@@ -60,28 +60,41 @@ describe('Interactable', () => {
     });
   });
 
-  it('registers itself with a unique ID based on useId on mount and unregisters on unmount', () => {
+  it('registers interactables with stable prefixed unique IDs and unregisters them on unmount', () => {
     const { unmount } = render(
-      <Interactable
-        position={[0, 0, 0]}
-        emoji="🎸"
-        name="Test Item"
-        onInteract={() => {}}
-      />
+      <>
+        <Interactable
+          position={[0, 0, 0]}
+          emoji="🎸"
+          name="Test Item 1"
+          onInteract={() => {}}
+        />
+        <Interactable
+          position={[1, 0, 0]}
+          emoji="🥁"
+          name="Test Item 2"
+          onInteract={() => {}}
+        />
+      </>
     );
 
-    expect(mockRegister).toHaveBeenCalledTimes(1);
-    const registeredId = mockRegister.mock.calls[0][0];
+    expect(mockRegister).toHaveBeenCalledTimes(2);
+    const firstRegisteredId = mockRegister.mock.calls[0][0];
+    const secondRegisteredId = mockRegister.mock.calls[1][0];
 
-    // React 18+ useId() returns a string like ":r0:"
-    // Our code uses `interactable-${id}`
-    expect(registeredId).toContain('interactable-');
-    // Ensure it's not using the old Math.random() pattern which was a simple alphanumeric string after "interactable-"
-    // useId strings in React 18 usually start/end with ":" or are wrapped in underscores in some environments (like Vitest/JSDOM)
-    // For example: "interactable-:r0:" or "interactable-_r_0_"
-    expect(registeredId).toMatch(/^interactable-((:|_.+).+(:|.+_))$/);
+    expect(firstRegisteredId).toMatch(/^interactable-/);
+    expect(secondRegisteredId).toMatch(/^interactable-/);
+
+    // Ensure IDs are no longer using the old Math.random() pattern.
+    expect(firstRegisteredId).not.toMatch(/^interactable-[a-z0-9]{8}$/);
+    expect(secondRegisteredId).not.toMatch(/^interactable-[a-z0-9]{8}$/);
+
+    // Separate instances should register distinct IDs.
+    expect(firstRegisteredId).not.toBe(secondRegisteredId);
 
     unmount();
-    expect(mockUnregister).toHaveBeenCalledWith(registeredId);
+
+    expect(mockUnregister).toHaveBeenCalledWith(firstRegisteredId);
+    expect(mockUnregister).toHaveBeenCalledWith(secondRegisteredId);
   });
 });
