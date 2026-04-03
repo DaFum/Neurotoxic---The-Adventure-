@@ -73,13 +73,15 @@ export function MainMenu() {
         }
         return false;
       });
-      const skills = savedRecord.skills as Record<string, number>;
+      const skills = typeof savedRecord.skills === 'object' && savedRecord.skills !== null
+        ? savedRecord.skills as Record<string, unknown>
+        : undefined;
       const hasMoodOrSkillProgress =
         savedRecord.bandMood !== undefined && typeof savedRecord.bandMood === 'number' && (
           savedRecord.bandMood !== 20 ||
-          skills?.technical > 0 ||
-          skills?.social > 0 ||
-          skills?.chaos > 0
+          (typeof skills?.technical === 'number' && skills.technical > 0) ||
+          (typeof skills?.social === 'number' && skills.social > 0) ||
+          (typeof skills?.chaos === 'number' && skills.chaos > 0)
         );
 
       setHasSavedGame(Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress));
