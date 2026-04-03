@@ -242,7 +242,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - _Bonus (Wenn mariusEgoStrategy gesetzt):_ "Erinnerst du dich an unsere Strategie?" (+35 BandMood, +5 Social, setzt `mariusConfidenceBoost`).
     - (Skill: Social 5): "Gott am Mikrofon" (+30 BandMood, +3 Social, setzt `mariusConfidenceBoost`).
     - (Trait: Performer): "Einziger Mensch auf der Bühne" (+30 BandMood, +3 Social, setzt `backstage_performer_speech`, setzt `mariusConfidenceBoost`).
-    - (Trait: Mystic): "Lass die Frequenz durch dich fließen" (+25 BandMood, +3 Chaos, setzt `mariusConfidenceBoost`).
+    - (Trait: Mystic): "Lass die Frequenz durch dich fließen" (+35 BandMood, +5 Chaos, setzt `mariusConfidenceBoost`, setzt `marius_mystic_calm`).
     - (Trait: Brutalist): "Angst ist Schwäche. Zerstöre sie" (+20 BandMood, +3 Chaos). **Hinweis: setzt NICHT `mariusConfidenceBoost`.**
     - (Flag `askedAbout1982` gesetzt): "Erinnerung an 1982" (+25 BandMood, setzt `mariusConfidenceBoost`).
     - "Lego-Trick" (+10 BandMood).
@@ -293,6 +293,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Spezial (Trait: Mystic, einmalig — `tankwartMysticDone` noch nicht gesetzt):_ "Ich suche die Wahrheit" (+30 BandMood, Erhalt: Splitter der Leere, setzt `tankwartMysticDone`). Wird vor `ghostTrustEarned`-Zweig geprüft, sofern `ghostTrustEarned` noch nicht gesetzt ist. **Setzt NICHT `tankwartPhilosophy`** — ermöglicht Mystic-Spielern auch nach diesem Dialog das Betanken des Vans.
   - _Fallback-Text:_ Wenn `backstageRitualPerformed` gesetzt, reagiert der Tankwart mit einem ritualbewussten Begrüßungstext statt des Standard-Textes.
   - _Spezial (Trait: Cynic, einmalig):_ "Das ist doch alles Quatsch. Gib mir Sprit." (+15 BandMood, +3 Chaos, setzt `tankwartBargain`).
+  - _Spezial (Trait: Diplomat, einmalig):_ "Wir können sicher ein Arrangement treffen." (+20 BandMood, +5 Social, setzt `tankwartBargain`).
   - _Spezial (Trait: Performer, einmalig):_ "Ich spiele für dich, Tankwart." (+25 BandMood, +5 Social, setzt `tankwartBargain`).
   - _Item (Industrie-Talisman):_ "Lehre mich" (+20 BandMood, **Lore:** `tankwart_truth`) ODER "Gig spielen" (+5 BandMood).
   - _Item (Verbotenes Riff):_ "Ich bin bereit" (+15 BandMood) ODER nach Konsequenzen fragen.
@@ -374,6 +375,7 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 - **Matze:**
   - _Sabotage-Geständnis (Wenn Sabotage entdeckt & Amp repariert):_
     - (Trait: Diplomat): Vergeben (+30 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
+    - (Skill: Chaos 8): Angst kanalisieren (+25 BandMood, +3 Chaos, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
     - (Trait: Brutalist): Warnen (+15 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).
 - **Marius:**
   - _Reaktionen auf Zustände:_
