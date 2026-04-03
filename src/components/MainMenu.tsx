@@ -37,9 +37,21 @@ export function MainMenu() {
         setHasSavedGame(false);
         return;
       }
-      const parsed = JSON.parse(raw) as { state?: any } | null;
-      const saved = parsed?.state;
-      if (!saved) {
+
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        setHasSavedGame(false);
+        return;
+      }
+
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        setHasSavedGame(false);
+        return;
+      }
+      const saved = parsed.state;
+      if (!saved || typeof saved !== 'object' || Array.isArray(saved)) {
         setHasSavedGame(false);
         return;
       }
