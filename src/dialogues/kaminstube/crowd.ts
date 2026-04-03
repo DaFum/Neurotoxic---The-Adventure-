@@ -20,7 +20,7 @@ export function buildKaminstubeCrowdDialogue(): Dialogue {
             'Manager: "Tangermünde! Seid ihr bereit für den Lärm?!" Die Menge brüllt zurück. Sie gehören uns.'
           );
           currentStore.setFlag('kaminstube_crowd_rallied', true);
-          currentStore.increaseBandMood(20);
+          currentStore.increaseBandMood(20, 'id_4c8bd5d3');
           currentStore.increaseSkill('social', 3);
         },
       },
@@ -33,7 +33,7 @@ export function buildKaminstubeCrowdDialogue(): Dialogue {
             'Ein ohrenbetäubendes Fiepen zerschneidet die Stille. Die Cover-Band-Rufer verstummen in Schock. Der Rest der Halle rastet aus!'
           );
           currentStore.setFlag('kaminstube_crowd_rallied', true);
-          currentStore.increaseBandMood(25);
+          currentStore.increaseBandMood(25, 'id_20f0ddce');
           currentStore.increaseSkill('chaos', 4);
         },
       },

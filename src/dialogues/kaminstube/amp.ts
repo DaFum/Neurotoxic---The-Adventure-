@@ -26,7 +26,7 @@ export function buildKaminstubeAmpDialogue(): Dialogue {
   store.removeFromInventory('Röhre');
   store.setFlag('ampFixed', true);
   store.completeQuest('amp');
-  store.increaseBandMood(30);
+  store.increaseBandMood(30, 'id_e3cce1ec');
 
   return say('Du hast die Röhre ausgetauscht. Der Amp funktioniert wieder!');
 }

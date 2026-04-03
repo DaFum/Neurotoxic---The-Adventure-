@@ -35,7 +35,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();
-        currentStore.increaseBandMood(20);
+        currentStore.increaseBandMood(20, 'id_dde1df94');
       },
     });
 
@@ -50,7 +50,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();
-        currentStore.increaseBandMood(10);
+        currentStore.increaseBandMood(10, 'id_5d55c28a');
         currentStore.increaseSkill('chaos', 3);
       },
     });
@@ -66,7 +66,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();
-        currentStore.increaseBandMood(15);
+        currentStore.increaseBandMood(15, 'id_48e589bd');
         currentStore.increaseSkill('technical', 3);
       },
     });
@@ -82,7 +82,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();
-        currentStore.increaseBandMood(20);
+        currentStore.increaseBandMood(20, 'id_ad77326c');
       },
     });
   }

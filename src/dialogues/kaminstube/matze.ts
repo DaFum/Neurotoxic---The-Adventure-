@@ -10,7 +10,7 @@ function handleMatzeConfession(text: string, moodDelta: number) {
     true,
     'Matze gesteht die Tourbus-Sabotage'
   );
-  currentStore.increaseBandMood(moodDelta);
+  currentStore.increaseBandMood(moodDelta, 'id_dc796c39');
 }
 
 export function buildKaminstubeMatzeDialogue(): Dialogue {

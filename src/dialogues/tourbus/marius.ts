@@ -34,7 +34,7 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.removeFromInventory('Marius Ego');
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'id_1d3ac6c4');
           },
         },
         {
@@ -44,7 +44,7 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(-10);
+            currentStore.increaseBandMood(-10, 'id_f3887664');
           },
         },
       ],
@@ -62,7 +62,7 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
             },
             action: () => {
               const currentStore = game();
-              currentStore.increaseBandMood(10);
+              currentStore.increaseBandMood(10, 'id_47daa02e');
             },
           },
           {
@@ -73,7 +73,7 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
             },
             action: () => {
               const currentStore = game();
-              currentStore.increaseBandMood(15);
+              currentStore.increaseBandMood(15, 'id_26d4ed71');
             },
           },
           {
@@ -102,7 +102,7 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
                   action: () => {
                     const currentStore = game();
                     currentStore.setFlag('marius_tourbus_performer_claimed', true);
-                    currentStore.increaseBandMood(15);
+                    currentStore.increaseBandMood(15, 'id_30261faf');
                     currentStore.increaseSkill('social', 3);
                   },
                 },

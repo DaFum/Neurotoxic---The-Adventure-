@@ -21,7 +21,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Matze: "Wir werden die Welt mit diesem Ding verändern. Danke, Boss. Der Sound wird legendär."');
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'id_18af0178');
             currentStore.setFlag('matzeDeepTalk', true);
           }
         },
@@ -30,7 +30,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Matze: "Verstehe. Ein Geheimnis zwischen uns und dem Stahl. Ich mag das. Lass uns die Bühne abreißen."');
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'id_fe0c518a');
             currentStore.setFlag('matzeDeepTalk', true);
           }
         }
@@ -48,7 +48,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
             const currentStore = game();
             currentStore.setDialogue('Matze: "UNGLAUBLICH! Damit werden wir die Kaminstube in Schutt und Asche legen! Du bist der beste Manager aller Zeiten!"');
             currentStore.setFlag('showedRiffToMatze', true);
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'id_b5b88f73');
           }
         },
         {
@@ -76,7 +76,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Matze: "Sub-Aquatic Industrial? Klingt teuer. Wisch einfach auf."');
-            currentStore.increaseBandMood(-5);
+            currentStore.increaseBandMood(-5, 'id_43a4e8ae');
           }
         }
       ]
@@ -93,7 +93,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Matze schlägt die Saiten an. Ein Riss in der Wand entsteht. "WHOOPS! Aber geil, oder?"');
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'id_63f0878f');
             currentStore.setFlag('matzeRiffWarning', true);
           }
         },
@@ -121,7 +121,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."');
-          currentStore.increaseBandMood(10);
+          currentStore.increaseBandMood(10, 'id_ad6e67a1');
         }
       },
       ...when(!flags.matzePerformerTalk, {
@@ -131,7 +131,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
           currentStore.setFlag('matzePerformerTalk', true);
-          currentStore.increaseBandMood(20);
+          currentStore.increaseBandMood(20, 'id_95782860');
           currentStore.increaseSkill('social', 3);
         }
       } as DialogueOption),
@@ -141,7 +141,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');
-          currentStore.increaseBandMood(20);
+          currentStore.increaseBandMood(20, 'id_aa52d079');
           currentStore.increaseSkill('chaos', 5);
           currentStore.setFlag('matzeCynicOneShot', true);
         }
@@ -155,7 +155,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Buchhaltung? Wir sind eine Metal-Band, kein Steuerbüro! Geh und hol uns ein Bier."');
-          currentStore.increaseBandMood(-2);
+          currentStore.increaseBandMood(-2, 'id_c1b7f39b');
         }
       }
     ]
@@ -180,7 +180,7 @@ export function buildMatze1982Dialogue(): Dialogue {
             if (pickedUpFragment) {
               currentStore.setFlag('matzeDeepTalk', true);
               currentStore.setFlag('frequenz1982_proberaum', true);
-              currentStore.increaseBandMood(25, 'matze_frequenz1982');
+              currentStore.increaseBandMood(25, 'id_6c147e54');
               currentStore.increaseSkill('chaos', 4);
               currentStore.setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
             } else {
@@ -206,7 +206,7 @@ export function buildMatze1982Dialogue(): Dialogue {
               currentStore.setFlag('proberaum_brutalist_smash', true);
               currentStore.setFlag('matzeDeepTalk', true);
               currentStore.setFlag('frequenz1982_proberaum', true);
-              currentStore.increaseBandMood(10, 'matze_frequenz1982');
+              currentStore.increaseBandMood(10, 'id_6c147e54');
               currentStore.increaseSkill('chaos', 3);
               currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
             } else {
@@ -225,7 +225,7 @@ export function buildMatze1982Dialogue(): Dialogue {
           currentStore.setDialogue('Matze: "Du siehst sie auch?! Die Geometrie des Feedbacks... Du bist der Manager, den wir brauchen. In Salzgitter wird alles zusammenfallen."');
           currentStore.setFlag('matzeDeepTalk', true);
           currentStore.discoverLore('matze_1982_truth');
-          currentStore.increaseBandMood(30);
+          currentStore.increaseBandMood(30, 'id_505a7b59');
           currentStore.increaseSkill('chaos', 5);
         }
       },
@@ -236,7 +236,7 @@ export function buildMatze1982Dialogue(): Dialogue {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Die Frequenz der Gießerei lag bei exakt 432Hz. Es war, als ob der Stahl selbst schreit. Du hast ein Ohr für Details, Manager."');
           currentStore.setFlag('matzeDeepTalk', true);
-          currentStore.increaseBandMood(20);
+          currentStore.increaseBandMood(20, 'id_0afc985e');
           currentStore.increaseSkill('technical', 3);
         }
       },
@@ -247,7 +247,7 @@ export function buildMatze1982Dialogue(): Dialogue {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Du hast recht. Ich steigere mich da zu sehr rein. Lass uns einfach spielen. Danke, Manager."');
           currentStore.setFlag('matzeDeepTalk', true);
-          currentStore.increaseBandMood(15);
+          currentStore.increaseBandMood(15, 'id_c6580f62');
           currentStore.increaseSkill('social', 2);
         }
       },
@@ -258,7 +258,7 @@ export function buildMatze1982Dialogue(): Dialogue {
           currentStore.setDialogue('Matze: "Manche Dinge lassen sich nicht in Worte fassen. Lass uns weitermachen."');
           currentStore.setFlag('askedAbout1982', true);
           currentStore.setFlag('bassist_clue_matze', true);
-          currentStore.increaseBandMood(10);
+          currentStore.increaseBandMood(10, 'id_f0bc0fe3');
         }
       },
       {

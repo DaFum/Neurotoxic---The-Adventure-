@@ -40,7 +40,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(40);
+              currentStore.increaseBandMood(40, 'id_b4f7027d');
               currentStore.increaseSkill('chaos', 5);
             },
           },
@@ -59,7 +59,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(30);
+              currentStore.increaseBandMood(30, 'id_7ffa8585');
               currentStore.increaseSkill('technical', 5);
             },
           },
@@ -77,7 +77,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(20);
+              currentStore.increaseBandMood(20, 'id_4899db3c');
             },
           },
           {
@@ -114,7 +114,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(30);
+            currentStore.increaseBandMood(30, 'id_e0e8aacd');
             currentStore.increaseSkill('technical', 5);
           },
         },
@@ -136,7 +136,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(40);
+            currentStore.increaseBandMood(40, 'id_1f6ffb9b');
             currentStore.increaseSkill('chaos', 5);
           },
         },
@@ -157,7 +157,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const currentStore = game();
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'id_b74f71fa');
           },
         },
       ],
@@ -190,7 +190,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(25);
+          currentStore.increaseBandMood(25, 'id_24bc329a');
           currentStore.increaseSkill('technical', 5);
         },
       });
@@ -244,7 +244,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.increaseBandMood(5);
+          currentStore.increaseBandMood(5, 'id_2272824b');
         },
       },
       {

@@ -16,7 +16,7 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
               const currentStore = game();
               currentStore.setFlag('lars_drum_maintenance', true);
               currentStore.setDialogue('Lars: "Perfekt, der Hocker hat vorhin schon gewackelt wie ein Kuhschwanz. Jetzt ist er stabil!"');
-              currentStore.increaseBandMood(15);
+              currentStore.increaseBandMood(15, 'id_b22b7816');
               currentStore.increaseSkill('technical', 2);
             }
           }
@@ -39,7 +39,7 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
           'Lars: "Genau! 120 BPM, hart auf die Snare. Die Akustik des Raumes wird die Schläge verdoppeln!"'
         );
         currentStore.setFlag('kaminstube_lars_talked', true);
-        currentStore.increaseBandMood(15);
+        currentStore.increaseBandMood(15, 'id_7fb5010a');
         currentStore.increaseSkill('technical', 3);
       },
     },
@@ -52,7 +52,7 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
           'Lars: "JA! Ein Polyrhythmus, der die Architektur der Halle in Frage stellt!"'
         );
         currentStore.setFlag('kaminstube_lars_talked', true);
-        currentStore.increaseBandMood(20);
+        currentStore.increaseBandMood(20, 'id_0827dff4');
         currentStore.increaseSkill('chaos', 3);
       },
     },
@@ -77,7 +77,7 @@ export function buildKaminstubeLarsDialogue(): Dialogue {
           'Lars: "Ja... der Pakt wird stärker. Ich spüre die Hämmer der alten Gießerei in mir schlagen. Wir sind bereit."'
         );
         currentStore.setFlag('kaminstube_lars_talked', true);
-        currentStore.increaseBandMood(10);
+        currentStore.increaseBandMood(10, 'id_7a94997f');
       },
     });
   }

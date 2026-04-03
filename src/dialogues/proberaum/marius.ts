@@ -15,7 +15,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.completeQuestWithFlag('beer', 'gaveBeerToMarius');
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'id_10fa71ff');
             currentStore.setDialogue(
               'Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"'
             );
@@ -35,7 +35,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
             currentStore.setDialogue(
               'Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"'
             );
-            currentStore.increaseBandMood(-5);
+            currentStore.increaseBandMood(-5, 'id_e769cd73');
           },
         },
         ...when(!flags.mariusVisionShared && trait === 'Visionary', {
@@ -47,7 +47,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
               'Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."'
             );
             currentStore.setFlag('mariusVisionShared', true);
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'id_79a5c0f5');
             currentStore.increaseSkill('social', 3);
           },
         } as DialogueOption),
@@ -60,7 +60,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
               'Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."'
             );
             currentStore.setFlag('mariusCalmedDown', true);
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'id_78680db7');
             currentStore.increaseSkill('social', 2);
           },
         } as DialogueOption),
@@ -90,7 +90,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                       currentStore.setDialogue(
                         'Marius: "Ah, von einem Meister lernen. Zeig mir, wie ich das Licht fange."'
                       );
-                      currentStore.increaseBandMood(15);
+                      currentStore.increaseBandMood(15, 'id_ae754a5b');
                       currentStore.increaseSkill('social', 3);
                       currentStore.setFlag('mariusEgoStrategy', true);
                     },
@@ -103,7 +103,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                       currentStore.setDialogue(
                         'Marius: "WAS?! ...Nein, du hast recht. Ich muss wütender werden!"'
                       );
-                      currentStore.increaseBandMood(10);
+                      currentStore.increaseBandMood(10, 'id_943e1377');
                       currentStore.increaseSkill('chaos', 3);
                       currentStore.setFlag('mariusEgoStrategy', true);
                     },
@@ -116,7 +116,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                       currentStore.setDialogue(
                         'Marius: "Ein... Plan? Ok, das könnte helfen, nicht die Kontrolle zu verlieren."'
                       );
-                      currentStore.increaseBandMood(20);
+                      currentStore.increaseBandMood(20, 'id_a6ace3a9');
                       currentStore.setFlag('mariusEgoStrategy', true);
                     },
                   },
@@ -144,7 +144,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
               );
               currentStore.setFlag('mariusSelfDoubtRevealed', true);
               currentStore.setFlag('marius_tourbus_doubt', true);
-              currentStore.increaseBandMood(15);
+              currentStore.increaseBandMood(15, 'id_fb2ed10b');
               currentStore.increaseSkill('social', 3);
             },
           } as DialogueOption),
@@ -157,7 +157,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                 'Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"'
               );
               currentStore.setFlag('mariusEgoComplimented', true);
-              currentStore.increaseBandMood(5);
+              currentStore.increaseBandMood(5, 'id_4d4988ff');
               currentStore.increaseSkill('chaos', 2);
             },
           } as DialogueOption),

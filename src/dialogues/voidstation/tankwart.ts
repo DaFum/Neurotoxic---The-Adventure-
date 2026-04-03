@@ -26,7 +26,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
               'Tankwart: "Für einen Freund des Geistes gibt es einen besonderen Rabatt in der Leere."'
             );
             currentStore.setFlag('tankwartBargain', true);
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'id_18a44b8a');
           },
         },
       ],
@@ -48,7 +48,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
                 'Tankwart: "Die Wahrheit ist ein Riff, das niemals endet. Hier, nimm diesen Splitter der Leere. Er wird dir helfen, das Verbotene Riff zu verstehen."'
               );
               currentStore.setFlag('tankwartMysticDone', true);
-              currentStore.increaseBandMood(30);
+              currentStore.increaseBandMood(30, 'id_43444833');
               return;
             }
 
@@ -74,7 +74,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
               'Tankwart: "Lärm ist nicht das Chaos. Lärm ist die Ordnung, die wir noch nicht verstehen. Jedes Feedback ist ein Gebet an die Leere. In Salzgitter werdet ihr die Antwort finden."'
             );
             currentStore.setFlag('tankwartPhilosophy', true);
-            currentStore.increaseBandMood(20);
+            currentStore.increaseBandMood(20, 'id_c8d2805d');
           },
         },
         {
@@ -84,7 +84,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
             currentStore.setDialogue(
               'Tankwart: "So begrenzt. Aber okay. Die Leere braucht auch Handwerker."'
             );
-            currentStore.increaseBandMood(5);
+            currentStore.increaseBandMood(5, 'id_6d4efe53');
           },
         },
       ],
@@ -103,7 +103,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
               'Tankwart: "Spielt es laut, spielt es stolz. Die Leere wartet auf diesen Akkord. Er wird die Sterne zum Erlöschen bringen."'
             );
             currentStore.setFlag('tankwartReactedToRiff', true);
-            currentStore.increaseBandMood(15);
+            currentStore.increaseBandMood(15, 'id_f37a5f2c');
           },
         },
         {
@@ -138,7 +138,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           );
           currentStore.removeFromInventory('Dunkle Materie');
           currentStore.completeQuestWithFlag('void', 'voidRefueled');
-          currentStore.increaseBandMood(25);
+          currentStore.increaseBandMood(25, 'id_5205fcd4');
         },
       },
       {
@@ -150,7 +150,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           );
           currentStore.removeFromInventory('Dunkle Materie');
           currentStore.completeQuestWithFlag('void', 'voidRefueled');
-          currentStore.increaseBandMood(10);
+          currentStore.increaseBandMood(10, 'id_c850573c');
         },
       },
     ];
@@ -166,7 +166,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           );
           currentStore.removeFromInventory('Dunkle Materie');
           currentStore.completeQuestWithFlag('void', 'voidRefueled');
-          currentStore.increaseBandMood(40);
+          currentStore.increaseBandMood(40, 'id_b7aa2f05');
         },
       });
     }
@@ -204,7 +204,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
                 currentStore.setDialogue(
                   'Tankwart: "Quatsch? Schau dich um, Fleischsack. Du stehst in der 5. Dimension. Hier ist der Sprit."'
                 );
-                currentStore.increaseBandMood(15);
+                currentStore.increaseBandMood(15, 'id_85c3c140');
                 currentStore.increaseSkill('chaos', 3);
                 currentStore.setFlag('tankwartBargain', true);
               },
@@ -218,7 +218,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
                 currentStore.setDialogue(
                   'Tankwart: "Ein Arrangement? Die Leere nimmt nur, aber für einen Vermittler des Lärms mache ich eine Ausnahme."'
                 );
-                currentStore.increaseBandMood(20);
+                currentStore.increaseBandMood(20, 'id_3a16474f');
                 currentStore.increaseSkill('social', 5);
                 currentStore.setFlag('tankwartBargain', true);
               },
@@ -232,7 +232,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
                 currentStore.setDialogue(
                   'Du legst eine kosmische Performance hin. Der Tankwart applaudiert lautlos. "Bravo. Die Leere liebt eine gute Show."'
                 );
-                currentStore.increaseBandMood(25);
+                currentStore.increaseBandMood(25, 'id_13855dd1');
                 currentStore.increaseSkill('social', 5);
                 currentStore.setFlag('tankwartBargain', true);
               },
@@ -246,7 +246,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           currentStore.setDialogue(
             'Tankwart: "Das Riff ist in dir... und in der Pfütze im Proberaum, die seit 1982 niemals getrocknet ist."'
           );
-          currentStore.increaseBandMood(5);
+          currentStore.increaseBandMood(5, 'id_97b4b7de');
         },
       },
       {
@@ -258,7 +258,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           currentStore.setDialogue(
             'Tankwart: "Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort - sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge."'
           );
-          currentStore.increaseBandMood(15);
+          currentStore.increaseBandMood(15, 'id_4f6f9630');
           currentStore.setFlag('tankwartPhilosophy', true);
         },
       },

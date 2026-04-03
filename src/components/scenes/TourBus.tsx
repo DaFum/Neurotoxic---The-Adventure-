@@ -386,7 +386,7 @@ export function TourBus() {
         name="Vergessenes Notizbuch"
         onInteract={() => {
           setDialogue('Ein abgegriffenes Notizbuch mit dem Logo von NEUROTOXIC. Seite 42: "Der Sound muss weh tun. Wenn es nicht weh tut, ist es nur Musik. Wir brauchen mehr Feedback." Seite 43: "Marius hat sein Ego im Kühlschrank vergessen. Wieder einmal."');
-          increaseBandMood(5);
+          increaseBandMood(5, 'id_1f0c8904');
         }}
       />
 
