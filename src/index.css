@@ -78,3 +78,12 @@
 .animate-shake {
   animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
 }
+
+/* Accessibility: Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-glitch,
+  .animate-shake {
+    animation: none;
+    transform: none;
+  }
+}
