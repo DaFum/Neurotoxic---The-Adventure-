@@ -210,6 +210,20 @@ export function buildVoidTankwartDialogue(): Dialogue {
               },
             },
             {
+              id: 'tankwart_diplomat',
+              text: 'Wir können sicher ein Arrangement treffen. [Diplomat]',
+              requiredTrait: 'Diplomat' as const,
+              action: () => {
+                const currentStore = game();
+                currentStore.setDialogue(
+                  'Tankwart: "Ein Arrangement? Die Leere nimmt nur, aber für einen Vermittler des Lärms mache ich eine Ausnahme."'
+                );
+                currentStore.increaseBandMood(20);
+                currentStore.increaseSkill('social', 5);
+                currentStore.setFlag('tankwartBargain', true);
+              },
+            },
+            {
               id: 'tankwart_performer',
               text: 'Ich spiele für dich, Tankwart. [Performer]',
               requiredTrait: 'Performer' as const,

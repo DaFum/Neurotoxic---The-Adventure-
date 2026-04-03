@@ -121,8 +121,9 @@ export function buildBackstageMariusDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
-        currentStore.increaseBandMood(25);
-        currentStore.increaseSkill('chaos', 3);
+        currentStore.setFlag('marius_mystic_calm', true);
+        currentStore.increaseBandMood(35);
+        currentStore.increaseSkill('chaos', 5);
       },
     },
     {
