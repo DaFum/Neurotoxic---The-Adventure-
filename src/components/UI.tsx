@@ -857,7 +857,6 @@ export function UI() {
           <div
             className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
             role="dialog"
-            aria-modal="true"
             aria-labelledby="dialogue-title"
           >
             <motion.div 
@@ -874,7 +873,7 @@ export function UI() {
 
                 <div className="flex flex-col gap-4">
                   <div className="flex justify-between items-center border-b border-toxic/20 pb-2">
-                    <span id="dialogue-title" className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</span>
+                    <h2 id="dialogue-title" className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</h2>
                     <button
                       onClick={() => setDialogue(null)}
                       aria-label="Close transmission"
