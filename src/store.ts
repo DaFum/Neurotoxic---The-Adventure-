@@ -326,8 +326,8 @@ const initialState = {
   },
   dialogue: null,
   inventory: [],
-  inventoryCounts: {} as Record<string, number>,
-  itemPickupCounts: {} as Record<string, number>,
+  inventoryCounts: Object.create(null) as Record<string, number>,
+  itemPickupCounts: Object.create(null) as Record<string, number>,
   flags: {
     waterCleaned: false,
     ampFixed: false,
@@ -720,16 +720,16 @@ export const useStore = create<GameState>()(
           }
 
           didAdd = true;
+          const newInventoryCounts = Object.assign(Object.create(null), state.inventoryCounts);
+          newInventoryCounts[item] = (state.inventoryCounts[item] ?? 0) + 1;
+
+          const newItemPickupCounts = Object.assign(Object.create(null), state.itemPickupCounts);
+          newItemPickupCounts[item] = pickedCount + 1;
+
           return {
             inventory: [...state.inventory, item],
-            inventoryCounts: {
-              ...state.inventoryCounts,
-              [item]: (state.inventoryCounts[item] ?? 0) + 1,
-            },
-            itemPickupCounts: {
-              ...state.itemPickupCounts,
-              [item]: pickedCount + 1,
-            },
+            inventoryCounts: newInventoryCounts,
+            itemPickupCounts: newItemPickupCounts,
           };
         });
         if (didAdd) {
@@ -743,7 +743,7 @@ export const useStore = create<GameState>()(
           if (index !== -1) {
             const newInventory = [...state.inventory];
             newInventory.splice(index, 1);
-            const newCounts = { ...state.inventoryCounts };
+            const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
             if (newCounts[item] > 1) {
               newCounts[item]--;
             } else {
@@ -792,7 +792,7 @@ export const useStore = create<GameState>()(
           newInventory.splice(lower, 1);
           newInventory.push(recipe.result);
 
-          const newCounts = { ...state.inventoryCounts };
+          const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
           // Decrement item1
           if (newCounts[item1] > 1) {
             newCounts[item1]--;
@@ -1057,9 +1057,14 @@ export const useStore = create<GameState>()(
           return completed === true ? 'completed' : 'active';
         };
 
-        const persistedQuestsMap = new Map<string, any>();
+        const persistedQuestsMap = new Map<string, unknown>();
         for (const pq of persistedQuests) {
-          if (pq?.id && typeof pq.id === 'string') {
+          if (
+            pq !== null &&
+            typeof pq === 'object' &&
+            'id' in pq &&
+            typeof pq.id === 'string'
+          ) {
             persistedQuestsMap.set(pq.id, pq);
           }
         }
@@ -1083,38 +1088,42 @@ export const useStore = create<GameState>()(
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
         const dynamicQuests = persistedQuests
-          .filter(
-            (pq: any) =>
-              pq?.id &&
-              typeof pq.id === 'string' &&
-              typeof pq.text === 'string' &&
-              !currentQuestIds.has(pq.id)
-          )
+          .filter((pq: unknown) => {
+            if (pq === null || typeof pq !== 'object') return false;
+            const p = pq as Record<string, unknown>;
+            return (
+              typeof p.id === 'string' &&
+              typeof p.text === 'string' &&
+              !currentQuestIds.has(p.id)
+            );
+          })
           .map((pq) => {
-            const p = pq as unknown as {
-              id: string;
-              text: string;
-              status?: unknown;
-              completed?: unknown;
-            };
+            const p = pq as Record<string, unknown>;
             return {
-              id: p.id,
-              text: p.text,
+              id: p.id as string,
+              text: p.text as string,
               status: normalizeQuestStatus(p.status, p.completed),
             };
           });
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
-        const persistedLoreMap = new Map<string, any>();
+        const persistedLoreMap = new Map<string, Record<string, unknown>>();
         for (const pe of persistedLore) {
-          if (pe?.id) persistedLoreMap.set(pe.id, pe);
+          if (
+            pe !== null &&
+            typeof pe === 'object' &&
+            'id' in pe &&
+            typeof pe.id === 'string'
+          ) {
+            persistedLoreMap.set(pe.id, pe as unknown as Record<string, unknown>);
+          }
         }
 
         const mergedLoreEntries = currentState.loreEntries.map((e) => {
           const persistedEntry = persistedLoreMap.get(e.id);
           return persistedEntry
-            ? { ...e, discovered: persistedEntry.discovered }
+            ? { ...e, discovered: persistedEntry.discovered === true }
             : e;
         });
 
@@ -1122,14 +1131,22 @@ export const useStore = create<GameState>()(
           (item) => typeof item === 'string'
         );
 
-        const inventoryCounts: Record<string, number> = {};
+        const inventoryCounts: Record<string, number> = Object.create(null);
         for (const item of sanitizedInventory) {
           inventoryCounts[item] = (inventoryCounts[item] ?? 0) + 1;
         }
 
-        const mergedPickupCounts: Record<string, number> = {
-          ...persistedPickupCounts,
-        };
+        const mergedPickupCounts: Record<string, number> = Object.create(null);
+        for (const [item, value] of Object.entries(persistedPickupCounts)) {
+          if (
+            typeof item === 'string' &&
+            typeof value === 'number' &&
+            Number.isFinite(value) &&
+            value >= 0
+          ) {
+            mergedPickupCounts[item] = value;
+          }
+        }
         for (const [item, count] of Object.entries(inventoryCounts)) {
           mergedPickupCounts[item] = Math.max(
             mergedPickupCounts[item] ?? 0,
