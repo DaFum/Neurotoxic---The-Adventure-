@@ -97,14 +97,15 @@ export function UI() {
   const [compactHudTab, setCompactHudTab] = useState<'status' | 'inventory' | 'quests'>('status');
   const hasSyncedViewportRef = useRef(false);
 
-  const openQuestCount = useMemo(
-    () =>
-      quests.reduce(
-        (acc, quest) => acc + (quest.status === 'active' ? 1 : 0),
-        0
-      ),
-    [quests]
-  );
+  const openQuestCount = useMemo(() => {
+    let count = 0;
+    for (let i = 0; i < quests.length; i++) {
+      if (quests[i].status === 'active') {
+        count++;
+      }
+    }
+    return count;
+  }, [quests]);
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
 
@@ -125,6 +126,14 @@ export function UI() {
     }
     return result;
   }, [inventoryCounts]);
+
+  const inventoryTotalCount = useMemo(() => {
+    let sum = 0;
+    for (const item in inventoryCounts) {
+      sum += inventoryCounts[item];
+    }
+    return sum;
+  }, [inventoryCounts]);
   const selectedItemCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const item of selectedItems) {
@@ -141,10 +150,15 @@ export function UI() {
     return dict;
   }, [quests]);
 
-  const discoveredLoreCount = useMemo(
-    () => loreEntries.reduce((count, entry) => (entry.discovered ? count + 1 : count), 0),
-    [loreEntries]
-  );
+  const discoveredLoreCount = useMemo(() => {
+    let count = 0;
+    for (let i = 0; i < loreEntries.length; i++) {
+      if (loreEntries[i].discovered) {
+        count++;
+      }
+    }
+    return count;
+  }, [loreEntries]);
 
   useEffect(() => {
     setSelectedItems((prev) => {
@@ -308,9 +322,11 @@ export function UI() {
 
   const toggleItemSelection = (item: string, availableCount: number) => {
     setSelectedItems((prev) => {
-      // ⚡ Bolt Optimization: Use reduce instead of filter.length to avoid allocating an intermediate array
-      // This prevents unnecessary garbage collection overhead when selecting items
-      const selectedCount = prev.reduce((count, entry) => count + (entry === item ? 1 : 0), 0);
+      // ⚡ Bolt Optimization: Use a standard for loop instead of reduce to avoid intermediate allocations and function call overhead
+      let selectedCount = 0;
+      for (let i = 0; i < prev.length; i++) {
+        if (prev[i] === item) selectedCount++;
+      }
       const totalSelected = prev.length;
 
       if (selectedCount === 0) {
@@ -395,7 +411,7 @@ export function UI() {
             <span className="text-toxic font-bold">{sceneLabel}</span>
             <span className="text-zinc-400">Mood {bandMood}%</span>
             <span className="text-zinc-400">Open Quests {openQuestCount}</span>
-            <span className="text-zinc-400">Inventory {Object.values(inventoryCounts).reduce((sum, count) => sum + count, 0)}</span>
+            <span className="text-zinc-400">Inventory {inventoryTotalCount}</span>
           </div>
         </div>
       </div>
