@@ -113,13 +113,16 @@ export function MainMenu() {
             animate={{ opacity: 1, backdropFilter: 'blur(8px)' }}
             exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
             className="absolute inset-0 z-50 bg-black/80 flex items-center justify-center p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="save-detected-title"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               className="max-w-2xl w-full bg-zinc-950 p-8 brutal-border-toxic"
             >
-              <h3 className="text-3xl text-toxic font-black uppercase tracking-widest mb-5 border-b border-toxic/20 pb-4">
+              <h3 id="save-detected-title" className="text-3xl text-toxic font-black uppercase tracking-widest mb-5 border-b border-toxic/20 pb-4">
                 Save_Detected
               </h3>
               <p className="text-xs font-mono text-zinc-300 leading-relaxed uppercase tracking-wider mb-6">
@@ -179,13 +182,16 @@ export function MainMenu() {
             animate={{ opacity: 1, backdropFilter: 'blur(10px)' }}
             exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
             className="absolute inset-0 z-50 bg-black/80 flex items-center justify-center p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="select-trait-title"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               className="max-w-4xl w-full bg-zinc-950 p-10 brutal-border-toxic"
             >
-              <h3 className="text-4xl text-toxic font-black uppercase tracking-widest mb-8 border-b border-toxic/20 pb-4">
+              <h3 id="select-trait-title" className="text-4xl text-toxic font-black uppercase tracking-widest mb-8 border-b border-toxic/20 pb-4">
                 Select_Professional_Trait
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
