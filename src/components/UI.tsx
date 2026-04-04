@@ -743,14 +743,19 @@ export function UI() {
 
       {/* Pause Menu */}
       {isPaused && (
-        <div className="absolute inset-0 bg-obsidian/80 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50">
+        <div
+          className="absolute inset-0 bg-obsidian/80 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="system-paused-title"
+        >
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             className="bg-black p-10 brutal-border-toxic flex flex-col gap-6 w-80 relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-toxic animate-pulse" />
-            <h2 className="text-4xl font-display text-toxic tracking-tighter text-center mb-6">SYSTEM_PAUSED</h2>
+            <h2 id="system-paused-title" className="text-4xl font-display text-toxic tracking-tighter text-center mb-6">SYSTEM_PAUSED</h2>
             
             <button
               onClick={() => setPaused(false)}
@@ -849,7 +854,11 @@ export function UI() {
       {/* Dialogue Box */}
       <AnimatePresence>
         {dialogue && (
-          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto">
+          <div
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
+            role="dialog"
+            aria-labelledby="dialogue-title"
+          >
             <motion.div 
               initial={{ opacity: 0, y: 50, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -864,7 +873,7 @@ export function UI() {
 
                 <div className="flex flex-col gap-4">
                   <div className="flex justify-between items-center border-b border-toxic/20 pb-2">
-                    <span className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</span>
+                    <h2 id="dialogue-title" className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</h2>
                     <button
                       onClick={() => setDialogue(null)}
                       aria-label="Close transmission"
