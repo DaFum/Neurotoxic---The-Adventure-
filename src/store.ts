@@ -720,16 +720,16 @@ export const useStore = create<GameState>()(
           }
 
           didAdd = true;
+          const newInventoryCounts = Object.assign(Object.create(null), state.inventoryCounts);
+          newInventoryCounts[item] = (state.inventoryCounts[item] ?? 0) + 1;
+
+          const newItemPickupCounts = Object.assign(Object.create(null), state.itemPickupCounts);
+          newItemPickupCounts[item] = pickedCount + 1;
+
           return {
             inventory: [...state.inventory, item],
-            inventoryCounts: {
-              ...state.inventoryCounts,
-              [item]: (state.inventoryCounts[item] ?? 0) + 1,
-            },
-            itemPickupCounts: {
-              ...state.itemPickupCounts,
-              [item]: pickedCount + 1,
-            },
+            inventoryCounts: newInventoryCounts,
+            itemPickupCounts: newItemPickupCounts,
           };
         });
         if (didAdd) {
@@ -743,7 +743,7 @@ export const useStore = create<GameState>()(
           if (index !== -1) {
             const newInventory = [...state.inventory];
             newInventory.splice(index, 1);
-            const newCounts = { ...state.inventoryCounts };
+            const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
             if (newCounts[item] > 1) {
               newCounts[item]--;
             } else {
@@ -792,7 +792,7 @@ export const useStore = create<GameState>()(
           newInventory.splice(lower, 1);
           newInventory.push(recipe.result);
 
-          const newCounts = { ...state.inventoryCounts };
+          const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
           // Decrement item1
           if (newCounts[item1] > 1) {
             newCounts[item1]--;
@@ -1123,7 +1123,7 @@ export const useStore = create<GameState>()(
         const mergedLoreEntries = currentState.loreEntries.map((e) => {
           const persistedEntry = persistedLoreMap.get(e.id);
           return persistedEntry
-            ? { ...e, discovered: Boolean(persistedEntry.discovered) }
+            ? { ...e, discovered: persistedEntry.discovered === true }
             : e;
         });
 
@@ -1136,10 +1136,17 @@ export const useStore = create<GameState>()(
           inventoryCounts[item] = (inventoryCounts[item] ?? 0) + 1;
         }
 
-        const mergedPickupCounts: Record<string, number> = Object.assign(
-          Object.create(null),
-          persistedPickupCounts
-        );
+        const mergedPickupCounts: Record<string, number> = Object.create(null);
+        for (const [item, value] of Object.entries(persistedPickupCounts)) {
+          if (
+            typeof item === 'string' &&
+            typeof value === 'number' &&
+            Number.isFinite(value) &&
+            value >= 0
+          ) {
+            mergedPickupCounts[item] = value;
+          }
+        }
         for (const [item, count] of Object.entries(inventoryCounts)) {
           mergedPickupCounts[item] = Math.max(
             mergedPickupCounts[item] ?? 0,
