@@ -19,11 +19,13 @@
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { type QuestStatus, useStore } from '../store';
-import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
-import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff } from 'lucide-react';
+import { Backpack, CheckCircle2, Heart, Plus, Activity, Eye, EyeOff } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { audio } from '../audio';
+import { motion } from 'motion/react';
+import { GlitchOverlay } from './ui/GlitchOverlay';
+import { PauseMenu } from './ui/PauseMenu';
+import { LoreCodex } from './ui/LoreCodex';
+import { DialogueBox } from './ui/DialogueBox';
 
 const QUEST_STATUS_ORDER: Record<QuestStatus, number> = {
   active: 0,
@@ -83,11 +85,8 @@ export function UI() {
   const trait = useStore((state) => state.trait);
   const skills = useStore((state) => state.skills);
   const loreEntries = useStore((state) => state.loreEntries);
-  const [displayedText, setDisplayedText] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showLoreCodex, setShowLoreCodex] = useState(false);
-  const [isResolving, setIsResolving] = useState(false);
-  const isResolvingRef = useRef(false);
   const [showHudPanels, setShowHudPanels] = useState(() => (
     typeof window === 'undefined' ? true : window.innerWidth >= 1280
   ));
@@ -182,9 +181,6 @@ export function UI() {
       return changed ? newSelected : prev;
     });
   }, [inventoryCounts]);
-  const closeLoreBtnRef = useRef<HTMLButtonElement>(null);
-  const loreCodexContainerRef = useRef<HTMLDivElement>(null);
-  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
   const sceneLabel = scene === 'proberaum'
     ? 'PROBERAUM_01'
     : scene === 'tourbus'
@@ -241,83 +237,6 @@ export function UI() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [scene, isPaused, showLoreCodex]);
 
-  useEffect(() => {
-    if (showLoreCodex) {
-      previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
-      if (closeLoreBtnRef.current) {
-        closeLoreBtnRef.current.focus();
-      }
-    } else {
-      if (previouslyFocusedElementRef.current) {
-        previouslyFocusedElementRef.current.focus();
-        previouslyFocusedElementRef.current = null;
-      }
-    }
-  }, [showLoreCodex]);
-
-  const handleLoreCodexKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      e.nativeEvent.stopImmediatePropagation();
-      e.stopPropagation();
-      setShowLoreCodex(false);
-      return;
-    }
-
-    if (e.key === 'Tab') {
-      if (!loreCodexContainerRef.current) return;
-      const focusableElements = loreCodexContainerRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusableElements.length === 0) return;
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          lastElement.focus();
-          e.preventDefault();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          firstElement.focus();
-          e.preventDefault();
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    isResolvingRef.current = false;
-    setIsResolving(false);
-
-    if (!dialogue) {
-      setDisplayedText('');
-      return;
-    }
-    
-    let i = 0;
-    setDisplayedText('');
-    
-    // Determine speed: urgency 1 (high) = fast, urgency 3 (low) = slow
-    const baseDelay = dialogue.urgency === 1 ? 15 : dialogue.urgency === 3 ? 50 : 30;
-    
-      const interval = setInterval(() => {
-        const char = dialogue.text[i];
-        setDisplayedText((prev) => prev + char);
-        
-        // Play typing sound for non-space characters
-        if (char !== ' ') {
-          audio.playTypewriter();
-        }
-      
-      i++;
-      if (i >= dialogue.text.length) clearInterval(interval);
-    }, baseDelay);
-    
-    return () => clearInterval(interval);
-  }, [dialogue]);
-
   if (scene === 'menu') return null;
 
   const toggleItemSelection = (item: string, availableCount: number) => {
@@ -364,46 +283,7 @@ export function UI() {
 
   return (
     <div className={`absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 ${bandMood > 85 ? 'animate-pulse brightness-125' : ''} ${bandMood > 90 ? 'animate-glitch' : ''}`}>
-      {/* Dynamic Glitch Overlay */}
-      {glitchIntensity > 0 && (
-        <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden select-none">
-          <motion.div
-            animate={{
-              opacity: [0.05, 0.15, 0.05],
-              x: [-2, 2, -2],
-              y: [-1, 1, -1],
-            }}
-            transition={{
-              duration: 0.2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            className="absolute inset-0 bg-red-500/5 mix-blend-overlay"
-            style={{
-              filter: `contrast(${100 + glitchIntensity * 50}%) brightness(${100 + glitchIntensity * 20}%)`,
-            }}
-          />
-          {glitchIntensity > 0.4 && (
-            <motion.div
-              animate={{
-                clipPath: [
-                  'inset(10% 0 80% 0)',
-                  'inset(40% 0 40% 0)',
-                  'inset(70% 0 10% 0)',
-                  'inset(0% 0 0% 0)',
-                ],
-                x: [-10, 10, -5, 0],
-              }}
-              transition={{
-                duration: 0.1,
-                repeat: Infinity,
-                repeatDelay: Math.random() * 2
-              }}
-              className="absolute inset-0 bg-cyan-500/5 mix-blend-screen"
-            />
-          )}
-        </div>
-      )}
+      <GlitchOverlay glitchIntensity={glitchIntensity} />
 
       <div className={`absolute top-4 left-1/2 -translate-x-1/2 pointer-events-auto z-20 ${isCompactViewport ? 'w-[calc(100%-7rem)]' : 'w-[min(560px,calc(100%-9rem))]'}`}>
         <div className="bg-black/80 border border-toxic/30 px-3 py-2 backdrop-blur-sm">
@@ -758,241 +638,32 @@ export function UI() {
       </button>
 
       {/* Pause Menu */}
+      <PauseMenu
+        isPaused={isPaused}
+        setPaused={setPaused}
+        resetGame={resetGame}
+        setScene={setScene}
+        setShowLoreCodex={setShowLoreCodex}
+        discoveredLoreCount={discoveredLoreCount}
+        totalLoreCount={loreEntries.length}
+      />
       {isPaused && (
-        <div
-          className="absolute inset-0 bg-obsidian/80 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="system-paused-title"
-        >
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            className="bg-black p-10 brutal-border-toxic flex flex-col gap-6 w-80 relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-full h-1 bg-toxic animate-pulse" />
-            <h2 id="system-paused-title" className="text-4xl font-display text-toxic tracking-tighter text-center mb-6">SYSTEM_PAUSED</h2>
-            
-            <button
-              onClick={() => setPaused(false)}
-              className="group flex items-center justify-center gap-3 bg-toxic hover:bg-white text-black font-black py-4 text-sm uppercase tracking-[0.2em] transition-all brutal-border-toxic hover:translate-x-[-2px] hover:translate-y-[-2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              <Play size={18} fill="currentColor" />
-              RESUME_SESSION
-            </button>
-
-            <button
-              onClick={() => {
-                if (confirm('REBOOT_SYSTEM: Are you sure?')) {
-                  resetGame();
-                  setPaused(false);
-                }
-              }}
-              className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              <RotateCcw size={18} />
-              REBOOT_GAME
-            </button>
-
-            <button
-              onClick={() => setShowLoreCodex(true)}
-              className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              <BookOpen size={18} />
-              LORE_CODEX ({discoveredLoreCount}/{loreEntries.length})
-            </button>
-
-            <button
-              onClick={() => {
-                setScene('menu');
-                setPaused(false);
-              }}
-              className="flex items-center justify-center gap-3 bg-blood/20 hover:bg-blood text-blood hover:text-white font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-blood/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-blood focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              <LogOut size={18} />
-              TERMINATE_PROCESS
-            </button>
-          </motion.div>
-
-          {/* Lore Codex Overlay */}
-          <AnimatePresence>
-            {showLoreCodex && (
-              <motion.div
-                ref={loreCodexContainerRef}
-                onKeyDown={handleLoreCodexKeyDown}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 30 }}
-                className="absolute inset-0 bg-black/95 z-50 flex flex-col p-4 md:p-8 pointer-events-auto"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="lore-codex-title"
-              >
-                <div className="flex justify-between items-center mb-4 md:mb-8 border-b border-toxic/30 pb-4">
-                  <div>
-                    <h2 id="lore-codex-title" className="text-2xl md:text-3xl font-display text-toxic tracking-tighter">LORE_CODEX</h2>
-                    <p className="text-zinc-500 font-mono text-xs uppercase">Discovered Data: {discoveredLoreCount} / {loreEntries.length}</p>
-                  </div>
-                  <button
-                    ref={closeLoreBtnRef}
-                    onClick={() => setShowLoreCodex(false)}
-                    aria-label="Close lore codex"
-                    className="p-2 border border-toxic/30 text-toxic hover:bg-toxic hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-toxic"
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 overflow-y-auto pr-2 md:pr-4 custom-scrollbar" tabIndex={0}>
-                  {loreEntries.map((entry, i) => (
-                    <motion.div
-                      key={entry.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                      className={`p-4 border ${entry.discovered ? 'border-toxic/50 bg-toxic/5' : 'border-zinc-800 bg-zinc-900/30'}`}
-                    >
-                      <h3 className={`text-sm font-bold uppercase tracking-widest mb-2 ${entry.discovered ? 'text-toxic' : 'text-zinc-600'}`}>
-                        {entry.discovered ? entry.title : '??? [ ENCRYPTED ]'}
-                      </h3>
-                      <p className={`text-xs font-mono leading-relaxed ${entry.discovered ? 'text-zinc-300 italic' : 'text-zinc-700 blur-[2px] select-none'}`}>
-                        {entry.discovered ? entry.content : 'Datensatz beschädigt oder nicht gefunden. Synchronisation fehlgeschlagen.'}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="absolute inset-0 z-50 pointer-events-none">
+          <LoreCodex
+            showLoreCodex={showLoreCodex}
+            setShowLoreCodex={setShowLoreCodex}
+            loreEntries={loreEntries}
+            discoveredLoreCount={discoveredLoreCount}
+          />
         </div>
       )}
 
       {/* Dialogue Box */}
-      <AnimatePresence>
-        {dialogue && (
-          <div
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
-            role="dialog"
-            aria-labelledby="dialogue-title"
-          >
-            <motion.div 
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            >
-              <div className={`bg-black/95 brutal-border-toxic p-8 relative overflow-hidden ${dialogue.visualEffect === 'glitch' ? 'animate-glitch ring-2 ring-red-500 shadow-[0_0_20px_red]' : ''} ${dialogue.visualEffect === 'shake' ? 'animate-shake ring-2 ring-toxic shadow-[0_0_20px_#adff2f]' : ''}`}>
-                {/* Decorative corner accents */}
-                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-toxic" />
-                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-toxic" />
-                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-toxic" />
-                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-toxic" />
-
-                <div className="flex flex-col gap-4">
-                  <div className="flex justify-between items-center border-b border-toxic/20 pb-2">
-                    <h2 id="dialogue-title" className="text-[10px] font-black text-toxic uppercase tracking-[0.4em]">Incoming_Transmission</h2>
-                    <button
-                      onClick={() => setDialogue(null)}
-                      aria-label="Close transmission"
-                      className="text-toxic hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                  <p className="text-xl font-bold leading-tight text-zinc-100 italic">
-                    {displayedText}
-                    <span className="inline-block w-2 h-5 bg-toxic ml-1 animate-pulse" />
-                  </p>
-
-                  {/* Branching Options */}
-                  {displayedText.length >= (dialogue?.text.length || 0) && dialogue?.options && (
-                    <div className="flex flex-col gap-2 mt-4">
-                      {dialogue.options.map((option, idx) => {
-                        const skillReq = option.requiredSkill;
-                        const traitReq = option.requiredTrait;
-                        const questDeps = option.questDependencies;
-                        const requiredItems = option.requiredItems;
-                        const requiredFlags = option.requiredFlags;
-                        const forbiddenFlags = option.forbiddenFlags;
-                        const isLocked = !canSelectOption(option);
-
-                        return (
-                          <button
-                            key={option.id || idx}
-                            aria-disabled={isLocked || isResolving}
-                            onClick={() => {
-                              if (isLocked || isResolving || isResolvingRef.current) return;
-                              const currentDialogue = useStore.getState().dialogue;
-                              isResolvingRef.current = true;
-                              setIsResolving(true);
-                              executeDialogueOption(option);
-                              if (useStore.getState().dialogue === currentDialogue) {
-                                isResolvingRef.current = false;
-                                setIsResolving(false);
-                              }
-                            }}
-                            className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
-                              isLocked || isResolving
-                              ? 'bg-zinc-900/50 border-zinc-800 text-zinc-600 cursor-not-allowed grayscale'
-                              : 'bg-zinc-900 hover:bg-toxic text-zinc-400 hover:text-black border-zinc-800 hover:border-toxic'
-                            }`}
-                          >
-                            <div className="flex justify-between items-center w-full">
-                              <span>{`> ${option.text}`}</span>
-                              {isLocked && <X size={14} className="text-blood" />}
-                            </div>
-
-                            {(skillReq || traitReq || questDeps || requiredItems || requiredFlags || forbiddenFlags) && (
-                              <div className={`text-[8px] mt-1 font-mono ${isLocked ? 'text-blood' : 'text-toxic/60 group-hover:text-black/60'}`}>
-                                {skillReq && `[ REQ: ${skillReq.name.toUpperCase()} ${skillReq.level} ] `}
-                                {traitReq && `[ REQ: ${traitReq.toUpperCase()} ] `}
-                                {questDeps && questDeps.map((dep, depIdx) => {
-                                  if (typeof dep === 'string') {
-                                    const questTitle = questDictionary.get(dep) || dep;
-                                    return <span key={`dep-${depIdx}`}>[ REQ: QUEST COMPLETED: {questTitle} ] </span>
-                                  } else {
-                                    const questTitle = questDictionary.get(dep.id) || dep.id;
-                                    return <span key={`dep-${depIdx}`}>[ REQ: QUEST {dep.status.toUpperCase()}: {questTitle} ] </span>
-                                  }
-                                })}
-                                {requiredItems && requiredItems.map((item, itemIdx) => (
-                                  <span key={`req-item-${itemIdx}`}>[ REQ: ITEM: {item.toUpperCase()} ] </span>
-                                ))}
-                                {requiredFlags && requiredFlags.map((flag, flagIdx) => (
-                                  <span key={`req-flag-${flagIdx}`}>[ REQ: FLAG: {flag.toUpperCase()} ] </span>
-                                ))}
-                                {forbiddenFlags && forbiddenFlags.map((flag, flagIdx) => (
-                                  <span key={`forbid-flag-${flagIdx}`}>[ BLOCKED BY: FLAG: {flag.toUpperCase()} ] </span>
-                                ))}
-                              </div>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <div className="flex justify-end mt-4">
-                    {!dialogue?.options && (
-                      <button
-                        onClick={() => {
-                          if (displayedText.length < (dialogue?.text.length || 0)) {
-                            setDisplayedText(dialogue?.text || '');
-                          } else {
-                            setDialogue(null);
-                          }
-                        }}
-                        className="bg-toxic/10 hover:bg-toxic text-toxic hover:text-black px-6 py-2 font-black uppercase tracking-[0.2em] text-[10px] transition-all border border-toxic/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
-                      >
-                        {displayedText.length < (dialogue?.text.length || 0) ? 'SKIP_DATA' : 'ACKNOWLEDGE'}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      <DialogueBox
+        dialogue={dialogue}
+        setDialogue={setDialogue}
+        questDictionary={questDictionary}
+      />
     </div>
   );
 }
