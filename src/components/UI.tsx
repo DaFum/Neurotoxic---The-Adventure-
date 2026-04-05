@@ -19,11 +19,9 @@
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { type QuestStatus, useStore } from '../store';
-import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
-import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff } from 'lucide-react';
+import { Backpack, CheckCircle2, Heart, Plus, Activity, Eye, EyeOff } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { audio } from '../audio';
+import { motion } from 'motion/react';
 import { GlitchOverlay } from './ui/GlitchOverlay';
 import { PauseMenu } from './ui/PauseMenu';
 import { LoreCodex } from './ui/LoreCodex';

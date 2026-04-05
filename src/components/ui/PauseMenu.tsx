@@ -1,12 +1,12 @@
 import { motion } from 'motion/react';
 import { Play, RotateCcw, BookOpen, LogOut } from 'lucide-react';
-
+import type { GameState } from '../../store';
 
 interface PauseMenuProps {
   isPaused: boolean;
   setPaused: (paused: boolean) => void;
   resetGame: () => void;
-  setScene: (scene: any) => void;
+  setScene: GameState['setScene'];
   setShowLoreCodex: (show: boolean) => void;
   discoveredLoreCount: number;
   totalLoreCount: number;

@@ -19,10 +19,15 @@ export function DialogueBox({
   const [displayedText, setDisplayedText] = useState('');
   const [isResolving, setIsResolving] = useState(false);
   const isResolvingRef = useRef(false);
+  const typewriterIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     isResolvingRef.current = false;
     setIsResolving(false);
+
+    if (typewriterIntervalRef.current) {
+      clearInterval(typewriterIntervalRef.current);
+    }
 
     if (!dialogue) {
       setDisplayedText('');
@@ -36,7 +41,7 @@ export function DialogueBox({
     const baseDelay =
       dialogue.urgency === 1 ? 15 : dialogue.urgency === 3 ? 50 : 30;
 
-    const interval = setInterval(() => {
+    typewriterIntervalRef.current = setInterval(() => {
       const char = dialogue.text[i];
       setDisplayedText((prev) => prev + char);
 
@@ -46,10 +51,18 @@ export function DialogueBox({
       }
 
       i++;
-      if (i >= dialogue.text.length) clearInterval(interval);
+      if (i >= dialogue.text.length) {
+        if (typewriterIntervalRef.current) {
+          clearInterval(typewriterIntervalRef.current);
+        }
+      }
     }, baseDelay);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (typewriterIntervalRef.current) {
+        clearInterval(typewriterIntervalRef.current);
+      }
+    };
   }, [dialogue]);
 
   return (
@@ -127,7 +140,7 @@ export function DialogueBox({
                                 isResolvingRef.current
                               )
                                 return;
-                              const currentDialogue = useStore.getState().dialogue;
+                              const currentDialogue = dialogue;
                               isResolvingRef.current = true;
                               setIsResolving(true);
                               executeDialogueOption(option);
@@ -228,6 +241,9 @@ export function DialogueBox({
                           displayedText.length < (dialogue?.text.length || 0)
                         ) {
                           setDisplayedText(dialogue?.text || '');
+                          if (typewriterIntervalRef.current) {
+                            clearInterval(typewriterIntervalRef.current);
+                          }
                         } else {
                           setDialogue(null);
                         }
