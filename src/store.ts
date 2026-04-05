@@ -1087,24 +1087,25 @@ export const useStore = create<GameState>()(
 
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
-        const dynamicQuests = persistedQuests
-          .filter((pq: unknown) => {
-            if (pq === null || typeof pq !== 'object') return false;
+        // ⚡ Bolt Optimization: Replace chained filter().map() with a single for loop to avoid intermediate array allocations
+        const dynamicQuests: Quest[] = [];
+        for (let i = 0; i < persistedQuests.length; i++) {
+          const pq = persistedQuests[i];
+          if (pq !== null && typeof pq === 'object') {
             const p = pq as Record<string, unknown>;
-            return (
+            if (
               typeof p.id === 'string' &&
               typeof p.text === 'string' &&
               !currentQuestIds.has(p.id)
-            );
-          })
-          .map((pq) => {
-            const p = pq as Record<string, unknown>;
-            return {
-              id: p.id as string,
-              text: p.text as string,
-              status: normalizeQuestStatus(p.status, p.completed),
-            };
-          });
+            ) {
+              dynamicQuests.push({
+                id: p.id as string,
+                text: p.text as string,
+                status: normalizeQuestStatus(p.status, p.completed),
+              });
+            }
+          }
+        }
 
         const allQuests = [...mergedQuests, ...dynamicQuests];
 
@@ -1127,13 +1128,15 @@ export const useStore = create<GameState>()(
             : e;
         });
 
-        const sanitizedInventory = persistedInventory.filter(
-          (item) => typeof item === 'string'
-        );
-
+        // ⚡ Bolt Optimization: Combine filter and counting loops to avoid intermediate array allocations
+        const sanitizedInventory: string[] = [];
         const inventoryCounts: Record<string, number> = Object.create(null);
-        for (const item of sanitizedInventory) {
-          inventoryCounts[item] = (inventoryCounts[item] ?? 0) + 1;
+        for (let i = 0; i < persistedInventory.length; i++) {
+          const item = persistedInventory[i];
+          if (typeof item === 'string') {
+            sanitizedInventory.push(item);
+            inventoryCounts[item] = (inventoryCounts[item] ?? 0) + 1;
+          }
         }
 
         const mergedPickupCounts: Record<string, number> = Object.create(null);

@@ -18,8 +18,9 @@
  * #3: ERRORS & SOLUTIONS
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
-import { type QuestStatus, useStore } from '../store';
-import { Backpack, CheckCircle2, Heart, Plus, Activity, Eye, EyeOff } from 'lucide-react';
+import { type QuestStatus, type Quest, useStore } from '../store';
+import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
+import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'motion/react';
 import { GlitchOverlay } from './ui/GlitchOverlay';
@@ -108,9 +109,17 @@ export function UI() {
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
 
-    return quests
-      .filter((quest) => shouldShowCompletedQuests || quest.status !== 'completed')
-      .map((quest, index) => ({ quest, index }))
+    // ⚡ Bolt Optimization: Use a single for loop to filter and retain original index,
+    // avoiding chained array methods that allocate multiple intermediate arrays
+    const filtered: { quest: Quest; index: number }[] = [];
+    for (let i = 0; i < quests.length; i++) {
+      const quest = quests[i];
+      if (shouldShowCompletedQuests || quest.status !== 'completed') {
+        filtered.push({ quest, index: i });
+      }
+    }
+
+    return filtered
       .sort((a, b) => {
         const statusDiff = QUEST_STATUS_ORDER[a.quest.status] - QUEST_STATUS_ORDER[b.quest.status];
         if (statusDiff !== 0) return statusDiff;
