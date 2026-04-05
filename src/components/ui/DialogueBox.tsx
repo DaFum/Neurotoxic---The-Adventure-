@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useLayoutEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { useStore, Dialogue } from '../../store';
@@ -30,9 +30,9 @@ export function DialogueBox({
   const [displayedText, setDisplayedText] = useState('');
   const [isResolving, setIsResolving] = useState(false);
   const isResolvingRef = useRef(false);
-  const typewriterIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const typewriterIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     isResolvingRef.current = false;
     setIsResolving(false);
 
@@ -157,12 +157,15 @@ export function DialogueBox({
                               const currentDialogue = dialogue;
                               isResolvingRef.current = true;
                               setIsResolving(true);
-                              executeDialogueOption(option);
-                              if (
-                                useStore.getState().dialogue === currentDialogue
-                              ) {
-                                isResolvingRef.current = false;
-                                setIsResolving(false);
+                              try {
+                                executeDialogueOption(option);
+                              } finally {
+                                if (
+                                  useStore.getState().dialogue === currentDialogue
+                                ) {
+                                  isResolvingRef.current = false;
+                                  setIsResolving(false);
+                                }
                               }
                             }}
                             className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${

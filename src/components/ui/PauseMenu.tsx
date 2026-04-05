@@ -111,7 +111,6 @@ export function PauseMenu({
             if (confirm('REBOOT_SYSTEM: Are you sure?')) {
               audio.stopAmbient();
               resetGame();
-              setPaused(false);
             }
           }}
           className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
