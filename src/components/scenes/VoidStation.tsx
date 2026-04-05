@@ -39,6 +39,48 @@ import {
   buildVoidTerminalDialogue,
 } from '../../dialogues/voidstation';
 
+const OBELISK_RING_Y_OFFSETS = [-3.2, -1.6, 0, 1.6, 3.2] as const;
+const CRYSTAL_POSITIONS = [
+  [-16, 1.6, -8],
+  [-12, 2.1, 10],
+  [12, 2.3, 10],
+  [16, 1.8, -8],
+  [0, 2.5, -16],
+] as const;
+const ANOMALY_RING_RADII = [8, 14, 20] as const;
+const CONSOLE_POSITIONS = [
+  [-14, 0.8, -2],
+  [-10, 0.8, 3],
+  [10, 0.8, 3],
+  [14, 0.8, -2],
+] as const;
+const CONSOLE_SCREEN_POSITIONS = [
+  [-14, 1.45, -1.2],
+  [-10, 1.45, 3.8],
+  [10, 1.45, 3.8],
+  [14, 1.45, -1.2],
+] as const;
+const CONSOLE_ORB_POSITIONS = [
+  [-13.1, 0.5, -1.2],
+  [-10.9, 0.5, 3.8],
+  [9.1, 0.5, 3.8],
+  [13.1, 0.5, -1.2],
+] as const;
+const VOID_PANEL_X_POSITIONS = [-12, -6, 0, 6, 12] as const;
+const VOID_ARCH_POSITIONS = [
+  [-15, 3.2, -3],
+  [15, 3.2, -3],
+  [-15, 3.2, 4],
+  [15, 3.2, 4],
+] as const;
+const CONDUIT_X_POSITIONS = [-14, -7, 0, 7, 14] as const;
+const SHARD_POSITIONS = [
+  [-6, 2.8, -11],
+  [-2, 3.4, -13],
+  [2, 3.1, -13],
+  [6, 2.7, -11],
+] as const;
+
 /**
  * Renders the 3D scene environment and logic for VoidStation.
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
@@ -135,7 +177,7 @@ export function VoidStation() {
             emissiveIntensity={2}
           />
         </mesh>
-        {[-3.2, -1.6, 0, 1.6, 3.2].map((y, idx) => (
+        {OBELISK_RING_Y_OFFSETS.map((y, idx) => (
           <mesh
             key={`obelisk-ring-${idx}`}
             position={[-10, 5 + y, -10]}
@@ -160,20 +202,14 @@ export function VoidStation() {
       </Float>
 
       {/* Orbiting crystals */}
-      {[
-        [-16, 1.6, -8],
-        [-12, 2.1, 10],
-        [12, 2.3, 10],
-        [16, 1.8, -8],
-        [0, 2.5, -16],
-      ].map((pos, idx) => (
+      {CRYSTAL_POSITIONS.map((pos, idx) => (
         <Float
           key={`crystal-${idx}`}
           speed={2 + idx * 0.2}
           rotationIntensity={1.6}
           floatIntensity={0.8}
         >
-          <mesh position={pos as [number, number, number]}>
+          <mesh position={pos as unknown as [number, number, number]}>
             <dodecahedronGeometry args={[1.2, 0]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#7a4dff' : '#36d7ff'}
@@ -187,7 +223,7 @@ export function VoidStation() {
       ))}
 
       {/* Distant anomaly rings */}
-      {[8, 14, 20].map((r, idx) => (
+      {ANOMALY_RING_RADII.map((r, idx) => (
         <mesh
           key={`anomaly-ring-${r}`}
           position={[0, 6 + idx * 0.8, -12 - idx * 4]}
@@ -203,15 +239,10 @@ export function VoidStation() {
       ))}
 
       {/* Station interior modules */}
-      {[
-        [-14, 0.8, -2],
-        [-10, 0.8, 3],
-        [10, 0.8, 3],
-        [14, 0.8, -2],
-      ].map((pos, idx) => (
+      {CONSOLE_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-console-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos as unknown as [number, number, number]}
           castShadow
           receiveShadow
         >
@@ -225,15 +256,10 @@ export function VoidStation() {
           />
         </mesh>
       ))}
-      {[
-        [-14, 1.45, -1.2],
-        [-10, 1.45, 3.8],
-        [10, 1.45, 3.8],
-        [14, 1.45, -1.2],
-      ].map((pos, idx) => (
+      {CONSOLE_SCREEN_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-console-screen-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos as unknown as [number, number, number]}
         >
           <planeGeometry args={[1.8, 0.52]} />
           <meshStandardMaterial
@@ -245,15 +271,10 @@ export function VoidStation() {
           />
         </mesh>
       ))}
-      {[
-        [-13.1, 0.5, -1.2],
-        [-10.9, 0.5, 3.8],
-        [9.1, 0.5, 3.8],
-        [13.1, 0.5, -1.2],
-      ].map((pos, idx) => (
+      {CONSOLE_ORB_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-console-orb-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos as unknown as [number, number, number]}
         >
           <sphereGeometry args={[0.14, 12, 12]} />
           <meshStandardMaterial
@@ -265,7 +286,7 @@ export function VoidStation() {
           />
         </mesh>
       ))}
-      {[-12, -6, 0, 6, 12].map((x) => (
+      {VOID_PANEL_X_POSITIONS.map((x) => (
         <mesh key={`void-panel-${x}`} position={[x, 1.9, -1.3]}>
           <planeGeometry args={[1.2, 0.26]} />
           <meshBasicMaterial color="#57f5ff" transparent opacity={0.7} />
@@ -275,15 +296,10 @@ export function VoidStation() {
         <ringGeometry args={[5.5, 7.2, 48]} />
         <meshBasicMaterial color="#9f64ff" transparent opacity={0.2} />
       </mesh>
-      {[
-        [-15, 3.2, -3],
-        [15, 3.2, -3],
-        [-15, 3.2, 4],
-        [15, 3.2, 4],
-      ].map((pos, idx) => (
+      {VOID_ARCH_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-arch-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos as unknown as [number, number, number]}
           rotation={[0, idx < 2 ? Math.PI / 2 : -Math.PI / 2, 0]}
         >
           <torusGeometry args={[1.6, 0.18, 14, 36]} />
@@ -298,7 +314,7 @@ export function VoidStation() {
       ))}
 
       {/* Conduit lines and floating shards */}
-      {[-14, -7, 0, 7, 14].map((x, idx) => (
+      {CONDUIT_X_POSITIONS.map((x, idx) => (
         <mesh
           key={`conduit-${x}`}
           position={[x, 0.06, -6.5]}
@@ -314,19 +330,14 @@ export function VoidStation() {
           />
         </mesh>
       ))}
-      {[
-        [-6, 2.8, -11],
-        [-2, 3.4, -13],
-        [2, 3.1, -13],
-        [6, 2.7, -11],
-      ].map((pos, idx) => (
+      {SHARD_POSITIONS.map((pos, idx) => (
         <Float
           key={`shard-${idx}`}
           speed={2.2 + idx * 0.2}
           rotationIntensity={2.4}
           floatIntensity={0.7}
         >
-          <mesh position={pos as [number, number, number]}>
+          <mesh position={pos as unknown as [number, number, number]}>
             <tetrahedronGeometry args={[0.42, 0]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#ff7ce2' : '#7efbff'}
