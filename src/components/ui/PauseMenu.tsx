@@ -109,6 +109,7 @@ export function PauseMenu({
         <button
           onClick={() => {
             if (confirm('REBOOT_SYSTEM: Are you sure?')) {
+              audio.stopAmbient();
               resetGame();
               setPaused(false);
             }

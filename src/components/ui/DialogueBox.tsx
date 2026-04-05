@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { useStore, Dialogue } from '../../store';
+import { useShallow } from 'zustand/react/shallow';
 import { canSelectOption, executeDialogueOption } from '../../dialogueEngine';
 import { audio } from '../../audio';
 
@@ -16,7 +17,15 @@ export function DialogueBox({
   setDialogue,
   questDictionary,
 }: DialogueBoxProps) {
-  useStore((state) => state.flags); // Subscribe to flags so canSelectOption updates re-render options
+  useStore(
+    useShallow((state) => ({
+      flags: state.flags,
+      trait: state.trait,
+      skills: state.skills,
+      quests: state.quests,
+      inventoryCounts: state.inventoryCounts,
+    }))
+  ); // Subscribe to all dependencies for canSelectOption so locked/unlocked UI syncs perfectly
 
   const [displayedText, setDisplayedText] = useState('');
   const [isResolving, setIsResolving] = useState(false);
@@ -44,20 +53,22 @@ export function DialogueBox({
       dialogue.urgency === 1 ? 15 : dialogue.urgency === 3 ? 50 : 30;
 
     typewriterIntervalRef.current = setInterval(() => {
-      const char = dialogue.text[i];
-      setDisplayedText((prev) => prev + char);
-
-      // Play typing sound for non-space characters
-      if (char !== ' ') {
-        audio.playTypewriter();
-      }
-
-      i++;
       if (i >= dialogue.text.length) {
         if (typewriterIntervalRef.current) {
           clearInterval(typewriterIntervalRef.current);
         }
+        return;
       }
+
+      const char = dialogue.text[i];
+      if (char !== undefined) {
+        setDisplayedText((prev) => prev + char);
+        // Play typing sound for non-space characters
+        if (char !== ' ') {
+          audio.playTypewriter();
+        }
+      }
+      i++;
     }, baseDelay);
 
     return () => {
