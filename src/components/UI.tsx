@@ -582,7 +582,14 @@ export function UI() {
             </div>
 
             {/* Band Mood Meter */}
-            <div className="bg-black/90 p-4 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:100ms]">
+            <div
+              className="bg-black/90 p-4 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:100ms]"
+              role="progressbar"
+              aria-valuenow={bandMood}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Band Mood"
+            >
               <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
                   <Heart size={12} className={bandMood > 50 ? "text-toxic" : "text-blood"} fill={bandMood > 50 ? "currentColor" : "none"} />
@@ -741,9 +748,10 @@ export function UI() {
 
       {/* Controls Hint */}
       <div className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none">
-        Joystick / WASD = Bewegen<br/>
-        Tippen / Klick / E = Interagieren<br/>
-        H = HUD ein/aus
+        <span className="text-toxic font-bold">Joystick / WASD</span> = Bewegen<br/>
+        <span className="text-toxic font-bold">Tippen / Klick / E</span> = Interagieren<br/>
+        <span className="text-toxic font-bold">H</span> = HUD ein/aus<br/>
+        <span className="text-toxic font-bold">ESC</span> = Pause
       </div>
 
       {/* Touch-accessible Pause Button */}
