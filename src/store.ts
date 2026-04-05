@@ -1088,7 +1088,7 @@ export const useStore = create<GameState>()(
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
         // ⚡ Bolt Optimization: Replace chained filter().map() with a single for loop to avoid intermediate array allocations
-        const dynamicQuests = [];
+        const dynamicQuests: Quest[] = [];
         for (let i = 0; i < persistedQuests.length; i++) {
           const pq = persistedQuests[i];
           if (pq !== null && typeof pq === 'object') {
