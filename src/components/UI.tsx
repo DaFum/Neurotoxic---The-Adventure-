@@ -588,7 +588,7 @@ export function UI() {
               aria-valuenow={bandMood}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-label="Band Mood"
+              aria-label="Band Vibe"
             >
               <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
