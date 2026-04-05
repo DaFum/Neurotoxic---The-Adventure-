@@ -16,6 +16,8 @@ export function DialogueBox({
   setDialogue,
   questDictionary,
 }: DialogueBoxProps) {
+  useStore((state) => state.flags); // Subscribe to flags so canSelectOption updates re-render options
+
   const [displayedText, setDisplayedText] = useState('');
   const [isResolving, setIsResolving] = useState(false);
   const isResolvingRef = useRef(false);
@@ -118,7 +120,8 @@ export function DialogueBox({
 
                 {/* Branching Options */}
                 {displayedText.length >= (dialogue?.text.length || 0) &&
-                  dialogue?.options && (
+                  dialogue?.options &&
+                  dialogue.options.length > 0 && (
                     <div className="flex flex-col gap-2 mt-4">
                       {dialogue.options.map((option, idx) => {
                         const skillReq = option.requiredSkill;
@@ -234,7 +237,7 @@ export function DialogueBox({
                   )}
 
                 <div className="flex justify-end mt-4">
-                  {!dialogue?.options && (
+                  {(!dialogue?.options || dialogue.options.length === 0) && (
                     <button
                       onClick={() => {
                         if (

@@ -1,6 +1,8 @@
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Play, RotateCcw, BookOpen, LogOut } from 'lucide-react';
 import type { GameState } from '../../store';
+import { audio } from '../../audio';
 
 interface PauseMenuProps {
   isPaused: boolean;
@@ -21,10 +23,62 @@ export function PauseMenu({
   discoveredLoreCount,
   totalLoreCount,
 }: PauseMenuProps) {
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
+  const pauseMenuContainerRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (isPaused) {
+      previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
+      if (initialFocusRef.current) {
+        initialFocusRef.current.focus();
+      }
+    } else {
+      if (previouslyFocusedElementRef.current) {
+        previouslyFocusedElementRef.current.focus();
+        previouslyFocusedElementRef.current = null;
+      }
+    }
+  }, [isPaused]);
+
+  const handlePauseMenuKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.nativeEvent.stopImmediatePropagation();
+      e.stopPropagation();
+      setPaused(false);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      if (!pauseMenuContainerRef.current) return;
+      const focusableElements = pauseMenuContainerRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    }
+  };
+
   if (!isPaused) return null;
 
   return (
     <div
+      ref={pauseMenuContainerRef}
+      onKeyDown={handlePauseMenuKeyDown}
       className="absolute inset-0 bg-obsidian/80 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50"
       role="dialog"
       aria-modal="true"
@@ -44,6 +98,7 @@ export function PauseMenu({
         </h2>
 
         <button
+          ref={initialFocusRef}
           onClick={() => setPaused(false)}
           className="group flex items-center justify-center gap-3 bg-toxic hover:bg-white text-black font-black py-4 text-sm uppercase tracking-[0.2em] transition-all brutal-border-toxic hover:translate-x-[-2px] hover:translate-y-[-2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
@@ -74,6 +129,7 @@ export function PauseMenu({
 
         <button
           onClick={() => {
+            audio.stopAmbient();
             setScene('menu');
             setPaused(false);
           }}
