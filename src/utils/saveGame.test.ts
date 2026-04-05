@@ -58,7 +58,7 @@ describe('checkHasSavedGame', () => {
 
   describe('progress detection (returns true)', () => {
     it('returns true when trait is present', () => {
-      expect(checkHasSavedGame(JSON.stringify({ state: { trait: 'musician' } }))).toBe(true);
+      expect(checkHasSavedGame(JSON.stringify({ state: { trait: 'Performer' } }))).toBe(true);
     });
 
     it('returns true when inventory is not empty', () => {
@@ -83,6 +83,10 @@ describe('checkHasSavedGame', () => {
     it('returns true when bandMood is not 20', () => {
       expect(checkHasSavedGame(JSON.stringify({ state: { bandMood: 15 } }))).toBe(true);
       expect(checkHasSavedGame(JSON.stringify({ state: { bandMood: 25 } }))).toBe(true);
+    });
+
+    it('returns true when a skill is increased even if bandMood is missing', () => {
+      expect(checkHasSavedGame(JSON.stringify({ state: { skills: { technical: 1 } } }))).toBe(true);
     });
 
     it('returns true when a skill is increased even if bandMood is 20', () => {

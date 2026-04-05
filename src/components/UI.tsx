@@ -235,6 +235,10 @@ export function UI() {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) return;
+      if (event.key === 'Escape' && scene !== 'menu') {
+        setPaused(!isPaused);
+        return;
+      }
       if (isPaused || showLoreCodex) return;
       if ((event.key === 'h' || event.key === 'H') && scene !== 'menu') {
         event.preventDefault();
@@ -244,7 +248,7 @@ export function UI() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [scene, isPaused, showLoreCodex]);
+  }, [scene, isPaused, showLoreCodex, setPaused]);
 
   if (scene === 'menu') return null;
 
