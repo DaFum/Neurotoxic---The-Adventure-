@@ -38,16 +38,6 @@ export function Game() {
     return () => audio.stopAmbient();
   }, [scene]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && scene !== 'menu') {
-        setPaused(!isPaused);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPaused, scene]);
-
   return (
     <KeyboardInteractionProvider>
     <div className="w-full h-screen bg-black relative overflow-hidden font-sans">

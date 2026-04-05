@@ -236,7 +236,12 @@ export function UI() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) return;
       if (event.key === 'Escape' && scene !== 'menu') {
-        setPaused(!isPaused);
+        event.preventDefault();
+        if (showLoreCodex) {
+          setShowLoreCodex(false);
+        } else {
+          setPaused(!isPaused);
+        }
         return;
       }
       if (isPaused || showLoreCodex) return;
@@ -248,7 +253,7 @@ export function UI() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [scene, isPaused, showLoreCodex, setPaused]);
+  }, [scene, isPaused, showLoreCodex, setPaused, setShowLoreCodex]);
 
   if (scene === 'menu') return null;
 
