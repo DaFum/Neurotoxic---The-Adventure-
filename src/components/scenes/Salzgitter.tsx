@@ -30,6 +30,37 @@ import {
   buildSalzgitterMatzeDialogue,
 } from '../../dialogues/salzgitter';
 
+const TRUSS_X_POSITIONS: ReadonlyArray<number> = [-9.5, 9.5];
+const SPEAKER_EDGE_X_OFFSETS: ReadonlyArray<number> = [-0.72, 0.72];
+const TRUSS_NODE_Y_POSITIONS: ReadonlyArray<number> = [-1.8, -0.6, 0.6, 1.8];
+const LED_PANEL_X_POSITIONS: ReadonlyArray<number> = [-12, -4, 4, 12];
+const LED_STRIP_Y_POSITIONS: ReadonlyArray<number> = [-1.4, -0.4, 0.6, 1.6];
+const BARRIER_X_POSITIONS: ReadonlyArray<number> = [-12, -8, -4, 0, 4, 8, 12];
+const RUNWAY_RAIL_X_POSITIONS: ReadonlyArray<number> = [-13.5, 13.5];
+const SKYLINE_DATA: ReadonlyArray<{ pos: [number, number, number], height: number }> = [
+  { pos: [-18, 2.5, -10.4], height: 2.4 },
+  { pos: [-14, 3.2, -10.3], height: 3.6 },
+  { pos: [-10, 2.2, -10.35], height: 2.1 },
+  { pos: [10, 2.7, -10.35], height: 2.8 },
+  { pos: [14, 3.6, -10.25], height: 4.2 },
+  { pos: [18, 2.4, -10.4], height: 2.3 },
+];
+const SPEAKER_STACK_X_POSITIONS: ReadonlyArray<number> = [-7.5, -2.5, 2.5, 7.5];
+const ROAD_CASE_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-11, 0.65, -8.8],
+  [11, 0.65, -8.8],
+  [-11, 0.65, -6.2],
+  [11, 0.65, -6.2],
+];
+const ROAD_CASE_LID_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-11, 1.28, -8.8],
+  [11, 1.28, -8.8],
+  [-11, 1.28, -6.2],
+  [11, 1.28, -6.2],
+];
+const STAGE_STAIR_DATA: ReadonlyArray<number> = [-0.45, 0, 0.45];
+const MIC_X_POSITIONS: ReadonlyArray<number> = [-2.6, 0, 2.6];
+
 /**
  * Renders the 3D scene environment and logic for Salzgitter.
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
@@ -151,7 +182,7 @@ export function Salzgitter() {
       </RigidBody>
 
       {/* Stage trusses */}
-      {[-9.5, 9.5].map((x) => (
+      {TRUSS_X_POSITIONS.map((x) => (
         <group key={`truss-${x}`} position={[x, 3, -8.8]}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[0.45, 6, 0.45]} />
@@ -169,7 +200,7 @@ export function Salzgitter() {
               roughness={0.3}
             />
           </mesh>
-          {[-1.8, -0.6, 0.6, 1.8].map((y, idx) => (
+          {TRUSS_NODE_Y_POSITIONS.map((y, idx) => (
             <mesh
               key={`truss-node-${x}-${idx}`}
               position={[0, y, 0.26]}
@@ -189,7 +220,7 @@ export function Salzgitter() {
       ))}
 
       {/* LED wall panels */}
-      {[-12, -4, 4, 12].map((x, idx) => (
+      {LED_PANEL_X_POSITIONS.map((x, idx) => (
         <group key={`led-panel-${x}`} position={[x, 5.8, -10.75]}>
           <mesh>
             <planeGeometry args={[6.6, 4.3]} />
@@ -201,7 +232,7 @@ export function Salzgitter() {
               roughness={0.55}
             />
           </mesh>
-          {[-1.4, -0.4, 0.6, 1.6].map((y, stripe) => (
+          {LED_STRIP_Y_POSITIONS.map((y, stripe) => (
             <mesh key={`led-strip-${idx}-${stripe}`} position={[0, y, 0.01]}>
               <planeGeometry args={[5.8, 0.22]} />
               <meshBasicMaterial
@@ -215,7 +246,7 @@ export function Salzgitter() {
       ))}
 
       {/* Crowd barricades */}
-      {[-12, -8, -4, 0, 4, 8, 12].map((x) => (
+      {BARRIER_X_POSITIONS.map((x) => (
         <group key={`barrier-${x}`} position={[x, 0.6, 1.8]}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.8, 1.2, 0.18]} />
@@ -249,7 +280,7 @@ export function Salzgitter() {
       ))}
 
       {/* Front runway rails */}
-      {[-13.5, 13.5].map((x, idx) => (
+      {RUNWAY_RAIL_X_POSITIONS.map((x, idx) => (
         <group key={`rail-${x}`} position={[x, 0.9, 0.3]}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[0.4, 1.8, 6.4]} />
@@ -273,25 +304,18 @@ export function Salzgitter() {
       ))}
 
       {/* Distant skyline silhouettes */}
-      {[
-        [-18, 2.5, -10.4, 2.4],
-        [-14, 3.2, -10.3, 3.6],
-        [-10, 2.2, -10.35, 2.1],
-        [10, 2.7, -10.35, 2.8],
-        [14, 3.6, -10.25, 4.2],
-        [18, 2.4, -10.4, 2.3],
-      ].map((entry, idx) => (
+      {SKYLINE_DATA.map((entry, idx) => (
         <mesh
           key={`skyline-${idx}`}
-          position={[entry[0], entry[1], entry[2]] as [number, number, number]}
+          position={entry.pos}
         >
-          <boxGeometry args={[1.8, entry[3], 0.3]} />
+          <boxGeometry args={[1.8, entry.height, 0.3]} />
           <meshStandardMaterial color="#0a0d12" />
         </mesh>
       ))}
 
       {/* Stage interior details */}
-      {[-7.5, -2.5, 2.5, 7.5].map((x) => (
+      {SPEAKER_STACK_X_POSITIONS.map((x) => (
         <group key={`speaker-stack-${x}`} position={[x, 1.5, -6.9]}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[2, 3, 1.2]} />
@@ -321,7 +345,7 @@ export function Salzgitter() {
               opacity={0.42}
             />
           </mesh>
-          {[-0.72, 0.72].map((px) => (
+          {SPEAKER_EDGE_X_OFFSETS.map((px) => (
             <mesh key={`speaker-edge-${x}-${px}`} position={[px, 0, 0.58]}>
               <boxGeometry args={[0.06, 2.9, 0.08]} />
               <meshStandardMaterial
@@ -333,15 +357,10 @@ export function Salzgitter() {
           ))}
         </group>
       ))}
-      {[
-        [-11, 0.65, -8.8],
-        [11, 0.65, -8.8],
-        [-11, 0.65, -6.2],
-        [11, 0.65, -6.2],
-      ].map((pos, idx) => (
+      {ROAD_CASE_POSITIONS.map((pos, idx) => (
         <mesh
           key={`road-case-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos}
           castShadow
           receiveShadow
         >
@@ -355,15 +374,10 @@ export function Salzgitter() {
           />
         </mesh>
       ))}
-      {[
-        [-11, 1.28, -8.8],
-        [11, 1.28, -8.8],
-        [-11, 1.28, -6.2],
-        [11, 1.28, -6.2],
-      ].map((pos, idx) => (
+      {ROAD_CASE_LID_POSITIONS.map((pos, idx) => (
         <mesh
           key={`road-case-lid-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos}
         >
           <boxGeometry args={[2.08, 0.08, 0.98]} />
           <meshStandardMaterial
@@ -387,7 +401,7 @@ export function Salzgitter() {
           roughness={0.42}
         />
       </mesh>
-      {[-0.45, 0, 0.45].map((x, idx) => (
+      {STAGE_STAIR_DATA.map((x, idx) => (
         <mesh
           key={`stage-stair-${idx}`}
           position={[x, 0.32 + idx * 0.18, -5.95]}
@@ -404,7 +418,7 @@ export function Salzgitter() {
           />
         </mesh>
       ))}
-      {[-2.6, 0, 2.6].map((x) => (
+      {MIC_X_POSITIONS.map((x) => (
         <group key={`mic-${x}`} position={[x, 1.05, -5.6]}>
           <mesh castShadow receiveShadow>
             <cylinderGeometry args={[0.04, 0.05, 1.7, 10]} />

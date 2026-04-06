@@ -34,7 +34,9 @@ const QUEST_STATUS_ORDER: Record<QuestStatus, number> = {
   completed: 2,
 };
 
-const METER_SEGMENTS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] as const;
+const METER_SEGMENTS: ReadonlyArray<number> = [
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+];
 
 const getQuestStatusMeta = (status: QuestStatus) => {
   if (status === 'active') {

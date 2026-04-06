@@ -65,7 +65,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
     const baseOptions: DialogueOption[] = [
       {
         text: 'Lass mich deine Becken nachziehen. [Technician]',
-        requiredTrait: 'Technician' as const,
+        requiredTrait: 'Technician',
         action: () => {
           const currentStore = game();
           if (!currentStore.flags.backstage_lars_technician_claimed) {

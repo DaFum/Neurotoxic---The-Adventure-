@@ -27,6 +27,39 @@ import {
   buildBackstageRitualCircleDialogue,
 } from '../../dialogues/backstage';
 
+const TAPE_X_POSITIONS: ReadonlyArray<number> = [-6, -3, 0, 3, 6];
+const FLIGHTCASE_DETAIL_X_OFFSETS: ReadonlyArray<number> = [-0.72, 0.72];
+const FLIGHTCASE_WHEEL_X_OFFSETS: ReadonlyArray<number> = [-0.45, 0.45];
+const RACK_POST_X_OFFSETS: ReadonlyArray<number> = [-0.7, 0.7];
+const MIRROR_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-14.2, 2.7, -4],
+  [14.2, 2.7, -4],
+];
+const BULB_X_POSITIONS: ReadonlyArray<number> = [-1.25, -0.62, 0, 0.62, 1.25];
+const TRUSS_LIGHT_X_POSITIONS: ReadonlyArray<number> = [-12, -6, 0, 6, 12];
+const FLIGHTCASE_X_POSITIONS: ReadonlyArray<number> = [-11, -7, -3, 1, 5, 9];
+const RACK_X_POSITIONS: ReadonlyArray<number> = [-9, -3, 3, 9];
+const RACK_SCREEN_Y_POSITIONS: ReadonlyArray<number> = [0.95, 0.25, -0.45];
+const STACK_X_POSITIONS: ReadonlyArray<number> = [-10, -6, 6, 10];
+const SOFA_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-12.5, 0.55, 2.8],
+  [12.5, 0.55, 2.8],
+  [-12.5, 0.55, -0.2],
+  [12.5, 0.55, -0.2],
+];
+const DESK_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-12.9, 1.05, -4],
+  [12.9, 1.05, -4],
+];
+const DESK_LEG_X_POSITIONS: ReadonlyArray<number> = [-1.3, 1.3];
+const DESK_ITEM_X_POSITIONS: ReadonlyArray<number> = [-0.9, -0.3, 0.3, 0.9];
+const AMP_RACK_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-7, 0.7, 0.9],
+  [-5.4, 0.7, 0.6],
+  [5.6, 0.7, 0.8],
+  [7.2, 0.7, 0.5],
+];
+
 /**
  * Renders the 3D scene environment and logic for Backstage.
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
@@ -198,7 +231,7 @@ export function Backstage() {
       </RigidBody>
 
       {/* Stage tape and runway lines */}
-      {[-6, -3, 0, 3, 6].map((x) => (
+      {TAPE_X_POSITIONS.map((x) => (
         <mesh
           key={`tape-${x}`}
           position={[x, -0.48, -0.5]}
@@ -222,13 +255,10 @@ export function Backstage() {
       </mesh>
 
       {/* Makeup mirrors with bulbs */}
-      {[
-        [-14.2, 2.7, -4],
-        [14.2, 2.7, -4],
-      ].map((pos, idx) => (
+      {MIRROR_POSITIONS.map((pos, idx) => (
         <group
           key={`mirror-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos}
           rotation={[0, idx === 0 ? Math.PI / 2 : -Math.PI / 2, 0]}
         >
           <mesh>
@@ -241,7 +271,7 @@ export function Backstage() {
               roughness={0.48}
             />
           </mesh>
-          {[-1.25, -0.62, 0, 0.62, 1.25].map((x) => (
+          {BULB_X_POSITIONS.map((x) => (
             <mesh key={`bulb-top-${idx}-${x}`} position={[x, 1.2, 0.05]}>
               <sphereGeometry args={[0.11, 10, 10]} />
               <meshStandardMaterial
@@ -251,7 +281,7 @@ export function Backstage() {
               />
             </mesh>
           ))}
-          {[-1.25, -0.62, 0, 0.62, 1.25].map((x) => (
+          {BULB_X_POSITIONS.map((x) => (
             <mesh key={`bulb-bottom-${idx}-${x}`} position={[x, -1.2, 0.05]}>
               <sphereGeometry args={[0.11, 10, 10]} />
               <meshStandardMaterial
@@ -265,7 +295,7 @@ export function Backstage() {
       ))}
 
       {/* Truss lights */}
-      {[-12, -6, 0, 6, 12].map((x) => (
+      {TRUSS_LIGHT_X_POSITIONS.map((x) => (
         <group key={`truss-${x}`} position={[x, 7.2, -6]}>
           <mesh>
             <boxGeometry args={[1.8, 0.14, 0.14]} />
@@ -287,7 +317,7 @@ export function Backstage() {
       ))}
 
       {/* Backstage interior props */}
-      {[-11, -7, -3, 1, 5, 9].map((x) => (
+      {FLIGHTCASE_X_POSITIONS.map((x) => (
         <mesh
           key={`flightcase-${x}`}
           position={[x, 0.55, -2.2]}
@@ -304,7 +334,7 @@ export function Backstage() {
           />
         </mesh>
       ))}
-      {[-11, -7, -3, 1, 5, 9].map((x, idx) => (
+      {FLIGHTCASE_X_POSITIONS.map((x, idx) => (
         <group key={`flightcase-detail-${x}`} position={[x, 0.55, -2.2]}>
           <mesh position={[0, 0.48, 0]}>
             <boxGeometry args={[1.46, 0.08, 0.86]} />
@@ -316,7 +346,7 @@ export function Backstage() {
               roughness={0.2}
             />
           </mesh>
-          {[-0.72, 0.72].map((px) => (
+          {FLIGHTCASE_DETAIL_X_OFFSETS.map((px) => (
             <mesh key={`flightcase-edge-${idx}-${px}`} position={[px, 0, 0]}>
               <boxGeometry args={[0.08, 0.9, 0.92]} />
               <meshStandardMaterial
@@ -326,7 +356,7 @@ export function Backstage() {
               />
             </mesh>
           ))}
-          {[-0.45, 0.45].map((px) => (
+          {FLIGHTCASE_WHEEL_X_OFFSETS.map((px) => (
             <mesh
               key={`flightcase-wheel-l-${idx}-${px}`}
               position={[px, -0.58, -0.38]}
@@ -340,7 +370,7 @@ export function Backstage() {
               />
             </mesh>
           ))}
-          {[-0.45, 0.45].map((px) => (
+          {FLIGHTCASE_WHEEL_X_OFFSETS.map((px) => (
             <mesh
               key={`flightcase-wheel-r-${idx}-${px}`}
               position={[px, -0.58, 0.38]}
@@ -364,7 +394,8 @@ export function Backstage() {
           emissiveIntensity={0.45}
         />
       </mesh>
-      {[-9, -3, 3, 9].map((x) => (
+      {/* Racks */}
+      {RACK_X_POSITIONS.map((x) => (
         <mesh
           key={`rack-${x}`}
           position={[x, 1.6, 6.8]}
@@ -381,9 +412,9 @@ export function Backstage() {
           />
         </mesh>
       ))}
-      {[-9, -3, 3, 9].map((x, idx) => (
+      {RACK_X_POSITIONS.map((x, idx) => (
         <group key={`rack-detail-${x}`} position={[x, 1.6, 6.8]}>
-          {[0.95, 0.25, -0.45].map((y, row) => (
+          {RACK_SCREEN_Y_POSITIONS.map((y, row) => (
             <mesh key={`rack-screen-${idx}-${row}`} position={[0, y, 0.36]}>
               <planeGeometry args={[1.8, 0.45]} />
               <meshStandardMaterial
@@ -395,7 +426,7 @@ export function Backstage() {
               />
             </mesh>
           ))}
-          {[-0.7, 0.7].map((px) => (
+          {RACK_POST_X_OFFSETS.map((px) => (
             <mesh key={`rack-post-${idx}-${px}`} position={[px, 0, 0.35]}>
               <boxGeometry args={[0.08, 2.9, 0.08]} />
               <meshStandardMaterial
@@ -407,7 +438,7 @@ export function Backstage() {
           ))}
         </group>
       ))}
-      {[-10, -6, 6, 10].map((x) => (
+      {STACK_X_POSITIONS.map((x) => (
         <mesh
           key={`stack-${x}`}
           position={[x, 1.7, -7.3]}
@@ -424,15 +455,10 @@ export function Backstage() {
           />
         </mesh>
       ))}
-      {[
-        [-12.5, 0.55, 2.8],
-        [12.5, 0.55, 2.8],
-        [-12.5, 0.55, -0.2],
-        [12.5, 0.55, -0.2],
-      ].map((pos, idx) => (
+      {SOFA_POSITIONS.map((pos, idx) => (
         <mesh
           key={`sofa-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos}
           castShadow
           receiveShadow
         >
@@ -447,13 +473,10 @@ export function Backstage() {
       ))}
 
       {/* Dressing desks and stage gear */}
-      {[
-        [-12.9, 1.05, -4],
-        [12.9, 1.05, -4],
-      ].map((pos, idx) => (
+      {DESK_POSITIONS.map((pos, idx) => (
         <group
           key={`desk-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos}
           rotation={[0, idx === 0 ? Math.PI / 2 : -Math.PI / 2, 0]}
         >
           <mesh castShadow receiveShadow>
@@ -465,7 +488,7 @@ export function Backstage() {
               roughness={0.72}
             />
           </mesh>
-          {[-1.3, 1.3].map((x) => (
+          {DESK_LEG_X_POSITIONS.map((x) => (
             <mesh
               key={`desk-leg-${idx}-${x}`}
               position={[x, -0.48, 0.4]}
@@ -480,7 +503,7 @@ export function Backstage() {
               />
             </mesh>
           ))}
-          {[-1.3, 1.3].map((x) => (
+          {DESK_LEG_X_POSITIONS.map((x) => (
             <mesh
               key={`desk-leg-back-${idx}-${x}`}
               position={[x, -0.48, -0.4]}
@@ -495,7 +518,7 @@ export function Backstage() {
               />
             </mesh>
           ))}
-          {[-0.9, -0.3, 0.3, 0.9].map((x, n) => (
+          {DESK_ITEM_X_POSITIONS.map((x, n) => (
             <mesh
               key={`desk-item-${idx}-${n}`}
               position={[x, 0.15, 0]}
@@ -513,15 +536,10 @@ export function Backstage() {
           ))}
         </group>
       ))}
-      {[
-        [-7, 0.7, 0.9],
-        [-5.4, 0.7, 0.6],
-        [5.6, 0.7, 0.8],
-        [7.2, 0.7, 0.5],
-      ].map((pos, idx) => (
+      {AMP_RACK_POSITIONS.map((pos, idx) => (
         <group
           key={`amp-rack-${idx}`}
-          position={pos as [number, number, number]}
+          position={pos}
         >
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.2, 1.4, 0.9]} />

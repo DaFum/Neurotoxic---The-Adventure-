@@ -126,7 +126,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
       },
       ...when(!flags.matzePerformerTalk, {
         text: 'Zeig mir, wie du die Crowd liest. [Performer]',
-        requiredTrait: 'Performer' as const,
+        requiredTrait: 'Performer',
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
@@ -137,7 +137,7 @@ export function buildProberaumMatzeDialogue(): Dialogue {
       } as DialogueOption),
       ...when(!flags.matzeCynicOneShot, {
         text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
-        requiredTrait: 'Cynic' as const,
+        requiredTrait: 'Cynic',
         action: () => {
           const currentStore = game();
           currentStore.setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');

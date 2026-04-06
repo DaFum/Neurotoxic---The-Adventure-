@@ -35,6 +35,26 @@ import {
   buildKaminstubeWirtDialogue,
 } from '../../dialogues/kaminstube';
 
+const TABLE_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-6, 0.6, 1.5],
+  [5.5, 0.6, 2],
+  [9, 0.6, -3],
+];
+const STOOL_X_OFFSETS: ReadonlyArray<number> = [-0.85, 0.85];
+const MUG_POSITIONS: ReadonlyArray<[number, number, number]> = [
+  [-6, 0.78, 1.3],
+  [5.5, 0.78, 1.8],
+  [9, 0.78, -3.2],
+];
+const CEILING_BEAM_X_POSITIONS: ReadonlyArray<number> = [-10, -5, 0, 5, 10];
+const LAMP_X_POSITIONS: ReadonlyArray<number> = [-9, -3, 3, 9];
+const BAR_TAP_Z_POSITIONS: ReadonlyArray<number> = [2.6, 0.8, -1, -2.8];
+const SHELF_Y_POSITIONS: ReadonlyArray<number> = [2.2, 1.3, 0.4];
+const BOTTLE_Z_POSITIONS: ReadonlyArray<number> = [-3, -1.5, 0, 1.5, 3];
+const WINDOW_X_POSITIONS: ReadonlyArray<number> = [-9, -3, 3, 9];
+const MONITOR_X_POSITIONS: ReadonlyArray<number> = [-4.2, -1.2, 1.2, 4.2];
+const CABLE_COIL_X_POSITIONS: ReadonlyArray<number> = [-1.4, -0.6, 0.2, 1];
+
 /**
  * Renders the 3D scene environment and logic for Kaminstube.
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
@@ -195,12 +215,8 @@ export function Kaminstube() {
       />
 
       {/* Tables and stools */}
-      {[
-        [-6, 0.6, 1.5],
-        [5.5, 0.6, 2],
-        [9, 0.6, -3],
-      ].map((pos, idx) => (
-        <group key={`table-${idx}`} position={pos as [number, number, number]}>
+      {TABLE_POSITIONS.map((pos, idx) => (
+        <group key={`table-${idx}`} position={pos}>
           <mesh castShadow receiveShadow>
             <cylinderGeometry args={[0.8, 0.9, 0.15, 18]} />
             <meshStandardMaterial
@@ -213,7 +229,7 @@ export function Kaminstube() {
             <cylinderGeometry args={[0.12, 0.16, 0.9, 10]} />
             <meshStandardMaterial color="#241915" metalness={0.2} />
           </mesh>
-          {[-0.85, 0.85].map((x) => (
+          {STOOL_X_OFFSETS.map((x) => (
             <mesh
               key={`stool-a-${x}`}
               position={[x, -0.55, 0.3]}
@@ -229,7 +245,7 @@ export function Kaminstube() {
               />
             </mesh>
           ))}
-          {[-0.85, 0.85].map((x) => (
+          {STOOL_X_OFFSETS.map((x) => (
             <mesh
               key={`stool-b-${x}`}
               position={[x, -0.55, -0.3]}
@@ -247,12 +263,8 @@ export function Kaminstube() {
           ))}
         </group>
       ))}
-      {[
-        [-6, 0.78, 1.3],
-        [5.5, 0.78, 1.8],
-        [9, 0.78, -3.2],
-      ].map((pos, idx) => (
-        <group key={`mug-${idx}`} position={pos as [number, number, number]}>
+      {MUG_POSITIONS.map((pos, idx) => (
+        <group key={`mug-${idx}`} position={pos}>
           <mesh castShadow>
             <cylinderGeometry args={[0.13, 0.14, 0.22, 14]} />
             <meshStandardMaterial
@@ -274,7 +286,7 @@ export function Kaminstube() {
       ))}
 
       {/* Ceiling beams */}
-      {[-10, -5, 0, 5, 10].map((x) => (
+      {CEILING_BEAM_X_POSITIONS.map((x) => (
         <mesh
           key={`beam-${x}`}
           position={[x, 6.3, -0.5]}
@@ -285,7 +297,7 @@ export function Kaminstube() {
           <meshStandardMaterial color="#2b1d18" roughness={0.95} />
         </mesh>
       ))}
-      {[-9, -3, 3, 9].map((x) => (
+      {LAMP_X_POSITIONS.map((x) => (
         <group key={`lamp-${x}`} position={[x, 5.8, -0.8]}>
           <mesh castShadow>
             <cylinderGeometry args={[0.05, 0.05, 1.1, 8]} />
@@ -317,7 +329,7 @@ export function Kaminstube() {
           roughness={0.8}
         />
       </mesh>
-      {[2.6, 0.8, -1, -2.8].map((z, idx) => (
+      {BAR_TAP_Z_POSITIONS.map((z, idx) => (
         <group key={`bar-tap-${idx}`} position={[10.34, 1.48, z]}>
           <mesh castShadow receiveShadow>
             <cylinderGeometry args={[0.05, 0.05, 0.5, 10]} />
@@ -337,7 +349,7 @@ export function Kaminstube() {
           </mesh>
         </group>
       ))}
-      {[2.2, 1.3, 0.4].map((y, idx) => (
+      {SHELF_Y_POSITIONS.map((y, idx) => (
         <mesh
           key={`shelf-${idx}`}
           position={[10.35, y, -0.5]}
@@ -348,7 +360,7 @@ export function Kaminstube() {
           <meshStandardMaterial color="#714330" />
         </mesh>
       ))}
-      {[-3, -1.5, 0, 1.5, 3].map((z) => (
+      {BOTTLE_Z_POSITIONS.map((z) => (
         <mesh key={`bottle-${z}`} position={[10.15, 2.35, z]} castShadow>
           <cylinderGeometry args={[0.12, 0.1, 0.45, 10]} />
           <meshStandardMaterial
@@ -360,7 +372,7 @@ export function Kaminstube() {
       ))}
 
       {/* Colored stained windows and stage monitors */}
-      {[-9, -3, 3, 9].map((x, idx) => (
+      {WINDOW_X_POSITIONS.map((x, idx) => (
         <mesh key={`window-${x}`} position={[x, 4.1, -7.88]}>
           <planeGeometry args={[2.2, 2.4]} />
           <meshStandardMaterial
@@ -372,7 +384,7 @@ export function Kaminstube() {
           />
         </mesh>
       ))}
-      {[-4.2, -1.2, 1.2, 4.2].map((x) => (
+      {MONITOR_X_POSITIONS.map((x) => (
         <mesh
           key={`monitor-${x}`}
           position={[x, 0.62, -4.65]}
@@ -441,7 +453,7 @@ export function Kaminstube() {
           />
         </mesh>
       </group>
-      {[-1.4, -0.6, 0.2, 1].map((x) => (
+      {CABLE_COIL_X_POSITIONS.map((x) => (
         <mesh
           key={`coil-${x}`}
           position={[x, 0.03, -3.85]}
