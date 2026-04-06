@@ -99,10 +99,10 @@ export function Proberaum() {
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const discoverLore = useStore((state) => state.discoverLore);
-  const feedbackMonitorQuestCompleted = useStore(
-    (state) =>
-      state.quests.find((quest) => quest.id === 'feedback_monitor')?.status === 'completed'
-  ) || flags.feedbackMonitorQuestCompleted;
+  const feedbackMonitorQuestCompleted = useStore((state) =>
+    state.flags.feedbackMonitorQuestCompleted ||
+    state.quests.some((quest) => quest.id === 'feedback_monitor' && quest.status === 'completed')
+  );
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
