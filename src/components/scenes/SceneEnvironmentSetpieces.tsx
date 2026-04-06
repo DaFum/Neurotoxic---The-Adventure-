@@ -1,36 +1,36 @@
 import { Float } from '@react-three/drei';
 
-const PROBERAUM_DUCT_X_POSITIONS = [-12, -6, 0, 6, 12] as const;
-const PROBERAUM_CABLE_X_POSITIONS = [-11.8, -7.2, -2.6, 2.6, 7.2, 11.8] as const;
-const PROBERAUM_JUNCTION_POSITIONS = [
+const PROBERAUM_DUCT_X_POSITIONS: ReadonlyArray<number> = [-12, -6, 0, 6, 12];
+const PROBERAUM_CABLE_X_POSITIONS: ReadonlyArray<number> = [-11.8, -7.2, -2.6, 2.6, 7.2, 11.8];
+const PROBERAUM_JUNCTION_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-13.6, 2.8, -5.7], [13.6, 2.8, -5.7], [-13.6, 2.8, 3.2], [13.6, 2.8, 3.2],
-] as const;
+];
 
-const TOURBUS_RIB_Z_POSITIONS = [-4, -1.2, 1.2, 4] as const;
-const TOURBUS_OVERHEAD_X_POSITIONS = [-4.8, -3.2, -1.6, 0, 1.6, 3.2, 4.8] as const;
-const TOURBUS_FLOOR_BOLT_X_POSITIONS = [-5, -2.5, 0, 2.5, 5] as const;
+const TOURBUS_RIB_Z_POSITIONS: ReadonlyArray<number> = [-4, -1.2, 1.2, 4];
+const TOURBUS_OVERHEAD_X_POSITIONS: ReadonlyArray<number> = [-4.8, -3.2, -1.6, 0, 1.6, 3.2, 4.8];
+const TOURBUS_FLOOR_BOLT_X_POSITIONS: ReadonlyArray<number> = [-5, -2.5, 0, 2.5, 5];
 
-const BACKSTAGE_LAMP_X_POSITIONS = [-9, -3, 3, 9] as const;
-const BACKSTAGE_RUNWAY_X_POSITIONS = [-11, -7, -3, 1, 5, 9] as const;
+const BACKSTAGE_LAMP_X_POSITIONS: ReadonlyArray<number> = [-9, -3, 3, 9];
+const BACKSTAGE_RUNWAY_X_POSITIONS: ReadonlyArray<number> = [-11, -7, -3, 1, 5, 9];
 
-const VOID_RING_RADII = [7.5, 12.5, 17.5] as const;
-const VOID_PYLON_POSITIONS = [
+const VOID_RING_RADII: ReadonlyArray<number> = [7.5, 12.5, 17.5];
+const VOID_PYLON_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-15, 0.9, -12], [-7, 1.2, -16], [7, 1.3, -16], [15, 0.9, -12], [-15, 1.1, 12], [15, 1.1, 12],
-] as const;
-const VOID_STRIP_X_POSITIONS = [-12, -6, 0, 6, 12] as const;
+];
+const VOID_STRIP_X_POSITIONS: ReadonlyArray<number> = [-12, -6, 0, 6, 12];
 
-const KAMINSTUBE_RAFTER_X_POSITIONS = [-12, -6, 0, 6, 12] as const;
-const KAMINSTUBE_BARREL_POSITIONS = [
+const KAMINSTUBE_RAFTER_X_POSITIONS: ReadonlyArray<number> = [-12, -6, 0, 6, 12];
+const KAMINSTUBE_BARREL_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-13.2, 0.72, -3.6], [13.2, 0.72, -3.6], [-13.2, 0.72, 1.8], [13.2, 0.72, 1.8],
-] as const;
-const KAMINSTUBE_CHAIN_X_POSITIONS = [-8, -2, 4, 10] as const;
+];
+const KAMINSTUBE_CHAIN_X_POSITIONS: ReadonlyArray<number> = [-8, -2, 4, 10];
 
-const SALZGITTER_TOWER_POSITIONS = [
+const SALZGITTER_TOWER_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-15, 3.2, -7.8], [15, 3.2, -7.8], [-15, 3.2, -3.8], [15, 3.2, -3.8],
-] as const;
-const SALZGITTER_TOWER_STRIP_Y_OFFSETS = [-2.1, -1, 0.1, 1.2, 2.3] as const;
-const SALZGITTER_GANTRY_X_POSITIONS = [-10, -5, 0, 5, 10] as const;
-const SALZGITTER_FRONT_STRIP_X_POSITIONS = [-14, -10, -6, -2, 2, 6, 10, 14] as const;
+];
+const SALZGITTER_TOWER_STRIP_Y_OFFSETS: ReadonlyArray<number> = [-2.1, -1, 0.1, 1.2, 2.3];
+const SALZGITTER_GANTRY_X_POSITIONS: ReadonlyArray<number> = [-10, -5, 0, 5, 10];
+const SALZGITTER_FRONT_STRIP_X_POSITIONS: ReadonlyArray<number> = [-14, -10, -6, -2, 2, 6, 10, 14];
 
 type SceneVariant = 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
 
@@ -69,7 +69,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
             </mesh>
           ))}
           {PROBERAUM_JUNCTION_POSITIONS.map((pos, idx) => (
-            <group key={`proberaum-junction-${idx}`} position={pos as unknown as [number, number, number]}>
+            <group key={`proberaum-junction-${idx}`} position={pos}>
               <mesh castShadow receiveShadow>
                 <boxGeometry args={[0.55, 0.55, 0.55]} />
                 <meshStandardMaterial color="#3f4f63" emissive="#1d2e41" emissiveIntensity={0.35} metalness={0.68} roughness={0.32} />
@@ -150,7 +150,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
             </Float>
           ))}
           {VOID_PYLON_POSITIONS.map((pos, idx) => (
-            <group key={`void-pylon-${idx}`} position={pos as unknown as [number, number, number]}>
+            <group key={`void-pylon-${idx}`} position={pos}>
               <mesh castShadow receiveShadow>
                 <cylinderGeometry args={[0.32, 0.42, 2.2, 12]} />
                 <meshStandardMaterial color="#2a2a47" emissive="#171735" emissiveIntensity={0.35} metalness={0.62} roughness={0.35} />
@@ -179,7 +179,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
             </mesh>
           ))}
           {KAMINSTUBE_BARREL_POSITIONS.map((pos, idx) => (
-            <group key={`kaminstube-barrels-${idx}`} position={pos as unknown as [number, number, number]}>
+            <group key={`kaminstube-barrels-${idx}`} position={pos}>
               <mesh castShadow receiveShadow>
                 <cylinderGeometry args={[0.35, 0.38, 0.72, 16]} />
                 <meshStandardMaterial color="#5d3927" emissive="#2d170f" emissiveIntensity={0.25} metalness={0.24} roughness={0.78} />
@@ -210,7 +210,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
       return (
         <group>
           {SALZGITTER_TOWER_POSITIONS.map((pos, idx) => (
-            <group key={`salzgitter-tower-${idx}`} position={pos as unknown as [number, number, number]}>
+            <group key={`salzgitter-tower-${idx}`} position={pos}>
               <mesh castShadow receiveShadow>
                 <boxGeometry args={[1.4, 6.2, 1.1]} />
                 <meshStandardMaterial color="#202734" emissive="#121b29" emissiveIntensity={0.34} metalness={0.68} roughness={0.36} />

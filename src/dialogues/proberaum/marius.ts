@@ -84,7 +84,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                 options: [
                   {
                     text: 'Ich coache deine Bühnenpräsenz. [Performer]',
-                    requiredTrait: 'Performer' as const,
+                    requiredTrait: 'Performer',
                     action: () => {
                       const currentStore = game();
                       currentStore.setDialogue(
@@ -97,7 +97,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                   },
                   {
                     text: 'Du wirst auf der Bühne sterben. [Cynic]',
-                    requiredTrait: 'Cynic' as const,
+                    requiredTrait: 'Cynic',
                     action: () => {
                       const currentStore = game();
                       currentStore.setDialogue(
@@ -110,7 +110,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                   },
                   {
                     text: 'Hier ist ein Ego-Management-Plan. [Social 7]',
-                    requiredSkill: { name: 'social' as const, level: 7 },
+                    requiredSkill: { name: 'social', level: 7 },
                     action: () => {
                       const currentStore = game();
                       currentStore.setDialogue(

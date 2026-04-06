@@ -39,47 +39,47 @@ import {
   buildVoidTerminalDialogue,
 } from '../../dialogues/voidstation';
 
-const OBELISK_RING_Y_OFFSETS = [-3.2, -1.6, 0, 1.6, 3.2] as const;
-const CRYSTAL_POSITIONS = [
+const OBELISK_RING_Y_OFFSETS: ReadonlyArray<number> = [-3.2, -1.6, 0, 1.6, 3.2];
+const CRYSTAL_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-16, 1.6, -8],
   [-12, 2.1, 10],
   [12, 2.3, 10],
   [16, 1.8, -8],
   [0, 2.5, -16],
-] as const;
-const ANOMALY_RING_RADII = [8, 14, 20] as const;
-const CONSOLE_POSITIONS = [
+];
+const ANOMALY_RING_RADII: ReadonlyArray<number> = [8, 14, 20];
+const CONSOLE_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-14, 0.8, -2],
   [-10, 0.8, 3],
   [10, 0.8, 3],
   [14, 0.8, -2],
-] as const;
-const CONSOLE_SCREEN_POSITIONS = [
+];
+const CONSOLE_SCREEN_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-14, 1.45, -1.2],
   [-10, 1.45, 3.8],
   [10, 1.45, 3.8],
   [14, 1.45, -1.2],
-] as const;
-const CONSOLE_ORB_POSITIONS = [
+];
+const CONSOLE_ORB_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-13.1, 0.5, -1.2],
   [-10.9, 0.5, 3.8],
   [9.1, 0.5, 3.8],
   [13.1, 0.5, -1.2],
-] as const;
-const VOID_PANEL_X_POSITIONS = [-12, -6, 0, 6, 12] as const;
-const VOID_ARCH_POSITIONS = [
+];
+const VOID_PANEL_X_POSITIONS: ReadonlyArray<number> = [-12, -6, 0, 6, 12];
+const VOID_ARCH_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-15, 3.2, -3],
   [15, 3.2, -3],
   [-15, 3.2, 4],
   [15, 3.2, 4],
-] as const;
-const CONDUIT_X_POSITIONS = [-14, -7, 0, 7, 14] as const;
-const SHARD_POSITIONS = [
+];
+const CONDUIT_X_POSITIONS: ReadonlyArray<number> = [-14, -7, 0, 7, 14];
+const SHARD_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-6, 2.8, -11],
   [-2, 3.4, -13],
   [2, 3.1, -13],
   [6, 2.7, -11],
-] as const;
+];
 
 /**
  * Renders the 3D scene environment and logic for VoidStation.
@@ -209,7 +209,7 @@ export function VoidStation() {
           rotationIntensity={1.6}
           floatIntensity={0.8}
         >
-          <mesh position={pos as unknown as [number, number, number]}>
+          <mesh position={pos}>
             <dodecahedronGeometry args={[1.2, 0]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#7a4dff' : '#36d7ff'}
@@ -242,7 +242,7 @@ export function VoidStation() {
       {CONSOLE_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-console-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
           castShadow
           receiveShadow
         >
@@ -259,7 +259,7 @@ export function VoidStation() {
       {CONSOLE_SCREEN_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-console-screen-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
         >
           <planeGeometry args={[1.8, 0.52]} />
           <meshStandardMaterial
@@ -274,7 +274,7 @@ export function VoidStation() {
       {CONSOLE_ORB_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-console-orb-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
         >
           <sphereGeometry args={[0.14, 12, 12]} />
           <meshStandardMaterial
@@ -299,7 +299,7 @@ export function VoidStation() {
       {VOID_ARCH_POSITIONS.map((pos, idx) => (
         <mesh
           key={`void-arch-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
           rotation={[0, idx < 2 ? Math.PI / 2 : -Math.PI / 2, 0]}
         >
           <torusGeometry args={[1.6, 0.18, 14, 36]} />
@@ -337,7 +337,7 @@ export function VoidStation() {
           rotationIntensity={2.4}
           floatIntensity={0.7}
         >
-          <mesh position={pos as unknown as [number, number, number]}>
+          <mesh position={pos}>
             <tetrahedronGeometry args={[0.42, 0]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#ff7ce2' : '#7efbff'}

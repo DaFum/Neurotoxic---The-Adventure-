@@ -31,43 +31,43 @@ import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-const ACOUSTIC_PANEL_X_POSITIONS = [-11, -5.5, 0, 5.5, 11] as const;
-const CRATE_HANDLE_X_OFFSETS = [-0.64, 0.64] as const;
-const CRATE_WHEEL_X_OFFSETS = [-0.45, 0.45] as const;
-const RACK_VENT_Y_OFFSETS = [-0.5, 0, 0.5] as const;
-const PEDAL_SWITCH_X_OFFSETS = [-0.28, 0, 0.28] as const;
-const NEON_BAR_X_POSITIONS = [-10, -5, 0, 5, 10] as const;
-const CRATE_DATA = [
+const ACOUSTIC_PANEL_X_POSITIONS: ReadonlyArray<number> = [-11, -5.5, 0, 5.5, 11];
+const CRATE_HANDLE_X_OFFSETS: ReadonlyArray<number> = [-0.64, 0.64];
+const CRATE_WHEEL_X_OFFSETS: ReadonlyArray<number> = [-0.45, 0.45];
+const RACK_VENT_Y_OFFSETS: ReadonlyArray<number> = [-0.5, 0, 0.5];
+const PEDAL_SWITCH_X_OFFSETS: ReadonlyArray<number> = [-0.28, 0, 0.28];
+const NEON_BAR_X_POSITIONS: ReadonlyArray<number> = [-10, -5, 0, 5, 10];
+const CRATE_DATA: ReadonlyArray<{ pos: [number, number, number]; rot: number }> = [
   { pos: [-12, 0.6, 5], rot: 0.2 },
   { pos: [11, 0.6, 4], rot: -0.25 },
   { pos: [6, 0.6, -6], rot: 0.12 },
-] as const;
-const UTILITY_RACK_POSITIONS = [
+];
+const UTILITY_RACK_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-13.1, 1.4, -4],
   [13.1, 1.4, -4],
   [-13.1, 1.4, 1.5],
   [13.1, 1.4, 1.5],
-] as const;
-const CABLE_TRENCH_Z_POSITIONS = [-6, -2, 2, 6] as const;
-const AMP_STACK_POSITIONS = [
+];
+const CABLE_TRENCH_Z_POSITIONS: ReadonlyArray<number> = [-6, -2, 2, 6];
+const AMP_STACK_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-2, 0.45, -3.8],
   [2.4, 0.45, -3.6],
   [0.2, 0.45, -4.2],
-] as const;
-const MIC_STAND_X_POSITIONS = [-0.5, 0, 0.5] as const;
-const PEDALBOARD_POSITIONS = [
+];
+const MIC_STAND_X_POSITIONS: ReadonlyArray<number> = [-0.5, 0, 0.5];
+const PEDALBOARD_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-1.4, 0.08, -2.5],
   [1.2, 0.08, -2.45],
   [0, 0.08, -2.2],
-] as const;
-const CABLE_REEL_X_POSITIONS = [-2.6, -1.6, -0.6, 0.4, 1.4, 2.4] as const;
-const LAMP_X_POSITIONS = [-9, -3, 3, 9] as const;
-const POSTER_LINE_DATA = [
+];
+const CABLE_REEL_X_POSITIONS: ReadonlyArray<number> = [-2.6, -1.6, -0.6, 0.4, 1.4, 2.4];
+const LAMP_X_POSITIONS: ReadonlyArray<number> = [-9, -3, 3, 9];
+const POSTER_LINE_DATA: ReadonlyArray<{ y: number, w: number, c: string }> = [
   { y: 0.95, w: 0.75, c: '#ef4444' },
   { y: 0.45, w: 1.2, c: '#d4d4d8' },
   { y: 0.0, w: 1.0, c: '#d4d4d8' },
   { y: -0.45, w: 1.15, c: '#d4d4d8' },
-] as const;
+];
 
 /**
  * Renders the 3D scene environment and logic for Proberaum.
@@ -198,7 +198,7 @@ export function Proberaum() {
       {CRATE_DATA.map((crate, idx) => (
         <group
           key={`crate-${idx}`}
-          position={crate.pos as unknown as [number, number, number]}
+          position={crate.pos}
           rotation={[0, crate.rot, 0]}
         >
           <mesh castShadow receiveShadow>
@@ -268,7 +268,7 @@ export function Proberaum() {
       {UTILITY_RACK_POSITIONS.map((pos, idx) => (
         <group
           key={`utility-rack-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
         >
           <mesh castShadow receiveShadow>
             <boxGeometry args={[0.9, 2.8, 2.4]} />
@@ -328,7 +328,7 @@ export function Proberaum() {
       {AMP_STACK_POSITIONS.map((pos, idx) => (
         <group
           key={`amp-stack-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
         >
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.4, 0.9, 0.9]} />
@@ -430,7 +430,7 @@ export function Proberaum() {
       {PEDALBOARD_POSITIONS.map((pos, idx) => (
         <group
           key={`pedalboard-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
           rotation={[-Math.PI / 2, 0, 0]}
         >
           <mesh>

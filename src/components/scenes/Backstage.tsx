@@ -27,38 +27,38 @@ import {
   buildBackstageRitualCircleDialogue,
 } from '../../dialogues/backstage';
 
-const TAPE_X_POSITIONS = [-6, -3, 0, 3, 6] as const;
-const FLIGHTCASE_DETAIL_X_OFFSETS = [-0.72, 0.72] as const;
-const FLIGHTCASE_WHEEL_X_OFFSETS = [-0.45, 0.45] as const;
-const RACK_POST_X_OFFSETS = [-0.7, 0.7] as const;
-const MIRROR_POSITIONS = [
+const TAPE_X_POSITIONS: ReadonlyArray<number> = [-6, -3, 0, 3, 6];
+const FLIGHTCASE_DETAIL_X_OFFSETS: ReadonlyArray<number> = [-0.72, 0.72];
+const FLIGHTCASE_WHEEL_X_OFFSETS: ReadonlyArray<number> = [-0.45, 0.45];
+const RACK_POST_X_OFFSETS: ReadonlyArray<number> = [-0.7, 0.7];
+const MIRROR_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-14.2, 2.7, -4],
   [14.2, 2.7, -4],
-] as const;
-const BULB_X_POSITIONS = [-1.25, -0.62, 0, 0.62, 1.25] as const;
-const TRUSS_LIGHT_X_POSITIONS = [-12, -6, 0, 6, 12] as const;
-const FLIGHTCASE_X_POSITIONS = [-11, -7, -3, 1, 5, 9] as const;
-const RACK_X_POSITIONS = [-9, -3, 3, 9] as const;
-const RACK_SCREEN_Y_POSITIONS = [0.95, 0.25, -0.45] as const;
-const STACK_X_POSITIONS = [-10, -6, 6, 10] as const;
-const SOFA_POSITIONS = [
+];
+const BULB_X_POSITIONS: ReadonlyArray<number> = [-1.25, -0.62, 0, 0.62, 1.25];
+const TRUSS_LIGHT_X_POSITIONS: ReadonlyArray<number> = [-12, -6, 0, 6, 12];
+const FLIGHTCASE_X_POSITIONS: ReadonlyArray<number> = [-11, -7, -3, 1, 5, 9];
+const RACK_X_POSITIONS: ReadonlyArray<number> = [-9, -3, 3, 9];
+const RACK_SCREEN_Y_POSITIONS: ReadonlyArray<number> = [0.95, 0.25, -0.45];
+const STACK_X_POSITIONS: ReadonlyArray<number> = [-10, -6, 6, 10];
+const SOFA_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-12.5, 0.55, 2.8],
   [12.5, 0.55, 2.8],
   [-12.5, 0.55, -0.2],
   [12.5, 0.55, -0.2],
-] as const;
-const DESK_POSITIONS = [
+];
+const DESK_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-12.9, 1.05, -4],
   [12.9, 1.05, -4],
-] as const;
-const DESK_LEG_X_POSITIONS = [-1.3, 1.3] as const;
-const DESK_ITEM_X_POSITIONS = [-0.9, -0.3, 0.3, 0.9] as const;
-const AMP_RACK_POSITIONS = [
+];
+const DESK_LEG_X_POSITIONS: ReadonlyArray<number> = [-1.3, 1.3];
+const DESK_ITEM_X_POSITIONS: ReadonlyArray<number> = [-0.9, -0.3, 0.3, 0.9];
+const AMP_RACK_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-7, 0.7, 0.9],
   [-5.4, 0.7, 0.6],
   [5.6, 0.7, 0.8],
   [7.2, 0.7, 0.5],
-] as const;
+];
 
 /**
  * Renders the 3D scene environment and logic for Backstage.
@@ -258,7 +258,7 @@ export function Backstage() {
       {MIRROR_POSITIONS.map((pos, idx) => (
         <group
           key={`mirror-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
           rotation={[0, idx === 0 ? Math.PI / 2 : -Math.PI / 2, 0]}
         >
           <mesh>
@@ -458,7 +458,7 @@ export function Backstage() {
       {SOFA_POSITIONS.map((pos, idx) => (
         <mesh
           key={`sofa-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
           castShadow
           receiveShadow
         >
@@ -476,7 +476,7 @@ export function Backstage() {
       {DESK_POSITIONS.map((pos, idx) => (
         <group
           key={`desk-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
           rotation={[0, idx === 0 ? Math.PI / 2 : -Math.PI / 2, 0]}
         >
           <mesh castShadow receiveShadow>
@@ -539,7 +539,7 @@ export function Backstage() {
       {AMP_RACK_POSITIONS.map((pos, idx) => (
         <group
           key={`amp-rack-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
         >
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.2, 1.4, 0.9]} />

@@ -30,36 +30,36 @@ import {
   buildSalzgitterMatzeDialogue,
 } from '../../dialogues/salzgitter';
 
-const TRUSS_X_POSITIONS = [-9.5, 9.5] as const;
-const SPEAKER_EDGE_X_OFFSETS = [-0.72, 0.72] as const;
-const TRUSS_NODE_Y_POSITIONS = [-1.8, -0.6, 0.6, 1.8] as const;
-const LED_PANEL_X_POSITIONS = [-12, -4, 4, 12] as const;
-const LED_STRIP_Y_POSITIONS = [-1.4, -0.4, 0.6, 1.6] as const;
-const BARRIER_X_POSITIONS = [-12, -8, -4, 0, 4, 8, 12] as const;
-const RUNWAY_RAIL_X_POSITIONS = [-13.5, 13.5] as const;
-const SKYLINE_DATA = [
-  [-18, 2.5, -10.4, 2.4],
-  [-14, 3.2, -10.3, 3.6],
-  [-10, 2.2, -10.35, 2.1],
-  [10, 2.7, -10.35, 2.8],
-  [14, 3.6, -10.25, 4.2],
-  [18, 2.4, -10.4, 2.3],
-] as const;
-const SPEAKER_STACK_X_POSITIONS = [-7.5, -2.5, 2.5, 7.5] as const;
-const ROAD_CASE_POSITIONS = [
+const TRUSS_X_POSITIONS: ReadonlyArray<number> = [-9.5, 9.5];
+const SPEAKER_EDGE_X_OFFSETS: ReadonlyArray<number> = [-0.72, 0.72];
+const TRUSS_NODE_Y_POSITIONS: ReadonlyArray<number> = [-1.8, -0.6, 0.6, 1.8];
+const LED_PANEL_X_POSITIONS: ReadonlyArray<number> = [-12, -4, 4, 12];
+const LED_STRIP_Y_POSITIONS: ReadonlyArray<number> = [-1.4, -0.4, 0.6, 1.6];
+const BARRIER_X_POSITIONS: ReadonlyArray<number> = [-12, -8, -4, 0, 4, 8, 12];
+const RUNWAY_RAIL_X_POSITIONS: ReadonlyArray<number> = [-13.5, 13.5];
+const SKYLINE_DATA: ReadonlyArray<{ pos: [number, number, number], height: number }> = [
+  { pos: [-18, 2.5, -10.4], height: 2.4 },
+  { pos: [-14, 3.2, -10.3], height: 3.6 },
+  { pos: [-10, 2.2, -10.35], height: 2.1 },
+  { pos: [10, 2.7, -10.35], height: 2.8 },
+  { pos: [14, 3.6, -10.25], height: 4.2 },
+  { pos: [18, 2.4, -10.4], height: 2.3 },
+];
+const SPEAKER_STACK_X_POSITIONS: ReadonlyArray<number> = [-7.5, -2.5, 2.5, 7.5];
+const ROAD_CASE_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-11, 0.65, -8.8],
   [11, 0.65, -8.8],
   [-11, 0.65, -6.2],
   [11, 0.65, -6.2],
-] as const;
-const ROAD_CASE_LID_POSITIONS = [
+];
+const ROAD_CASE_LID_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [-11, 1.28, -8.8],
   [11, 1.28, -8.8],
   [-11, 1.28, -6.2],
   [11, 1.28, -6.2],
-] as const;
-const STAGE_STAIR_DATA = [-0.45, 0, 0.45] as const;
-const MIC_X_POSITIONS = [-2.6, 0, 2.6] as const;
+];
+const STAGE_STAIR_DATA: ReadonlyArray<number> = [-0.45, 0, 0.45];
+const MIC_X_POSITIONS: ReadonlyArray<number> = [-2.6, 0, 2.6];
 
 /**
  * Renders the 3D scene environment and logic for Salzgitter.
@@ -307,9 +307,9 @@ export function Salzgitter() {
       {SKYLINE_DATA.map((entry, idx) => (
         <mesh
           key={`skyline-${idx}`}
-          position={[entry[0], entry[1], entry[2]] as unknown as [number, number, number]}
+          position={entry.pos}
         >
-          <boxGeometry args={[1.8, entry[3], 0.3]} />
+          <boxGeometry args={[1.8, entry.height, 0.3]} />
           <meshStandardMaterial color="#0a0d12" />
         </mesh>
       ))}
@@ -360,7 +360,7 @@ export function Salzgitter() {
       {ROAD_CASE_POSITIONS.map((pos, idx) => (
         <mesh
           key={`road-case-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
           castShadow
           receiveShadow
         >
@@ -377,7 +377,7 @@ export function Salzgitter() {
       {ROAD_CASE_LID_POSITIONS.map((pos, idx) => (
         <mesh
           key={`road-case-lid-${idx}`}
-          position={pos as unknown as [number, number, number]}
+          position={pos}
         >
           <boxGeometry args={[2.08, 0.08, 0.98]} />
           <meshStandardMaterial
