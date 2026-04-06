@@ -14,9 +14,6 @@ describe('touchInput singleton', () => {
   const initialState = { ...touchInput };
 
   beforeEach(() => {
-    for (const key of Object.keys(touchInput) as (keyof typeof touchInput)[]) {
-      delete touchInput[key];
-    }
     Object.assign(touchInput, initialState);
   });
 

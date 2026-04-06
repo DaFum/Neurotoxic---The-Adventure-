@@ -34,13 +34,14 @@ export function checkHasSavedGame(raw: string | null): boolean {
       ? savedRecord.skills as Record<string, unknown>
       : undefined;
 
+    const hasSkillProgress =
+      (typeof skills?.technical === 'number' && skills.technical > 0) ||
+      (typeof skills?.social === 'number' && skills.social > 0) ||
+      (typeof skills?.chaos === 'number' && skills.chaos > 0);
+
     const hasMoodOrSkillProgress =
-      savedRecord.bandMood !== undefined && typeof savedRecord.bandMood === 'number' && (
-        savedRecord.bandMood !== 20 ||
-        (typeof skills?.technical === 'number' && skills.technical > 0) ||
-        (typeof skills?.social === 'number' && skills.social > 0) ||
-        (typeof skills?.chaos === 'number' && skills.chaos > 0)
-      );
+      (savedRecord.bandMood !== undefined && typeof savedRecord.bandMood === 'number' && savedRecord.bandMood !== 20) ||
+      hasSkillProgress;
 
     return Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress);
   } catch {
