@@ -838,14 +838,14 @@ export const useStore = create<GameState>()(
       setPaused: (isPaused) => set({ isPaused }),
       addQuest: (id, text) =>
         set((state) => {
-          const existing = state.quests.find((q) => q.id === id);
-          if (existing) {
+          const index = state.quests.findIndex((q) => q.id === id);
+          if (index !== -1) {
             // Update the display text while preserving the current status so that
             // narrative corrections propagate to saves without reopening the quest.
+            const newQuests = [...state.quests];
+            newQuests[index] = { ...newQuests[index], text };
             return {
-              quests: state.quests.map((q) =>
-                q.id === id ? { ...q, text } : q
-              ),
+              quests: newQuests,
             };
           }
           return {
@@ -857,8 +857,8 @@ export const useStore = create<GameState>()(
         }),
       completeQuest: (id, text) =>
         set((state) => {
-          const exists = state.quests.some((q) => q.id === id);
-          if (!exists) {
+          const index = state.quests.findIndex((q) => q.id === id);
+          if (index === -1) {
             if (text) {
               return {
                 quests: [
@@ -870,16 +870,16 @@ export const useStore = create<GameState>()(
             console.warn(`Attempted to complete unregistered quest: ${id}`);
             return state;
           }
+          const newQuests = [...state.quests];
+          newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus };
           return {
-            quests: state.quests.map((q) =>
-              q.id === id ? { ...q, status: 'completed' as QuestStatus } : q
-            ),
+            quests: newQuests,
           };
         }),
       failQuest: (id, text) =>
         set((state) => {
-          const exists = state.quests.some((q) => q.id === id);
-          if (!exists) {
+          const index = state.quests.findIndex((q) => q.id === id);
+          if (index === -1) {
             if (text) {
               return {
                 quests: [
@@ -891,26 +891,24 @@ export const useStore = create<GameState>()(
             console.warn(`Attempted to fail unregistered quest: ${id}`);
             return state;
           }
+          const newQuests = [...state.quests];
+          newQuests[index] = { ...newQuests[index], status: 'failed' as QuestStatus };
           return {
-            quests: state.quests.map((q) =>
-              q.id === id ? { ...q, status: 'failed' as QuestStatus } : q
-            ),
+            quests: newQuests,
           };
         }),
       startQuestWithFlag: (id, text, flag, flagValue = true) =>
         set((state) => {
-          const existing = state.quests.find((q) => q.id === id);
-          if (existing) {
+          const index = state.quests.findIndex((q) => q.id === id);
+          if (index !== -1) {
+            const newQuests = [...state.quests];
+            newQuests[index] = {
+              ...newQuests[index],
+              text,
+              status: (newQuests[index].status === 'completed' ? 'completed' : 'active') as QuestStatus,
+            };
             return {
-              quests: state.quests.map((q) =>
-                q.id === id
-                  ? {
-                      ...q,
-                      text,
-                      status: (existing.status === 'completed' ? 'completed' : 'active') as QuestStatus,
-                    }
-                  : q
-              ),
+              quests: newQuests,
               flags: { ...state.flags, [flag]: flagValue },
             };
           }
@@ -924,8 +922,8 @@ export const useStore = create<GameState>()(
         }),
       completeQuestWithFlag: (id, flag, flagValue = true, text) =>
         set((state) => {
-          const exists = state.quests.some((q) => q.id === id);
-          if (!exists) {
+          const index = state.quests.findIndex((q) => q.id === id);
+          if (index === -1) {
             if (text) {
               return {
                 quests: [
@@ -938,24 +936,27 @@ export const useStore = create<GameState>()(
             console.warn(`Attempted to complete unregistered quest: ${id}`);
             return state;
           }
+          const newQuests = [...state.quests];
+          newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus };
           return {
-            quests: state.quests.map((q) =>
-              q.id === id ? { ...q, status: 'completed' as QuestStatus } : q
-            ),
+            quests: newQuests,
             flags: { ...state.flags, [flag]: flagValue },
           };
         }),
       startAndFinishQuest: (id, text) =>
         set((state) => {
-          const existing = state.quests.find((q) => q.id === id);
-          if (existing?.status === 'completed' || existing?.status === 'failed')
-            return state;
-          if (existing?.status === 'active') {
-            return {
-              quests: state.quests.map((q) =>
-                q.id === id ? { ...q, status: 'completed' as QuestStatus } : q
-              ),
-            };
+          const index = state.quests.findIndex((q) => q.id === id);
+          if (index !== -1) {
+            const existing = state.quests[index];
+            if (existing.status === 'completed' || existing.status === 'failed')
+              return state;
+            if (existing.status === 'active') {
+              const newQuests = [...state.quests];
+              newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus };
+              return {
+                quests: newQuests,
+              };
+            }
           }
           return {
             quests: [
