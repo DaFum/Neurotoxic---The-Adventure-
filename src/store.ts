@@ -840,6 +840,7 @@ export const useStore = create<GameState>()(
         set((state) => {
           const index = state.quests.findIndex((q) => q.id === id);
           if (index !== -1) {
+            if (state.quests[index].text === text) return state;
             const newQuests = [...state.quests];
             newQuests[index] = { ...newQuests[index], text };
             return { quests: newQuests };
@@ -866,6 +867,7 @@ export const useStore = create<GameState>()(
             console.warn(`Attempted to complete unregistered quest: ${id}`);
             return state;
           }
+          if (state.quests[index].status === 'completed') return state;
           const newQuests = [...state.quests];
           newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus };
           return { quests: newQuests };
@@ -885,6 +887,7 @@ export const useStore = create<GameState>()(
             console.warn(`Attempted to fail unregistered quest: ${id}`);
             return state;
           }
+          if (state.quests[index].status === 'failed') return state;
           const newQuests = [...state.quests];
           newQuests[index] = { ...newQuests[index], status: 'failed' as QuestStatus };
           return { quests: newQuests };
@@ -893,16 +896,18 @@ export const useStore = create<GameState>()(
         set((state) => {
           const index = state.quests.findIndex((q) => q.id === id);
           if (index !== -1) {
-            const newQuests = [...state.quests];
-            const existingStatus = newQuests[index].status;
-            newQuests[index] = {
-              ...newQuests[index],
-              text,
-              status: (existingStatus === 'completed' ? 'completed' : 'active') as QuestStatus,
-            };
+            const quest = state.quests[index];
+            const nextStatus = (quest.status === 'completed' ? 'completed' : 'active') as QuestStatus;
+            const questChanged = quest.text !== text || quest.status !== nextStatus;
+            const flagChanged = state.flags[flag] !== flagValue;
+            if (!questChanged && !flagChanged) return state;
+
+            const newQuests = questChanged ? [...state.quests] : state.quests;
+            if (questChanged) newQuests[index] = { ...quest, text, status: nextStatus };
+
             return {
-              quests: newQuests,
-              flags: { ...state.flags, [flag]: flagValue },
+              ...(questChanged && { quests: newQuests }),
+              ...(flagChanged && { flags: { ...state.flags, [flag]: flagValue } }),
             };
           }
           return {
@@ -929,11 +934,17 @@ export const useStore = create<GameState>()(
             console.warn(`Attempted to complete unregistered quest: ${id}`);
             return state;
           }
-          const newQuests = [...state.quests];
-          newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus };
+          const quest = state.quests[index];
+          const statusChanged = quest.status !== 'completed';
+          const flagChanged = state.flags[flag] !== flagValue;
+          if (!statusChanged && !flagChanged) return state;
+
+          const newQuests = statusChanged ? [...state.quests] : state.quests;
+          if (statusChanged) newQuests[index] = { ...quest, status: 'completed' as QuestStatus };
+
           return {
-            quests: newQuests,
-            flags: { ...state.flags, [flag]: flagValue },
+            ...(statusChanged && { quests: newQuests }),
+            ...(flagChanged && { flags: { ...state.flags, [flag]: flagValue } }),
           };
         }),
       startAndFinishQuest: (id, text) =>
@@ -1077,10 +1088,9 @@ export const useStore = create<GameState>()(
 
         const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
 
-        // ⚡ Bolt Optimization: Replace chained filter().map() with a single for loop to avoid intermediate array allocations
+        // ⚡ Bolt Optimization: Iterate over persistedQuestsMap.values() to avoid appending duplicate quest IDs from older saves
         const dynamicQuests: Quest[] = [];
-        for (let i = 0; i < persistedQuests.length; i++) {
-          const pq = persistedQuests[i];
+        for (const pq of persistedQuestsMap.values()) {
           if (pq !== null && typeof pq === 'object') {
             const p = pq as Record<string, unknown>;
             if (
@@ -1224,11 +1234,32 @@ export const useStore = create<GameState>()(
                   (q) => q.id === 'fix_cable'
                 );
                 if (fixCableQuestIndex !== -1) {
-                  updatedQuests = [...currentState.quests];
-                  updatedQuests[fixCableQuestIndex] = {
-                    ...updatedQuests[fixCableQuestIndex],
-                    id: 'cable',
-                  };
+                  const fixCableQuest = currentState.quests[fixCableQuestIndex];
+                  const cableQuestIndex = currentState.quests.findIndex((q) => q.id === 'cable');
+
+                  if (cableQuestIndex !== -1) {
+                    const cableQuest = currentState.quests[cableQuestIndex];
+                    // Merge statuses: 'completed' > 'active' > 'failed'
+                    let mergedStatus = cableQuest.status;
+                    if (fixCableQuest.status === 'completed' || cableQuest.status === 'completed') {
+                      mergedStatus = 'completed';
+                    } else if (fixCableQuest.status === 'active' || cableQuest.status === 'active') {
+                      mergedStatus = 'active';
+                    }
+
+                    updatedQuests = currentState.quests.filter((q) => q.id !== 'fix_cable');
+                    const newCableIndex = updatedQuests.findIndex((q) => q.id === 'cable');
+                    updatedQuests[newCableIndex] = {
+                      ...cableQuest,
+                      status: mergedStatus,
+                    };
+                  } else {
+                    updatedQuests = [...currentState.quests];
+                    updatedQuests[fixCableQuestIndex] = {
+                      ...fixCableQuest,
+                      id: 'cable',
+                    };
+                  }
                 }
 
                 return {
