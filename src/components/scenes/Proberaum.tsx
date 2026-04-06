@@ -96,13 +96,13 @@ export function Proberaum() {
     Batterie: state.inventory.includes('Batterie'),
     'Quanten-Kabel': state.inventory.includes('Quanten-Kabel')
   })));
-  const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const discoverLore = useStore((state) => state.discoverLore);
-  const feedbackMonitorQuestCompleted =
-    quests.find((quest) => quest.id === 'feedback_monitor')?.status ===
-      'completed' || flags.feedbackMonitorQuestCompleted;
+  const feedbackMonitorQuestCompleted = useStore(
+    (state) =>
+      state.quests.find((quest) => quest.id === 'feedback_monitor')?.status === 'completed'
+  ) || flags.feedbackMonitorQuestCompleted;
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
