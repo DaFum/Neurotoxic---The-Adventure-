@@ -27,3 +27,4 @@
 ## 2026-04-10 - String Iteration Allocation Overhead
 **Learning:** Generating seeds or hashes from strings using `name.split('').reduce(...)` causes unnecessary Garbage Collection (GC) pressure by allocating an intermediate array of characters. Repository benchmarks indicate that a standard `for` loop with `charCodeAt(i)` is approximately 2.2x faster.
 **Action:** Prefer a standard `for` loop over string length when calculating hash values from strings to eliminate temporary allocations.
+- Discovered that modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans.
