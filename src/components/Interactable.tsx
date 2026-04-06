@@ -61,9 +61,6 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const hoveredRef = useRef(false);
   const interactedRef = useRef(false);
   const { register, unregister } = useKeyboardInteraction();
-  const isPaused = useStore((state) => state.isPaused);
-  const bandMood = useStore((state) => state.bandMood);
-  const setCameraShake = useStore((state) => state.setCameraShake);
 
   // ⚡ Bolt Optimization: Cache Vector3 objects to prevent GC overhead in useFrame
   const playerPosVector = useRef(new THREE.Vector3()).current;
@@ -209,9 +206,8 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   }, [register, unregister]);
 
   useFrame((_state, delta) => {
+    const { isPaused, bandMood, playerPos } = useStore.getState();
     if (isPaused) return;
-
-    const playerPos = useStore.getState().playerPos;
 
     // ⚡ Bolt Optimization: Reuse Vector3 objects to avoid allocations in animation loop
     playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
@@ -286,7 +282,7 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   });
 
   const handleInteract = () => {
-    const { isPaused: currentIsPaused, dialogue: currentDialogue } = useStore.getState();
+    const { isPaused: currentIsPaused, dialogue: currentDialogue, setCameraShake } = useStore.getState();
     if (currentDialogue) return;
     if (inRangeRef.current && !currentIsPaused) {
       audio.playInteraction();
