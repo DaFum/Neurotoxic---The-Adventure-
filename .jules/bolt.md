@@ -27,6 +27,10 @@
 ## 2026-04-10 - String Iteration Allocation Overhead
 **Learning:** Generating seeds or hashes from strings using `name.split('').reduce(...)` causes unnecessary Garbage Collection (GC) pressure by allocating an intermediate array of characters. Repository benchmarks indicate that a standard `for` loop with `charCodeAt(i)` is approximately 2.2x faster.
 **Action:** Prefer a standard `for` loop over string length when calculating hash values from strings to eliminate temporary allocations.
+- Discovered that modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans.
+## 2026-04-12 - Imperative State Reads in R3F Components
+**Learning:** To prevent severe performance bottlenecks in frequently instanced React Three Fiber components (like `Interactable.tsx`), avoid reactive Zustand subscriptions (`useStore(state => state.value)`) for state only needed inside `useFrame` or event handlers. Subscribing at the component level forces massive, unnecessary React re-renders across the entire 3D scene when global state (like `bandMood` or `isPaused`) changes.
+**Action:** Read the state imperatively using `useStore.getState().value` directly within the `useFrame` loop or the event handler callback to bypass the React rendering cycle entirely.
 
 ## 2026-04-11 - Zustand Array Mutation Optimization
 **Learning:** Modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans.
