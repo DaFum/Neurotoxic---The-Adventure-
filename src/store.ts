@@ -906,7 +906,7 @@ export const useStore = create<GameState>()(
             if (questChanged) newQuests[index] = { ...quest, text, status: nextStatus };
 
             return {
-              quests: newQuests,
+              ...(questChanged && { quests: newQuests }),
               ...(flagChanged && { flags: { ...state.flags, [flag]: flagValue } }),
             };
           }
@@ -943,7 +943,7 @@ export const useStore = create<GameState>()(
           if (statusChanged) newQuests[index] = { ...quest, status: 'completed' as QuestStatus };
 
           return {
-            quests: newQuests,
+            ...(statusChanged && { quests: newQuests }),
             ...(flagChanged && { flags: { ...state.flags, [flag]: flagValue } }),
           };
         }),
@@ -1234,13 +1234,29 @@ export const useStore = create<GameState>()(
                   (q) => q.id === 'fix_cable'
                 );
                 if (fixCableQuestIndex !== -1) {
-                  const cableQuestExists = currentState.quests.some((q) => q.id === 'cable');
-                  if (cableQuestExists) {
+                  const fixCableQuest = currentState.quests[fixCableQuestIndex];
+                  const cableQuestIndex = currentState.quests.findIndex((q) => q.id === 'cable');
+
+                  if (cableQuestIndex !== -1) {
+                    const cableQuest = currentState.quests[cableQuestIndex];
+                    // Merge statuses: 'completed' > 'active' > 'failed'
+                    let mergedStatus = cableQuest.status;
+                    if (fixCableQuest.status === 'completed' || cableQuest.status === 'completed') {
+                      mergedStatus = 'completed';
+                    } else if (fixCableQuest.status === 'active' || cableQuest.status === 'active') {
+                      mergedStatus = 'active';
+                    }
+
                     updatedQuests = currentState.quests.filter((q) => q.id !== 'fix_cable');
+                    const newCableIndex = updatedQuests.findIndex((q) => q.id === 'cable');
+                    updatedQuests[newCableIndex] = {
+                      ...cableQuest,
+                      status: mergedStatus,
+                    };
                   } else {
                     updatedQuests = [...currentState.quests];
                     updatedQuests[fixCableQuestIndex] = {
-                      ...updatedQuests[fixCableQuestIndex],
+                      ...fixCableQuest,
                       id: 'cable',
                     };
                   }

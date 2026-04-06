@@ -11,17 +11,23 @@ vi.mock('./KeyboardInteractionManager', () => ({
   useKeyboardInteraction: vi.fn(),
 }));
 
-vi.mock('../store', () => ({
-  useStore: vi.fn((selector) => {
-    const state = {
-      isPaused: false,
-      bandMood: 20,
-      setCameraShake: vi.fn(),
-      playerPos: [0, 0, 0],
-    };
-    return selector ? selector(state) : state;
-  }),
-}));
+vi.mock('../store', () => {
+  const mockState = {
+    isPaused: false,
+    bandMood: 20,
+    setCameraShake: vi.fn(),
+    playerPos: [0, 0, 0],
+    dialogue: null,
+    setDialogue: vi.fn(),
+  };
+
+  const useStoreMock = vi.fn((selector) => selector ? selector(mockState) : mockState) as any;
+  useStoreMock.getState = () => mockState;
+
+  return {
+    useStore: useStoreMock,
+  };
+});
 
 vi.mock('@react-three/fiber', () => ({
   useFrame: vi.fn(),
