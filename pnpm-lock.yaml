@@ -32,9 +32,6 @@ importers:
       lucide-react:
         specifier: ^1.7.0
         version: 1.7.0(react@19.2.4)
-      mitata:
-        specifier: ^1.0.34
-        version: 1.0.34
       motion:
         specifier: ^12.25.0
         version: 12.38.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -72,6 +69,9 @@ importers:
       jsdom:
         specifier: ^29.0.1
         version: 29.0.1
+      mitata:
+        specifier: ^1.0.34
+        version: 1.0.34
       tailwindcss:
         specifier: ^4.1.14
         version: 4.2.2
