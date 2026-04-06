@@ -129,20 +129,15 @@ export function UI() {
       })
       .map(({ quest }) => quest);
   }, [quests, scene, openQuestCount]);
-  const inventoryStacks = useMemo(() => {
-    const result = [];
+  const { inventoryStacks, inventoryTotalCount } = useMemo(() => {
+    const stacks = [];
+    let totalCount = 0;
     for (const item in inventoryCounts) {
-      result.push({ item, count: inventoryCounts[item] });
+      const count = inventoryCounts[item];
+      stacks.push({ item, count });
+      totalCount += count;
     }
-    return result;
-  }, [inventoryCounts]);
-
-  const inventoryTotalCount = useMemo(() => {
-    let sum = 0;
-    for (const item in inventoryCounts) {
-      sum += inventoryCounts[item];
-    }
-    return sum;
+    return { inventoryStacks: stacks, inventoryTotalCount: totalCount };
   }, [inventoryCounts]);
   const selectedItemCounts = useMemo(() => {
     const counts = new Map<string, number>();
