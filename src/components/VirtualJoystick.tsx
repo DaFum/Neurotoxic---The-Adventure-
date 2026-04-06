@@ -13,19 +13,24 @@ const MAX = BASE_R - KNOB_R; // max knob travel px
  * Only appears on touch-capable devices.
  * @returns A UI overlay for touch joystick controls, or null if hidden.
  */
-export function VirtualJoystick() {
+function useTouchDeviceDetection() {
   const [visible, setVisible] = useState(false);
-  const baseRef = useRef<HTMLDivElement>(null);
-  const activePid = useRef<number | null>(null);
-  const center = useRef({ x: 0, y: 0 });
-  const [knob, setKnob] = useState({ x: 0, y: 0 });
-  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     // Show on coarse-pointer (touch) devices, or if the device has touch events at all
     const mq = window.matchMedia('(pointer: coarse)');
     setVisible(mq.matches || 'ontouchstart' in window);
   }, []);
+
+  return visible;
+}
+
+function useJoystickControls(visible: boolean) {
+  const baseRef = useRef<HTMLDivElement>(null);
+  const activePid = useRef<number | null>(null);
+  const center = useRef({ x: 0, y: 0 });
+  const [knob, setKnob] = useState({ x: 0, y: 0 });
+  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     const el = baseRef.current;
@@ -83,6 +88,13 @@ export function VirtualJoystick() {
       touchInput.z = 0;
     };
   }, [visible]);
+
+  return { baseRef, knob, pressed };
+}
+
+export function VirtualJoystick() {
+  const visible = useTouchDeviceDetection();
+  const { baseRef, knob, pressed } = useJoystickControls(visible);
 
   if (!visible) return null;
 
