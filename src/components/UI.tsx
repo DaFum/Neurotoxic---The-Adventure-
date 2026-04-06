@@ -20,7 +20,7 @@
  */
 import { type QuestStatus, type Quest, useStore } from '../store';
 import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
-import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff } from 'lucide-react';
+import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff, Pause } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'motion/react';
 import { GlitchOverlay } from './ui/GlitchOverlay';
@@ -315,6 +315,7 @@ export function UI() {
         onClick={() => setShowHudPanels((prev) => !prev)}
         className="absolute top-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         aria-label="Toggle HUD panels"
+        title="Toggle HUD (H)"
         aria-pressed={showHudPanels}
       >
         {showHudPanels ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -654,10 +655,11 @@ export function UI() {
         onClick={() => setPaused(!isPaused)}
         className="absolute bottom-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         aria-label="Toggle pause menu"
+        title="Pause Game (ESC)"
         aria-pressed={isPaused}
         style={{ touchAction: 'none' }}
       >
-        ⏸
+        <Pause size={18} fill="currentColor" />
       </button>
 
       {/* Pause Menu */}
