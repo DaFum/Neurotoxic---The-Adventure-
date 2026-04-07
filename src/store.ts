@@ -670,6 +670,17 @@ const RECIPES: Recipe[] = [
   },
 ];
 
+const recipeKey = (item1: string, item2: string) =>
+  item1 < item2 ? `${item1}|${item2}` : `${item2}|${item1}`;
+
+const RECIPE_LOOKUP: Record<string, Recipe> = Object.create(null);
+for (const r of RECIPES) {
+  const i1 = r.ingredients[0];
+  const i2 = r.ingredients[1];
+  const key = recipeKey(i1, i2);
+  RECIPE_LOOKUP[key] = r;
+}
+
 // Limits how often an item may be collected in total during a run.
 // Default is 1 for all items not listed here.
 const ITEM_PICKUP_LIMITS: Record<string, number> = {
@@ -764,11 +775,11 @@ export const useStore = create<GameState>()(
         return pickedCount < getItemPickupLimit(item);
       },
       combineItems: (item1, item2) => {
-        const recipe = RECIPES.find(
-          (r) =>
-            (item1 === r.ingredients[0] && item2 === r.ingredients[1]) ||
-            (item1 === r.ingredients[1] && item2 === r.ingredients[0])
-        );
+        const sortedKey = [item1, item2].sort().join('|');
+        const directKey = `${item1}|${item2}`;
+        const reverseKey = `${item2}|${item1}`;
+        const recipe =
+          RECIPE_LOOKUP[sortedKey] ?? RECIPE_LOOKUP[directKey] ?? RECIPE_LOOKUP[reverseKey];
 
         if (!recipe) return false;
 
