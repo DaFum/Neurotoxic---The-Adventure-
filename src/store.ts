@@ -1039,11 +1039,19 @@ export const useStore = create<GameState>()(
         const persistedLore = Array.isArray(typedPersistedState.loreEntries)
           ? typedPersistedState.loreEntries
           : [];
-        const persistedFlags =
+        const rawPersistedFlags =
           typedPersistedState.flags !== null &&
           typeof typedPersistedState.flags === 'object'
-            ? typedPersistedState.flags
+            ? (typedPersistedState.flags as Record<string, boolean>)
             : {};
+
+        const persistedFlags = { ...rawPersistedFlags };
+        if (persistedFlags.ampFixed) {
+          if (!persistedFlags.ampRepaired) {
+            persistedFlags.ampRepaired = true;
+          }
+          delete persistedFlags.ampFixed;
+        }
         const persistedPickupCounts =
           typedPersistedState.itemPickupCounts !== null &&
           typeof typedPersistedState.itemPickupCounts === 'object'

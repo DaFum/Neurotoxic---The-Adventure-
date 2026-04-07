@@ -107,12 +107,20 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   if (option.questToComplete) {
     try {
       useStore.getState().completeQuest(option.questToComplete);
-    } catch {}
+    } catch (error) {
+      if (!(error instanceof Error && error.message.startsWith('Attempted to complete unregistered quest:'))) {
+        throw error;
+      }
+    }
   }
   if (option.questToFail) {
     try {
       useStore.getState().failQuest(option.questToFail);
-    } catch {}
+    } catch (error) {
+      if (!(error instanceof Error && error.message.startsWith('Attempted to fail unregistered quest:'))) {
+        throw error;
+      }
+    }
   }
 
   // Snapshot dialogue state before action so we can detect action-driven navigation
