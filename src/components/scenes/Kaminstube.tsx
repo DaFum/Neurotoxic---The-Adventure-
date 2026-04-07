@@ -87,7 +87,7 @@ export function Kaminstube() {
 
   useFrame((_state, delta) => {
     if (flags.ampFixed) {
-      // Dynamic lighting when the amp is fixed (show starts)
+      // Dynamic lighting when the amp is repaired (show starts)
       tRef.current += delta || 0;
       const t = tRef.current;
       const beat = Math.abs(Math.sin(t * 4)); // Simple beat sync
