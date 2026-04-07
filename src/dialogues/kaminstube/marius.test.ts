@@ -17,7 +17,7 @@ describe('buildKaminstubeMariusDialogue', () => {
     setupTestState({
       flags: {
         ...useStore.getState().flags,
-        ampFixed: true,
+        ampRepaired: true,
         mariusEgoStrategy: true,
       },
     });
@@ -30,7 +30,7 @@ describe('buildKaminstubeMariusDialogue', () => {
     setupTestState({
       flags: {
         ...useStore.getState().flags,
-        ampFixed: true,
+        ampRepaired: true,
         mariusEgoStrategy: true,
         egoContained: true,
       },
@@ -44,7 +44,7 @@ describe('buildKaminstubeMariusDialogue', () => {
     setupTestState({
       flags: {
         ...useStore.getState().flags,
-        ampFixed: true,
+        ampRepaired: true,
         egoContained: true,
       },
     });
@@ -57,7 +57,7 @@ describe('buildKaminstubeMariusDialogue', () => {
     setupTestState({
       flags: {
         ...useStore.getState().flags,
-        ampFixed: true,
+        ampRepaired: true,
       },
     });
 

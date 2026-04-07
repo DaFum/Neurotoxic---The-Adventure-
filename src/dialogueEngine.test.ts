@@ -10,20 +10,20 @@ describe('dialogueEngine', () => {
 
   describe('canSelectOption', () => {
     it('should check requiredFlags', () => {
-      const option: DialogueOption = { text: 'Test', requiredFlags: ['ampFixed'] };
+      const option: DialogueOption = { text: 'Test', requiredFlags: ['ampRepaired'] };
 
       expect(canSelectOption(option)).toBe(false);
 
-      useStore.getState().setFlag('ampFixed', true);
+      useStore.getState().setFlag('ampRepaired', true);
       expect(canSelectOption(option)).toBe(true);
     });
 
     it('should check forbiddenFlags', () => {
-      const option: DialogueOption = { text: 'Test', forbiddenFlags: ['ampFixed'] };
+      const option: DialogueOption = { text: 'Test', forbiddenFlags: ['ampRepaired'] };
 
       expect(canSelectOption(option)).toBe(true);
 
-      useStore.getState().setFlag('ampFixed', true);
+      useStore.getState().setFlag('ampRepaired', true);
       expect(canSelectOption(option)).toBe(false);
     });
 
@@ -84,7 +84,7 @@ describe('dialogueEngine', () => {
       const option: DialogueOption = {
         text: 'Test',
         consumeItems: ['Bier'],
-        flagToSet: { flag: 'ampFixed', value: true },
+        flagToSet: { flag: 'ampRepaired', value: true },
         action: actionSpy,
       };
 
@@ -94,13 +94,45 @@ describe('dialogueEngine', () => {
         // Item should be gone
         expect(state.inventory).not.toContain('Bier');
         // Flag should be set
-        expect(state.flags.ampFixed).toBe(true);
+        expect(state.flags.ampRepaired).toBe(true);
       });
 
       const success = executeDialogueOption(option);
 
       expect(success).toBe(true);
       expect(actionSpy).toHaveBeenCalled();
+    });
+
+    it('should handle throwing questToComplete and continue executing pipeline', () => {
+      const actionSpy = vi.fn();
+      const option: DialogueOption = {
+        text: 'Test',
+        questToComplete: 'missing_quest', // This will throw in store.ts
+        action: actionSpy,
+        nextDialogue: { text: 'Next' }
+      };
+
+      const success = executeDialogueOption(option);
+
+      expect(success).toBe(true);
+      expect(actionSpy).toHaveBeenCalled();
+      expect(useStore.getState().dialogue?.text).toBe('Next');
+    });
+
+    it('should handle throwing questToFail and continue executing pipeline', () => {
+      const actionSpy = vi.fn();
+      const option: DialogueOption = {
+        text: 'Test',
+        questToFail: 'missing_quest', // This will throw in store.ts
+        action: actionSpy,
+        nextDialogue: { text: 'Next' }
+      };
+
+      const success = executeDialogueOption(option);
+
+      expect(success).toBe(true);
+      expect(actionSpy).toHaveBeenCalled();
+      expect(useStore.getState().dialogue?.text).toBe('Next');
     });
 
     it('should warn if action calls setDialogue and nextDialogue is defined', () => {

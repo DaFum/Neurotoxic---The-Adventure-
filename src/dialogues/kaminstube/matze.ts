@@ -16,7 +16,7 @@ function handleMatzeConfession(text: string, moodDelta: number) {
 export function buildKaminstubeMatzeDialogue(): Dialogue {
   const store = game();
 
-  if (!store.flags.ampFixed) {
+  if (!store.flags.ampRepaired) {
     return say(
       'Matze: "Mein Amp hat den Geist aufgegeben! Er hat wohl zu viel von der 432Hz-Energie aus der Void Station abbekommen."'
     );

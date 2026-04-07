@@ -19,7 +19,7 @@ describe('buildKaminstubeMatzeDialogue', () => {
       trait: 'Diplomat',
       flags: {
         ...useStore.getState().flags,
-        ampFixed: true,
+        ampRepaired: true,
         tourbus_sabotage_discovered: true,
       },
       quests: [
@@ -57,7 +57,7 @@ describe('buildKaminstubeMatzeDialogue', () => {
     setupTestState({
       flags: {
         ...useStore.getState().flags,
-        ampFixed: true,
+        ampRepaired: true,
         tourbus_sabotage_discovered: true,
         tourbus_matze_confession: true,
       },

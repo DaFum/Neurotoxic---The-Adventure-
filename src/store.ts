@@ -24,7 +24,7 @@ export type Quest = { id: string; text: string; status: QuestStatus };
  */
 export type Flag =
   | 'waterCleaned'
-  | 'ampFixed'
+  | 'ampRepaired'
   | 'cableFixed'
   | 'setlistFound'
   | 'mariusCalmed'
@@ -330,7 +330,7 @@ const initialState = {
   itemPickupCounts: Object.create(null) as Record<string, number>,
   flags: {
     waterCleaned: false,
-    ampFixed: false,
+    ampRepaired: false,
     cableFixed: false,
     setlistFound: false,
     mariusCalmed: false,

@@ -24,7 +24,7 @@ export function buildKaminstubeAmpDialogue(): Dialogue {
   }
 
   store.removeFromInventory('Röhre');
-  store.setFlag('ampFixed', true);
+  store.setFlag('ampRepaired', true);
   store.completeQuest('amp');
   store.increaseBandMood(30, 'id_e3cce1ec');
 

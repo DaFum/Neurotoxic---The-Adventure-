@@ -4,7 +4,7 @@ import { say, game } from '../shared/helpers';
 export function buildKaminstubeMariusDialogue(): Dialogue {
   const store = game();
 
-  if (!store.flags.ampFixed) {
+  if (!store.flags.ampRepaired) {
     return say(
       'Marius: "Die Stille hier ist unerträglich. Sie erinnert mich an die Leere zwischen den Sternen. Wir müssen Lärm machen, Matze!"'
     );
