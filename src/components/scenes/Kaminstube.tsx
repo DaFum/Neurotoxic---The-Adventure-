@@ -1,7 +1,7 @@
 /**
  * #1: UPDATES
  * - Added lore, interactable objects, and NPCs.
- * - Implemented quest logic for fixing the amp.
+ * - Implemented quest logic for repairing the amp.
  * - Added dialogue branches for NPC interactions.
  * - Added cosmic_echo quest.
  *
@@ -61,7 +61,7 @@ const CABLE_COIL_X_POSITIONS: ReadonlyArray<number> = [-1.4, -0.6, 0.2, 1];
  */
 export function Kaminstube() {
   const flags = useStore(useShallow((state) => ({
-    ampFixed: state.flags.ampFixed,
+    ampRepaired: state.flags.ampRepaired,
     kaminFeuerPact: state.flags.kaminFeuerPact
   })));
   const hasRoehre = useStore((state) => state.inventory.includes('Röhre'));
@@ -86,7 +86,7 @@ export function Kaminstube() {
   }, []);
 
   useFrame((_state, delta) => {
-    if (flags.ampFixed) {
+    if (flags.ampRepaired) {
       // Dynamic lighting when the amp is repaired (show starts)
       tRef.current += delta || 0;
       const t = tRef.current;
@@ -532,7 +532,7 @@ export function Kaminstube() {
         idleType="headbang"
         onInteract={() => {
           const store = useStore.getState();
-          if (!store.flags.ampFixed) {
+          if (!store.flags.ampRepaired) {
             store.addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
           }
           store.setDialogue(buildKaminstubeMatzeDialogue());
@@ -562,7 +562,7 @@ export function Kaminstube() {
       />
 
       {/* Items */}
-      {!hasRoehre && !flags.ampFixed && (
+      {!hasRoehre && !flags.ampRepaired && (
         <Interactable
           position={[8, 0.5, 2]}
           emoji="🔌"
@@ -577,7 +577,7 @@ export function Kaminstube() {
       )}
 
       {/* The Amp Interaction */}
-      {!flags.ampFixed && (
+      {!flags.ampRepaired && (
         <Interactable
           position={[-5, 1.5, -6]}
           emoji="📻"
@@ -615,7 +615,7 @@ export function Kaminstube() {
       />
 
       {/* Exit */}
-      {flags.ampFixed && (
+      {flags.ampRepaired && (
         <Interactable
           position={[0, 1, 4]}
           emoji="🚐"

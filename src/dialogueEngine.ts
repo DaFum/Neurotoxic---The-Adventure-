@@ -104,8 +104,16 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   // Re-read store state to avoid stale references after inventory consumption
   if (option.flagToSet) useStore.getState().setFlag(option.flagToSet.flag, option.flagToSet.value);
   if (option.questToAdd) useStore.getState().addQuest(option.questToAdd.id, option.questToAdd.text);
-  if (option.questToComplete) useStore.getState().completeQuest(option.questToComplete);
-  if (option.questToFail) useStore.getState().failQuest(option.questToFail);
+  if (option.questToComplete) {
+    try {
+      useStore.getState().completeQuest(option.questToComplete);
+    } catch {}
+  }
+  if (option.questToFail) {
+    try {
+      useStore.getState().failQuest(option.questToFail);
+    } catch {}
+  }
 
   // Snapshot dialogue state before action so we can detect action-driven navigation
   const preActionDialogue = useStore.getState().dialogue;

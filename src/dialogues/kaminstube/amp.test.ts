@@ -40,7 +40,7 @@ describe('buildKaminstubeAmpDialogue', () => {
     const dialogue = buildKaminstubeAmpDialogue();
 
     expect(dialogue.text).toContain('Amp ist stumm');
-    expect(useStore.getState().flags.ampFixed).toBe(false);
+    expect(useStore.getState().flags.ampRepaired).toBe(false);
   });
 
   it('consumes tube, fixes amp and completes quest when tube exists', () => {
@@ -62,7 +62,7 @@ describe('buildKaminstubeAmpDialogue', () => {
 
     expect(dialogue.text).toContain('Amp funktioniert wieder');
     expect(stateAfter.inventory).not.toContain('Röhre');
-    expect(stateAfter.flags.ampFixed).toBe(true);
+    expect(stateAfter.flags.ampRepaired).toBe(true);
     expect(stateAfter.quests.find((quest) => quest.id === 'amp')?.status).toBe(
       'completed'
     );

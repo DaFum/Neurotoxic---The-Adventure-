@@ -159,7 +159,7 @@ export function DialogueBox({
                               setIsResolving(true);
                               try {
                                 executeDialogueOption(option);
-                              } finally {
+                              } catch {} finally {
                                 if (
                                   useStore.getState().dialogue === currentDialogue
                                 ) {
