@@ -124,10 +124,11 @@ export function UI() {
       buckets[QUEST_STATUS_ORDER[quest.status]].push(quest);
     }
 
-    let result: Quest[] = [];
+    const result: Quest[] = [];
     for (let i = 0; i < numStatuses; i++) {
-      if (buckets[i].length > 0) {
-        result = result.concat(buckets[i]);
+      const bucket = buckets[i];
+      for (let j = 0; j < bucket.length; j++) {
+        result.push(bucket[j]);
       }
     }
     return result;
