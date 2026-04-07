@@ -694,6 +694,57 @@ const ITEM_PICKUP_LIMITS: Record<string, number> = {
 const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
 
 /**
+ * Migrates the legacy feedback monitor flags to the new split system.
+ */
+const migrateLegacyFeedbackMonitorFlag = (flags: Record<Flag, boolean>): Record<Flag, boolean> => {
+  const newFlags = { ...flags };
+  if (newFlags.feedbackMonitorQuestStarted) {
+    newFlags.feedbackMonitorBackstageTalked = true;
+    newFlags.feedbackMonitorBackstageQuestStarted = true;
+    if (newFlags.feedbackMonitorQuestCompleted) {
+      newFlags.feedbackMonitorBackstageQuestCompleted = true;
+      // Zero the legacy flag so Proberaum's own feedbackMonitorQuestCompleted
+      // starts clean and doesn't inherit the Backstage completion state.
+      newFlags.feedbackMonitorQuestCompleted = false;
+    }
+    // Zero out the migrated flag rather than deleting (required by typed Record<Flag, boolean>)
+    newFlags.feedbackMonitorQuestStarted = false;
+  }
+  return newFlags;
+};
+
+/**
+ * Migrates legacy quests to their new IDs and resolves status merges.
+ */
+const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
+  const fixCableQuestIndex = quests.findIndex((q) => q.id === 'fix_cable');
+  if (fixCableQuestIndex === -1) return quests;
+
+  const fixCableQuest = quests[fixCableQuestIndex];
+  const cableQuestIndex = quests.findIndex((q) => q.id === 'cable');
+
+  if (cableQuestIndex !== -1) {
+    const cableQuest = quests[cableQuestIndex];
+    // Merge statuses: 'completed' > 'active' > 'failed'
+    let mergedStatus = cableQuest.status;
+    if (fixCableQuest.status === 'completed' || cableQuest.status === 'completed') {
+      mergedStatus = 'completed';
+    } else if (fixCableQuest.status === 'active' || cableQuest.status === 'active') {
+      mergedStatus = 'active';
+    }
+
+    const updatedQuests = quests.filter((q) => q.id !== 'fix_cable');
+    const newCableIndex = updatedQuests.findIndex((q) => q.id === 'cable');
+    updatedQuests[newCableIndex] = { ...cableQuest, status: mergedStatus };
+    return updatedQuests;
+  }
+
+  const updatedQuests = [...quests];
+  updatedQuests[fixCableQuestIndex] = { ...fixCableQuest, id: 'cable' };
+  return updatedQuests;
+};
+
+/**
  * The Zustand hook for accessing and mutating the global game state.
  * Automatically persists the state to localStorage.
  */
@@ -1219,63 +1270,18 @@ export const useStore = create<GameState>()(
                     migrateEntry('cosmic_echo_decoded');
                 }
 
-                const newFlags = { ...currentState.flags };
-
-                // Migrate legacy feedback monitor flag
-                if (newFlags.feedbackMonitorQuestStarted) {
-                  newFlags.feedbackMonitorBackstageTalked = true;
-                  newFlags.feedbackMonitorBackstageQuestStarted = true;
-                  if (newFlags.feedbackMonitorQuestCompleted) {
-                    newFlags.feedbackMonitorBackstageQuestCompleted = true;
-                    // Zero the legacy flag so Proberaum's own feedbackMonitorQuestCompleted
-                    // starts clean and doesn't inherit the Backstage completion state.
-                    newFlags.feedbackMonitorQuestCompleted = false;
-                  }
-                  // Zero out the migrated flag rather than deleting (required by typed Record<Flag, boolean>)
-                  newFlags.feedbackMonitorQuestStarted = false;
-                }
-
+                const newFlags = migrateLegacyFeedbackMonitorFlag(currentState.flags);
                 newFlags.legacyLoreMigrated = true;
 
-                let updatedQuests = currentState.quests;
-                const fixCableQuestIndex = currentState.quests.findIndex(
-                  (q) => q.id === 'fix_cable'
-                );
-                if (fixCableQuestIndex !== -1) {
-                  const fixCableQuest = currentState.quests[fixCableQuestIndex];
-                  const cableQuestIndex = currentState.quests.findIndex((q) => q.id === 'cable');
-
-                  if (cableQuestIndex !== -1) {
-                    const cableQuest = currentState.quests[cableQuestIndex];
-                    // Merge statuses: 'completed' > 'active' > 'failed'
-                    let mergedStatus = cableQuest.status;
-                    if (fixCableQuest.status === 'completed' || cableQuest.status === 'completed') {
-                      mergedStatus = 'completed';
-                    } else if (fixCableQuest.status === 'active' || cableQuest.status === 'active') {
-                      mergedStatus = 'active';
-                    }
-
-                    updatedQuests = currentState.quests.filter((q) => q.id !== 'fix_cable');
-                    const newCableIndex = updatedQuests.findIndex((q) => q.id === 'cable');
-                    updatedQuests[newCableIndex] = {
-                      ...cableQuest,
-                      status: mergedStatus,
-                    };
-                  } else {
-                    updatedQuests = [...currentState.quests];
-                    updatedQuests[fixCableQuestIndex] = {
-                      ...fixCableQuest,
-                      id: 'cable',
-                    };
-                  }
-                }
+                const updatedQuests = migrateLegacyQuests(currentState.quests);
+                const hasQuestChanges = updatedQuests !== currentState.quests;
 
                 return {
                   loreEntries: migratedLore
                     ? newEntries
                     : currentState.loreEntries,
                   flags: newFlags,
-                  ...(fixCableQuestIndex !== -1 && { quests: updatedQuests }),
+                  ...(hasQuestChanges && { quests: updatedQuests }),
                 };
               });
             }, 0);
