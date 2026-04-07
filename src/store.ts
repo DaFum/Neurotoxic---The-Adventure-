@@ -22,6 +22,7 @@ export class QuestNotFoundError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'QuestNotFoundError';
+    Object.setPrototypeOf(this, QuestNotFoundError.prototype);
   }
 }
 
