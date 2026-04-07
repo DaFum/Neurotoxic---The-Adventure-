@@ -111,20 +111,26 @@ export function UI() {
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
 
-    const activeQuests: Quest[] = [];
-    const failedQuests: Quest[] = [];
-    const completedQuests: Quest[] = [];
+    const numStatuses = Object.keys(QUEST_STATUS_ORDER).length;
+    const buckets: Quest[][] = [];
+    for (let i = 0; i < numStatuses; i++) {
+      buckets.push([]);
+    }
 
     for (let i = 0; i < quests.length; i++) {
       const quest = quests[i];
       if (quest.status === 'completed' && !shouldShowCompletedQuests) continue;
 
-      if (quest.status === 'active') activeQuests.push(quest);
-      else if (quest.status === 'failed') failedQuests.push(quest);
-      else if (quest.status === 'completed') completedQuests.push(quest);
+      buckets[QUEST_STATUS_ORDER[quest.status]].push(quest);
     }
 
-    return activeQuests.concat(failedQuests, completedQuests);
+    let result: Quest[] = [];
+    for (let i = 0; i < numStatuses; i++) {
+      if (buckets[i].length > 0) {
+        result = result.concat(buckets[i]);
+      }
+    }
+    return result;
   }, [quests, scene, openQuestCount]);
   const { inventoryStacks, inventoryTotalCount } = useMemo(() => {
     const stacks = [];
