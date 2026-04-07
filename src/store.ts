@@ -18,6 +18,14 @@ export type QuestStatus = 'active' | 'completed' | 'failed';
 
 export type Quest = { id: string; text: string; status: QuestStatus };
 
+export class QuestNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'QuestNotFoundError';
+    Object.setPrototypeOf(this, QuestNotFoundError.prototype);
+  }
+}
+
 /**
  * All known boolean game flags. Using a union type here gives autocomplete
  * and catches typos at compile time when calling setFlag().
@@ -694,6 +702,20 @@ const ITEM_PICKUP_LIMITS: Record<string, number> = {
 const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
 
 /**
+ * Migrates deprecated persisted flags to current flags.
+ */
+export const migrateFlags = (rawFlags: Record<string, boolean>): Record<string, boolean> => {
+  const flags = { ...rawFlags };
+  if ('ampFixed' in flags) {
+    if (flags.ampFixed && !flags.ampRepaired) {
+      flags.ampRepaired = true;
+    }
+    delete flags.ampFixed;
+  }
+  return flags;
+};
+
+/**
  * Migrates the legacy feedback monitor flags to the new split system.
  */
 const migrateLegacyFeedbackMonitorFlag = (flags: Record<Flag, boolean>): Record<Flag, boolean> => {
@@ -726,17 +748,14 @@ const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
   if (cableQuestIndex !== -1) {
     const cableQuest = quests[cableQuestIndex];
     // Merge statuses: 'completed' > 'active' > 'failed'
-    let mergedStatus = cableQuest.status;
-    if (fixCableQuest.status === 'completed' || cableQuest.status === 'completed') {
-      mergedStatus = 'completed';
-    } else if (fixCableQuest.status === 'active' || cableQuest.status === 'active') {
-      mergedStatus = 'active';
-    }
+    const statusPriority: Record<QuestStatus, number> = { completed: 3, active: 2, failed: 1 };
+    const mergedStatus = statusPriority[fixCableQuest.status] > statusPriority[cableQuest.status]
+      ? fixCableQuest.status
+      : cableQuest.status;
 
-    const updatedQuests = quests.filter((q) => q.id !== 'fix_cable');
-    const newCableIndex = updatedQuests.findIndex((q) => q.id === 'cable');
-    updatedQuests[newCableIndex] = { ...cableQuest, status: mergedStatus };
-    return updatedQuests;
+    return quests
+      .filter((q) => q.id !== 'fix_cable')
+      .map((q) => (q.id === 'cable' ? { ...q, status: mergedStatus } : q));
   }
 
   const updatedQuests = [...quests];
@@ -926,7 +945,7 @@ export const useStore = create<GameState>()(
                 ],
               };
             }
-            throw new Error(`Attempted to complete unregistered quest: ${id}`);
+            throw new QuestNotFoundError(`Attempted to complete unregistered quest: ${id}`);
           }
           if (state.quests[index].status === 'completed') return state;
           const newQuests = [...state.quests];
@@ -945,7 +964,7 @@ export const useStore = create<GameState>()(
                 ],
               };
             }
-            throw new Error(`Attempted to fail unregistered quest: ${id}`);
+            throw new QuestNotFoundError(`Attempted to fail unregistered quest: ${id}`);
           }
           if (state.quests[index].status === 'failed') return state;
           const newQuests = [...state.quests];
@@ -991,7 +1010,7 @@ export const useStore = create<GameState>()(
                 flags: { ...state.flags, [flag]: flagValue },
               };
             }
-            throw new Error(`Attempted to complete unregistered quest: ${id}`);
+            throw new QuestNotFoundError(`Attempted to complete unregistered quest: ${id}`);
           }
           const quest = state.quests[index];
           const statusChanged = quest.status !== 'completed';
@@ -1096,13 +1115,7 @@ export const useStore = create<GameState>()(
             ? (typedPersistedState.flags as Record<string, boolean>)
             : {};
 
-        const persistedFlags = { ...rawPersistedFlags };
-        if (persistedFlags.ampFixed) {
-          if (!persistedFlags.ampRepaired) {
-            persistedFlags.ampRepaired = true;
-          }
-          delete persistedFlags.ampFixed;
-        }
+        const persistedFlags = migrateFlags(rawPersistedFlags);
         const persistedPickupCounts =
           typedPersistedState.itemPickupCounts !== null &&
           typeof typedPersistedState.itemPickupCounts === 'object'

@@ -1,4 +1,4 @@
-import { useStore } from './store';
+import { useStore, QuestNotFoundError } from './store';
 import type { DialogueOption, Quest } from './store';
 
 // Cache for O(1) quest lookups
@@ -108,7 +108,7 @@ export function executeDialogueOption(option: DialogueOption): boolean {
     try {
       useStore.getState().completeQuest(option.questToComplete);
     } catch (error) {
-      if (!(error instanceof Error && error.message.startsWith('Attempted to complete unregistered quest:'))) {
+      if (!(error instanceof QuestNotFoundError)) {
         throw error;
       }
     }
@@ -117,7 +117,7 @@ export function executeDialogueOption(option: DialogueOption): boolean {
     try {
       useStore.getState().failQuest(option.questToFail);
     } catch (error) {
-      if (!(error instanceof Error && error.message.startsWith('Attempted to fail unregistered quest:'))) {
+      if (!(error instanceof QuestNotFoundError)) {
         throw error;
       }
     }

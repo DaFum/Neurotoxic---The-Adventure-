@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { useStore } from './store';
+import { useStore, migrateFlags } from './store';
 
 describe('useStore', () => {
   beforeEach(() => {
@@ -17,6 +17,29 @@ describe('useStore', () => {
 
       state.setFlag('salzgitter_true_ending', true);
       expect(useStore.getState().flags.salzgitter_true_ending).toBe(true);
+    });
+  });
+
+  describe('migrateFlags', () => {
+    it('should migrate ampFixed: true to ampRepaired: true and remove ampFixed', () => {
+      const rawFlags = { ampFixed: true };
+      const migrated = migrateFlags(rawFlags);
+      expect(migrated.ampRepaired).toBe(true);
+      expect(migrated).not.toHaveProperty('ampFixed');
+    });
+
+    it('should remove ampFixed if it is false without setting ampRepaired: true', () => {
+      const rawFlags = { ampFixed: false };
+      const migrated = migrateFlags(rawFlags);
+      expect(migrated.ampRepaired).toBeUndefined(); // Assuming it wasn't there to begin with
+      expect(migrated).not.toHaveProperty('ampFixed');
+    });
+
+    it('should not overwrite ampRepaired if it is already true and ampFixed is true', () => {
+      const rawFlags = { ampFixed: true, ampRepaired: true };
+      const migrated = migrateFlags(rawFlags);
+      expect(migrated.ampRepaired).toBe(true);
+      expect(migrated).not.toHaveProperty('ampFixed');
     });
   });
 
