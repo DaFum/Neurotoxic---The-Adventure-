@@ -160,13 +160,11 @@ export function DialogueBox({
                               try {
                                 executeDialogueOption(option);
                               } catch (error) {
-                                if (import.meta.env.MODE !== 'production') {
-                                  console.error(
-                                    'Failed to execute dialogue option',
-                                    option,
-                                    error
-                                  );
-                                }
+                                console.error(
+                                  'Failed to execute dialogue option',
+                                  option,
+                                  error
+                                );
                               } finally {
                                 if (
                                   useStore.getState().dialogue === currentDialogue
