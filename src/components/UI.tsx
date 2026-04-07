@@ -111,23 +111,17 @@ export function UI() {
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
 
-    // ⚡ Bolt Optimization: Use a single for loop to filter and retain original index,
-    // avoiding chained array methods that allocate multiple intermediate arrays
-    const filtered: { quest: Quest; index: number }[] = [];
+    // ⚡ Bolt Optimization: Use a single for loop to filter and rely on stable sort,
+    // eliminating intermediate object wrapper allocations and the subsequent .map step
+    const filtered: Quest[] = [];
     for (let i = 0; i < quests.length; i++) {
       const quest = quests[i];
       if (shouldShowCompletedQuests || quest.status !== 'completed') {
-        filtered.push({ quest, index: i });
+        filtered.push(quest);
       }
     }
 
-    return filtered
-      .sort((a, b) => {
-        const statusDiff = QUEST_STATUS_ORDER[a.quest.status] - QUEST_STATUS_ORDER[b.quest.status];
-        if (statusDiff !== 0) return statusDiff;
-        return a.index - b.index;
-      })
-      .map(({ quest }) => quest);
+    return filtered.sort((a, b) => QUEST_STATUS_ORDER[a.status] - QUEST_STATUS_ORDER[b.status]);
   }, [quests, scene, openQuestCount]);
   const { inventoryStacks, inventoryTotalCount } = useMemo(() => {
     const stacks = [];
