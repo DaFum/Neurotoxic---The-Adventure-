@@ -147,7 +147,6 @@ export function DialogueBox({
                           <button
                             key={option.id || idx}
                             aria-disabled={isLocked || isResolving}
-                            title={isLocked ? "Option locked due to missing requirements" : undefined}
                             onClick={() => {
                               if (
                                 isLocked ||
