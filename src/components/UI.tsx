@@ -111,9 +111,9 @@ export function UI() {
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
 
-    const numStatuses = Object.keys(QUEST_STATUS_ORDER).length;
+    const numBuckets = Math.max(...Object.values(QUEST_STATUS_ORDER)) + 1;
     const buckets: Quest[][] = [];
-    for (let i = 0; i < numStatuses; i++) {
+    for (let i = 0; i < numBuckets; i++) {
       buckets.push([]);
     }
 
@@ -121,11 +121,16 @@ export function UI() {
       const quest = quests[i];
       if (quest.status === 'completed' && !shouldShowCompletedQuests) continue;
 
-      buckets[QUEST_STATUS_ORDER[quest.status]].push(quest);
+      const orderValue = QUEST_STATUS_ORDER[quest.status];
+      if (orderValue !== undefined && orderValue >= 0 && orderValue < numBuckets) {
+        buckets[orderValue].push(quest);
+      } else {
+        console.warn(`Unknown or out-of-bounds quest status order for status: ${quest.status}`);
+      }
     }
 
     const result: Quest[] = [];
-    for (let i = 0; i < numStatuses; i++) {
+    for (let i = 0; i < numBuckets; i++) {
       const bucket = buckets[i];
       for (let j = 0; j < bucket.length; j++) {
         result.push(bucket[j]);
