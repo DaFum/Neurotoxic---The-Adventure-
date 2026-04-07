@@ -159,7 +159,15 @@ export function DialogueBox({
                               setIsResolving(true);
                               try {
                                 executeDialogueOption(option);
-                              } catch {} finally {
+                              } catch (error) {
+                                if (import.meta.env.MODE !== 'production') {
+                                  console.error(
+                                    'Failed to execute dialogue option',
+                                    option,
+                                    error
+                                  );
+                                }
+                              } finally {
                                 if (
                                   useStore.getState().dialogue === currentDialogue
                                 ) {
