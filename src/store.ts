@@ -875,8 +875,7 @@ export const useStore = create<GameState>()(
                 ],
               };
             }
-            console.warn(`Attempted to complete unregistered quest: ${id}`);
-            return state;
+            throw new Error(`Attempted to complete unregistered quest: ${id}`);
           }
           if (state.quests[index].status === 'completed') return state;
           const newQuests = [...state.quests];
@@ -895,8 +894,7 @@ export const useStore = create<GameState>()(
                 ],
               };
             }
-            console.warn(`Attempted to fail unregistered quest: ${id}`);
-            return state;
+            throw new Error(`Attempted to fail unregistered quest: ${id}`);
           }
           if (state.quests[index].status === 'failed') return state;
           const newQuests = [...state.quests];
@@ -942,8 +940,7 @@ export const useStore = create<GameState>()(
                 flags: { ...state.flags, [flag]: flagValue },
               };
             }
-            console.warn(`Attempted to complete unregistered quest: ${id}`);
-            return state;
+            throw new Error(`Attempted to complete unregistered quest: ${id}`);
           }
           const quest = state.quests[index];
           const statusChanged = quest.status !== 'completed';

@@ -237,17 +237,12 @@ describe('useStore', () => {
       expect(state.quests.find(q => q.id === 'test_quest_3')?.status).toBe('completed');
     });
 
-    it('completeQuestWithFlag should return unchanged state if quest is missing and no text is provided', () => {
-      let state = useStore.getState();
-      const initialQuestsLength = state.quests.length;
+    it('completeQuestWithFlag should throw an error if quest is missing and no text is provided', () => {
+      const state = useStore.getState();
 
-      state.completeQuestWithFlag('missing_quest', 'mariusCalmed');
-
-      state = useStore.getState();
-      // Because we returned the original state entirely, the flag should NOT be set
-      expect(state.flags.mariusCalmed).toBe(false);
-      expect(state.quests.length).toBe(initialQuestsLength);
-      expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest');
+      expect(() => {
+        state.completeQuestWithFlag('missing_quest', 'mariusCalmed');
+      }).toThrowError('Attempted to complete unregistered quest: missing_quest');
     });
 
     it('completeQuestWithFlag should backfill a completed quest entry when text is provided for a missing quest', () => {
@@ -266,26 +261,20 @@ describe('useStore', () => {
       expect(warnSpy).not.toHaveBeenCalled();
     });
 
-    it('completeQuest should return unchanged state if quest is missing and no text is provided', () => {
-      let state = useStore.getState();
-      const initialState = state;
+    it('completeQuest should throw an error if quest is missing and no text is provided', () => {
+      const state = useStore.getState();
 
-      state.completeQuest('missing_quest_2');
-
-      state = useStore.getState();
-      expect(state).toBe(initialState);
-      expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest_2');
+      expect(() => {
+        state.completeQuest('missing_quest_2');
+      }).toThrowError('Attempted to complete unregistered quest: missing_quest_2');
     });
 
-    it('failQuest should return unchanged state if quest is missing and no text is provided', () => {
-      let state = useStore.getState();
-      const initialState = state;
+    it('failQuest should throw an error if quest is missing and no text is provided', () => {
+      const state = useStore.getState();
 
-      state.failQuest('missing_quest_3');
-
-      state = useStore.getState();
-      expect(state).toBe(initialState);
-      expect(warnSpy).toHaveBeenCalledWith('Attempted to fail unregistered quest: missing_quest_3');
+      expect(() => {
+        state.failQuest('missing_quest_3');
+      }).toThrowError('Attempted to fail unregistered quest: missing_quest_3');
     });
   });
 });
