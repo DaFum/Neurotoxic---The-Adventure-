@@ -121,7 +121,7 @@ export function UI() {
 
       if (quest.status === 'active') activeQuests.push(quest);
       else if (quest.status === 'failed') failedQuests.push(quest);
-      else completedQuests.push(quest);
+      else if (quest.status === 'completed') completedQuests.push(quest);
     }
 
     return activeQuests.concat(failedQuests, completedQuests);
