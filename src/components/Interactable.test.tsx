@@ -34,7 +34,7 @@ vi.mock('@react-three/fiber', () => ({
 }));
 
 vi.mock('@react-three/rapier', () => ({
-  RigidBody: ({ children }: any) => <div data-testid="rigid-body">{children}</div>,
+  RigidBody: ({ children }: { children: React.ReactNode }) => <div data-testid="rigid-body">{children}</div>,
   CuboidCollider: () => null,
 }));
 
