@@ -35,3 +35,7 @@
 ## 2026-04-11 - Zustand Array Mutation Optimization
 **Learning:** Modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans.
 **Action:** Prefer `.findIndex()` lookup and targeted index modification when updating a single unique item in a state array.
+
+## 2026-04-08 - Shared R3F Textures
+**Learning:** Instantiating identical `THREE.CanvasTexture` instances across multiple identical React Three Fiber components causes redundant memory allocation and GPU texture uploads.
+**Action:** Extract texture generation into module-level factory functions that use a reference-counted `Map` cache. This ensures multiple identical components share the exact same R3F texture object while still cleaning up memory when the last component unmounts.
