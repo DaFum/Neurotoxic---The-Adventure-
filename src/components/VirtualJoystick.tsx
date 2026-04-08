@@ -119,6 +119,7 @@ export function VirtualJoystick() {
         transition: 'border-color 0.1s, box-shadow 0.1s',
         zIndex: 30,
       }}
+      aria-hidden="true"
     >
       {/* Crosshair guide lines */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.18 }}>

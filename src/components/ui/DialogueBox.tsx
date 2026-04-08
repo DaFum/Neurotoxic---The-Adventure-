@@ -84,6 +84,7 @@ export function DialogueBox({
         <div
           className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
           role="dialog"
+          aria-modal="true"
           aria-labelledby="dialogue-title"
         >
           <motion.div
