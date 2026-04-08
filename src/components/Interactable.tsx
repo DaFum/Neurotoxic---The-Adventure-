@@ -171,14 +171,15 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const targetPosVector = useRef(new THREE.Vector3(...position)).current;
 
   // Initialize inRangeRef accurately to prevent one frame flicker
-  const inRangeRef = useRef((() => {
+  const inRangeRef = useRef(false);
+  useMemo(() => {
     const { playerPos } = useStore.getState();
-    const initialPlayerPos = playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
-    const initialTargetPos = targetPosVector.set(position[0], position[1], position[2]);
-    const distSq = initialPlayerPos.distanceToSquared(initialTargetPos);
+    playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
+    targetPosVector.set(position[0], position[1], position[2]);
+    const distSq = playerPosVector.distanceToSquared(targetPosVector);
     distanceRef.current = distSq;
-    return distSq < 16.0;
-  })());
+    inRangeRef.current = distSq < 16.0;
+  }, []);
 
   const palette = useMemo(() => {
     let seed = 0;
