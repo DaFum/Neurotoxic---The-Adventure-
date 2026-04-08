@@ -5,14 +5,18 @@ import * as React from 'react';
  */
 import { render } from '@testing-library/react';
 import { Player } from './Player';
-import { GameState } from '../store';
+import type { GameState } from '../store';
+
+const makeMockGameState = (overrides: Partial<GameState>): GameState => {
+  return overrides as GameState;
+};
 
 let mockStoreSubscriptions: ((state: GameState) => void)[] = [];
-let mockStoreState = {
+let mockStoreState = makeMockGameState({
   playerPos: [1, 2, 3],
   cameraShakeKick: 0,
   cameraShakeIntensity: 0,
-} as unknown as GameState;
+});
 
 vi.mock('../store', () => {
   const useStore = vi.fn((selector) => {
@@ -45,7 +49,7 @@ let mockBodyMethods = {
 vi.mock('@react-three/rapier', async () => {
   const React = await import('react');
   return {
-    RigidBody: React.forwardRef(({ children }: { children: React.ReactNode }, ref: React.Ref<any>) => {
+    RigidBody: React.forwardRef(({ children }: { children: React.ReactNode }, ref: React.Ref<{ setTranslation: (...args: any[]) => void; setLinvel: (...args: any[]) => void; setAngvel: (...args: any[]) => void; translation: () => { x: number; y: number; z: number } }>) => {
       React.useImperativeHandle(ref, () => mockBodyMethods);
       return <>{children}</>;
     }),
@@ -112,7 +116,7 @@ describe('Player Rigidbody Initialization Error Handling', () => {
     // Now trigger the store subscription with a new position
     const posSubscription = mockStoreSubscriptions[0];
 
-    expect(() => posSubscription({ ...mockStoreState, playerPos: [10, 10, 10] } as unknown as GameState)).not.toThrow();
+    expect(() => posSubscription(makeMockGameState({ ...mockStoreState, playerPos: [10, 10, 10] }))).not.toThrow();
 
     // In the subscription, setTranslation should be called and the error caught
     expect(mockBodyMethods.setTranslation).toHaveBeenCalledTimes(1);
