@@ -46,7 +46,7 @@ vi.mock('../audio', () => ({
 const mockDispose = vi.fn();
 let canvasTextureCtorCount = 0;
 vi.mock('three', async () => {
-  const actual = await vi.importActual('three') as any;
+  const actual = await vi.importActual<typeof import('three')>('three');
   return {
     ...actual,
     CanvasTexture: class {
