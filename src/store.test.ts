@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach, MockInstance } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach, type MockInstance } from 'vitest';
 import { useStore, migrateFlags } from './store';
 
 describe('useStore', () => {
