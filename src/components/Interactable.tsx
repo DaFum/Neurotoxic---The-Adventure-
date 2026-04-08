@@ -19,6 +19,115 @@ import { useStore } from '../store';
 import { audio } from '../audio';
 import { useKeyboardInteraction } from './KeyboardInteractionManager';
 
+// --- Module-level Texture Cache ---
+interface CacheEntry {
+  texture: THREE.CanvasTexture;
+  refCount: number;
+}
+
+const textureCache = new Map<string, CacheEntry>();
+
+function getEmojiTexture(emoji: string): THREE.CanvasTexture {
+  const key = `emoji_${emoji}`;
+  let entry = textureCache.get(key);
+  if (entry) {
+    entry.refCount++;
+    return entry.texture;
+  }
+
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.clearRect(0, 0, size, size);
+    const gradient = ctx.createRadialGradient(size / 2, size / 2, 20, size / 2, size / 2, 120);
+    gradient.addColorStop(0, 'rgba(173,255,47,0.22)');
+    gradient.addColorStop(1, 'rgba(173,255,47,0)');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, 120, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '150px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, size / 2, size / 2 + 8);
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+
+  textureCache.set(key, { texture, refCount: 1 });
+  return texture;
+}
+
+function releaseEmojiTexture(emoji: string) {
+  const key = `emoji_${emoji}`;
+  const entry = textureCache.get(key);
+  if (entry) {
+    entry.refCount--;
+    if (entry.refCount <= 0) {
+      entry.texture.dispose();
+      textureCache.delete(key);
+    }
+  }
+}
+
+function getLabelTexture(name: string, isInRange: boolean): THREE.CanvasTexture {
+  const key = `label_${name}_${isInRange}`;
+  let entry = textureCache.get(key);
+  if (entry) {
+    entry.refCount++;
+    return entry.texture;
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(0,0,0,0.78)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#adff2f';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+
+    ctx.fillStyle = '#adff2f';
+    ctx.font = '700 36px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(name.toUpperCase(), canvas.width / 2, 42);
+
+    ctx.fillStyle = isInRange ? '#b3b3b3' : '#8b0000';
+    ctx.font = '600 22px "JetBrains Mono", monospace';
+    ctx.fillText(isInRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', canvas.width / 2, 90);
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+
+  textureCache.set(key, { texture, refCount: 1 });
+  return texture;
+}
+
+function releaseLabelTexture(name: string, isInRange: boolean) {
+  const key = `label_${name}_${isInRange}`;
+  const entry = textureCache.get(key);
+  if (entry) {
+    entry.refCount--;
+    if (entry.refCount <= 0) {
+      entry.texture.dispose();
+      textureCache.delete(key);
+    }
+  }
+}
+// ------------------------------------------
+
 interface InteractableProps {
   position: [number, number, number];
   emoji: string;
@@ -81,30 +190,7 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   }, [name, isBandMember]);
 
   useEffect(() => {
-    const size = 256;
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, size, size);
-    const gradient = ctx.createRadialGradient(size / 2, size / 2, 20, size / 2, size / 2, 120);
-    gradient.addColorStop(0, 'rgba(173,255,47,0.22)');
-    gradient.addColorStop(1, 'rgba(173,255,47,0)');
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, 120, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.font = '150px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(emoji, size / 2, size / 2 + 8);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.needsUpdate = true;
+    const texture = getEmojiTexture(emoji);
     emojiTextureRef.current = texture;
 
     if (spriteRef.current) {
@@ -126,48 +212,18 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
       if (emojiTextureRef.current === texture) {
         emojiTextureRef.current = null;
       }
-      texture.dispose();
+      releaseEmojiTexture(emoji);
     };
   }, [emoji]);
 
   useEffect(() => {
-    const createLabelTexture = (isInRange: boolean) => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 128;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return null;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(0,0,0,0.78)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = '#adff2f';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
-
-      ctx.fillStyle = '#adff2f';
-      ctx.font = '700 36px "JetBrains Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(name.toUpperCase(), canvas.width / 2, 42);
-
-      ctx.fillStyle = isInRange ? '#b3b3b3' : '#8b0000';
-      ctx.font = '600 22px "JetBrains Mono", monospace';
-      ctx.fillText(isInRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', canvas.width / 2, 90);
-
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-      return texture;
-    };
-
-    labelTextureInRangeRef.current = createLabelTexture(true);
-    labelTextureOutOfRangeRef.current = createLabelTexture(false);
+    labelTextureInRangeRef.current = getLabelTexture(name, true);
+    labelTextureOutOfRangeRef.current = getLabelTexture(name, false);
 
     if (labelSpriteRef.current) {
       const material = labelSpriteRef.current.material;
       if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
-        material.map = labelTextureOutOfRangeRef.current;
+        material.map = inRangeRef.current ? labelTextureInRangeRef.current : labelTextureOutOfRangeRef.current;
         material.needsUpdate = true;
       }
     }
@@ -182,19 +238,12 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
         }
       }
 
-      labelTextureInRangeRef.current?.dispose();
-      labelTextureOutOfRangeRef.current?.dispose();
+      releaseLabelTexture(name, true);
+      releaseLabelTexture(name, false);
       labelTextureInRangeRef.current = null;
       labelTextureOutOfRangeRef.current = null;
     };
   }, [name]);
-
-  useEffect(() => {
-    return () => {
-      emojiTextureRef.current?.dispose();
-      emojiTextureRef.current = null;
-    };
-  }, []);
 
   useEffect(() => {
     const id = instanceIdRef.current;
