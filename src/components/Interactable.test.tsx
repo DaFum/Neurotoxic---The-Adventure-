@@ -43,13 +43,14 @@ vi.mock('../audio', () => ({
 }));
 
 // Mock THREE to avoid issues with CanvasTexture and other things
+const mockDispose = vi.fn();
 vi.mock('three', async () => {
   const actual = await vi.importActual('three') as any;
   return {
     ...actual,
     CanvasTexture: class {
       needsUpdate = false;
-      dispose = vi.fn();
+      dispose = mockDispose;
     },
   };
 });
@@ -102,5 +103,51 @@ describe('Interactable', () => {
 
     expect(mockUnregister).toHaveBeenCalledWith(firstRegisteredId);
     expect(mockUnregister).toHaveBeenCalledWith(secondRegisteredId);
+  });
+
+  it('reuses CanvasTexture instances for identical interactables and disposes only when all unmount', () => {
+    mockDispose.mockClear();
+
+    const { rerender, unmount } = render(
+      <>
+        <Interactable
+          position={[0, 0, 0]}
+          emoji="🎸"
+          name="Guitar"
+          onInteract={() => {}}
+        />
+        <Interactable
+          position={[1, 0, 0]}
+          emoji="🎸"
+          name="Guitar"
+          onInteract={() => {}}
+        />
+      </>
+    );
+
+    // Initial render creates the textures (one for emoji, two for in/out range labels per unique identity)
+    expect(mockDispose).not.toHaveBeenCalled();
+
+    // Rerender with only one interactable
+    rerender(
+      <>
+        <Interactable
+          position={[0, 0, 0]}
+          emoji="🎸"
+          name="Guitar"
+          onInteract={() => {}}
+        />
+      </>
+    );
+
+    // One instance unmounted, but the other is still using the textures, so dispose should not be called
+    expect(mockDispose).not.toHaveBeenCalled();
+
+    // Unmount the remaining interactable
+    unmount();
+
+    // Now all consumers are gone, textures should be disposed.
+    // Emoji (1) + Label In Range (1) + Label Out of Range (1) = 3 calls
+    expect(mockDispose).toHaveBeenCalledTimes(3);
   });
 });

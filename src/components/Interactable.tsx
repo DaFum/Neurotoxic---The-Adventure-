@@ -216,7 +216,7 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
     if (labelSpriteRef.current) {
       const material = labelSpriteRef.current.material;
       if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
-        material.map = outOfRangeTexture;
+        material.map = inRangeRef.current ? inRangeTexture : outOfRangeTexture;
         material.needsUpdate = true;
       }
     }
