@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach, MockInstance } from 'vitest';
 import { useStore, migrateFlags } from './store';
 
 describe('useStore', () => {
@@ -195,7 +195,7 @@ describe('useStore', () => {
   });
 
   describe('Quest Helpers', () => {
-    let warnSpy: any;
+    let warnSpy: MockInstance;
 
     beforeEach(() => {
       warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
