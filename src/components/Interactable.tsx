@@ -29,103 +29,109 @@ interface InteractableProps {
   idleType?: 'headbang' | 'tap' | 'sway';
 }
 
-const emojiCache = new Map<string, { texture: THREE.CanvasTexture; refs: number }>();
-const labelCache = new Map<string, { texture: THREE.CanvasTexture; refs: number }>();
+// Texture Dimensions
+const EMOJI_TEXTURE_SIZE = 256;
+const LABEL_TEXTURE_WIDTH = 512;
+const LABEL_TEXTURE_HEIGHT = 128;
 
-const getEmojiTexture = (emoji: string): THREE.CanvasTexture => {
-  const cached = emojiCache.get(emoji);
-  if (cached) {
-    cached.refs++;
-    return cached.texture;
+// Fonts
+const FONT_EMOJI = '150px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+const FONT_LABEL_NAME = '700 36px "JetBrains Mono", monospace';
+const FONT_LABEL_PROMPT = '600 22px "JetBrains Mono", monospace';
+
+// Colors
+const COLOR_ACCENT = '#adff2f';
+const COLOR_PROMPT_IN_RANGE = '#b3b3b3';
+const COLOR_PROMPT_OUT_OF_RANGE = '#8b0000';
+
+const textureCache = new Map<string, { texture: THREE.CanvasTexture; refCount: number }>();
+
+function getCachedTexture(key: string, createCanvas: () => HTMLCanvasElement): THREE.CanvasTexture {
+  let entry = textureCache.get(key);
+  if (entry) {
+    entry.refCount++;
+    return entry.texture;
   }
 
-  const size = 256;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.clearRect(0, 0, size, size);
-    const gradient = ctx.createRadialGradient(size / 2, size / 2, 20, size / 2, size / 2, 120);
-    gradient.addColorStop(0, 'rgba(173,255,47,0.22)');
-    gradient.addColorStop(1, 'rgba(173,255,47,0)');
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, 120, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.font = '150px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(emoji, size / 2, size / 2 + 8);
-  }
-
+  const canvas = createCanvas();
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
-  emojiCache.set(emoji, { texture, refs: 1 });
+
+  textureCache.set(key, { texture, refCount: 1 });
   return texture;
+}
+
+function releaseCachedTexture(key: string) {
+  const entry = textureCache.get(key);
+  if (entry) {
+    entry.refCount--;
+    if (entry.refCount <= 0) {
+      entry.texture.dispose();
+      textureCache.delete(key);
+    }
+  }
+}
+
+const getEmojiTexture = (emoji: string): THREE.CanvasTexture => {
+  return getCachedTexture(`emoji-${emoji}`, () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = EMOJI_TEXTURE_SIZE;
+    canvas.height = EMOJI_TEXTURE_SIZE;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.clearRect(0, 0, EMOJI_TEXTURE_SIZE, EMOJI_TEXTURE_SIZE);
+      const gradient = ctx.createRadialGradient(EMOJI_TEXTURE_SIZE / 2, EMOJI_TEXTURE_SIZE / 2, 20, EMOJI_TEXTURE_SIZE / 2, EMOJI_TEXTURE_SIZE / 2, 120);
+      gradient.addColorStop(0, 'rgba(173,255,47,0.22)');
+      gradient.addColorStop(1, 'rgba(173,255,47,0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(EMOJI_TEXTURE_SIZE / 2, EMOJI_TEXTURE_SIZE / 2, 120, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.font = FONT_EMOJI;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(emoji, EMOJI_TEXTURE_SIZE / 2, EMOJI_TEXTURE_SIZE / 2 + 8);
+    }
+    return canvas;
+  });
 };
 
 const releaseEmojiTexture = (emoji: string) => {
-  const cached = emojiCache.get(emoji);
-  if (cached) {
-    cached.refs--;
-    if (cached.refs <= 0) {
-      cached.texture.dispose();
-      emojiCache.delete(emoji);
-    }
-  }
+  releaseCachedTexture(`emoji-${emoji}`);
 };
 
 const getLabelTexture = (name: string, isInRange: boolean): THREE.CanvasTexture => {
-  const key = `${name}-${isInRange}`;
-  const cached = labelCache.get(key);
-  if (cached) {
-    cached.refs++;
-    return cached.texture;
-  }
+  return getCachedTexture(`label-${name}-${isInRange}`, () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = LABEL_TEXTURE_WIDTH;
+    canvas.height = LABEL_TEXTURE_HEIGHT;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.clearRect(0, 0, LABEL_TEXTURE_WIDTH, LABEL_TEXTURE_HEIGHT);
+      ctx.fillStyle = 'rgba(0,0,0,0.78)';
+      ctx.fillRect(0, 0, LABEL_TEXTURE_WIDTH, LABEL_TEXTURE_HEIGHT);
+      ctx.strokeStyle = COLOR_ACCENT;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(2, 2, LABEL_TEXTURE_WIDTH - 4, LABEL_TEXTURE_HEIGHT - 4);
 
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 128;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(0,0,0,0.78)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#adff2f';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+      ctx.fillStyle = COLOR_ACCENT;
+      ctx.font = FONT_LABEL_NAME;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(name.toUpperCase(), LABEL_TEXTURE_WIDTH / 2, 42);
 
-    ctx.fillStyle = '#adff2f';
-    ctx.font = '700 36px "JetBrains Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(name.toUpperCase(), canvas.width / 2, 42);
-
-    ctx.fillStyle = isInRange ? '#b3b3b3' : '#8b0000';
-    ctx.font = '600 22px "JetBrains Mono", monospace';
-    ctx.fillText(isInRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', canvas.width / 2, 90);
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
-  labelCache.set(key, { texture, refs: 1 });
-  return texture;
+      ctx.fillStyle = isInRange ? COLOR_PROMPT_IN_RANGE : COLOR_PROMPT_OUT_OF_RANGE;
+      ctx.font = FONT_LABEL_PROMPT;
+      ctx.fillText(isInRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', LABEL_TEXTURE_WIDTH / 2, 90);
+    }
+    return canvas;
+  });
 };
 
 const releaseLabelTexture = (name: string, isInRange: boolean) => {
-  const key = `${name}-${isInRange}`;
-  const cached = labelCache.get(key);
-  if (cached) {
-    cached.refs--;
-    if (cached.refs <= 0) {
-      cached.texture.dispose();
-      labelCache.delete(key);
-    }
-  }
+  releaseCachedTexture(`label-${name}-${isInRange}`);
 };
 
 /**
@@ -156,7 +162,6 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const coreRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
   const distanceRef = useRef(Infinity);
-  const inRangeRef = useRef(false);
   const hoveredRef = useRef(false);
   const interactedRef = useRef(false);
   const { register, unregister } = useKeyboardInteraction();
@@ -164,6 +169,17 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   // ⚡ Bolt Optimization: Cache Vector3 objects to prevent GC overhead in useFrame
   const playerPosVector = useRef(new THREE.Vector3()).current;
   const targetPosVector = useRef(new THREE.Vector3(...position)).current;
+
+  // Initialize inRangeRef accurately to prevent one frame flicker
+  const inRangeRef = useRef(false);
+  useMemo(() => {
+    const { playerPos } = useStore.getState();
+    playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
+    targetPosVector.set(position[0], position[1], position[2]);
+    const distSq = playerPosVector.distanceToSquared(targetPosVector);
+    distanceRef.current = distSq;
+    inRangeRef.current = distSq < 16.0;
+  }, []);
 
   const palette = useMemo(() => {
     let seed = 0;
