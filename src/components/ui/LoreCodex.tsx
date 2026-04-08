@@ -105,6 +105,8 @@ export function LoreCodex({
           <div
             className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 overflow-y-auto pr-2 md:pr-4 custom-scrollbar"
             tabIndex={0}
+            role="region"
+            aria-label="Lore Entries"
           >
             {loreEntries.map((entry, i) => (
               <motion.div
