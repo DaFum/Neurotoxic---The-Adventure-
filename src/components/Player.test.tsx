@@ -44,7 +44,7 @@ let mockBodyMethods = {
 vi.mock('@react-three/rapier', async () => {
   const React = await import('react');
   return {
-    RigidBody: React.forwardRef(({ children }: any, ref: React.Ref<any>) => {
+    RigidBody: React.forwardRef(({ children }: { children: React.ReactNode }, ref: React.Ref<any>) => {
       React.useImperativeHandle(ref, () => mockBodyMethods);
       return <>{children}</>;
     }),
