@@ -5,13 +5,14 @@ import * as React from 'react';
  */
 import { render } from '@testing-library/react';
 import { Player } from './Player';
+import { GameState } from '../store';
 
-let mockStoreSubscriptions: ((state: any) => void)[] = [];
+let mockStoreSubscriptions: ((state: GameState) => void)[] = [];
 let mockStoreState = {
   playerPos: [1, 2, 3],
   cameraShakeKick: 0,
   cameraShakeIntensity: 0,
-};
+} as unknown as GameState;
 
 vi.mock('../store', () => {
   const useStore = vi.fn((selector) => {
@@ -111,7 +112,7 @@ describe('Player Rigidbody Initialization Error Handling', () => {
     // Now trigger the store subscription with a new position
     const posSubscription = mockStoreSubscriptions[0];
 
-    expect(() => posSubscription({ ...mockStoreState, playerPos: [10, 10, 10] })).not.toThrow();
+    expect(() => posSubscription({ ...mockStoreState, playerPos: [10, 10, 10] } as unknown as GameState)).not.toThrow();
 
     // In the subscription, setTranslation should be called and the error caught
     expect(mockBodyMethods.setTranslation).toHaveBeenCalledTimes(1);
