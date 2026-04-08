@@ -47,10 +47,10 @@ vi.mock('three', async () => {
   const actual = await vi.importActual('three') as any;
   return {
     ...actual,
-    CanvasTexture: vi.fn().mockImplementation(() => ({
-      dispose: vi.fn(),
-      needsUpdate: false,
-    })),
+    CanvasTexture: class {
+      needsUpdate = false;
+      dispose = vi.fn();
+    },
   };
 });
 
