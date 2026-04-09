@@ -29,7 +29,6 @@ describe('checkHasSavedGame', () => {
       });
       expect(checkHasSavedGame('{}')).toBe(false);
       expect(parseSpy).toHaveBeenCalled();
-      parseSpy.mockRestore();
     });
 
     it('returns false for valid JSON that is not an object', () => {

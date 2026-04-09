@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { audio } from './audio';
 
+// --- Global Cleanup ---
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 // --- Mocks ---
 
 class MockAudioParam {
@@ -88,11 +93,14 @@ describe('AudioEngine', () => {
       const expectedError = new Error('Resume failed');
       ctx.resume.mockRejectedValueOnce(expectedError);
 
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.init();
 
       // Wait for the promise rejection to be caught
       await Promise.resolve();
 
+      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext resume failed:', expectedError);
+      consoleWarnSpy.mockRestore();
       // Should not throw and fail silently
     });
 
@@ -102,8 +110,11 @@ describe('AudioEngine', () => {
         throw expectedError;
       }));
 
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.init();
 
+      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext initialization failed:', expectedError);
+      consoleWarnSpy.mockRestore();
       // Should not throw and fail silently
     });
   });
