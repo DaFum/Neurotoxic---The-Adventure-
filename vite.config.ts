@@ -17,10 +17,6 @@ function suppressThreeAndRapierDeprecationWarnings(): Plugin {
         );
       }
 
-      if (normalizedId.includes('/@react-three/rapier/dist/react-three-rapier.esm.js')) {
-        next = next.replace(/await\s+r\.init\(\s*\)\s*;/g, 'await r.init({});');
-      }
-
       if (next !== code) {
         return next;
       }
