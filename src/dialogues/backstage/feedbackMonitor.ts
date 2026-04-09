@@ -35,11 +35,11 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             action: () => {
-            const _st = game(); _st.setDialogue('Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.');
-              const currentStore = game();
-              currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(40, 'id_b4f7027d');
-              currentStore.increaseSkill('chaos', 5);
+              const store = game();
+              store.setDialogue('Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.');
+              store.discoverLore('maschinen_bewusstsein');
+              store.increaseBandMood(40, 'id_b4f7027d');
+              store.increaseSkill('chaos', 5);
             },
           },
           {
@@ -52,11 +52,11 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             action: () => {
-            const _st = game(); _st.setDialogue('Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.');
-              const currentStore = game();
-              currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(30, 'id_7ffa8585');
-              currentStore.increaseSkill('technical', 5);
+              const store = game();
+              store.setDialogue('Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.');
+              store.discoverLore('maschinen_bewusstsein');
+              store.increaseBandMood(30, 'id_7ffa8585');
+              store.increaseSkill('technical', 5);
             },
           },
           {
@@ -68,10 +68,10 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             action: () => {
-            const _st = game(); _st.setDialogue('Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."');
-              const currentStore = game();
-              currentStore.discoverLore('maschinen_bewusstsein');
-              currentStore.increaseBandMood(20, 'id_4899db3c');
+              const store = game();
+              store.setDialogue('Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."');
+              store.discoverLore('maschinen_bewusstsein');
+              store.increaseBandMood(20, 'id_4899db3c');
             },
           },
           {
@@ -104,10 +104,10 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             value: true,
           },
           action: () => {
-            const _st = game(); _st.setDialogue('Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."');
-            const currentStore = game();
-            currentStore.increaseBandMood(30, 'id_e0e8aacd');
-            currentStore.increaseSkill('technical', 5);
+            const store = game();
+            store.setDialogue('Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."');
+            store.increaseBandMood(30, 'id_e0e8aacd');
+            store.increaseSkill('technical', 5);
           },
         },
         {
@@ -124,10 +124,10 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             value: true,
           },
           action: () => {
-            const _st = game(); _st.setDialogue('Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."');
-            const currentStore = game();
-            currentStore.increaseBandMood(40, 'id_1f6ffb9b');
-            currentStore.increaseSkill('chaos', 5);
+            const store = game();
+            store.setDialogue('Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."');
+            store.increaseBandMood(40, 'id_1f6ffb9b');
+            store.increaseSkill('chaos', 5);
           },
         },
         {
@@ -143,9 +143,9 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             value: true,
           },
           action: () => {
-            const _st = game(); _st.setDialogue('Monitor: "BZZZT. Okay, das reicht für einen Standard-Gig."');
-            const currentStore = game();
-            currentStore.increaseBandMood(15, 'id_b74f71fa');
+            const store = game();
+            store.setDialogue('Monitor: "BZZZT. Okay, das reicht für einen Standard-Gig."');
+            store.increaseBandMood(15, 'id_b74f71fa');
           },
         },
       ],

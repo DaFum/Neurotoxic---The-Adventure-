@@ -18,14 +18,6 @@ export type QuestStatus = 'active' | 'completed' | 'failed';
 
 export type Quest = { id: string; text: string; status: QuestStatus };
 
-export class QuestNotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'QuestNotFoundError';
-    Object.setPrototypeOf(this, QuestNotFoundError.prototype);
-  }
-}
-
 /**
  * All known boolean game flags. Using a union type here gives autocomplete
  * and catches typos at compile time when calling setFlag().
@@ -1013,7 +1005,7 @@ export const useStore = create<GameState>()(
               };
             }
             console.warn(`Attempted to complete unregistered quest: ${id}`);
-            return state;
+            return state.flags[flag] !== flagValue ? { flags: { ...state.flags, [flag]: flagValue } } : state;
           }
           const quest = state.quests[index];
           const statusChanged = quest.status !== 'completed';

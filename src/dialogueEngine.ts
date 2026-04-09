@@ -1,4 +1,4 @@
-import { useStore, QuestNotFoundError } from './store';
+import { useStore } from './store';
 import type { DialogueOption, Quest } from './store';
 
 // Cache for O(1) quest lookups
@@ -109,22 +109,10 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   if (option.flagToSet) useStore.getState().setFlag(option.flagToSet.flag, option.flagToSet.value);
   if (option.questToAdd) useStore.getState().addQuest(option.questToAdd.id, option.questToAdd.text);
   if (option.questToComplete) {
-    try {
-      useStore.getState().completeQuest(option.questToComplete);
-    } catch (error) {
-      if (!(error instanceof QuestNotFoundError)) {
-        throw error;
-      }
-    }
+    useStore.getState().completeQuest(option.questToComplete);
   }
   if (option.questToFail) {
-    try {
-      useStore.getState().failQuest(option.questToFail);
-    } catch (error) {
-      if (!(error instanceof QuestNotFoundError)) {
-        throw error;
-      }
-    }
+    useStore.getState().failQuest(option.questToFail);
   }
 
   // Snapshot dialogue state before action so we can detect action-driven navigation

@@ -260,11 +260,15 @@ describe('useStore', () => {
       expect(state.quests.find(q => q.id === 'test_quest_3')?.status).toBe('completed');
     });
 
-    it('completeQuestWithFlag should log a warning if quest is missing and no text is provided', () => {
-      const state = useStore.getState();
+    it('completeQuestWithFlag should log a warning if quest is missing and no text is provided, but still set the flag', () => {
+      let state = useStore.getState();
+      expect(state.flags.mariusCalmed).toBe(false);
 
       state.completeQuestWithFlag('missing_quest', 'mariusCalmed');
       expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest');
+
+      state = useStore.getState();
+      expect(state.flags.mariusCalmed).toBe(true);
     });
 
     it('completeQuestWithFlag should backfill a completed quest entry when text is provided for a missing quest', () => {

@@ -108,7 +108,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
             const currentStore = game();
             currentStore.setDialogue('Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"');
             currentStore.setFlag('ampSentient', true);
-            game().increaseBandMood(20, 'id_ba40c619');
+            currentStore.increaseBandMood(20, 'id_ba40c619');
           },
         },
         {
@@ -123,7 +123,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."');
-            game().increaseBandMood(30, 'id_1a39e6b3');
+            currentStore.increaseBandMood(30, 'id_1a39e6b3');
           },
         },
         {
@@ -138,7 +138,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue('Amp: "So kalt... aber vielleicht hast du recht. Ich bin nur hier, um zu schreien."');
-            game().increaseBandMood(10, 'id_91b5381f');
+            currentStore.increaseBandMood(10, 'id_91b5381f');
           },
         },
         {
@@ -224,8 +224,8 @@ export function buildProberaumAmpDialogue(): Dialogue {
         action: () => {
             const currentStore = game();
           currentStore.setDialogue('Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."');
-          game().increaseBandMood(20, 'id_f3211ce8');
-          game().increaseSkill('technical', 5);
+          currentStore.increaseBandMood(20, 'id_f3211ce8');
+          currentStore.increaseSkill('technical', 5);
         },
       });
     }

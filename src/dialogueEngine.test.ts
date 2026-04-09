@@ -122,7 +122,7 @@ describe('dialogueEngine', () => {
 
     });
 
-    it('should throw an error if action calls setDialogue and nextDialogue is defined', () => {
+    it('should throw an error if both action and nextDialogue are defined', () => {
       const option: DialogueOption = {
         text: 'Test',
         nextDialogue: { text: 'Next' },

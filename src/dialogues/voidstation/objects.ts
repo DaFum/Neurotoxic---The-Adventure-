@@ -34,8 +34,8 @@ export function buildVoidTerminalDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setFlag('voidTerminalRead', true);
-          game().discoverLore('void_1982');
-          game().increaseBandMood(5, 'id_15515ca2');
+          currentStore.discoverLore('void_1982');
+          currentStore.increaseBandMood(5, 'id_15515ca2');
           currentStore.setDialogue(
             'Log: "Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback."'
           );
@@ -79,8 +79,8 @@ export function buildVoidCosmicEchoDialogue(): Dialogue {
           currentStore.setDialogue('Du erkennst ein Muster in der Verzerrung. Es ist ein Koordinaten-Code für Salzgitter! Du hast das Echo entschlüsselt.');
           if (!currentStore.flags.voidCosmicEchoRewarded) {
             currentStore.setFlag('voidCosmicEchoRewarded', true);
-            game().discoverLore('cosmic_echo_decoded');
-            game().increaseBandMood(20, 'id_0ea02c8e');
+            currentStore.discoverLore('cosmic_echo_decoded');
+            currentStore.increaseBandMood(20, 'id_0ea02c8e');
           }
         },
       },
@@ -431,7 +431,7 @@ export function buildVoidDiplomatenInterfaceDialogue(): Dialogue {
         action: () => {
             const currentStore = game();
               currentStore.setDialogue('Du entzifferst die fragmentierten Logs: Aufnahmen von Frequenzen, die 1982 in Salzgitter gemessen wurden. Etwas hat damals angefangen - und noch nicht aufgehört.');
-          game().discoverLore('schaltpult_record');
+          currentStore.discoverLore('schaltpult_record');
         },
       },
       {
