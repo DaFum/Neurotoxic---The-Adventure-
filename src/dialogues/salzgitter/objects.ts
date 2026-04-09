@@ -48,10 +48,8 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
       requiredTrait: 'Mystic',
       consumeItems: ['Bassist-Saite'],
       flagToSet: { flag: 'bassist_restored', value: true },
-      nextDialogue: {
-        text: 'Bassist: "Das... das ist ein Teil von mir! Mein alter Rhythmus... ich erinnere mich!"',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Bassist: "Das... das ist ein Teil von mir! Mein alter Rhythmus... ich erinnere mich!"');
         const currentStore = game();
         currentStore.discoverLore('bassist_wahrheit');
         currentStore.increaseBandMood(40, 'id_d57d80fb');
@@ -64,10 +62,8 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
       text: 'Nimm den Resonanz-Kristall. Vollende das Riff.',
       consumeItems: ['Resonanz-Kristall'],
       flagToSet: { flag: 'bassist_restored', value: true },
-      nextDialogue: {
-        text: 'Bassist: "Der Kristall... er verbindet die Dimensionen. Ich setze ihn ein, wenn wir die letzte Note spielen. Danke, Manager."',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Bassist: "Der Kristall... er verbindet die Dimensionen. Ich setze ihn ein, wenn wir die letzte Note spielen. Danke, Manager."');
         const currentStore = game();
         currentStore.discoverLore('bassist_wahrheit');
         currentStore.increaseBandMood(30, 'id_5ee0fbf5');
@@ -78,10 +74,8 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
   if (store.flags.voidBassistSpoken) {
     options.unshift({
       text: 'Du erinnerst dich an mich.',
-      nextDialogue: {
-        text: 'Bassist: "Ja... du hast mir in der Leere zugehört. Meine Töne gehören heute euch."',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Bassist: "Ja... du hast mir in der Leere zugehört. Meine Töne gehören heute euch."');
         const currentStore = game();
         if (!currentStore.flags.voidBassistMoodGiven) {
           currentStore.increaseBandMood(20, 'id_cba2c75a');
@@ -113,10 +107,8 @@ export function buildSalzgitterFanDialogue(): Dialogue {
         {
           text: 'Ein Geschenk für dich.',
           consumeItems: ['Industrie-Talisman'],
-          nextDialogue: {
-            text: 'Fan: "Ich werde ihn in Ehren halten! Du bist der beste Manager der Welt! Ich spüre die pure Kraft des Stahls!"',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Fan: "Ich werde ihn in Ehren halten! Du bist der beste Manager der Welt! Ich spüre die pure Kraft des Stahls!"');
             game().increaseBandMood(40, 'id_a2f911b1');
           },
         },
@@ -131,20 +123,16 @@ export function buildSalzgitterFanDialogue(): Dialogue {
         {
           text: 'Klar, komm her!',
           consumeItems: ['Signierte Setliste'],
-          nextDialogue: {
-            text: 'Fan: "Du riechst nach Erfolg und... altem Kaffee. Danke!"',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Fan: "Du riechst nach Erfolg und... altem Kaffee. Danke!"');
             game().increaseBandMood(25, 'id_9b1e56fe');
           },
         },
         {
           text: 'Abstand halten, bitte.',
           consumeItems: ['Signierte Setliste'],
-          nextDialogue: {
-            text: 'Fan: "Verstehe. Die Aura eines Managers ist zu stark. Danke für die Liste!"',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Fan: "Verstehe. Die Aura eines Managers ist zu stark. Danke für die Liste!"');
             game().increaseBandMood(15, 'id_dab52566');
           },
         },
@@ -192,10 +180,8 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Starte eine Fan-Bewegung beim Konzert',
     },
     questToComplete: 'fan_movement',
-    nextDialogue: {
-      text: 'Du reißt die Arme hoch und beginnst einen Rhythmus. Der Fan stimmt ein, dann die Menge. Ein epischer Chor entsteht!',
-    },
     action: () => {
+            const _st = game(); _st.setDialogue('Du reißt die Arme hoch und beginnst einen Rhythmus. Der Fan stimmt ein, dann die Menge. Ein epischer Chor entsteht!');
       game().increaseBandMood(35, 'id_ca71c867');
     },
   });
@@ -208,10 +194,8 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Starte eine Fan-Bewegung beim Konzert',
     },
     questToComplete: 'fan_movement',
-    nextDialogue: {
-      text: 'Ein Chor aus hunderten Kehlen beginnt das Intro eures größten Hits zu singen. Die Energie ist greifbar!',
-    },
     action: () => {
+            const _st = game(); _st.setDialogue('Ein Chor aus hunderten Kehlen beginnt das Intro eures größten Hits zu singen. Die Energie ist greifbar!');
       game().increaseBandMood(30, 'id_e34f3612');
     },
   });
@@ -224,10 +208,8 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Starte eine Fan-Bewegung beim Konzert',
     },
     questToComplete: 'fan_movement',
-    nextDialogue: {
-      text: 'Der Fan weint vor Ergriffenheit. "Ja... wir sind eins!" Er reicht die Botschaft an die Menge weiter.',
-    },
     action: () => {
+            const _st = game(); _st.setDialogue('Der Fan weint vor Ergriffenheit. "Ja... wir sind eins!" Er reicht die Botschaft an die Menge weiter.');
       game().increaseBandMood(25, 'id_e5ab7980');
     },
   });
@@ -237,10 +219,8 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       text: 'Hier, ein Andenken. [Diplomat]',
       requiredTrait: 'Diplomat',
       flagToSet: { flag: 'gaveDiplomatSouvenir', value: true },
-      nextDialogue: {
-        text: 'Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Fan: "Wow, danke! Ein echtes Tour-Artefakt! Du bist ein Diplomat des Lärms!"');
         game().increaseBandMood(20, 'id_48795c2e');
       },
     });
@@ -254,10 +234,8 @@ export function buildSalzgitterFanDialogue(): Dialogue {
   });
   options.push({
     text: 'Wer bist du nochmal?',
-    nextDialogue: {
-      text: 'Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"',
-    },
     action: () => {
+            const _st = game(); _st.setDialogue('Fan: "Ich bin dein größter Albtraum... und dein treuester Fan!"');
       game().increaseBandMood(-2, 'id_a32c1d7c');
     },
   });
