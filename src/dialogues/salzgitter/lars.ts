@@ -20,8 +20,8 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
           requiredSkill: { name: 'chaos', level: 15 },
           flagToSet: { flag: 'salzgitter_encore_unlocked', value: true },
           action: () => {
-            const _st = game(); _st.setDialogue({ text: 'Lars: "JAAAAAAAAA! DIE DRUMS BRENNEN! DIE REALITÄT KOCHT! DAS IST DER ULTIMATIVE BEAT!"', visualEffect: 'shake' });
             const currentStore = game();
+            currentStore.setDialogue({ text: 'Lars: "JAAAAAAAAA! DIE DRUMS BRENNEN! DIE REALITÄT KOCHT! DAS IST DER ULTIMATIVE BEAT!"', visualEffect: 'shake' });
             currentStore.increaseBandMood(40, 'id_8630f970');
             currentStore.increaseSkill('chaos', 5);
           },
@@ -31,8 +31,8 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
           requiredSkill: { name: 'technical', level: 12 },
           flagToSet: { flag: 'salzgitter_encore_unlocked', value: true },
           action: () => {
-            const _st = game(); _st.setDialogue('Lars: "100% EFFIZIENZ! KEIN MILLIMETER VERSCHWENDET! ICH BIN DER ROBOTER-GOTT DER SNARE!"');
             const currentStore = game();
+            currentStore.setDialogue('Lars: "100% EFFIZIENZ! KEIN MILLIMETER VERSCHWENDET! ICH BIN DER ROBOTER-GOTT DER SNARE!"');
             currentStore.increaseBandMood(40, 'id_08c069fc');
             currentStore.increaseSkill('technical', 5);
           },
@@ -79,8 +79,8 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
         text: 'Hyperpowered Lars!',
         flagToSet: { flag: 'larsRhythmPactClaimed', value: true },
         action: () => {
-            const _st = game(); _st.setDialogue('Lars: "DER RHYTHMUS IST IN MIR EXPLODIERT! DER PAKT WIRD DIE REALITÄT ZERFETZEN!"');
-          const currentStore = game();
+            const currentStore = game();
+          currentStore.setDialogue('Lars: "DER RHYTHMUS IST IN MIR EXPLODIERT! DER PAKT WIRD DIE REALITÄT ZERFETZEN!"');
           currentStore.increaseBandMood(50, 'id_4d555826');
           currentStore.increaseSkill('chaos', 5);
         },
@@ -90,8 +90,8 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
         text: 'Lass uns die Realität zertrümmern.',
         flagToSet: { flag: 'larsRhythmPactClaimed', value: true },
         action: () => {
-            const _st = game(); _st.setDialogue('Lars: "Jeder Schlag ein Beben."');
-          const currentStore = game();
+            const currentStore = game();
+          currentStore.setDialogue('Lars: "Jeder Schlag ein Beben."');
           currentStore.increaseBandMood(30, 'id_fcf38de0');
         },
       });
@@ -113,8 +113,8 @@ export function buildSalzgitterLarsDialogue(): Dialogue {
                 text: 'Synchronisiere die Frequenz. [Technical 10]',
                 requiredSkill: { name: 'technical' as const, level: 10 },
                 action: () => {
-            const _st = game(); _st.setDialogue('Lars: "SYNC_COMPLETE! ICH BIN JETZT EIN TEIL DES NETZWERKS! DER BEAT IST ABSOLUT!"');
-                  const currentStore = game();
+            const currentStore = game();
+                  currentStore.setDialogue('Lars: "SYNC_COMPLETE! ICH BIN JETZT EIN TEIL DES NETZWERKS! DER BEAT IST ABSOLUT!"');
                   currentStore.setFlag('salzgitter_lars_technical_claimed', true);
                   currentStore.increaseBandMood(30, 'id_32f3fdc4');
                   currentStore.increaseSkill('technical', 5);

@@ -94,29 +94,32 @@ describe('dialogueEngine', () => {
     });
 
     it('should handle throwing questToComplete and continue executing pipeline', () => {
+      const actionSpy = vi.fn();
       const option: DialogueOption = {
         text: 'Test',
         questToComplete: 'missing_quest', // This will throw in store.ts
-        nextDialogue: { text: 'Next' }
+        action: actionSpy
       };
 
       const success = executeDialogueOption(option);
 
       expect(success).toBe(true);
-      expect(useStore.getState().dialogue?.text).toBe('Next');
+      expect(actionSpy).toHaveBeenCalled();
     });
 
     it('should handle throwing questToFail and continue executing pipeline', () => {
+      const actionSpy = vi.fn();
       const option: DialogueOption = {
         text: 'Test',
         questToFail: 'missing_quest', // This will throw in store.ts
-        nextDialogue: { text: 'Next' }
+        action: actionSpy
       };
 
       const success = executeDialogueOption(option);
 
       expect(success).toBe(true);
-      expect(useStore.getState().dialogue?.text).toBe('Next');
+      expect(actionSpy).toHaveBeenCalled();
+
     });
 
     it('should throw an error if action calls setDialogue and nextDialogue is defined', () => {
@@ -129,7 +132,7 @@ describe('dialogueEngine', () => {
       };
 
       expect(() => executeDialogueOption(option)).toThrow(
-        'executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. This conflicting pattern is deprecated and no longer allowed.'
+        'executeDialogueOption: option.nextDialogue and option.action are mutually exclusive. This conflicting pattern is deprecated and no longer allowed.'
       );
     });
   });

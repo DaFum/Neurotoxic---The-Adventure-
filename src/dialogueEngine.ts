@@ -94,7 +94,7 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   if (!canSelectOption(option)) return false;
 
   if (option.nextDialogue && option.action) {
-    throw new Error('executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. This conflicting pattern is deprecated and no longer allowed.');
+    throw new Error('executeDialogueOption: option.nextDialogue and option.action are mutually exclusive. This conflicting pattern is deprecated and no longer allowed.');
   }
 
   // 1. Consume items

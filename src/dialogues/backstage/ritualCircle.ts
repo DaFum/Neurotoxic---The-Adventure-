@@ -108,8 +108,8 @@ export function buildBackstageRitualCircleDialogue(
           requiredTrait: 'Mystic',
           consumeItems: ['Resonanz-Kristall'],
           action: () => {
-            const _st = game(); _st.setDialogue('Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!');
             const currentStore = game();
+            currentStore.setDialogue('Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!');
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(50, 'id_228aba72');
@@ -120,8 +120,8 @@ export function buildBackstageRitualCircleDialogue(
           requiredTrait: 'Brutalist',
           consumeItems: ['Resonanz-Kristall'],
           action: () => {
-            const _st = game(); _st.setDialogue('Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
             const currentStore = game();
+            currentStore.setDialogue('Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40, 'id_bddaff1d');
@@ -145,8 +145,8 @@ export function buildBackstageRitualCircleDialogue(
           requiredTrait: 'Brutalist',
           consumeItems: ['Frequenzfragment'],
           action: () => {
-            const _st = game(); _st.setDialogue('Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
             const currentStore = game();
+            currentStore.setDialogue('Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40, 'id_f6b0931d');
@@ -188,8 +188,8 @@ export function buildBackstageRitualCircleDialogue(
           text: 'Lass das Riff durch den Kreis hallen.',
           flagToSet: { flag: 'backstageForbiddenRiffUsed', value: true },
           action: () => {
-            const _st = game(); _st.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
             const currentStore = game();
+            currentStore.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
             currentStore.increaseBandMood(15, 'id_aca64936');
           },
         },

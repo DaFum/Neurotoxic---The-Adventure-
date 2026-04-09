@@ -1,0 +1,24 @@
+--- src/dialogues/backstage/feedbackMonitor.ts
++++ src/dialogues/backstage/feedbackMonitor.ts
+@@ -165,9 +165,6 @@
+     if (flags.ampSentient && !flags.feedbackMonitorBackstageQuestStarted) {
+       options.unshift({
+         text: 'Der Amp hat mir von dir erzählt.',
+-        nextDialogue: {
+-          text: 'Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."',
+-        },
+         questToAdd: {
+           id: BACKSTAGE_MONITOR_QUEST_ID,
+           text: BACKSTAGE_MONITOR_QUEST_TEXT,
+@@ -179,8 +176,9 @@
+         },
+         action: () => {
+-          const currentStore = game();
+-          currentStore.increaseBandMood(25, 'id_24bc329a');
+-          currentStore.increaseSkill('technical', 5);
++          game().setDialogue({ text: 'Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."' });
++          game().increaseBandMood(25, 'id_24bc329a');
++          game().increaseSkill('technical', 5);
+         },
+       });
+     } else if (!flags.feedbackMonitorBackstageQuestStarted) {

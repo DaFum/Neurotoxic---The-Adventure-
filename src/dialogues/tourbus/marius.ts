@@ -29,8 +29,8 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
         {
           text: 'Es ist jetzt sicher.',
           action: () => {
-            const _st = game(); _st.setDialogue('Marius: "Danke. Ich fühle mich wieder... vollständig. Und hungrig."');
             const currentStore = game();
+            currentStore.setDialogue('Marius: "Danke. Ich fühle mich wieder... vollständig. Und hungrig."');
             currentStore.removeFromInventory('Marius Ego');
             currentStore.increaseBandMood(20, 'id_1d3ac6c4');
           },
@@ -38,8 +38,8 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
         {
           text: 'Ich behalte es als Pfand.',
           action: () => {
-            const _st = game(); _st.setDialogue('Marius: "Du bist grausam, Manager. Aber irgendwie respektiere ich das."');
             const currentStore = game();
+            currentStore.setDialogue('Marius: "Du bist grausam, Manager. Aber irgendwie respektiere ich das."');
             currentStore.increaseBandMood(-10, 'id_f3887664');
           },
         },
@@ -54,8 +54,8 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
             text: 'Du brauchst kein Ego, um zu schreien. Zeig es ihnen! [Social 7]',
             requiredSkill: { name: 'social', level: 7 },
             action: () => {
-            const _st = game(); _st.setDialogue('Marius: "Vielleicht... hast du recht. Ich muss nicht ich selbst sein — ich muss Marius sein. Die Kaminstube wird brennen!"');
-              const currentStore = game();
+            const currentStore = game();
+              currentStore.setDialogue('Marius: "Vielleicht... hast du recht. Ich muss nicht ich selbst sein — ich muss Marius sein. Die Kaminstube wird brennen!"');
               currentStore.increaseBandMood(10, 'id_47daa02e');
             },
           },
@@ -63,8 +63,8 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
             text: 'Die Band braucht dich, Marius. Bleib fokussiert. [Diplomat]',
             requiredTrait: 'Diplomat',
             action: () => {
-            const _st = game(); _st.setDialogue('Marius: "Ich werde sie nicht im Stich lassen. Danke, Manager."');
-              const currentStore = game();
+            const currentStore = game();
+              currentStore.setDialogue('Marius: "Ich werde sie nicht im Stich lassen. Danke, Manager."');
               currentStore.increaseBandMood(15, 'id_26d4ed71');
             },
           },
@@ -89,8 +89,8 @@ export function buildTourbusMariusDialogue(): Dialogue | string {
                   requiredTrait: 'Performer' as const,
                   flagToSet: { flag: 'marius_tourbus_doubt' as const, value: false },
                   action: () => {
-            const _st = game(); _st.setDialogue('Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"');
-                    const currentStore = game();
+            const currentStore = game();
+                    currentStore.setDialogue('Marius: "Echtes Charisma... ja, das stimmt. Ich bin der Frontmann!"');
                     currentStore.setFlag('marius_tourbus_performer_claimed', true);
                     currentStore.increaseBandMood(15, 'id_30261faf');
                     currentStore.increaseSkill('social', 3);
