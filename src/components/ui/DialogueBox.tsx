@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, useRef } from 'react';
+import { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { useStore, Dialogue } from '../../store';
@@ -31,6 +31,7 @@ export function DialogueBox({
   const [isResolving, setIsResolving] = useState(false);
   const isResolvingRef = useRef(false);
   const typewriterIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const displayedTextLengthRef = useRef(0);
 
   useLayoutEffect(() => {
     isResolvingRef.current = false;
@@ -47,6 +48,7 @@ export function DialogueBox({
 
     let i = 0;
     setDisplayedText('');
+    displayedTextLengthRef.current = 0;
 
     // Determine speed: urgency 1 (high) = fast, urgency 3 (low) = slow
     const baseDelay =
@@ -63,6 +65,7 @@ export function DialogueBox({
       const char = dialogue.text[i];
       if (char !== undefined) {
         setDisplayedText((prev) => prev + char);
+        displayedTextLengthRef.current++;
         // Play typing sound for non-space characters
         if (char !== ' ') {
           audio.playTypewriter();
@@ -77,6 +80,60 @@ export function DialogueBox({
       }
     };
   }, [dialogue]);
+
+  useEffect(() => {
+    if (!dialogue) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isResolvingRef.current) return;
+
+      const isFinishedTyping = displayedTextLengthRef.current >= dialogue.text.length;
+
+      if (e.code === 'Space' || e.key === 'Enter') {
+        if (!isFinishedTyping) {
+          e.preventDefault();
+          setDisplayedText(dialogue.text);
+          displayedTextLengthRef.current = dialogue.text.length;
+          if (typewriterIntervalRef.current) {
+            clearInterval(typewriterIntervalRef.current);
+          }
+          return;
+        }
+
+        if (!dialogue.options || dialogue.options.length === 0) {
+          e.preventDefault();
+          setDialogue(null);
+          return;
+        }
+      }
+
+      if (isFinishedTyping && dialogue.options && dialogue.options.length > 0) {
+        const numKey = parseInt(e.key, 10);
+        if (numKey >= 1 && numKey <= dialogue.options.length) {
+          const option = dialogue.options[numKey - 1];
+          if (canSelectOption(option)) {
+            e.preventDefault();
+            const currentDialogue = dialogue;
+            isResolvingRef.current = true;
+            setIsResolving(true);
+            try {
+              executeDialogueOption(option);
+            } catch (error) {
+              console.error('Failed to execute dialogue option', option, error);
+            } finally {
+              if (useStore.getState().dialogue === currentDialogue) {
+                isResolvingRef.current = false;
+                setIsResolving(false);
+              }
+            }
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [dialogue, setDialogue]);
 
   return (
     <AnimatePresence>
@@ -181,7 +238,14 @@ export function DialogueBox({
                             }`}
                           >
                             <div className="flex justify-between items-center w-full">
-                              <span>{`> ${option.text}`}</span>
+                              <span>
+                                {idx < 9 && (
+                                  <span className="opacity-50 font-mono text-[10px] mr-2">
+                                    [{idx + 1}]
+                                  </span>
+                                )}
+                                {`> ${option.text}`}
+                              </span>
                               {isLocked && (
                                 <X size={14} className="text-blood" />
                               )}
@@ -276,6 +340,9 @@ export function DialogueBox({
                       {displayedText.length < (dialogue?.text.length || 0)
                         ? 'SKIP_DATA'
                         : 'ACKNOWLEDGE'}
+                      <span className="opacity-50 ml-2 font-mono">
+                        [SPACE]
+                      </span>
                     </button>
                   )}
                 </div>
