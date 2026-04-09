@@ -89,18 +89,22 @@ export function DialogueBox({
 
       const isFinishedTyping = displayedTextLengthRef.current >= dialogue.text.length;
 
-      if (e.code === 'Space' || e.code === 'Enter') {
-        e.preventDefault();
+      if (e.code === 'Space' || e.key === 'Enter') {
         if (!isFinishedTyping) {
+          e.preventDefault();
           setDisplayedText(dialogue.text);
           displayedTextLengthRef.current = dialogue.text.length;
           if (typewriterIntervalRef.current) {
             clearInterval(typewriterIntervalRef.current);
           }
-        } else if (!dialogue.options || dialogue.options.length === 0) {
-          setDialogue(null);
+          return;
         }
-        return;
+
+        if (!dialogue.options || dialogue.options.length === 0) {
+          e.preventDefault();
+          setDialogue(null);
+          return;
+        }
       }
 
       if (isFinishedTyping && dialogue.options && dialogue.options.length > 0) {
@@ -137,7 +141,6 @@ export function DialogueBox({
         <div
           className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
           role="dialog"
-          aria-modal="true"
           aria-labelledby="dialogue-title"
         >
           <motion.div
