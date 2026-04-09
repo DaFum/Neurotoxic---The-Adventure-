@@ -163,8 +163,8 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           questToComplete: 'ghost_trust',
           flagToSet: { flag: 'ghostTrustEarned', value: true },
           action: () => {
-            const _st = game(); _st.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
             const currentStore = game();
+            currentStore.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
             currentStore.increaseBandMood(25, 'id_cfcd3f76');
             currentStore.discoverLore('ghost_legacy');
           },
@@ -179,8 +179,8 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           questToComplete: 'ghost_trust',
           flagToSet: { flag: 'ghostTrustEarned', value: true },
           action: () => {
-            const _st = game(); _st.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
             const currentStore = game();
+            currentStore.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
             currentStore.increaseBandMood(20, 'id_907b6e1d');
             currentStore.discoverLore('ghost_legacy');
           },
@@ -436,8 +436,8 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           },
           flagToSet: { flag: 'ghostRecipeQuestStarted', value: true },
           action: () => {
-            const _st = game(); _st.setDialogue('Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."');
             const currentStore = game();
+            currentStore.setDialogue('Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."');
             currentStore.increaseBandMood(5, 'id_01cc9775');
           },
         },
@@ -463,8 +463,8 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const _st = game(); _st.setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
-          const currentStore = game();
+            const currentStore = game();
+          currentStore.setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
           currentStore.increaseBandMood(30, 'id_d4779a66');
         },
       },
@@ -478,8 +478,8 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const _st = game(); _st.setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
-          const currentStore = game();
+            const currentStore = game();
+          currentStore.setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
           currentStore.increaseBandMood(20, 'id_765a4f14');
         },
       },
@@ -493,8 +493,8 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const _st = game(); _st.setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
-          const currentStore = game();
+            const currentStore = game();
+          currentStore.setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
           currentStore.increaseBandMood(25, 'id_2e217dda');
         },
       },
@@ -507,8 +507,8 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const _st = game(); _st.setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
-          const currentStore = game();
+            const currentStore = game();
+          currentStore.setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
           currentStore.increaseBandMood(10, 'id_5b53bc9a');
         },
       },
