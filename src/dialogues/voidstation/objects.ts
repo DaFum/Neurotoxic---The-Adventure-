@@ -74,10 +74,8 @@ export function buildVoidCosmicEchoDialogue(): Dialogue {
         },
         questToComplete: 'cosmic_echo',
         flagToSet: { flag: 'cosmic_echo', value: true },
-        nextDialogue: {
-          text: 'Du erkennst ein Muster in der Verzerrung. Es ist ein Koordinaten-Code für Salzgitter! Du hast das Echo entschlüsselt.',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Du erkennst ein Muster in der Verzerrung. Es ist ein Koordinaten-Code für Salzgitter! Du hast das Echo entschlüsselt.');
           const currentStore = game();
           if (!currentStore.flags.voidCosmicEchoRewarded) {
             currentStore.setFlag('voidCosmicEchoRewarded', true);
@@ -107,10 +105,8 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
           text: 'Erforsche das Geheimnis des schwebenden Bassisten',
         },
         questToComplete: 'bassist_mystery',
-        nextDialogue: {
-          text: 'Bassist: "Sie vermissen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Bassist: "Sie vermissen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."');
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(25, 'social', 3);
         },
@@ -124,10 +120,8 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
           text: 'Erforsche das Geheimnis des schwebenden Bassisten',
         },
         questToComplete: 'bassist_mystery',
-        nextDialogue: {
-          text: 'Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"');
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(50, 'technical', 3);
         },
@@ -141,10 +135,8 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
           text: 'Erforsche das Geheimnis des schwebenden Bassisten',
         },
         questToComplete: 'bassist_mystery',
-        nextDialogue: {
-          text: 'Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."');
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(40, 'chaos', 3);
         },
@@ -158,10 +150,8 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
           text: 'Erforsche das Geheimnis des schwebenden Bassisten',
         },
         questToComplete: 'bassist_mystery',
-        nextDialogue: {
-          text: 'Bassist: "Du siehst das ganze Bild... Ich bin nicht verloren, ich bin das Fundament. Ich werde den Gig in Salzgitter stützen."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Bassist: "Du siehst das ganze Bild... Ich bin nicht verloren, ich bin das Fundament. Ich werde den Gig in Salzgitter stützen."');
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(40, 'chaos', 3);
         },
@@ -428,10 +418,8 @@ export function buildVoidDiplomatenInterfaceDialogue(): Dialogue {
             text: 'Verhandle mit der Leere. [Diplomat]',
             requiredTrait: 'Diplomat',
             flagToSet: { flag: 'void_diplomat_negotiation', value: true },
-            nextDialogue: {
-              text: 'Du triffst eine Vereinbarung mit den abstrakten Mächten dieses Ortes. Der Gig in Salzgitter wird durch das Gefüge der Raumzeit geschützt.',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Du triffst eine Vereinbarung mit den abstrakten Mächten dieses Ortes. Der Gig in Salzgitter wird durch das Gefüge der Raumzeit geschützt.');
               const currentStore = game();
               currentStore.discoverLore('schaltpult_record');
               currentStore.increaseBandMood(30, 'id_91b76ef4');
@@ -440,10 +428,8 @@ export function buildVoidDiplomatenInterfaceDialogue(): Dialogue {
           },
       {
         text: 'Lies die Aufzeichnungen.',
-        nextDialogue: {
-          text: 'Du entzifferst die fragmentierten Logs: Aufnahmen von Frequenzen, die 1982 in Salzgitter gemessen wurden. Etwas hat damals angefangen - und noch nicht aufgehört.',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Du entzifferst die fragmentierten Logs: Aufnahmen von Frequenzen, die 1982 in Salzgitter gemessen wurden. Etwas hat damals angefangen - und noch nicht aufgehört.');
           game().discoverLore('schaltpult_record');
         },
       },
@@ -471,10 +457,8 @@ export function buildVoidMagnetbandDialogue(): Dialogue {
             text: 'Ein Band abspielen. [Technical 5]',
             requiredSkill: { name: 'technical', level: 5 },
             flagToSet: { flag: 'magnetbandPlayed', value: true },
-            nextDialogue: {
-              text: 'Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.');
               const currentStore = game();
               currentStore.discoverLore('magnetband_session');
               currentStore.increaseBandMood(10, 'id_74124307');
@@ -525,10 +509,8 @@ export function buildVoidDetektorDialogue(): Dialogue {
             text: 'Gerät kalibrieren. [Technical 6]',
             requiredSkill: { name: 'technical', level: 6 },
             flagToSet: { flag: 'frequenzCalibrated', value: true },
-            nextDialogue: {
-              text: 'Du justierst die Antennen. Die Anzeige offenbart: Die gesamte Station atmet. Sie ist am Leben.',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Du justierst die Antennen. Die Anzeige offenbart: Die gesamte Station atmet. Sie ist am Leben.');
               const currentStore = game();
               currentStore.increaseBandMood(15, 'id_a59ff433');
               currentStore.increaseSkill('technical', 4);
@@ -558,10 +540,8 @@ export function buildVoidInschriftDialogue(): Dialogue {
             text: 'Vollständig entschlüsseln. [cosmic_echo complete]',
             questDependencies: ['cosmic_echo'],
             flagToSet: { flag: 'inschriftDecoded', value: true },
-            nextDialogue: {
-              text: 'Die Inschrift warnt vor einer Kadenz, die die Stille für immer töten wird. Salzgitter ist der Katalysator.',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Die Inschrift warnt vor einer Kadenz, die die Stille für immer töten wird. Salzgitter ist der Katalysator.');
               const currentStore = game();
               currentStore.discoverLore('inschrift_warning');
               currentStore.increaseBandMood(20, 'id_6275141e');

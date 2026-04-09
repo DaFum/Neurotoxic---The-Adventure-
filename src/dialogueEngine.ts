@@ -93,6 +93,10 @@ export function canSelectOption(option: DialogueOption): boolean {
 export function executeDialogueOption(option: DialogueOption): boolean {
   if (!canSelectOption(option)) return false;
 
+  if (option.nextDialogue && option.action) {
+    throw new Error('executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. This conflicting pattern is deprecated and no longer allowed.');
+  }
+
   // 1. Consume items
   if (option.consumeItems) {
     option.consumeItems.forEach(item => {
@@ -133,10 +137,6 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   // based exclusively on the `visualEffect` property of the `Dialogue` object.
 
   const postActionDialogue = useStore.getState().dialogue;
-
-  if (option.nextDialogue && option.action && preActionDialogue !== postActionDialogue) {
-    throw new Error('executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. This conflicting pattern is deprecated and no longer allowed.');
-  }
 
   // 4. Navigation: nextDialogue wins; otherwise auto-close unless action already redirected
   if (option.nextDialogue) {

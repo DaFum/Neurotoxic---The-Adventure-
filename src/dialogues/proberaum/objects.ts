@@ -104,10 +104,8 @@ export function buildProberaumAmpDialogue(): Dialogue {
           },
           questToComplete: 'amp_therapy',
           flagToSet: { flag: 'ampTherapyCompleted', value: true },
-          nextDialogue: {
-            text: 'Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"');
             const currentStore = game();
             currentStore.setFlag('ampSentient', true);
             currentStore.increaseBandMood(20, 'id_ba40c619');
@@ -122,10 +120,8 @@ export function buildProberaumAmpDialogue(): Dialogue {
           },
           questToComplete: 'amp_therapy',
           flagToSet: { flag: 'ampTherapyCompleted', value: true },
-          nextDialogue: {
-            text: 'Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."');
             const currentStore = game();
             currentStore.increaseBandMood(30, 'id_1a39e6b3');
           },
@@ -139,10 +135,8 @@ export function buildProberaumAmpDialogue(): Dialogue {
           },
           questToComplete: 'amp_therapy',
           flagToSet: { flag: 'ampTherapyCompleted', value: true },
-          nextDialogue: {
-            text: 'Amp: "So kalt... aber vielleicht hast du recht. Ich bin nur hier, um zu schreien."',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Amp: "So kalt... aber vielleicht hast du recht. Ich bin nur hier, um zu schreien."');
             const currentStore = game();
             currentStore.increaseBandMood(10, 'id_91b5381f');
           },
@@ -191,10 +185,8 @@ export function buildProberaumAmpDialogue(): Dialogue {
             text: 'Repariere den sprechenden Amp mit Lötkolben und Schrottmetall',
           },
           flagToSet: { flag: 'talkingAmpHeard', value: true },
-          nextDialogue: {
-            text: 'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."');
             game().increaseBandMood(2, 'id_0a6f2302');
           },
         },
@@ -211,10 +203,8 @@ export function buildProberaumAmpDialogue(): Dialogue {
           id: 'maschinen_seele',
           text: 'Entdecke die Verbindung zwischen den Maschinen',
         },
-        nextDialogue: {
-          text: 'Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."');
           const currentStore = game();
           currentStore.increaseBandMood(10, 'id_d3a45839');
           currentStore.increaseSkill('chaos', 2);
@@ -231,10 +221,8 @@ export function buildProberaumAmpDialogue(): Dialogue {
         },
         questToComplete: 'repair_amp',
         flagToSet: { flag: 'talkingAmpRepaired', value: true },
-        nextDialogue: {
-          text: 'Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."');
           const currentStore = game();
           currentStore.increaseBandMood(20, 'id_f3211ce8');
           currentStore.increaseSkill('technical', 5);
@@ -346,10 +334,8 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
         text: 'Deine Seriennummer... du bist nicht von der Stange. [Technical 5]',
         requiredSkill: { name: 'technical', level: 5 },
         flagToSet: { flag: 'maschinen_seele_tr8080', value: true },
-        nextDialogue: {
-          text: 'TR-8080: "Korrekt. Ich wurde 1982 aus dem Amp eines Bassisten gelötet. Wir teilen eine Seele."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('TR-8080: "Korrekt. Ich wurde 1982 aus dem Amp eines Bassisten gelötet. Wir teilen eine Seele."');
           const currentStore = game();
           currentStore.increaseBandMood(10, 'id_8947463e');
           currentStore.increaseSkill('technical', 3);
@@ -422,10 +408,8 @@ export function buildProberaumMonitorDialogue(): Dialogue {
           },
           questToComplete: 'feedback_monitor',
           flagToSet: { flag: 'feedbackMonitorQuestCompleted', value: true },
-          nextDialogue: {
-            text: 'Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
             const currentStore = game();
             currentStore.increaseBandMood(20, 'id_7702e666');
             currentStore.increaseSkill('technical', 5);

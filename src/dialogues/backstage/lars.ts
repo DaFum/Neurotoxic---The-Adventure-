@@ -31,10 +31,8 @@ export function buildBackstageLarsDialogue(): Dialogue {
             text: 'Konzentriere dich auf das Chaos. [Chaos 5]',
             requiredSkill: { name: 'chaos', level: 5 },
             flagToSet: { flag: 'larsDrumPhilosophy', value: true },
-            nextDialogue: {
-              text: 'Lars: "JA! Das Chaos ist die wahre Ordnung! Ich werde den Raum mit Polyrhythmen zerreißen!"',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Lars: "JA! Das Chaos ist die wahre Ordnung! Ich werde den Raum mit Polyrhythmen zerreißen!"');
               const currentStore = game();
               currentStore.increaseBandMood(20, 'id_e6a8a82d');
               currentStore.increaseSkill('chaos', 3);
@@ -44,10 +42,8 @@ export function buildBackstageLarsDialogue(): Dialogue {
             text: 'Folge dem Metronom. [Technical 5]',
             requiredSkill: { name: 'technical', level: 5 },
             flagToSet: { flag: 'larsDrumPhilosophy', value: true },
-            nextDialogue: {
-              text: 'Lars: "Nein... das ist zu simpel. Aber... vielleicht hast du recht. Präzision vor Wahnsinn."',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Lars: "Nein... das ist zu simpel. Aber... vielleicht hast du recht. Präzision vor Wahnsinn."');
               const currentStore = game();
               currentStore.increaseBandMood(10, 'id_506435a1');
             },
@@ -80,7 +76,7 @@ export function buildBackstageLarsDialogue(): Dialogue {
       },
       {
         text: 'Rock on.',
-        action: () => game().setDialogue('Lars: "Immer!"')
+        action: () => game().setDialogue({ text: 'Lars: "Immer!"' })
       }
     ];
 
@@ -96,10 +92,8 @@ export function buildBackstageLarsDialogue(): Dialogue {
         text: 'Trink es auf Ex!',
         consumeItems: ['Turbo-Koffein'],
         flagToSet: { flag: 'larsEnergized', value: true },
-        nextDialogue: {
-          text: 'Lars: "ICH BIN EIN BLITZ! ICH BIN DER DONNER! MEINE HÄNDE VIBRIEREN SO SCHNELL, DASS ICH DURCH WÄNDE GEHEN KANN!"',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Lars: "ICH BIN EIN BLITZ! ICH BIN DER DONNER! MEINE HÄNDE VIBRIEREN SO SCHNELL, DASS ICH DURCH WÄNDE GEHEN KANN!"');
           const currentStore = game();
           currentStore.setFlag('larsVibrating', true);
           currentStore.increaseBandMood(40, 'id_45157c22');
@@ -110,10 +104,8 @@ export function buildBackstageLarsDialogue(): Dialogue {
         requiredTrait: 'Diplomat',
         consumeItems: ['Turbo-Koffein'],
         flagToSet: { flag: 'larsEnergized', value: true },
-        nextDialogue: {
-          text: 'Lars: "Du hast recht. Ein kontrollierter Burn. Mein Rhythmus wird unaufhaltsam sein."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Lars: "Du hast recht. Ein kontrollierter Burn. Mein Rhythmus wird unaufhaltsam sein."');
           const currentStore = game();
           currentStore.setFlag('lars_paced', true);
           currentStore.increaseBandMood(30, 'id_5ff6a60f');
@@ -124,10 +116,8 @@ export function buildBackstageLarsDialogue(): Dialogue {
         text: 'Nur einen Schluck.',
         consumeItems: ['Turbo-Koffein'],
         flagToSet: { flag: 'larsEnergized', value: true },
-        nextDialogue: {
-          text: 'Lars: "Nur einen Schluck? Bist du wahnsinnig? Das Zeug ist wie Raketentreibstoff! ... Okay, ich fühl mich schon besser."',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Lars: "Nur einen Schluck? Bist du wahnsinnig? Das Zeug ist wie Raketentreibstoff! ... Okay, ich fühl mich schon besser."');
           const currentStore = game();
           currentStore.increaseBandMood(20, 'id_432b4fc4');
         },
@@ -139,10 +129,8 @@ export function buildBackstageLarsDialogue(): Dialogue {
         text: 'Der Pakt hält.',
         consumeItems: ['Turbo-Koffein'],
         flagToSet: { flag: 'larsEnergized', value: true },
-        nextDialogue: {
-          text: 'Lars: "Der Pakt hält! Diese Energie... sie speist direkt das Zentrum des Rhythmus!"',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Lars: "Der Pakt hält! Diese Energie... sie speist direkt das Zentrum des Rhythmus!"');
           const currentStore = game();
           currentStore.increaseBandMood(40, 'id_5ea33fb8');
         },
@@ -152,10 +140,8 @@ export function buildBackstageLarsDialogue(): Dialogue {
         requiredSkill: { name: 'chaos', level: 5 },
         consumeItems: ['Turbo-Koffein'],
         flagToSet: { flag: 'larsEnergized', value: true },
-        nextDialogue: {
-          text: 'Lars: "EXPLOSION! DER PAKT BRICHT DIE GRENZEN!"',
-        },
         action: () => {
+            const _st = game(); _st.setDialogue('Lars: "EXPLOSION! DER PAKT BRICHT DIE GRENZEN!"');
           const currentStore = game();
           currentStore.setFlag('larsVibrating', true);
           currentStore.increaseBandMood(50, 'id_c77c699e');

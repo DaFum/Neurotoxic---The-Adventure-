@@ -94,34 +94,28 @@ describe('dialogueEngine', () => {
     });
 
     it('should handle throwing questToComplete and continue executing pipeline', () => {
-      const actionSpy = vi.fn();
       const option: DialogueOption = {
         text: 'Test',
         questToComplete: 'missing_quest', // This will throw in store.ts
-        action: actionSpy,
         nextDialogue: { text: 'Next' }
       };
 
       const success = executeDialogueOption(option);
 
       expect(success).toBe(true);
-      expect(actionSpy).toHaveBeenCalled();
       expect(useStore.getState().dialogue?.text).toBe('Next');
     });
 
     it('should handle throwing questToFail and continue executing pipeline', () => {
-      const actionSpy = vi.fn();
       const option: DialogueOption = {
         text: 'Test',
         questToFail: 'missing_quest', // This will throw in store.ts
-        action: actionSpy,
         nextDialogue: { text: 'Next' }
       };
 
       const success = executeDialogueOption(option);
 
       expect(success).toBe(true);
-      expect(actionSpy).toHaveBeenCalled();
       expect(useStore.getState().dialogue?.text).toBe('Next');
     });
 

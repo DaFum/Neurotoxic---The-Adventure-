@@ -34,10 +34,8 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
               text: 'Vereinige das Maschinen-Bewusstsein',
             },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
-            nextDialogue: {
-              text: 'Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.');
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
               currentStore.increaseBandMood(40, 'id_b4f7027d');
@@ -53,10 +51,8 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
               text: 'Vereinige das Maschinen-Bewusstsein',
             },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
-            nextDialogue: {
-              text: 'Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.');
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
               currentStore.increaseBandMood(30, 'id_7ffa8585');
@@ -71,10 +67,8 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
               text: 'Vereinige das Maschinen-Bewusstsein',
             },
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
-            nextDialogue: {
-              text: 'Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."',
-            },
             action: () => {
+            const _st = game(); _st.setDialogue('Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."');
               const currentStore = game();
               currentStore.discoverLore('maschinen_bewusstsein');
               currentStore.increaseBandMood(20, 'id_4899db3c');
@@ -109,10 +103,8 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             flag: 'feedbackMonitorBackstageQuestCompleted',
             value: true,
           },
-          nextDialogue: {
-            text: 'Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."');
             const currentStore = game();
             currentStore.increaseBandMood(30, 'id_e0e8aacd');
             currentStore.increaseSkill('technical', 5);
@@ -131,10 +123,8 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             flag: 'feedbackMonitorBackstageQuestCompleted',
             value: true,
           },
-          nextDialogue: {
-            text: 'Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."');
             const currentStore = game();
             currentStore.increaseBandMood(40, 'id_1f6ffb9b');
             currentStore.increaseSkill('chaos', 5);
@@ -152,10 +142,8 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             flag: 'feedbackMonitorBackstageQuestCompleted',
             value: true,
           },
-          nextDialogue: {
-            text: 'Monitor: "BZZZT. Okay, das reicht für einen Standard-Gig."',
-          },
           action: () => {
+            const _st = game(); _st.setDialogue('Monitor: "BZZZT. Okay, das reicht für einen Standard-Gig."');
             const currentStore = game();
             currentStore.increaseBandMood(15, 'id_b74f71fa');
           },
@@ -223,28 +211,28 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
       {
         text: 'Hallo?',
         flagToSet: { flag: 'feedbackMonitorBackstageTalked', value: true },
-        nextDialogue: {
-          text: 'Monitor: "BZZZT. Hallo, Fleischsack. Ich habe schon tausend Sänger kommen und gehen sehen. Marius? Der klingt wie eine rostige Kreissäge in einem Mixer. BZZZT. Aber er hat... Seele. Eine sehr, sehr verzerrte Seele. Wenn du mir hilfst, meine Frequenzen zu optimieren, helfe ich dir beim Gig in Salzgitter."',
-          options: [
-            {
-              text: 'Wie kann ich helfen?',
-              nextDialogue: {
-                text: 'Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."',
-              },
-              questToAdd: {
-                id: BACKSTAGE_MONITOR_QUEST_ID,
-                text: BACKSTAGE_MONITOR_QUEST_TEXT,
-              },
-              flagToSet: {
-                flag: 'feedbackMonitorBackstageQuestStarted',
-                value: true,
-              },
-            },
-          ],
-        },
         action: () => {
           const currentStore = game();
           currentStore.increaseBandMood(5, 'id_2272824b');
+          currentStore.setDialogue({
+            text: 'Monitor: "BZZZT. Hallo, Fleischsack. Ich habe schon tausend Sänger kommen und gehen sehen. Marius? Der klingt wie eine rostige Kreissäge in einem Mixer. BZZZT. Aber er hat... Seele. Eine sehr, sehr verzerrte Seele. Wenn du mir hilfst, meine Frequenzen zu optimieren, helfe ich dir beim Gig in Salzgitter."',
+            options: [
+              {
+                text: 'Wie kann ich helfen?',
+                nextDialogue: {
+                  text: 'Monitor: "BZZZT. Finde den Verstärker-Schaltplan. Er ist irgendwo im Tourbus versteckt."',
+                },
+                questToAdd: {
+                  id: BACKSTAGE_MONITOR_QUEST_ID,
+                  text: BACKSTAGE_MONITOR_QUEST_TEXT,
+                },
+                flagToSet: {
+                  flag: 'feedbackMonitorBackstageQuestStarted',
+                  value: true,
+                },
+              },
+            ],
+          });
         },
       },
       {

@@ -58,10 +58,8 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       questToComplete: BACKSTAGE_MARIUS_QUEST_ID,
       flagToSet: { flag: 'mariusCalmed', value: true },
-      nextDialogue: {
-        text: 'Marius: "Ein Gott... ja. Ein Gott des Lärms! Danke, Manager. Ich werde sie alle in Grund und Boden schreien!"',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Marius: "Ein Gott... ja. Ein Gott des Lärms! Danke, Manager. Ich werde sie alle in Grund und Boden schreien!"');
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
         currentStore.increaseBandMood(30, 'id_666c08b2');
@@ -77,10 +75,8 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       questToComplete: BACKSTAGE_MARIUS_QUEST_ID,
       flagToSet: { flag: 'mariusCalmed', value: true },
-      nextDialogue: {
-        text: 'Marius: "Nur ich und das Mikrofon... Keine Erwartungen, nur reiner Ausdruck. Das ist brillant!"',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Marius: "Nur ich und das Mikrofon... Keine Erwartungen, nur reiner Ausdruck. Das ist brillant!"');
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
         currentStore.setFlag('backstage_performer_speech', true);
@@ -97,10 +93,8 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       questToComplete: BACKSTAGE_MARIUS_QUEST_ID,
       flagToSet: { flag: 'mariusCalmed', value: true },
-      nextDialogue: {
-        text: 'Marius: "...Du hast Recht. Zerstören. Einfach alles zerstören!"',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Marius: "...Du hast Recht. Zerstören. Einfach alles zerstören!"');
         const currentStore = game();
         currentStore.increaseBandMood(20, 'id_e971a377');
         currentStore.increaseSkill('chaos', 3);
@@ -115,10 +109,8 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       questToComplete: BACKSTAGE_MARIUS_QUEST_ID,
       flagToSet: { flag: 'mariusCalmed', value: true },
-      nextDialogue: {
-        text: 'Marius: "Die Frequenz... ich spüre sie. Ich bin nur das Gefäß. Die Musik spricht."',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Marius: "Die Frequenz... ich spüre sie. Ich bin nur das Gefäß. Die Musik spricht."');
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
         currentStore.increaseBandMood(25, 'id_f7d64725');
@@ -133,10 +125,8 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       questToComplete: BACKSTAGE_MARIUS_QUEST_ID,
       flagToSet: { flag: 'mariusCalmed', value: true },
-      nextDialogue: {
-        text: 'Marius: "Lego? Das macht es irgendwie... schmerzhafter? Aber okay, ich versuchs."',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Marius: "Lego? Das macht es irgendwie... schmerzhafter? Aber okay, ich versuchs."');
         const currentStore = game();
         currentStore.increaseBandMood(10, 'id_45b553b5');
       },
@@ -167,10 +157,8 @@ export function buildBackstageMariusDialogue(): Dialogue {
       },
       questToComplete: BACKSTAGE_MARIUS_QUEST_ID,
       flagToSet: { flag: 'mariusCalmed', value: true },
-      nextDialogue: {
-        text: 'Marius: "Die Strategie... ja! Ego-Management aktiviert! Ich habe die absolute Kontrolle!"',
-      },
       action: () => {
+            const _st = game(); _st.setDialogue('Marius: "Die Strategie... ja! Ego-Management aktiviert! Ich habe die absolute Kontrolle!"');
         const currentStore = game();
         currentStore.setFlag('mariusConfidenceBoost', true);
         currentStore.increaseBandMood(35, 'id_9661db70');
