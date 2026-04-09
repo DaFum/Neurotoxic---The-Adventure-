@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { checkHasSavedGame } from './saveGame';
 
 describe('checkHasSavedGame', () => {
@@ -13,6 +13,15 @@ describe('checkHasSavedGame', () => {
 
     it('returns false for invalid JSON', () => {
       expect(checkHasSavedGame('{ invalid }')).toBe(false);
+    });
+
+    it('returns false when JSON.parse throws an unexpected error', () => {
+      const parseSpy = vi.spyOn(JSON, 'parse').mockImplementationOnce(() => {
+        throw new Error('Unexpected parsing error');
+      });
+      expect(checkHasSavedGame('{}')).toBe(false);
+      expect(parseSpy).toHaveBeenCalled();
+      parseSpy.mockRestore();
     });
 
     it('returns false for valid JSON that is not an object', () => {
