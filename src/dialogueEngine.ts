@@ -135,7 +135,7 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   const postActionDialogue = useStore.getState().dialogue;
 
   if (option.nextDialogue && option.action && preActionDialogue !== postActionDialogue) {
-    console.warn('executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. nextDialogue will overwrite the action\'s dialogue change.');
+    throw new Error('executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. This conflicting pattern is deprecated and no longer allowed.');
   }
 
   // 4. Navigation: nextDialogue wins; otherwise auto-close unless action already redirected

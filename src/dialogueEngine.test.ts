@@ -65,16 +65,6 @@ describe('dialogueEngine', () => {
   });
 
   describe('executeDialogueOption', () => {
-    let warnSpy: any;
-
-    beforeEach(() => {
-      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    });
-
-    afterEach(() => {
-      warnSpy.mockRestore();
-    });
-
     it('should execute in correct order and consume items before declarative effects and actions', () => {
       const actionSpy = vi.fn();
 
@@ -135,7 +125,7 @@ describe('dialogueEngine', () => {
       expect(useStore.getState().dialogue?.text).toBe('Next');
     });
 
-    it('should warn if action calls setDialogue and nextDialogue is defined', () => {
+    it('should throw an error if action calls setDialogue and nextDialogue is defined', () => {
       const option: DialogueOption = {
         text: 'Test',
         nextDialogue: { text: 'Next' },
@@ -144,13 +134,9 @@ describe('dialogueEngine', () => {
         },
       };
 
-      executeDialogueOption(option);
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('option.action called setDialogue(), but option.nextDialogue is also defined')
+      expect(() => executeDialogueOption(option)).toThrow(
+        'executeDialogueOption: option.action called setDialogue(), but option.nextDialogue is also defined. This conflicting pattern is deprecated and no longer allowed.'
       );
-
-      // nextDialogue wins
-      expect(useStore.getState().dialogue?.text).toBe('Next');
     });
   });
 });
