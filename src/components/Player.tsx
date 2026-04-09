@@ -166,7 +166,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
       // Sync the rapier body with the store exactly once on mount to handle spawns.
       bodyRef.current.setTranslation({ x: initialPos[0], y: initialPos[1], z: initialPos[2] }, true);
       bodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
-      try { bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true); } catch {}
+bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
       lastSentPosRef.set(initialPos[0], initialPos[1], initialPos[2]);
     } catch {
       // Rapier body may not be initialized yet; ignore.
@@ -191,7 +191,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
           if (dx > 0.05) {
             bodyRef.current.setTranslation({ x: newPos[0], y: newPos[1], z: newPos[2] }, true);
             bodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
-            try { bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true); } catch {}
+bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
             lastSentPosRef.set(newPos[0], newPos[1], newPos[2]);
           }
         } catch {
