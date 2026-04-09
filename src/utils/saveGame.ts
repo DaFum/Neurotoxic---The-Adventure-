@@ -44,7 +44,8 @@ export function checkHasSavedGame(raw: string | null): boolean {
       hasSkillProgress;
 
     return Boolean(hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress);
-  } catch {
+  } catch (e) {
+    console.warn('Failed to parse save game:', e);
     return false;
   }
 }

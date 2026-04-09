@@ -1,8 +1,16 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { checkHasSavedGame } from './saveGame';
 
 describe('checkHasSavedGame', () => {
   describe('invalid inputs', () => {
+    beforeEach(() => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
     it('returns false for null', () => {
       expect(checkHasSavedGame(null)).toBe(false);
     });
@@ -23,6 +31,12 @@ describe('checkHasSavedGame', () => {
 
     it('returns false for an array', () => {
       expect(checkHasSavedGame('[]')).toBe(false);
+    });
+
+    it('logs a warning when JSON parsing fails', () => {
+      const result = checkHasSavedGame('{ invalid }');
+      expect(result).toBe(false);
+      expect(console.warn).toHaveBeenCalledWith('Failed to parse save game:', expect.any(Error));
     });
   });
 
