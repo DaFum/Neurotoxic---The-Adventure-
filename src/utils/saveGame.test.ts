@@ -23,6 +23,15 @@ describe('checkHasSavedGame', () => {
       expect(checkHasSavedGame('{ invalid }')).toBe(false);
     });
 
+    it('returns false when JSON.parse throws an unexpected error', () => {
+      const parseSpy = vi.spyOn(JSON, 'parse').mockImplementationOnce(() => {
+        throw new Error('Unexpected parsing error');
+      });
+      expect(checkHasSavedGame('{}')).toBe(false);
+      expect(parseSpy).toHaveBeenCalled();
+      parseSpy.mockRestore();
+    });
+
     it('returns false for valid JSON that is not an object', () => {
       expect(checkHasSavedGame('123')).toBe(false);
       expect(checkHasSavedGame('true')).toBe(false);
