@@ -1,7 +1,7 @@
 import { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
-import { useStore, Dialogue } from '../../store';
+import { useStore, Dialogue, DialogueOption } from '../../store';
 import { useShallow } from 'zustand/react/shallow';
 import { canSelectOption, executeDialogueOption } from '../../dialogueEngine';
 import { audio } from '../../audio';
@@ -32,6 +32,22 @@ export function DialogueBox({
   const isResolvingRef = useRef(false);
   const typewriterIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const displayedTextLengthRef = useRef(0);
+
+  const executeOption = (option: DialogueOption) => {
+    const currentDialogue = dialogue;
+    isResolvingRef.current = true;
+    setIsResolving(true);
+    try {
+      executeDialogueOption(option);
+    } catch (error) {
+      console.error('Failed to execute dialogue option', option, error);
+    } finally {
+      if (useStore.getState().dialogue === currentDialogue) {
+        isResolvingRef.current = false;
+        setIsResolving(false);
+      }
+    }
+  };
 
   useLayoutEffect(() => {
     isResolvingRef.current = false;
@@ -113,19 +129,7 @@ export function DialogueBox({
           const option = dialogue.options[numKey - 1];
           if (canSelectOption(option)) {
             e.preventDefault();
-            const currentDialogue = dialogue;
-            isResolvingRef.current = true;
-            setIsResolving(true);
-            try {
-              executeDialogueOption(option);
-            } catch (error) {
-              console.error('Failed to execute dialogue option', option, error);
-            } finally {
-              if (useStore.getState().dialogue === currentDialogue) {
-                isResolvingRef.current = false;
-                setIsResolving(false);
-              }
-            }
+            executeOption(option);
           }
         }
       }
@@ -211,25 +215,7 @@ export function DialogueBox({
                                 isResolvingRef.current
                               )
                                 return;
-                              const currentDialogue = dialogue;
-                              isResolvingRef.current = true;
-                              setIsResolving(true);
-                              try {
-                                executeDialogueOption(option);
-                              } catch (error) {
-                                console.error(
-                                  'Failed to execute dialogue option',
-                                  option,
-                                  error
-                                );
-                              } finally {
-                                if (
-                                  useStore.getState().dialogue === currentDialogue
-                                ) {
-                                  isResolvingRef.current = false;
-                                  setIsResolving(false);
-                                }
-                              }
+                              executeOption(option);
                             }}
                             className={`group relative flex flex-col px-4 py-3 text-sm font-bold uppercase tracking-wider text-left border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               isLocked || isResolving
@@ -328,6 +314,7 @@ export function DialogueBox({
                           displayedText.length < (dialogue?.text.length || 0)
                         ) {
                           setDisplayedText(dialogue?.text || '');
+                          displayedTextLengthRef.current = dialogue?.text.length || 0;
                           if (typewriterIntervalRef.current) {
                             clearInterval(typewriterIntervalRef.current);
                           }
