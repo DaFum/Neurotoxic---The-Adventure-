@@ -1072,14 +1072,17 @@ export const useStore = create<GameState>()(
       setCameraShake: (cameraShakeIntensity) => set((state) => ({ cameraShakeIntensity, cameraShakeKick: state.cameraShakeKick + 1 })),
       discoverLore: (id) =>
         set((state) => {
-          const entry = state.loreEntries.find((e) => e.id === id);
-          if (!entry || entry.discovered) {
+          // Use findIndex() so we can update only the matching lore entry after cloning
+          // the array. This still does an index lookup plus an array copy, but avoids a
+          // map()-style rewrite that would recreate every entry object on each update.
+          const index = state.loreEntries.findIndex((e) => e.id === id);
+          if (index === -1 || state.loreEntries[index].discovered) {
             return state; // Avoid state update if lore doesn't exist or is already discovered
           }
+          const newEntries = [...state.loreEntries];
+          newEntries[index] = { ...newEntries[index], discovered: true };
           return {
-            loreEntries: state.loreEntries.map((e) =>
-              e.id === id ? { ...e, discovered: true } : e
-            ),
+            loreEntries: newEntries,
           };
         }),
       resetGame: () => set(initialState),
