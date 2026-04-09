@@ -182,9 +182,14 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   }, []);
 
   const palette = useMemo(() => {
-    let seed = 0;
-    for (let i = 0; i < name.length; i++) {
-      seed += name.charCodeAt(i);
+    // ⚡ Bolt Optimization: Use O(1) sampling for seed generation instead of O(N) string iteration
+    // to ensure stable performance regardless of name length.
+    let seed = name.length;
+    if (name.length > 0) {
+      seed += name.charCodeAt(0) + (name.charCodeAt(name.length - 1) * 31);
+      if (name.length > 10) {
+        seed += name.charCodeAt(Math.floor(name.length / 2)) * 13;
+      }
     }
     const hue = (seed * 37) % 360;
     return {
