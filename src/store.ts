@@ -1013,7 +1013,7 @@ export const useStore = create<GameState>()(
               };
             }
             console.warn(`Attempted to complete unregistered quest: ${id}`);
-            return state;
+            return state.flags[flag] !== flagValue ? { flags: { ...state.flags, [flag]: flagValue } } : state;
           }
           const quest = state.quests[index];
           const statusChanged = quest.status !== 'completed';

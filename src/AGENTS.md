@@ -14,9 +14,9 @@
 - `addQuest(id, text)` — if a quest with that id already exists, updates its display text while preserving its current status. Never reopens a completed quest. For scene-entry objectives call it inside a mount `useEffect(() => { addQuest(...); }, [])`.
 - `startQuestWithFlag(id, text, flag, flagValue?)` — atomic helper that adds/updates a quest and sets a boolean flag in one step, guaranteeing they stay in sync. Sets status to `active` for new or `failed` quests; preserves `completed` status (only updates the text).
 - `startAndFinishQuest(id, text)` — records a milestone as completed in one step. If the quest already exists as 'active', transitions it to 'completed'. No-op if already completed or failed. Safe to call regardless of whether the quest was previously registered. Use for one-shot events (band meeting, fan movement, bassist contact, etc.).
-- `completeQuest(id, text?)` — call this when resolving a quest. If the quest is not registered, it will auto-register and complete it if `text` is provided, otherwise it throws an `Error`.
-- `completeQuestWithFlag(id, flag, flagValue?, text?)` — atomic helper that completes a quest and sets a boolean flag in one step. Accepts optional `text` to auto-register missing quests. Throws an `Error` if the quest is unregistered and no text is provided.
-- `failQuest(id, text?)` — marks a quest failed; appears with strikethrough in the journal. Works identically to `completeQuest` regarding unregistered quests (throws an `Error` if no text is provided).
+- `completeQuest(id, text?)` — call this when resolving a quest. If the quest is not registered, it will auto-register and complete it if `text` is provided, otherwise it logs a warning via `console.warn` and returns the state unmodified.
+- `completeQuestWithFlag(id, flag, flagValue?, text?)` — atomic helper that completes a quest and sets a boolean flag in one step. Accepts optional `text` to auto-register missing quests. Logs a warning via `console.warn` if the quest is unregistered and no text is provided.
+- `failQuest(id, text?)` — marks a quest failed; appears with strikethrough in the journal. Works identically to `completeQuest` regarding unregistered quests (logs a warning via `console.warn` if no text is provided).
 - Quest entries have `status: QuestStatus` (`'active' | 'completed' | 'failed'`) — not `completed: boolean`. Read with `q.status === 'completed'`, not `q.completed`.
 
 ### Flags
