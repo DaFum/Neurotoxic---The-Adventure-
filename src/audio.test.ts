@@ -88,13 +88,12 @@ describe('AudioEngine', () => {
       const expectedError = new Error('Resume failed');
       ctx.resume.mockRejectedValueOnce(expectedError);
 
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.init();
 
       // Wait for the promise rejection to be caught
       await Promise.resolve();
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext resume failed:', expectedError);
+      // Should not throw and fail silently
     });
 
     it('should handle initialization errors gracefully', () => {
@@ -103,10 +102,9 @@ describe('AudioEngine', () => {
         throw expectedError;
       }));
 
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.init();
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext initialization failed:', expectedError);
+      // Should not throw and fail silently
     });
   });
 

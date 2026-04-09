@@ -27,12 +27,12 @@ class AudioEngine {
         this.ctx = new AudioContext();
       }
       if (this.ctx.state === 'suspended') {
-        this.ctx.resume().catch((e) => {
-          console.warn('AudioContext resume failed:', e);
+        this.ctx.resume().catch(() => {
+          // Silent failure on resume
         });
       }
     } catch (e) {
-      console.warn('AudioContext initialization failed:', e);
+      // Silent failure on initialization
     }
   }
 
