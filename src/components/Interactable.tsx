@@ -190,6 +190,9 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
       if (name.length > 10) {
         seed += name.charCodeAt(Math.floor(name.length / 2)) * 13;
       }
+      if (name.length > 5) {
+        seed += name.charCodeAt(1) * 7;
+      }
     }
     const hue = (seed * 37) % 360;
     return {
