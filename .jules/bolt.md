@@ -40,3 +40,6 @@
 
 **Learning:** Instantiating identical `THREE.CanvasTexture` instances across multiple identical React Three Fiber components causes redundant memory allocation and GPU texture uploads.
 **Action:** Extract texture generation into module-level factory functions that use a reference-counted `Map` cache. This ensures multiple identical components share the exact same R3F texture object while still cleaning up memory when the last component unmounts.
+## 2026-04-14 - Zustand Array Mutation Optimization
+**Learning:** Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.
+**Action:** Replace `.find()` + `.map()` combinations with a single `.findIndex()` lookup, followed by a shallow array clone (`[...array]`) and direct index mutation (`newArray[index] = ...`).

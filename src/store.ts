@@ -1072,14 +1072,18 @@ export const useStore = create<GameState>()(
       setCameraShake: (cameraShakeIntensity) => set((state) => ({ cameraShakeIntensity, cameraShakeKick: state.cameraShakeKick + 1 })),
       discoverLore: (id) =>
         set((state) => {
-          const entry = state.loreEntries.find((e) => e.id === id);
-          if (!entry || entry.discovered) {
+          // ⚡ Bolt Optimization: Replace .find() and .map() with .findIndex()
+          // to prevent double O(N) array scans and avoid allocating a completely new
+          // array every time lore is discovered, reducing unnecessary garbage collection
+          // and improving performance.
+          const index = state.loreEntries.findIndex((e) => e.id === id);
+          if (index === -1 || state.loreEntries[index].discovered) {
             return state; // Avoid state update if lore doesn't exist or is already discovered
           }
+          const newEntries = [...state.loreEntries];
+          newEntries[index] = { ...newEntries[index], discovered: true };
           return {
-            loreEntries: state.loreEntries.map((e) =>
-              e.id === id ? { ...e, discovered: true } : e
-            ),
+            loreEntries: newEntries,
           };
         }),
       resetGame: () => set(initialState),
