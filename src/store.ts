@@ -1072,10 +1072,9 @@ export const useStore = create<GameState>()(
       setCameraShake: (cameraShakeIntensity) => set((state) => ({ cameraShakeIntensity, cameraShakeKick: state.cameraShakeKick + 1 })),
       discoverLore: (id) =>
         set((state) => {
-          // ⚡ Bolt Optimization: Replace .find() and .map() with .findIndex()
-          // to prevent double O(N) array scans and avoid allocating a completely new
-          // array every time lore is discovered, reducing unnecessary garbage collection
-          // and improving performance.
+          // Use findIndex() so we can update only the matching lore entry after cloning
+          // the array. This still does an index lookup plus an array copy, but avoids a
+          // map()-style rewrite that would recreate every entry object on each update.
           const index = state.loreEntries.findIndex((e) => e.id === id);
           if (index === -1 || state.loreEntries[index].discovered) {
             return state; // Avoid state update if lore doesn't exist or is already discovered
