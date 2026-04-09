@@ -99,7 +99,7 @@ describe('AudioEngine', () => {
 
     it('should handle initialization errors gracefully', () => {
       const expectedError = new Error('Init failed');
-      vi.stubGlobal('AudioContext', vi.fn().mockImplementation(function() {
+      vi.stubGlobal('AudioContext', vi.fn(function() {
         throw expectedError;
       }));
 
