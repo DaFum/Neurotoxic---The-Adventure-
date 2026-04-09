@@ -85,7 +85,8 @@ describe('AudioEngine', () => {
       audio.init();
       const ctx = audio.ctx as unknown as MockAudioContext;
       ctx.state = 'suspended';
-      ctx.resume.mockRejectedValueOnce(new Error('Resume failed'));
+      const expectedError = new Error('Resume failed');
+      ctx.resume.mockRejectedValueOnce(expectedError);
 
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.init();
@@ -93,18 +94,19 @@ describe('AudioEngine', () => {
       // Wait for the promise rejection to be caught
       await Promise.resolve();
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext resume failed:', expect.any(Error));
+      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext resume failed:', expectedError);
     });
 
     it('should handle initialization errors gracefully', () => {
-      vi.stubGlobal('AudioContext', vi.fn().mockImplementation(() => {
-        throw new Error('Init failed');
+      const expectedError = new Error('Init failed');
+      vi.stubGlobal('AudioContext', vi.fn(function() {
+        throw expectedError;
       }));
 
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.init();
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext initialization failed:', expect.any(Error));
+      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext initialization failed:', expectedError);
     });
   });
 
@@ -152,14 +154,15 @@ describe('AudioEngine', () => {
     it('should handle errors when playing a tone gracefully', () => {
       audio.init();
       const ctx = audio.ctx as unknown as MockAudioContext;
+      const expectedError = new Error('Oscillator failed');
       ctx.createOscillator.mockImplementationOnce(() => {
-        throw new Error('Oscillator failed');
+        throw expectedError;
       });
 
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.playTone(440, 'sine', 1);
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing tone:', expect.any(Error));
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing tone:', expectedError);
     });
 
     it('should do nothing if ctx is null', () => {
@@ -243,15 +246,16 @@ describe('AudioEngine', () => {
         audio.init();
         const ctx = audio.ctx as unknown as MockAudioContext;
         ctx.state = 'running';
+        const expectedError = new Error('Filter failed');
         ctx.createBiquadFilter.mockImplementationOnce(() => {
-            throw new Error('Filter failed');
+            throw expectedError;
         });
 
         const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
         audio.startAmbient('kaminstube');
         vi.advanceTimersByTime(100);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing kaminstube ambient:', expect.any(Error));
+        expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing kaminstube ambient:', expectedError);
     });
 
     it('should not play ambient if context is suspended', () => {
@@ -356,15 +360,16 @@ describe('AudioEngine', () => {
         audio.init();
         const ctx = audio.ctx as unknown as MockAudioContext;
         ctx.state = 'running';
+        const expectedError = new Error('Kick drum failed');
         ctx.createGain.mockImplementationOnce(() => {
-            throw new Error('Kick drum failed');
+            throw expectedError;
         });
 
         const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
         audio.startMusic();
         vi.advanceTimersByTime(audio.tempo);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing kick drum:', expect.any(Error));
+        expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing kick drum:', expectedError);
     });
   });
 });
