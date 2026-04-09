@@ -175,7 +175,7 @@ export type Trait =
 
 /**
  * Represents the player's current skill levels.
- * @property technical - Level of technical aptitude (e.g., repairing, hacking).
+ * @property technical - Level of technical aptitude (e.g., repairing, programming).
  * @property social - Level of social influence (e.g., charisma, persuasion).
  * @property chaos - Level of unpredictability (e.g., breaking things).
  */
