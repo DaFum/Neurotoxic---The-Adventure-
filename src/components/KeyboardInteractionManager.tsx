@@ -10,6 +10,7 @@ interface InteractableInfo {
 interface KeyboardInteractionContextValue {
   register: (id: string, getInfo: () => InteractableInfo | null) => void;
   unregister: (id: string) => void;
+  setActive: (id: string, active: boolean) => void;
 }
 
 const KeyboardInteractionContext = createContext<KeyboardInteractionContextValue | null>(null);
@@ -23,6 +24,7 @@ const KeyboardInteractionContext = createContext<KeyboardInteractionContextValue
  */
 export function KeyboardInteractionProvider({ children }: { children: ReactNode }) {
   const registryRef = useRef(new Map<string, () => InteractableInfo | null>());
+  const activeSetRef = useRef(new Set<string>());
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -32,7 +34,9 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
       if (isPaused || dialogue) return;
 
       let closest: InteractableInfo | null = null;
-      for (const getInfo of registryRef.current.values()) {
+      for (const id of activeSetRef.current) {
+        const getInfo = registryRef.current.get(id);
+        if (!getInfo) continue;
         const info = getInfo();
         if (info && (!closest || info.distance < closest.distance)) {
           closest = info;
@@ -50,7 +54,17 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
 
   const value = useRef<KeyboardInteractionContextValue>({
     register: (id, getInfo) => registryRef.current.set(id, getInfo),
-    unregister: (id) => registryRef.current.delete(id),
+    unregister: (id) => {
+      registryRef.current.delete(id);
+      activeSetRef.current.delete(id);
+    },
+    setActive: (id, active) => {
+      if (active) {
+        activeSetRef.current.add(id);
+      } else {
+        activeSetRef.current.delete(id);
+      }
+    },
   }).current;
 
   return (

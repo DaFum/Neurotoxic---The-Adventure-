@@ -163,7 +163,7 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const distanceRef = useRef(Infinity);
   const hoveredRef = useRef(false);
   const interactedRef = useRef(false);
-  const { register, unregister } = useKeyboardInteraction();
+  const { register, unregister, setActive } = useKeyboardInteraction();
 
   // ⚡ Bolt Optimization: Cache Vector3 objects to prevent GC overhead in useFrame
   const playerPosVector = useRef(new THREE.Vector3()).current;
@@ -261,8 +261,11 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
       if (!inRangeRef.current) return null;
       return { distance: distanceRef.current, trigger: handleInteractRef.current };
     });
+    if (inRangeRef.current) {
+      setActive(id, true);
+    }
     return () => unregister(id);
-  }, [register, unregister]);
+  }, [register, unregister, setActive]);
 
   useFrame((_state, delta) => {
     const { isPaused, bandMood, playerPos } = useStore.getState();
@@ -276,6 +279,9 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
     const distSq = playerPosVector.distanceToSquared(targetPosVector);
     const inRangeNow = distSq < 16.0; // 4.0 squared
     distanceRef.current = distSq; // keyboard interaction only compares relative distances, so squared is fine
+    if (inRangeNow !== inRangeRef.current) {
+      setActive(instanceIdRef.current, inRangeNow);
+    }
     inRangeRef.current = inRangeNow;
 
     if (ref.current) {
