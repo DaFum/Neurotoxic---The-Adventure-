@@ -21,7 +21,7 @@ useStore.subscribe((state, prevState) => {
   }
 });
 
-export function clearQuestCache() {
+export function refreshQuestCache() {
   updateQuestsCache(useStore.getState().quests);
 }
 
