@@ -1,13 +1,28 @@
 import { useStore } from './store';
 import type { DialogueOption, Quest } from './store';
 
-// Cache for O(1) quest lookups
-let lastQuestsRef: Quest[] | null = null;
+// Cache for O(1) quest lookups, maintained globally
 const cachedQuestsMap = new Map<string, Quest>();
+
+function updateQuestsCache(quests: Quest[]) {
+  cachedQuestsMap.clear();
+  for (let i = 0; i < quests.length; i++) {
+    cachedQuestsMap.set(quests[i].id, quests[i]);
+  }
+}
+
+// Initialize cache
+updateQuestsCache(useStore.getState().quests);
+
+// Maintain cache synchronously when store updates
+useStore.subscribe((state, prevState) => {
+  if (state.quests !== prevState.quests) {
+    updateQuestsCache(state.quests);
+  }
+});
 
 export function clearQuestCache() {
   cachedQuestsMap.clear();
-  lastQuestsRef = null;
 }
 
 /**
@@ -17,7 +32,7 @@ export function clearQuestCache() {
  * Used by the UI to determine disabled/locked state without executing game-state side-effects.
  */
 export function canSelectOption(option: DialogueOption): boolean {
-  const { trait, skills, quests, flags, inventoryCounts } = useStore.getState();
+  const { trait, skills, flags, inventoryCounts } = useStore.getState();
 
   if (option.requiredTrait && trait !== option.requiredTrait) return false;
 
@@ -27,14 +42,6 @@ export function canSelectOption(option: DialogueOption): boolean {
   }
 
   if (option.questDependencies) {
-    if (quests !== lastQuestsRef) {
-      cachedQuestsMap.clear();
-      for (let i = 0; i < quests.length; i++) {
-        cachedQuestsMap.set(quests[i].id, quests[i]);
-      }
-      lastQuestsRef = quests;
-    }
-
     for (const dep of option.questDependencies) {
       if (typeof dep === 'string') {
         const q = cachedQuestsMap.get(dep);
