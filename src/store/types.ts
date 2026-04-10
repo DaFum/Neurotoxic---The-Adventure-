@@ -258,7 +258,7 @@ export interface Dialogue {
  * @property isPaused - Indicates whether the game logic is paused.
  * @property setPaused - Sets the pause state.
  * @property cameraShakeIntensity - The current intensity of the camera shake effect.
- * @property cameraShakeKick - Triggers or increases the camera shake effect.
+ * @property cameraShakeKick - The current magnitude of the camera shake kick effect.
  * @property setCameraShake - Updates the camera shake intensity.
  * @property resetGame - Resets the entire game state to defaults.
  */
