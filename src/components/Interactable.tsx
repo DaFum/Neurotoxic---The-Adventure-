@@ -160,7 +160,6 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const ringRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(0);
-  const distanceRef = useRef(Infinity);
   const hoveredRef = useRef(false);
   const interactedRef = useRef(false);
   const { register, unregister, setActive } = useKeyboardInteraction();
@@ -174,8 +173,8 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
     return dx * dx + dy * dy + dz * dz;
   }, [position]);
 
+  const distanceRef = useRef(initialDistSq);
   const inRangeRef = useRef(initialDistSq < 16.0);
-  distanceRef.current = initialDistSq;
 
   const palette = useMemo(() => {
     let seed = 0;

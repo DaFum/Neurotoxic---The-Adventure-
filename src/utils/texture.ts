@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
 /**
- * Creates a THREE.CanvasTexture from an HTMLCanvasElement with standard settings.
- * @param canvas The canvas to create the texture from.
+ * Creates a THREE.CanvasTexture from an HTMLCanvasElement or OffscreenCanvas with standard settings.
+ * @param canvas The canvas (HTMLCanvasElement or OffscreenCanvas) to create the texture from.
  * @returns A new THREE.CanvasTexture configured for the project.
  */
 export function createCanvasTexture(canvas: HTMLCanvasElement | OffscreenCanvas): THREE.CanvasTexture {
