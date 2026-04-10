@@ -10,7 +10,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import React, { useEffect, useMemo, useRef, useId } from 'react';
+import React, { useEffect, useMemo, useRef, useId, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -18,6 +18,7 @@ import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
 import { useKeyboardInteraction } from './KeyboardInteractionManager';
+import { createCanvasTexture } from '../utils/texture';
 
 interface InteractableProps {
   position: [number, number, number];
@@ -54,9 +55,7 @@ function getCachedTexture(key: string, createCanvas: () => HTMLCanvasElement): T
   }
 
   const canvas = createCanvas();
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
+  const texture = createCanvasTexture(canvas);
 
   textureCache.set(key, { texture, refCount: 1 });
   return texture;
@@ -172,14 +171,15 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
 
   // Initialize inRangeRef accurately to prevent one frame flicker
   const inRangeRef = useRef(false);
-  useMemo(() => {
+  useState(() => {
     const { playerPos } = useStore.getState();
-    playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
-    targetPosVector.set(position[0], position[1], position[2]);
-    const distSq = playerPosVector.distanceToSquared(targetPosVector);
+    const dx = playerPos[0] - position[0];
+    const dy = playerPos[1] - position[1];
+    const dz = playerPos[2] - position[2];
+    const distSq = dx * dx + dy * dy + dz * dz;
     distanceRef.current = distSq;
     inRangeRef.current = distSq < 16.0;
-  }, []);
+  });
 
   const palette = useMemo(() => {
     let seed = 0;
