@@ -416,8 +416,11 @@ export function UI() {
                       })}
                     </div>
                     <button
-                      onClick={handleCombine}
-                      disabled={selectedItems.length !== 2}
+                      onClick={() => {
+                        if (selectedItems.length !== 2) return;
+                        handleCombine();
+                      }}
+                      aria-disabled={selectedItems.length !== 2}
                       aria-describedby={selectedItems.length !== 2 ? "compact-merge-helper" : undefined}
                       className={`w-full mt-1 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                         selectedItems.length === 2
@@ -610,8 +613,11 @@ export function UI() {
                     )})}
                   </div>
                   <button
-                    onClick={handleCombine}
-                    disabled={selectedItems.length !== 2}
+                    onClick={() => {
+                      if (selectedItems.length !== 2) return;
+                      handleCombine();
+                    }}
+                    aria-disabled={selectedItems.length !== 2}
                     aria-describedby={selectedItems.length !== 2 ? "full-merge-helper" : undefined}
                     className={`w-full mt-2 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                       selectedItems.length === 2
