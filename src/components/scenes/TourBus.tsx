@@ -87,13 +87,13 @@ export function TourBus() {
   const addToInventory = useStore((state) => state.addToInventory);
   const canPickupItem = useStore((state) => state.canPickupItem);
   const inventoryIncludes = useStore(useShallow((state) => ({
-    Klebeband: state.inventory.includes('Klebeband'),
-    'Repariertes Kabel': state.inventory.includes('Repariertes Kabel'),
-    'Defektes Kabel': state.inventory.includes('Defektes Kabel'),
-    Kaffee: state.inventory.includes('Kaffee'),
-    Energiedrink: state.inventory.includes('Energiedrink'),
-    Bier: state.inventory.includes('Bier'),
-    Batterie: state.inventory.includes('Batterie')
+    Klebeband: !!state.inventoryCounts['Klebeband'],
+    'Repariertes Kabel': !!state.inventoryCounts['Repariertes Kabel'],
+    'Defektes Kabel': !!state.inventoryCounts['Defektes Kabel'],
+    Kaffee: !!state.inventoryCounts['Kaffee'],
+    Energiedrink: !!state.inventoryCounts['Energiedrink'],
+    Bier: !!state.inventoryCounts['Bier'],
+    Batterie: !!state.inventoryCounts['Batterie']
   })));
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const exitTimeoutRef = useRef<number | null>(null);

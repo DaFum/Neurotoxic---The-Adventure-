@@ -81,9 +81,9 @@ export function Backstage() {
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const increaseSkill = useStore((state) => state.increaseSkill);
   const inventoryIncludes = useStore(useShallow((state) => ({
-    Setliste: state.inventory.includes('Setliste'),
-    Stift: state.inventory.includes('Stift'),
-    Lötkolben: state.inventory.includes('Lötkolben')
+    Setliste: !!state.inventoryCounts['Setliste'],
+    Stift: !!state.inventoryCounts['Stift'],
+    Lötkolben: !!state.inventoryCounts['Lötkolben']
   })));
   const exitTimeoutRef = useRef<number | null>(null);
 

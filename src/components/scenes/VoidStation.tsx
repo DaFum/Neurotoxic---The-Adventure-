@@ -95,7 +95,7 @@ export function VoidStation() {
     bassist_contacted: state.flags.bassist_contacted
   })));
   const addQuest = useStore((state) => state.addQuest);
-  const hasDunkleMaterie = useStore((state) => state.inventory.includes('Dunkle Materie'));
+  const hasDunkleMaterie = useStore((state) => !!state.inventoryCounts['Dunkle Materie']);
   const exitTimeoutRef = useRef<number | null>(null);
 
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
