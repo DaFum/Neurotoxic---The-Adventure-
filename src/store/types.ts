@@ -251,13 +251,14 @@ export interface Dialogue {
  * @property startAndFinishQuest - Records a milestone as completed in one step. If the quest is already 'active', transitions it to 'completed'. No-op if already completed or failed.
  * @property bandMood - The current mood of the band (0-100).
  * @property increaseBandMood - Increases or decreases the band mood.
- * @property loreEntries - The dictionary of all lore entries in the game.
+ * @property loreEntries - The list of all lore entries in the game.
  * @property discoverLore - Marks a specific lore entry ID as discovered.
  * @property playerPos - The player's 3D coordinates [x, y, z].
  * @property setPlayerPos - Updates the player's coordinates.
  * @property isPaused - Indicates whether the game logic is paused.
  * @property setPaused - Sets the pause state.
- * @property cameraShake - The intensity of the camera shake effect.
+ * @property cameraShakeIntensity - The current intensity of the camera shake effect.
+ * @property cameraShakeKick - The current magnitude of the camera shake kick effect.
  * @property setCameraShake - Updates the camera shake intensity.
  * @property resetGame - Resets the entire game state to defaults.
  */

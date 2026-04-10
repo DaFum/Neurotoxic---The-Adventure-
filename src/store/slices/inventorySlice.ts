@@ -78,11 +78,8 @@ export const createInventorySlice: StateCreator<
     return pickedCount < getItemPickupLimit(item);
   },
   combineItems: (item1, item2) => {
-    const sortedKey = [item1, item2].sort().join('|');
-    const directKey = `${item1}|${item2}`;
-    const reverseKey = `${item2}|${item1}`;
-    const recipe =
-      RECIPE_LOOKUP[sortedKey] ?? RECIPE_LOOKUP[directKey] ?? RECIPE_LOOKUP[reverseKey];
+    const key = item1 < item2 ? `${item1}|${item2}` : `${item2}|${item1}`;
+    const recipe = RECIPE_LOOKUP[key];
 
     if (!recipe) return false;
 

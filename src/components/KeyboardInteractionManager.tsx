@@ -76,8 +76,8 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
 
 /**
  * Provides access to the keyboard interaction registry.
- * It allows components to register or unregister interactable elements.
- * @returns An object with `register` and `unregister` methods.
+ * It allows components to register, unregister, or set the active state of interactable elements.
+ * @returns An object with `register`, `unregister`, and `setActive` methods.
  * @throws {Error} Throws if called outside of a KeyboardInteractionProvider.
  */
 export function useKeyboardInteraction() {
