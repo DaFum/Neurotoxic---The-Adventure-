@@ -415,15 +415,19 @@ export function UI() {
                         );
                       })}
                     </div>
-                    {selectedItems.length === 2 && (
-                      <button
-                        onClick={handleCombine}
-                        className="w-full mt-1 bg-toxic hover:bg-toxic/80 text-black font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-transform active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                      >
-                        <Plus size={14} />
-                        Execute_Merge
-                      </button>
-                    )}
+                    <button
+                      onClick={handleCombine}
+                      disabled={selectedItems.length !== 2}
+                      title={selectedItems.length !== 2 ? "Select exactly two items to merge" : ""}
+                      className={`w-full mt-1 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+                        selectedItems.length === 2
+                          ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
+                          : 'bg-zinc-900/50 border border-zinc-800 text-zinc-600 cursor-not-allowed'
+                      }`}
+                    >
+                      <Plus size={14} />
+                      Execute_Merge
+                    </button>
                   </div>
                 )}
               </div>
@@ -600,15 +604,19 @@ export function UI() {
                       </motion.button>
                     )})}
                   </div>
-                  {selectedItems.length === 2 && (
-                    <button
-                      onClick={handleCombine}
-                      className="w-full mt-2 bg-toxic hover:bg-toxic/80 text-black font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-transform active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                    >
-                      <Plus size={14} />
-                      Execute_Merge
-                    </button>
-                  )}
+                  <button
+                    onClick={handleCombine}
+                    disabled={selectedItems.length !== 2}
+                    title={selectedItems.length !== 2 ? "Select exactly two items to merge" : ""}
+                    className={`w-full mt-2 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+                      selectedItems.length === 2
+                        ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
+                        : 'bg-zinc-900/50 border border-zinc-800 text-zinc-600 cursor-not-allowed'
+                    }`}
+                  >
+                    <Plus size={14} />
+                    Execute_Merge
+                  </button>
                 </div>
               )}
             </div>
