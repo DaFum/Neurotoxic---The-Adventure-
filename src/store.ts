@@ -9,7 +9,7 @@ import { createDialogueSlice } from './store/slices/dialogueSlice';
 import { createLoreSlice } from './store/slices/loreSlice';
 
 export * from './store/types';
-
+export * from './store/initialState';
 
 export const STORAGE_KEY = 'neurotoxic-game-storage';
 
