@@ -88,13 +88,13 @@ export function Proberaum() {
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
   const inventoryIncludes = useStore(useShallow((state) => ({
-    Mop: state.inventory.includes('Mop'),
-    Autoschlüssel: state.inventory.includes('Autoschlüssel'),
-    Bier: state.inventory.includes('Bier'),
-    Lötkolben: state.inventory.includes('Lötkolben'),
-    Schrottmetall: state.inventory.includes('Schrottmetall'),
-    Batterie: state.inventory.includes('Batterie'),
-    'Quanten-Kabel': state.inventory.includes('Quanten-Kabel')
+    Mop: !!state.inventoryCounts['Mop'],
+    Autoschlüssel: !!state.inventoryCounts['Autoschlüssel'],
+    Bier: !!state.inventoryCounts['Bier'],
+    Lötkolben: !!state.inventoryCounts['Lötkolben'],
+    Schrottmetall: !!state.inventoryCounts['Schrottmetall'],
+    Batterie: !!state.inventoryCounts['Batterie'],
+    'Quanten-Kabel': !!state.inventoryCounts['Quanten-Kabel']
   })));
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);

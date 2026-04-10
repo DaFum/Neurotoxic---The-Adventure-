@@ -64,7 +64,7 @@ export function Kaminstube() {
     ampRepaired: state.flags.ampRepaired,
     kaminFeuerPact: state.flags.kaminFeuerPact
   })));
-  const hasRoehre = useStore((state) => state.inventory.includes('Röhre'));
+  const hasRoehre = useStore((state) => !!state.inventoryCounts['Röhre']);
   const quests = useStore((state) => state.quests);
   const setDialogue = useStore((state) => state.setDialogue);
   const forgottenLoreCompleted = quests.some(
