@@ -44,6 +44,6 @@
 **Learning:** Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.
 **Action:** Replace `.find()` + `.map()` combinations with a single `.findIndex()` lookup, followed by a shallow array clone (`[...array]`) and direct index mutation (`newArray[index] = ...`).
 
-## Quest Lookup Cache Optimization
+## 2026-04-15 - Quest Lookup Cache Optimization
 
 To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently called hot-path functions (e.g., `canSelectOption` during dialogue/UI renders), avoid lazy evaluation methods that execute on access and cause overhead in the render pipeline. Instead, eagerly maintain a derived Map cache at the module level using `useStore.subscribe` to synchronize with the Zustand store. This guarantees O(1) lookup times with `~80ns/iter` consistently and isolates map rebuild costs out of the render loop.

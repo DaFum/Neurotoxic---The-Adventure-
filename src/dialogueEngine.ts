@@ -22,7 +22,7 @@ useStore.subscribe((state, prevState) => {
 });
 
 export function clearQuestCache() {
-  cachedQuestsMap.clear();
+  updateQuestsCache(useStore.getState().quests);
 }
 
 /**

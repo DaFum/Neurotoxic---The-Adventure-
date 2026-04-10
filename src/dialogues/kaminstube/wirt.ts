@@ -73,6 +73,12 @@ function buildLegacy1982Dialogue(): Dialogue {
                 );
               },
             },
+            {
+              text: 'Zurück.',
+              action: () => {
+                game().setDialogue(buildLegacy1982Dialogue());
+              },
+            },
           ],
         });
       },
@@ -184,13 +190,12 @@ export function buildKaminstubeWirtDialogue(): Dialogue {
     return preludeDialogue;
   }
 
-  if (store.bandMood > 80 && !store.flags.wirtLegacy1982) {
-    const knowsSecret =
-      store.flags.askedAbout1982 || store.flags.ghostSecretRevealed;
-
-    if (knowsSecret) {
-      return buildLegacy1982Dialogue();
-    }
+  if (
+    store.bandMood > 80 &&
+    !store.flags.wirtLegacy1982 &&
+    (store.flags.askedAbout1982 || store.flags.ghostSecretRevealed)
+  ) {
+    return buildLegacy1982Dialogue();
   }
 
   if (store.bandMood > 80) {
