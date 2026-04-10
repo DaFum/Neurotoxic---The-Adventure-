@@ -418,7 +418,7 @@ export function UI() {
                     <button
                       onClick={handleCombine}
                       disabled={selectedItems.length !== 2}
-                      title={selectedItems.length !== 2 ? "Select exactly two items to merge" : ""}
+                      aria-describedby={selectedItems.length !== 2 ? "compact-merge-helper" : undefined}
                       className={`w-full mt-1 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                         selectedItems.length === 2
                           ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
@@ -428,6 +428,11 @@ export function UI() {
                       <Plus size={14} />
                       Execute_Merge
                     </button>
+                    {selectedItems.length !== 2 && (
+                      <div id="compact-merge-helper" className="text-zinc-500 text-[8px] text-center mt-1 uppercase tracking-widest">
+                        Select exactly two items to merge
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -607,7 +612,7 @@ export function UI() {
                   <button
                     onClick={handleCombine}
                     disabled={selectedItems.length !== 2}
-                    title={selectedItems.length !== 2 ? "Select exactly two items to merge" : ""}
+                    aria-describedby={selectedItems.length !== 2 ? "full-merge-helper" : undefined}
                     className={`w-full mt-2 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                       selectedItems.length === 2
                         ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
@@ -617,6 +622,11 @@ export function UI() {
                     <Plus size={14} />
                     Execute_Merge
                   </button>
+                  {selectedItems.length !== 2 && (
+                    <div id="full-merge-helper" className="text-zinc-500 text-[8px] text-center mt-1 uppercase tracking-widest">
+                      Select exactly two items to merge
+                    </div>
+                  )}
                 </div>
               )}
             </div>

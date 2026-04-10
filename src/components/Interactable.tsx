@@ -176,6 +176,11 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const distanceRef = useRef(initialDistSq);
   const inRangeRef = useRef(initialDistSq < 16.0);
 
+  useEffect(() => {
+    distanceRef.current = initialDistSq;
+    inRangeRef.current = initialDistSq < 16.0;
+  }, [initialDistSq]);
+
   const palette = useMemo(() => {
     let seed = 0;
     for (let i = 0; i < name.length; i++) {
