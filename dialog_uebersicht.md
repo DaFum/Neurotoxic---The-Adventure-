@@ -355,8 +355,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - Option (Trait: Diplomat): "Ich bin vertrauenswürdig." (+25 BandMood, +5 Social, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
     - Option (Skill: Social 7): "Es ist wichtig für die Band." (+20 BandMood, +3 Social, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
     - Option (Skill: Chaos 5): "Die Wahrheit muss raus!" (+15 BandMood, +3 Chaos, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
-    - Option: "Lass gut sein." (kein Effekt, schließt den Dialog)
-    - Option: "Zurück." (Zurück zum Hauptdialog)
+    - Option: "Lass gut sein." (Triggert die NPC-Antwort 'Wirt: "Besser ist das. Die Wände hier haben Ohren."', schließt den Dialog nicht)
+    - Option: "Zurück." (Kehrt in das Legacy 1982 Submenü zurück, indem `buildLegacy1982Dialogue()` aufgerufen wird)
   - _Item (Industrie-Talisman):_ Erhält "Altes Plektrum" (wichtig für Matze in Salzgitter) (+20 BandMood, Erhalt: Altes Plektrum).
   - _BandMood > 80:_ Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
   - _Standard:_ Erhalt: Bier, solange Pickup-Limit nicht erreicht ist; bei Limit verweigert der Wirt weiteres Freibier mit eigener Antwort.
