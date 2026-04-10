@@ -18,6 +18,7 @@ import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
 import { useKeyboardInteraction } from './KeyboardInteractionManager';
+import { createCanvasTexture } from '../utils/texture';
 
 interface InteractableProps {
   position: [number, number, number];
@@ -54,9 +55,7 @@ function getCachedTexture(key: string, createCanvas: () => HTMLCanvasElement): T
   }
 
   const canvas = createCanvas();
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
+  const texture = createCanvasTexture(canvas);
 
   textureCache.set(key, { texture, refCount: 1 });
   return texture;
