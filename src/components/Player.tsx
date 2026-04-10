@@ -20,6 +20,7 @@ import { useStore } from '../store';
 import { audio } from '../audio';
 import { touchInput } from '../touchInput';
 import { clampPlayerPosition } from '../utils/math';
+import { createCanvasTexture } from '../utils/texture';
 
 interface PlayerProps {
   bounds?: { x: [number, number]; z: [number, number] };
@@ -80,9 +81,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     ctx.textBaseline = 'middle';
     ctx.fillText('🕶️', 128, 132);
 
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.needsUpdate = true;
+    const texture = createCanvasTexture(canvas);
     playerTextureRef.current = texture;
 
     const sprite = spriteRef.current;
@@ -130,9 +129,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     ctx.textBaseline = 'middle';
     ctx.fillText('UNIT_01: MANAGER', 210, 40);
 
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.needsUpdate = true;
+    const texture = createCanvasTexture(canvas);
     labelTextureRef.current = texture;
 
     const labelSprite = labelSpriteRef.current;
