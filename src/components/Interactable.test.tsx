@@ -62,6 +62,7 @@ vi.mock('three', async () => {
 describe('Interactable', () => {
   const mockRegister = vi.fn();
   const mockUnregister = vi.fn();
+  const mockSetActive = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -69,6 +70,7 @@ describe('Interactable', () => {
     (useKeyboardInteraction as any).mockReturnValue({
       register: mockRegister,
       unregister: mockUnregister,
+      setActive: mockSetActive,
     });
   });
 
