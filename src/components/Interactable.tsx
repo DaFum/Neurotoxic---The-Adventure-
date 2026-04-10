@@ -165,21 +165,17 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
   const interactedRef = useRef(false);
   const { register, unregister } = useKeyboardInteraction();
 
-  // ⚡ Bolt Optimization: Cache Vector3 objects to prevent GC overhead in useFrame
-  const playerPosVector = useRef(new THREE.Vector3()).current;
-  const targetPosVector = useRef(new THREE.Vector3(...position)).current;
-
-  // Initialize inRangeRef accurately to prevent one frame flicker
-  const inRangeRef = useRef(false);
-  useState(() => {
+  // Initialize accurately to prevent one frame flicker
+  const initialDistSq = useMemo(() => {
     const { playerPos } = useStore.getState();
     const dx = playerPos[0] - position[0];
     const dy = playerPos[1] - position[1];
     const dz = playerPos[2] - position[2];
-    const distSq = dx * dx + dy * dy + dz * dz;
-    distanceRef.current = distSq;
-    inRangeRef.current = distSq < 16.0;
-  });
+    return dx * dx + dy * dy + dz * dz;
+  }, [position]);
+
+  const inRangeRef = useRef(initialDistSq < 16.0);
+  distanceRef.current = initialDistSq;
 
   const palette = useMemo(() => {
     let seed = 0;
@@ -268,12 +264,12 @@ export const Interactable = React.memo(function Interactable({ position, emoji, 
     const { isPaused, bandMood, playerPos } = useStore.getState();
     if (isPaused) return;
 
-    // ⚡ Bolt Optimization: Reuse Vector3 objects to avoid allocations in animation loop
-    playerPosVector.set(playerPos[0], playerPos[1], playerPos[2]);
-    targetPosVector.set(position[0], position[1], position[2]);
+    // ⚡ Bolt Optimization: Use scalar math to avoid object allocation and method call overhead
+    const dx = playerPos[0] - position[0];
+    const dy = playerPos[1] - position[1];
+    const dz = playerPos[2] - position[2];
+    const distSq = dx * dx + dy * dy + dz * dz;
 
-    // ⚡ Bolt Optimization: Use distanceToSquared to avoid expensive Math.sqrt() calls every frame for every interactable
-    const distSq = playerPosVector.distanceToSquared(targetPosVector);
     const inRangeNow = distSq < 16.0; // 4.0 squared
     distanceRef.current = distSq; // keyboard interaction only compares relative distances, so squared is fine
     inRangeRef.current = inRangeNow;
