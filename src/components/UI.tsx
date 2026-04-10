@@ -100,7 +100,7 @@ export function UI() {
   const hasSyncedViewportRef = useRef(false);
 
   const openQuestCount = useMemo(() => {
-    return quests.reduce((count, quest) => quest.status === 'active' ? count + 1 : count, 0);
+    return quests.filter((quest) => quest.status === 'active').length;
   }, [quests]);
   const visibleQuests = useMemo(() => {
     const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
