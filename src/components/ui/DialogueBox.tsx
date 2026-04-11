@@ -146,6 +146,8 @@ export function DialogueBox({
           className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
           role="dialog"
           aria-labelledby="dialogue-title"
+          aria-live="polite"
+          aria-atomic="true"
         >
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
