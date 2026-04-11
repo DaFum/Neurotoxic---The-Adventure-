@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { GameState, Quest, QuestStatus, Flag, Skills } from './store/types';
+import { GameState, Quest, QuestStatus, Flag, Skills, LoreEntry } from './store/types';
 import { createCoreSlice } from './store/slices/coreSlice';
 import { createInventorySlice } from './store/slices/inventorySlice';
 import { createQuestSlice } from './store/slices/questSlice';
@@ -140,7 +140,7 @@ export const useStore = create<GameState>()(
         // ⚡ Bolt Optimization: Use a standard for loop to pre-allocate merged array
         // instead of mapping. Also optimize Set creation for currentQuestIds to avoid
         // temporary arrays created by `.map()`.
-        const mergedQuests = new Array(currentState.quests.length);
+        const mergedQuests = new Array<Quest>(currentState.quests.length);
         const currentQuestIds = new Set<string>();
         for (let i = 0; i < currentState.quests.length; i++) {
           const q = currentState.quests[i];
@@ -194,7 +194,9 @@ export const useStore = create<GameState>()(
           }
         }
 
-        const mergedLoreEntries = new Array(currentState.loreEntries.length);
+        const mergedLoreEntries: LoreEntry[] = new Array<LoreEntry>(
+          currentState.loreEntries.length,
+        );
         for (let i = 0; i < currentState.loreEntries.length; i++) {
           const e = currentState.loreEntries[i];
           const persistedEntry = persistedLoreMap.get(e.id);
