@@ -140,16 +140,18 @@ export function DialogueBox({
   }, [dialogue, setDialogue]);
 
   return (
-    <AnimatePresence>
-      {dialogue && (
-        <div
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
-          role="dialog"
-          aria-labelledby="dialogue-title"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <motion.div
+    <>
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {dialogue && displayedTextLengthRef.current >= dialogue.text.length ? dialogue.text : ''}
+      </div>
+      <AnimatePresence>
+        {dialogue && (
+          <div
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
+            role="dialog"
+            aria-labelledby="dialogue-title"
+          >
+            <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -339,7 +341,8 @@ export function DialogueBox({
             </div>
           </motion.div>
         </div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
