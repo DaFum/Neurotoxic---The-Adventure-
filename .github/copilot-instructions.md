@@ -15,7 +15,7 @@
 
 - Tailwind is integrated via `@tailwindcss/vite`; do not replace it with a PostCSS-based Tailwind setup.
 - All `@react-three/rapier` bodies must be declared inside scene components (under `<Physics>`); defining them outside fails silently.
-- Keep dialog_uebersicht.md in sync when editing dialogue, quests, item interactions, or BandMood logic in src/components/scenes/, src/dialogues/, or src/store.ts.
+- Keep dialog_uebersicht.md in sync when editing dialogue, quests, item interactions, or BandMood logic in src/components/scenes/, src/dialogues/, or src/store/.
 - Three.js typings come from `three`; fix `THREE.*` type issues by checking/updating `three`, not by adding `@types/three`.
 - `setScene()` resets `playerPos` to `[0, 1, 0]` — every scene must have accessible geometry at that spawn point.
 - Skill names are lowercase (`'technical'`, `'social'`, `'chaos'`); trait names are Title Case (`'Visionary'`, `'Technician'`, etc.) — mismatches silently fail.

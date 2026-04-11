@@ -5,7 +5,8 @@ Zustand store containing the entire game state. Organized into 5 slices (coreSli
 ## Key Files
 
 - `types.ts` — GameState interface, Scene union (7 scenes), Flag union (100+ flags), QuestStatus, Quest, Skills, LoreEntry
-- `initialState.ts` — Default state values, ITEM_PICKUP_LIMITS, RECIPES for item combining, migration helpers
+- `initialState.ts` — Default state values, ITEM_PICKUP_LIMITS, RECIPES for item combining
+- `store.ts` — Zustand store setup, persistence wiring, and migration / backward-compatibility logic (including custom `persist.merge()` behavior)
 - `slices/*.ts` — Slice factories for state mutation (each exports a creator function)
 
 ## Persistence
