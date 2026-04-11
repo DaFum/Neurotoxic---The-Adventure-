@@ -142,7 +142,7 @@ export function DialogueBox({
   return (
     <>
       <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {dialogue && displayedTextLengthRef.current >= dialogue.text.length ? dialogue.text : ''}
+        {dialogue && displayedText.length >= dialogue.text.length ? dialogue.text : ''}
       </div>
       <AnimatePresence>
         {dialogue && (
