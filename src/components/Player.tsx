@@ -18,6 +18,7 @@ import { RigidBody, RapierRigidBody, CuboidCollider } from '@react-three/rapier'
 import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
+import { secureRandom } from '../utils/math';
 import { touchInput } from '../touchInput';
 import { clampPlayerPosition } from '../utils/math';
 import { createCanvasTexture } from '../utils/texture';
@@ -280,9 +281,9 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
 
     // Override the shakeOffset vector instead of creating a new one
     shakeOffset.set(
-      (Math.random() - 0.5) * currentCameraShake,
-      (Math.random() - 0.5) * currentCameraShake,
-      (Math.random() - 0.5) * currentCameraShake
+      (secureRandom() - 0.5) * currentCameraShake,
+      (secureRandom() - 0.5) * currentCameraShake,
+      (secureRandom() - 0.5) * currentCameraShake
     );
 
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, clampedX + shakeOffset.x, 0.1);

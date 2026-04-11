@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { clampPlayerPosition } from './math';
+import { clampPlayerPosition, secureRandom } from './math';
+
+describe('secureRandom', () => {
+  it('returns a number between 0 and 1', () => {
+    const val = secureRandom();
+    expect(val).toBeGreaterThanOrEqual(0);
+    expect(val).toBeLessThan(1);
+  });
+});
 
 describe('clampPlayerPosition', () => {
   const bounds: { x: [number, number]; z: [number, number] } = {
