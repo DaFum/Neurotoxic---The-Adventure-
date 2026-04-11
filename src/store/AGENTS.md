@@ -27,6 +27,6 @@ Flag names are immutable after first use — changing or removing a flag from th
 
 - `bandMoodGainClaims` deduplicates positive BandMood increases — passing the same `sourceId` twice prevents farming infinite mood points. Pass a unique, stable ID for each dialogue reward.
 - `itemPickupCounts` enforces per-item limits (defined in `ITEM_PICKUP_LIMITS`). Always check the boolean return value of `addToInventory()` before granting rewards.
-- `ITEM_PICKUP_LIMITS` has global defaults (1 per item) and exceptions for specific items (Bier: 2, Lötkolben: 3, Schrottmetall: 2, Frequenzfragment: 2). Defaults can be overridden per-playthrough and persist across saves.
-- `RECIPES` in `initialState.ts` checks both orderings (A, B) and (B, A) — add new recipes to the array if item combining should work both ways.
+- `ITEM_PICKUP_LIMITS` has global defaults (1 per item) and exceptions for specific items (Bier: 2, Lötkolben: 3, Schrottmetall: 2, Frequenzfragment: 2, Dunkle Materie: Infinity).
+- `RECIPES` in `initialState.ts` automatically handles both orderings (A, B) and (B, A) — simply add new recipes to the array.
 - `setScene()` always resets `playerPos` to `[0, 1, 0]` — every scene must have a valid spawn point there.
