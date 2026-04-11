@@ -19,7 +19,7 @@ import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
 import { touchInput } from '../touchInput';
-import { clampPlayerPosition } from '../utils/math';
+import { clampPlayerPosition, secureRandom } from '../utils/math';
 import { createCanvasTexture } from '../utils/texture';
 
 interface PlayerProps {
@@ -279,11 +279,15 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
     const currentCameraShake = cameraShakeRef.current;
 
     // Override the shakeOffset vector instead of creating a new one
-    shakeOffset.set(
-      (Math.random() - 0.5) * currentCameraShake,
-      (Math.random() - 0.5) * currentCameraShake,
-      (Math.random() - 0.5) * currentCameraShake
-    );
+    if (currentCameraShake > 0) {
+      shakeOffset.set(
+        (secureRandom() - 0.5) * currentCameraShake,
+        (secureRandom() - 0.5) * currentCameraShake,
+        (secureRandom() - 0.5) * currentCameraShake
+      );
+    } else {
+      shakeOffset.set(0, 0, 0);
+    }
 
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, clampedX + shakeOffset.x, 0.1);
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, clampedZ + 10 + shakeOffset.z, 0.1);

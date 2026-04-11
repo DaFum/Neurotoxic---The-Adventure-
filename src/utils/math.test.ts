@@ -1,5 +1,37 @@
-import { describe, it, expect } from 'vitest';
-import { clampPlayerPosition } from './math';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { clampPlayerPosition, secureRandom } from './math';
+
+describe('secureRandom', () => {
+  const originalGetRandomValues = global.crypto.getRandomValues;
+
+  afterEach(() => {
+    global.crypto.getRandomValues = originalGetRandomValues;
+  });
+
+  it('returns a number between 0 and 1', () => {
+    const val = secureRandom();
+    expect(val).toBeGreaterThanOrEqual(0);
+    expect(val).toBeLessThan(1);
+  });
+
+  it('returns 0 when rng generates 0', () => {
+    global.crypto.getRandomValues = vi.fn().mockImplementation((arr: Uint32Array) => {
+      arr[0] = 0;
+      return arr;
+    });
+    expect(secureRandom()).toBe(0);
+  });
+
+  it('returns a value strictly less than 1 when rng generates max uint32', () => {
+    global.crypto.getRandomValues = vi.fn().mockImplementation((arr: Uint32Array) => {
+      arr[0] = 0xFFFFFFFF;
+      return arr;
+    });
+    const val = secureRandom();
+    expect(val).toBeLessThan(1);
+    expect(val).toBeGreaterThan(0);
+  });
+});
 
 describe('clampPlayerPosition', () => {
   const bounds: { x: [number, number]; z: [number, number] } = {

@@ -12,6 +12,7 @@
 import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { audio } from '../audio';
+import { secureRandom } from '../utils/math';
 
 /**
  * A headless component that manages global background events and timers.
@@ -34,7 +35,7 @@ export function WorldEvents() {
     // Occasional random camera shake if mood is high, stronger at higher mood.
     if (bandMood > 70) {
       const interval = setInterval(() => {
-        if (Math.random() > 0.7) {
+        if (secureRandom() > 0.7) {
           const intensity = 0.12 + ((bandMood - 70) / 30) * 0.28;
           setCameraShake(Math.min(0.45, intensity));
         }
