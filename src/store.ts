@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { GameState, Quest, QuestStatus, Flag, Skills } from './store/types';
+import { GameState, Quest, QuestStatus, Flag, Skills, LoreEntry } from './store/types';
 import { createCoreSlice } from './store/slices/coreSlice';
 import { createInventorySlice } from './store/slices/inventorySlice';
 import { createQuestSlice } from './store/slices/questSlice';
@@ -137,22 +137,30 @@ export const useStore = create<GameState>()(
           }
         }
 
-        const mergedQuests = currentState.quests.map((q) => {
+        // ⚡ Bolt Optimization: Use a standard for loop to pre-allocate merged array
+        // instead of mapping. Also optimize Set creation for currentQuestIds to avoid
+        // temporary arrays created by `.map()`.
+        const mergedQuests = new Array<Quest>(currentState.quests.length);
+        const currentQuestIds = new Set<string>();
+        for (let i = 0; i < currentState.quests.length; i++) {
+          const q = currentState.quests[i];
+          currentQuestIds.add(q.id);
           const persistedQuest = persistedQuestsMap.get(q.id);
-          if (!persistedQuest) return q;
-          const pq = persistedQuest as unknown as {
-            id: string;
-            text: string;
-            status?: unknown;
-            completed?: unknown;
-          };
-          return {
-            ...q,
-            status: normalizeQuestStatus(pq.status, pq.completed),
-          };
-        });
-
-        const currentQuestIds = new Set(currentState.quests.map((q) => q.id));
+          if (!persistedQuest) {
+            mergedQuests[i] = q;
+          } else {
+            const pq = persistedQuest as unknown as {
+              id: string;
+              text: string;
+              status?: unknown;
+              completed?: unknown;
+            };
+            mergedQuests[i] = {
+              ...q,
+              status: normalizeQuestStatus(pq.status, pq.completed),
+            };
+          }
+        }
 
         const dynamicQuests: Quest[] = [];
         for (const pq of persistedQuestsMap.values()) {
@@ -186,12 +194,16 @@ export const useStore = create<GameState>()(
           }
         }
 
-        const mergedLoreEntries = currentState.loreEntries.map((e) => {
+        const mergedLoreEntries: LoreEntry[] = new Array<LoreEntry>(
+          currentState.loreEntries.length,
+        );
+        for (let i = 0; i < currentState.loreEntries.length; i++) {
+          const e = currentState.loreEntries[i];
           const persistedEntry = persistedLoreMap.get(e.id);
-          return persistedEntry
+          mergedLoreEntries[i] = persistedEntry
             ? { ...e, discovered: persistedEntry.discovered === true }
             : e;
-        });
+        }
 
         const sanitizedInventory: string[] = [];
         const inventoryCounts: Record<string, number> = Object.create(null);

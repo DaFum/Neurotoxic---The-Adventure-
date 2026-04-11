@@ -6,6 +6,10 @@
 **Learning:** Instantiating objects like `new THREE.Vector3()` inside `useFrame` creates garbage collection pressure and can lead to micro-stutters, especially if the component is used multiple times in the scene.
 **Action:** Cache vector objects using `useRef` to avoid re-instantiating them inside animation loops like `useFrame`. Update the cached vector's properties (e.g., using `.set()`) inside the loop.
 
+## 2024-04-18 - Array Hydration Optimization
+**Learning:** Using `.map()` and creating intermediate `Set` or arrays inside performance critical loops or state hydration tasks (like loading save files with quests and lore) creates unnecessary allocations, garbage collection pressure, and iteration overhead.
+**Action:** Always prefer initializing a single statically sized `new Array(length)` followed by a direct indexing `for` loop over array mapping when transforming existing data lists to bypass iterative array pushing allocations.
+
 ## 2024-05-15 - Unconditional Zustand Updates in Animation Loops
 **Learning:** Calling Zustand `set` functions unconditionally within `useFrame` (like `setPlayerPos([x, y, z])`) forces the creation of new arrays every frame (60fps), causing Zustand to see the value as "changed" and needlessly evaluating all subscribers' selectors across the entire app.
 **Action:** Always check if the value has actually changed before returning a new object or array in Zustand's `set` callback. Returning the current `state` object tells Zustand to abort the update and skip notifying subscribers.
