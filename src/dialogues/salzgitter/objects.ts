@@ -246,6 +246,87 @@ export function buildSalzgitterFanDialogue(): Dialogue {
   };
 }
 
+function executeFinaleEnding(currentStore: ReturnType<typeof game>): void {
+  const frequenz1982Completed =
+    currentStore.quests.find((quest) => quest.id === 'frequenz_1982')?.status ===
+      'completed' || currentStore.flags.frequenz1982_complete;
+
+  let endingsCount = 0;
+  if (currentStore.flags.salzgitterBandUnited) endingsCount++;
+  if (currentStore.flags.fanMovement) endingsCount++;
+  if (currentStore.flags.backstageRitualPerformed) endingsCount++;
+  if (currentStore.flags.wirtLegacy1982) endingsCount++;
+  if (currentStore.flags.voidBassistSpoken) endingsCount++;
+
+  if (!currentStore.flags.salzgitter_finalized) {
+    currentStore.completeQuestWithFlag(
+      'final',
+      'salzgitter_finalized',
+      true,
+      'Spiele das Finale in Salzgitter'
+    );
+  }
+
+  if (
+    currentStore.flags.salzgitter_true_ending &&
+    currentStore.flags.bassist_restored &&
+    currentStore.flags.maschinen_seele_complete
+  ) {
+    currentStore.increaseBandMood(100, 'id_1061f089');
+    currentStore.discoverLore('bassist_wahrheit');
+    currentStore.discoverLore('maschinen_bewusstsein');
+    currentStore.discoverLore('frequenz_1982_decoded');
+    currentStore.setDialogue(
+      'Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt - er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]'
+    );
+    return;
+  }
+
+  if (currentStore.flags.salzgitter_encore_unlocked) {
+    currentStore.increaseBandMood(50, 'id_fd5d4f31');
+    currentStore.setDialogue(
+      'ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]'
+    );
+    return;
+  }
+
+  if (
+    endingsCount >= 4 ||
+    (frequenz1982Completed &&
+      currentStore.flags.mariusConfidenceBoost &&
+      currentStore.bandMood > 70)
+  ) {
+    let baseText =
+      'Die Frequenz von 1982 hat die Halle erfüllt. Der Sound war perfekt. Die Fans liegen sich heulend in den Armen. Ein meisterhafter Auftritt!';
+    if (endingsCount >= 4) {
+      baseText +=
+        ' Der Zyklus von 1982 ist geschlossen. Die Band ist eine Einheit. Der Lärm ist rein.';
+    }
+    if (currentStore.flags.fanMovement && currentStore.flags.salzgitterBandUnited) {
+      baseText += ' Eine wahre Fan-Bewegung ist entstanden!';
+    }
+    currentStore.increaseBandMood(70, 'id_2db866fb');
+    currentStore.setDialogue(baseText + ' [BEST ENDING]');
+    return;
+  }
+
+  if (
+    endingsCount >= 2 ||
+    (currentStore.bandMood > 70 && currentStore.flags.mariusConfidenceBoost)
+  ) {
+    currentStore.increaseBandMood(50, 'id_fd6f712c');
+    currentStore.setDialogue(
+      'Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Band hat einiges zusammen durchgestanden. Die Tour ist ein Erfolg! [GOOD ENDING]'
+    );
+    return;
+  }
+
+  currentStore.increaseBandMood(30, 'id_9cb6c5c3');
+  currentStore.setDialogue(
+    'Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]'
+  );
+}
+
 export function buildSalzgitterFinaleDialogue(): Dialogue {
   const store = game();
   const finalQuestCompleted =
@@ -265,84 +346,7 @@ export function buildSalzgitterFinaleDialogue(): Dialogue {
         text: 'Beginne das Finale.',
         action: () => {
           const currentStore = game();
-          const frequenz1982Completed =
-            currentStore.quests.find((quest) => quest.id === 'frequenz_1982')?.status ===
-              'completed' || currentStore.flags.frequenz1982_complete;
-
-          let endingsCount = 0;
-          if (currentStore.flags.salzgitterBandUnited) endingsCount++;
-          if (currentStore.flags.fanMovement) endingsCount++;
-          if (currentStore.flags.backstageRitualPerformed) endingsCount++;
-          if (currentStore.flags.wirtLegacy1982) endingsCount++;
-          if (currentStore.flags.voidBassistSpoken) endingsCount++;
-
-          if (!currentStore.flags.salzgitter_finalized) {
-            currentStore.completeQuestWithFlag(
-              'final',
-              'salzgitter_finalized',
-              true,
-              'Spiele das Finale in Salzgitter'
-            );
-          }
-
-          if (
-            currentStore.flags.salzgitter_true_ending &&
-            currentStore.flags.bassist_restored &&
-            currentStore.flags.maschinen_seele_complete
-          ) {
-            currentStore.increaseBandMood(100, 'id_1061f089');
-            currentStore.discoverLore('bassist_wahrheit');
-            currentStore.discoverLore('maschinen_bewusstsein');
-            currentStore.discoverLore('frequenz_1982_decoded');
-            currentStore.setDialogue(
-              'Die Maschinen singen. Der Bassist schwingt im Grundton. Marius ist unantastbar. Der Manager hat nicht nur eine Tour gemanagt - er hat eine Frequenz wiederhergestellt, die seit 1982 verklungen war. NEUROTOXIC ist unsterblich. [TRUE ENDING]'
-            );
-            return;
-          }
-
-          if (currentStore.flags.salzgitter_encore_unlocked) {
-            currentStore.increaseBandMood(50, 'id_fd5d4f31');
-            currentStore.setDialogue(
-              'ZUGABE! Die Band spielt das Verbotene Riff! Lars zerschmettert die Snare, Matze lässt die Röhren glühen und Marius schreit die Halle in Grund und Boden. Die Realität bebt! [SECRET ENCORE]'
-            );
-            return;
-          }
-
-          if (
-            endingsCount >= 4 ||
-            (frequenz1982Completed &&
-              currentStore.flags.mariusConfidenceBoost &&
-              currentStore.bandMood > 70)
-          ) {
-            let baseText =
-              'Die Frequenz von 1982 hat die Halle erfüllt. Der Sound war perfekt. Die Fans liegen sich heulend in den Armen. Ein meisterhafter Auftritt!';
-            if (endingsCount >= 4) {
-              baseText +=
-                ' Der Zyklus von 1982 ist geschlossen. Die Band ist eine Einheit. Der Lärm ist rein.';
-            }
-            if (currentStore.flags.fanMovement && currentStore.flags.salzgitterBandUnited) {
-              baseText += ' Eine wahre Fan-Bewegung ist entstanden!';
-            }
-            currentStore.increaseBandMood(70, 'id_2db866fb');
-            currentStore.setDialogue(baseText + ' [BEST ENDING]');
-            return;
-          }
-
-          if (
-            endingsCount >= 2 ||
-            (currentStore.bandMood > 70 && currentStore.flags.mariusConfidenceBoost)
-          ) {
-            currentStore.increaseBandMood(50, 'id_fd6f712c');
-            currentStore.setDialogue(
-              'Ein solider Gig. Die Fans jubeln. Marius hat die Kontrolle behalten und NEUROTOXIC ist zufrieden. Die Band hat einiges zusammen durchgestanden. Die Tour ist ein Erfolg! [GOOD ENDING]'
-            );
-            return;
-          }
-
-          currentStore.increaseBandMood(30, 'id_9cb6c5c3');
-          currentStore.setDialogue(
-            'Du hast die Tour gemanagt. NEUROTOXIC hat gespielt. Es war... okay. Die Boxen haben überlebt, und das Bier war kalt. [STANDARD ENDING]'
-          );
+          executeFinaleEnding(currentStore);
         },
       },
       {

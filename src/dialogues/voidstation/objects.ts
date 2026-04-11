@@ -167,9 +167,8 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
   };
 }
 
-export function buildVoidEgoDialogue(): Dialogue {
+function getVoidEgoOptions(): DialogueOption[] {
   const store = game();
-
   const egoActionWrapper = (originalAction: () => void) => () => {
     game().discoverLore('ego_philosophy');
     originalAction();
@@ -355,6 +354,12 @@ export function buildVoidEgoDialogue(): Dialogue {
       }),
     });
   }
+
+  return options;
+}
+
+export function buildVoidEgoDialogue(): Dialogue {
+  const options = getVoidEgoOptions();
 
   return {
     text: 'Marius\' Ego: "Ich bin das Zentrum des Universums! Ohne mich wäre dieser Gig nur ein Haufen rostiger Nägel. Warum sollte ich zurück in diesen winzigen Körper?"',
