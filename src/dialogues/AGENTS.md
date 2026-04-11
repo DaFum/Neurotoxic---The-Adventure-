@@ -2,6 +2,8 @@
 
 Dialogue builder functions live here. Each file exports one or more `build[Scene][Npc]Dialogue()` factory functions that return a `Dialogue` object by reading current store state via `game()`.
 
+**Note:** Scene-specific subdirectories (e.g., `proberaum/`, `tourbus/`) inherit guidelines from this file and don't require separate AGENTS.md unless they introduce novel domain rules.
+
 ## Gotchas
 
 - `addToInventory(item)` returns `boolean` — always branch on the result. Quest completions, flag sets, and mood/skill rewards must be inside the `if (received)` block; the `else` branch must give explicit failure feedback. Unconditional completions after a failed pickup are a bug. Note: in the current store implementation, it returns `false` when the relevant per-item pickup limit is reached (see `ITEM_PICKUP_LIMITS` in `src/store/initialState.ts`).
