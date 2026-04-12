@@ -59,3 +59,7 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 ## 2026-04-16 - O(N) Inventory Array Lookups in React Components
 **Learning:** Using `state.inventory.includes('ItemName')` inside `useStore` hooks (especially wrapped in `useShallow`) forces O(N) array scans during high-frequency Zustand state evaluations, causing unnecessary CPU overhead and potential re-renders as the inventory grows.
 **Action:** Always prefer O(1) object property lookups against the pre-calculated `state.inventoryCounts` map (e.g., `!!state.inventoryCounts['ItemName']`) instead of scanning the full `state.inventory` array.
+
+## 2026-04-12 - Intermediate Array Allocations from `.filter().length`
+**Learning:** Using `array.filter(condition).length` to count matching items in React components or frequent operations creates an unnecessary intermediate array just to calculate its size, generating garbage collection pressure.
+**Action:** Replace `.filter(condition).length` with a standard `for` loop that maintains a local counter, entirely eliminating the intermediate array allocation.
