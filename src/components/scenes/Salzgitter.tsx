@@ -507,8 +507,7 @@ export function Salzgitter() {
         position={[-4, 3, -7]}
         emoji="🎸"
         name="Matze"
-        isBandMember={true}
-        idleType="headbang"
+        appearance={{ isBandMember: true, idleType: 'headbang' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildSalzgitterMatzeDialogue());
         }}
@@ -518,8 +517,7 @@ export function Salzgitter() {
         position={[4, 3, -8]}
         emoji="🥁"
         name="Lars"
-        isBandMember={true}
-        idleType="tap"
+        appearance={{ isBandMember: true, idleType: 'tap' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildSalzgitterLarsDialogue());
         }}
@@ -529,8 +527,7 @@ export function Salzgitter() {
         position={[0, 3, -6]}
         emoji="🎤"
         name="Marius"
-        isBandMember={true}
-        idleType="sway"
+        appearance={{ isBandMember: true, idleType: 'sway' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildSalzgitterMariusDialogue());
         }}

@@ -528,8 +528,7 @@ export function Kaminstube() {
         position={[-3, 2, -5]}
         emoji="🎸"
         name="Matze"
-        isBandMember={true}
-        idleType="headbang"
+        appearance={{ isBandMember: true, idleType: 'headbang' }}
         onInteract={() => {
           const store = useStore.getState();
           if (!store.flags.ampRepaired) {
@@ -543,8 +542,7 @@ export function Kaminstube() {
         position={[3, 2, -6]}
         emoji="🥁"
         name="Lars"
-        isBandMember={true}
-        idleType="tap"
+        appearance={{ isBandMember: true, idleType: 'tap' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildKaminstubeLarsDialogue());
         }}
@@ -554,8 +552,7 @@ export function Kaminstube() {
         position={[0, 2, -4]}
         emoji="🎤"
         name="Marius"
-        isBandMember={true}
-        idleType="sway"
+        appearance={{ isBandMember: true, idleType: 'sway' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildKaminstubeMariusDialogue());
         }}
