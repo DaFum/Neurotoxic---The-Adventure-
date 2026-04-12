@@ -2,7 +2,7 @@
 
 ## Interactable
 - Interaction range is hardcoded to 4.0 units — not configurable per instance
-- `isBandMember={true}` enables mood-scaled idle animations (`idleType`: "headbang" | "tap" | "sway")
+- `appearance: { isBandMember: true }` enables mood-scaled idle animations (`idleType`: "headbang" | "tap" | "sway")
 - For branching `onInteract` logic, prefer `useStore.getState()` reads inside the callback so checks/actions use the latest store snapshot
 
 ## Player

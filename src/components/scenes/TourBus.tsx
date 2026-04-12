@@ -294,7 +294,7 @@ export function TourBus() {
         position={[-3, 0, -2]}
         emoji="🎸"
         name="Matze"
-        idleType="sway"
+        appearance={{ idleType: 'sway' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildTourbusMatzeDialogue());
         }}
@@ -304,7 +304,7 @@ export function TourBus() {
         position={[3, 0, -2]}
         emoji="🎤"
         name="Marius"
-        idleType="headbang"
+        appearance={{ idleType: 'headbang' }}
         onInteract={() => {
           const store = useStore.getState();
           store.setDialogue(buildTourbusMariusDialogue());
