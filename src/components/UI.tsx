@@ -99,29 +99,20 @@ export function UI() {
   const [compactHudTab, setCompactHudTab] = useState<'status' | 'inventory' | 'quests'>('status');
   const hasSyncedViewportRef = useRef(false);
 
-  const openQuestCount = useMemo(() => {
-    // ⚡ Bolt Optimization: Use a standard for loop to count active quests
-    // to eliminate intermediate array allocations caused by `.filter()`.
+  const { openQuestCount, visibleQuests } = useMemo(() => {
+    // ⚡ Bolt Optimization: Consolidate O(N) scans into a single useMemo using a for...of loop
+    // to count active quests and populate order buckets, eliminating intermediate allocations.
     let count = 0;
-    for (let i = 0; i < quests.length; i++) {
-      if (quests[i].status === 'active') {
-        count++;
-      }
-    }
-    return count;
-  }, [quests]);
-  const visibleQuests = useMemo(() => {
-    const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
-
     const numBuckets = Math.max(...Object.values(QUEST_STATUS_ORDER)) + 1;
     const buckets: Quest[][] = [];
     for (let i = 0; i < numBuckets; i++) {
       buckets.push([]);
     }
 
-    for (let i = 0; i < quests.length; i++) {
-      const quest = quests[i];
-      if (quest.status === 'completed' && !shouldShowCompletedQuests) continue;
+    for (const quest of quests) {
+      if (quest.status === 'active') {
+        count++;
+      }
 
       const orderValue = QUEST_STATUS_ORDER[quest.status];
       if (orderValue !== undefined && orderValue >= 0 && orderValue < numBuckets) {
@@ -131,15 +122,19 @@ export function UI() {
       }
     }
 
+    const shouldShowCompletedQuests = scene === 'salzgitter' || count === 0;
     const result: Quest[] = [];
     for (let i = 0; i < numBuckets; i++) {
       const bucket = buckets[i];
       for (let j = 0; j < bucket.length; j++) {
-        result.push(bucket[j]);
+        const quest = bucket[j];
+        if (quest.status === 'completed' && !shouldShowCompletedQuests) continue;
+        result.push(quest);
       }
     }
-    return result;
-  }, [quests, scene, openQuestCount]);
+
+    return { openQuestCount: count, visibleQuests: result };
+  }, [quests, scene]);
   const { inventoryStacks, inventoryTotalCount } = useMemo(() => {
     const stacks = [];
     let totalCount = 0;
