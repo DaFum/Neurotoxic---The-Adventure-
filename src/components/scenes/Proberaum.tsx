@@ -556,8 +556,7 @@ export function Proberaum() {
         position={[-5, 1, -2]}
         emoji="🎸"
         name="Matze"
-        isBandMember={true}
-        idleType="headbang"
+        appearance={{ isBandMember: true, idleType: 'headbang' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildProberaumMatzeDialogue());
         }}
@@ -567,8 +566,7 @@ export function Proberaum() {
         position={[4, 1, -3]}
         emoji="🥁"
         name="Lars"
-        isBandMember={true}
-        idleType="tap"
+        appearance={{ isBandMember: true, idleType: 'tap' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildProberaumLarsDialogue());
         }}
@@ -578,8 +576,7 @@ export function Proberaum() {
         position={[6, 1, 1]}
         emoji="🎤"
         name="Marius"
-        isBandMember={true}
-        idleType="sway"
+        appearance={{ isBandMember: true, idleType: 'sway' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildProberaumMariusDialogue());
         }}

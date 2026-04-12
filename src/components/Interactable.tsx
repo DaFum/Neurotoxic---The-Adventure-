@@ -26,8 +26,10 @@ interface InteractableProps {
   name: string;
   onInteract: () => void;
   scale?: number;
-  isBandMember?: boolean;
-  idleType?: 'headbang' | 'tap' | 'sway';
+  appearance?: {
+    isBandMember?: boolean;
+    idleType?: 'headbang' | 'tap' | 'sway';
+  };
 }
 
 // Texture Dimensions
@@ -143,11 +145,20 @@ const releaseLabelTexture = (name: string, isInRange: boolean) => {
  * @param props.name - The descriptive name shown in the UI prompt.
  * @param props.onInteract - The callback function executed when the player interacts.
  * @param props.scale - Optional scale multiplier for the 3D model.
- * @param props.isBandMember - Optional flag indicating if this is a band member (enables idle animations).
- * @param props.idleType - The type of idle animation to play if it is a band member.
+ * @param props.appearance - Optional appearance settings.
+ * @param props.appearance.isBandMember - Optional flag indicating if this is a band member (enables idle animations).
+ * @param props.appearance.idleType - The type of idle animation to play if it is a band member.
  * @returns A 3D group containing the collision mesh and visual label.
  */
-export const Interactable = React.memo(function Interactable({ position, emoji, name, onInteract, scale = 1, isBandMember = false, idleType = 'sway' }: InteractableProps) {
+export const Interactable = React.memo(function Interactable({
+  position,
+  emoji,
+  name,
+  onInteract,
+  scale = 1,
+  appearance = {},
+}: InteractableProps) {
+  const { isBandMember = false, idleType = 'sway' } = appearance;
   const ref = useRef<THREE.Group>(null);
   const spriteRef = useRef<THREE.Sprite>(null);
   const labelSpriteRef = useRef<THREE.Sprite>(null);

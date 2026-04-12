@@ -598,8 +598,7 @@ export function Backstage() {
         position={[-4, 1, -5]}
         emoji="😰"
         name="Marius"
-        isBandMember={true}
-        idleType="sway"
+        appearance={{ isBandMember: true, idleType: 'sway' }}
         onInteract={() => {
           const store = useStore.getState();
           store.setDialogue(buildBackstageMariusDialogue());
@@ -611,8 +610,7 @@ export function Backstage() {
         position={[4, 1, -5]}
         emoji="🥁"
         name="Lars"
-        isBandMember={true}
-        idleType="tap"
+        appearance={{ isBandMember: true, idleType: 'tap' }}
         onInteract={() => {
           const store = useStore.getState();
           store.setDialogue(buildBackstageLarsDialogue());
