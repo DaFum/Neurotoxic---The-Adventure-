@@ -760,9 +760,13 @@ export function Backstage() {
               exitTimeoutRef.current = null;
             }, 1000);
           } else {
-            setDialogue(
-              'Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!'
-            );
+            if (!store.flags.mariusCalmed && !store.flags.setlistFound) {
+              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!');
+            } else if (!store.flags.mariusCalmed) {
+              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe!');
+            } else {
+              setDialogue('Wir können noch nicht raus. Die Setliste fehlt!');
+            }
           }
         }}
       />
@@ -786,9 +790,13 @@ export function Backstage() {
               exitTimeoutRef.current = null;
             }, 1000);
           } else {
-            setDialogue(
-              'Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!'
-            );
+            if (!store.flags.mariusCalmed && !store.flags.setlistFound) {
+              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!');
+            } else if (!store.flags.mariusCalmed) {
+              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe!');
+            } else {
+              setDialogue('Wir können noch nicht raus. Die Setliste fehlt!');
+            }
           }
         }}
       />
