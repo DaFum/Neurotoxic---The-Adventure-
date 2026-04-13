@@ -767,6 +767,25 @@ export function Backstage() {
         }}
       />
 
+      {/* Exit to Kaminstube */}
+      <Interactable
+        position={[8, 0, 8]}
+        emoji="🔥"
+        name="Zur Kaminstube"
+        onInteract={() => {
+          setDialogue('Vielleicht gibt es am Feuer noch etwas zu bereden.');
+          if (exitTimeoutRef.current !== null) {
+            window.clearTimeout(exitTimeoutRef.current);
+          }
+          exitTimeoutRef.current = window.setTimeout(() => {
+            if (useStore.getState().scene === 'backstage') {
+              useStore.getState().setScene('kaminstube');
+            }
+            exitTimeoutRef.current = null;
+          }, 1000);
+        }}
+      />
+
       <SceneEnvironmentSetpieces variant="backstage" />
 
       <Player bounds={{ x: [-14, 14], z: [-9, 9] }} />
