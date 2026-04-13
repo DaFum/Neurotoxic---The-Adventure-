@@ -52,9 +52,16 @@ const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
       ? fixCableQuest.status
       : cableQuest.status;
 
-    return quests
-      .filter((q) => q.id !== 'fix_cable')
-      .map((q) => (q.id === 'cable' ? { ...q, status: mergedStatus } : q));
+    // ⚡ Bolt Optimization: Use a single loop to avoid intermediate array allocations
+    const len = quests.length;
+    const updatedQuests = [];
+    for (let i = 0; i < len; i++) {
+      const q = quests[i];
+      if (q.id !== 'fix_cable') {
+        updatedQuests.push(q.id === 'cable' ? { ...q, status: mergedStatus } : q);
+      }
+    }
+    return updatedQuests;
   }
 
   const updatedQuests = [...quests];
