@@ -291,20 +291,20 @@ export function TourBus() {
 
       {/* Band Members in the Bus */}
       <Interactable
-        position={[-3, 0, -2]}
+        position={[-3, 1, -2]}
         emoji="🎸"
         name="Matze"
-        appearance={{ idleType: 'sway' }}
+        appearance={{ isBandMember: true, idleType: 'sway' }}
         onInteract={() => {
           useStore.getState().setDialogue(buildTourbusMatzeDialogue());
         }}
       />
 
       <Interactable
-        position={[3, 0, -2]}
+        position={[3, 1, -2]}
         emoji="🎤"
         name="Marius"
-        appearance={{ idleType: 'headbang' }}
+        appearance={{ isBandMember: true, idleType: 'headbang' }}
         onInteract={() => {
           const store = useStore.getState();
           store.setDialogue(buildTourbusMariusDialogue());

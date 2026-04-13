@@ -8,8 +8,8 @@ import { GlitchOverlay } from './GlitchOverlay';
 
 vi.mock('motion/react', () => ({
   motion: {
-    div: ({ children, className, style, dataTestId }: any) => (
-      <div className={className} style={style} data-testid={dataTestId}>
+    div: ({ children, ...props }: any) => (
+      <div {...props}>
         {children}
       </div>
     ),
@@ -37,13 +37,14 @@ describe('GlitchOverlay', () => {
   it('calculates the correct filter style based on intensity', () => {
     const intensity = 0.5;
     const { container } = render(<GlitchOverlay glitchIntensity={intensity} />);
-    const primaryOverlay = container.querySelector('.bg-red-500\\/5') as HTMLElement;
+    const primaryOverlay = container.querySelector('.bg-red-500\\/5');
+    expect(primaryOverlay).not.toBeNull();
 
     const expectedContrast = 100 + intensity * 50;
     const expectedBrightness = 100 + intensity * 20;
 
-    expect(primaryOverlay.style.filter).toContain(`contrast(${expectedContrast}%)`);
-    expect(primaryOverlay.style.filter).toContain(`brightness(${expectedBrightness}%)`);
+    expect((primaryOverlay as HTMLElement).style.filter).toContain(`contrast(${expectedContrast}%)`);
+    expect((primaryOverlay as HTMLElement).style.filter).toContain(`brightness(${expectedBrightness}%)`);
   });
 
   it('does not render secondary overlay when glitchIntensity <= 0.4', () => {

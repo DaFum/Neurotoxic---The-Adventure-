@@ -34,6 +34,8 @@ const QUEST_STATUS_ORDER: Record<QuestStatus, number> = {
   completed: 2,
 };
 
+const NUM_BUCKETS = Math.max(...Object.values(QUEST_STATUS_ORDER)) + 1;
+
 const METER_SEGMENTS: ReadonlyArray<number> = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
 ];
@@ -99,47 +101,42 @@ export function UI() {
   const [compactHudTab, setCompactHudTab] = useState<'status' | 'inventory' | 'quests'>('status');
   const hasSyncedViewportRef = useRef(false);
 
-  const openQuestCount = useMemo(() => {
-    // ⚡ Bolt Optimization: Use a standard for loop to count active quests
-    // to eliminate intermediate array allocations caused by `.filter()`.
+  const { openQuestCount, visibleQuests } = useMemo(() => {
+    // ⚡ Bolt Optimization: Consolidate O(N) scans into a single useMemo using a standard for loop
+    // to count active quests and populate order buckets, eliminating intermediate allocations.
     let count = 0;
-    for (let i = 0; i < quests.length; i++) {
-      if (quests[i].status === 'active') {
-        count++;
-      }
-    }
-    return count;
-  }, [quests]);
-  const visibleQuests = useMemo(() => {
-    const shouldShowCompletedQuests = scene === 'salzgitter' || openQuestCount === 0;
-
-    const numBuckets = Math.max(...Object.values(QUEST_STATUS_ORDER)) + 1;
     const buckets: Quest[][] = [];
-    for (let i = 0; i < numBuckets; i++) {
+    for (let i = 0; i < NUM_BUCKETS; i++) {
       buckets.push([]);
     }
 
     for (let i = 0; i < quests.length; i++) {
       const quest = quests[i];
-      if (quest.status === 'completed' && !shouldShowCompletedQuests) continue;
+      if (quest.status === 'active') {
+        count++;
+      }
 
       const orderValue = QUEST_STATUS_ORDER[quest.status];
-      if (orderValue !== undefined && orderValue >= 0 && orderValue < numBuckets) {
+      if (orderValue !== undefined && orderValue >= 0 && orderValue < NUM_BUCKETS) {
         buckets[orderValue].push(quest);
       } else {
         console.warn(`Unknown or out-of-bounds quest status order for status: ${quest.status}`);
       }
     }
 
+    const shouldShowCompletedQuests = scene === 'salzgitter' || count === 0;
     const result: Quest[] = [];
-    for (let i = 0; i < numBuckets; i++) {
+    for (let i = 0; i < NUM_BUCKETS; i++) {
       const bucket = buckets[i];
       for (let j = 0; j < bucket.length; j++) {
-        result.push(bucket[j]);
+        const quest = bucket[j];
+        if (quest.status === 'completed' && !shouldShowCompletedQuests) continue;
+        result.push(quest);
       }
     }
-    return result;
-  }, [quests, scene, openQuestCount]);
+
+    return { openQuestCount: count, visibleQuests: result };
+  }, [quests, scene]);
   const { inventoryStacks, inventoryTotalCount } = useMemo(() => {
     const stacks = [];
     let totalCount = 0;
