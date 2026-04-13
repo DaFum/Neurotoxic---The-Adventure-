@@ -1,3 +1,4 @@
+import { getCachedQuest } from '../../dialogueEngine';
 import { type Dialogue } from '../../store';
 import { game, say } from '../shared/helpers';
 
@@ -61,7 +62,7 @@ export function buildTourbusHiddenStashDialogue(): Dialogue | string {
       },
     });
   }
-  const frequenzQuest = store.quests.find((q) => q.id === 'frequenz_1982');
+  const frequenzQuest = getCachedQuest('frequenz_1982');
   if (!store.flags.frequenz1982_tourbus && frequenzQuest?.status === 'active') {
     options.push({
       text: 'Da steckt noch mehr dahinter... [Technical 3]',
@@ -102,9 +103,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
   const store = game();
   const { flags, hasItem } = store;
   const hasGeisterDrink = hasItem('Geister-Drink');
-  const ghostRecipeStatus = store.quests.find(
-    (quest) => quest.id === 'ghost_recipe'
-  )?.status;
+  const ghostRecipeStatus = getCachedQuest('ghost_recipe')?.status;
   const ghostRecipeCompleted =
     ghostRecipeStatus === 'completed' || flags.ghostRecipeQuestCompleted;
   const ghostRecipeStarted =
