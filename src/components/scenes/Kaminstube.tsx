@@ -611,7 +611,26 @@ export function Kaminstube() {
         }}
       />
 
-      {/* Exit */}
+      {/* Exits */}
+      <Interactable
+        position={[-8, 0, 8]}
+        emoji="🔙"
+        name="Zurück zum Backstage"
+        onInteract={() => {
+          setDialogue('Nochmal alles überprüfen? Zurück zum Backstage.');
+          if (exitTimeoutRef.current !== null) {
+            window.clearTimeout(exitTimeoutRef.current);
+          }
+          exitTimeoutRef.current = window.setTimeout(() => {
+            const store = useStore.getState();
+            if (store.scene === 'kaminstube') {
+              store.setScene('backstage');
+            }
+            exitTimeoutRef.current = null;
+          }, 1000);
+        }}
+      />
+
       {flags.ampRepaired && (
         <Interactable
           position={[0, 1, 4]}

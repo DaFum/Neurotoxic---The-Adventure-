@@ -565,6 +565,21 @@ export function Salzgitter() {
         }}
       />
 
+      {/* Exit to Kaminstube */}
+      <Interactable
+        position={[0, 0, 8]}
+        emoji="🚐"
+        name="Zurück zur Kaminstube"
+        onInteract={() => {
+          useStore.getState().setDialogue('Wir haben noch etwas in der Kaminstube vergessen.');
+          window.setTimeout(() => {
+            if (useStore.getState().scene === 'salzgitter') {
+              useStore.getState().setScene('kaminstube');
+            }
+          }, 1000);
+        }}
+      />
+
       <SceneEnvironmentSetpieces variant="salzgitter" />
 
       <Player bounds={{ x: [-18, 18], z: [-9, 9] }} />

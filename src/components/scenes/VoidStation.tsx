@@ -429,7 +429,7 @@ export function VoidStation() {
       <Interactable
         position={[0, 0, 10]}
         emoji="🌀"
-        name="Realitäts-Portal"
+        name="Realitäts-Portal (Nach Kaminstube)"
         onInteract={() => {
           const state = useStore.getState();
           state.setDialogue(buildVoidPortalDialogue());
@@ -438,11 +438,31 @@ export function VoidStation() {
               window.clearTimeout(exitTimeoutRef.current);
             }
             exitTimeoutRef.current = window.setTimeout(() => {
-              if (useStore.getState().scene === 'void_station')
-                setScene('kaminstube');
+              if (useStore.getState().scene === 'void_station') {
+                useStore.getState().setScene('kaminstube');
+              }
               exitTimeoutRef.current = null;
             }, 1000);
           }
+        }}
+      />
+
+      {/* Exit to Backstage */}
+      <Interactable
+        position={[10, 0, 0]}
+        emoji="🔙"
+        name="Zurück zum Backstage"
+        onInteract={() => {
+          useStore.getState().setDialogue('Die Koordinaten sind fixiert. Rückkehr in die bekannte Realität.');
+          if (exitTimeoutRef.current !== null) {
+            window.clearTimeout(exitTimeoutRef.current);
+          }
+          exitTimeoutRef.current = window.setTimeout(() => {
+            if (useStore.getState().scene === 'void_station') {
+              useStore.getState().setScene('backstage');
+            }
+            exitTimeoutRef.current = null;
+          }, 1000);
         }}
       />
 
