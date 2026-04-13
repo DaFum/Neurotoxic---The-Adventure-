@@ -291,7 +291,7 @@ export function TourBus() {
 
       {/* Band Members in the Bus */}
       <Interactable
-        position={[-3, 1, -2]}
+        position={[-3, 1, 2.5]}
         emoji="🎸"
         name="Matze"
         appearance={{ isBandMember: true, idleType: 'sway' }}
@@ -301,7 +301,7 @@ export function TourBus() {
       />
 
       <Interactable
-        position={[3, 1, -2]}
+        position={[3, 1, 2.5]}
         emoji="🎤"
         name="Marius"
         appearance={{ isBandMember: true, idleType: 'headbang' }}

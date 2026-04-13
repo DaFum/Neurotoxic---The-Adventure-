@@ -58,6 +58,7 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
     for (let i = 0; i < len; i++) {
       const q = quests[i];
       if (q.id !== 'fix_cable') {
+        // Only spread (creating a new object) if the status actually changes, preserving object identity otherwise
         updatedQuests.push(q.id === 'cable' && q.status !== mergedStatus ? { ...q, status: mergedStatus } : q);
       }
     }

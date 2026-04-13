@@ -25,6 +25,12 @@ export function refreshQuestCache() {
   updateQuestsCache(useStore.getState().quests);
 }
 
+/**
+ * Note: `getCachedQuest` relies on synchronous Zustand subscriptions for freshness.
+ * Any code that bypasses Zustand's `setState` to modify quests (e.g., direct mutation)
+ * would leave this cache stale. Currently all quest mutations go through Zustand slices,
+ * so this is safe, but it's worth noting for future maintenance.
+ */
 export function getCachedQuest(id: string): Quest | undefined {
   return cachedQuestsMap.get(id);
 }
