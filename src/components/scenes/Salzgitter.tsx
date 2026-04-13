@@ -67,6 +67,7 @@ const MIC_X_POSITIONS: ReadonlyArray<number> = [-2.6, 0, 2.6];
  */
 export function Salzgitter() {
   const bassist_contacted = useStore((state) => state.flags.bassist_contacted);
+  const salzgitter_finalized = useStore((state) => state.flags.salzgitter_finalized);
 
   const spotLight1Ref = useRef<THREE.SpotLight>(null);
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
@@ -576,23 +577,25 @@ export function Salzgitter() {
       />
 
       {/* Exit to Kaminstube */}
-      <Interactable
-        position={[0, 0, 8]}
-        emoji="🚐"
-        name="Zurück zur Kaminstube"
-        onInteract={() => {
-          useStore.getState().setDialogue('Wir haben noch etwas in der Kaminstube vergessen.');
-          if (exitTimeoutRef.current !== null) {
-            window.clearTimeout(exitTimeoutRef.current);
-          }
-          exitTimeoutRef.current = window.setTimeout(() => {
-            if (useStore.getState().scene === 'salzgitter') {
-              useStore.getState().setScene('kaminstube');
+      {!salzgitter_finalized && (
+        <Interactable
+          position={[0, 0, 8]}
+          emoji="🚐"
+          name="Zurück zur Kaminstube"
+          onInteract={() => {
+            useStore.getState().setDialogue('Wir haben noch etwas in der Kaminstube vergessen.');
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
             }
-            exitTimeoutRef.current = null;
-          }, 1000);
-        }}
-      />
+            exitTimeoutRef.current = window.setTimeout(() => {
+              if (useStore.getState().scene === 'salzgitter') {
+                useStore.getState().setScene('kaminstube');
+              }
+              exitTimeoutRef.current = null;
+            }, 1000);
+          }}
+        />
+      )}
 
       <SceneEnvironmentSetpieces variant="salzgitter" />
 
