@@ -773,16 +773,23 @@ export function Backstage() {
         emoji="🔥"
         name="Zur Kaminstube"
         onInteract={() => {
-          setDialogue('Vielleicht gibt es am Feuer noch etwas zu bereden.');
-          if (exitTimeoutRef.current !== null) {
-            window.clearTimeout(exitTimeoutRef.current);
-          }
-          exitTimeoutRef.current = window.setTimeout(() => {
-            if (useStore.getState().scene === 'backstage') {
-              useStore.getState().setScene('kaminstube');
+          const store = useStore.getState();
+          if (store.flags.mariusCalmed && store.flags.setlistFound) {
+            setDialogue('Vielleicht gibt es am Feuer noch etwas zu bereden.');
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
             }
-            exitTimeoutRef.current = null;
-          }, 1000);
+            exitTimeoutRef.current = window.setTimeout(() => {
+              if (useStore.getState().scene === 'backstage') {
+                useStore.getState().setScene('kaminstube');
+              }
+              exitTimeoutRef.current = null;
+            }, 1000);
+          } else {
+            setDialogue(
+              'Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!'
+            );
+          }
         }}
       />
 

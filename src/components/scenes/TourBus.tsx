@@ -482,7 +482,7 @@ export function TourBus() {
       />
 
       <Interactable
-        position={[-8, 0.5, 4]}
+        position={[-5, 0.5, 4]}
         emoji="🔙"
         name="Zurück zum Proberaum"
         onInteract={() => {

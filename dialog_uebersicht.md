@@ -16,6 +16,7 @@ _Update 01.04.2026 (Salzgitter Dialogue Refactor): Salzgitter-Dialoge (Matze, La
 _Update 01.04.2026 (VoidStation Dialogue Refactor): VoidStation-Dialoge (Kosmischer Tankwart, Altes Terminal, Kosmisches Echo, schwebender Bassist, Marius' Ego, Diplomaten-Interface, Magnetbänder, Frequenz-Detektor, Verbotene Inschrift) wurden in dedizierte Builder unter `src/dialogues/voidstation/` extrahiert. Zusätzlich gibt es explizites Inventar-Limit-Feedback bei `Dunkle Materie` und `Splitter der Leere` statt stiller Erfolgsannahme._
 _Update 01.04.2026 (Dialogue Bug Fixes & Quest State): (1) Salzgitter Matze Deep-Talk-Branch (`matzeDeepTalk`) ist jetzt durch `salzgitterMatzeDeepTalkDone` einmalig (one-shot); +40/+10 BandMood und Skills werden nur beim ersten Ausführen vergeben. (2) Salzgitter Bassist Auto-Restore: +30 BandMood und `bassist_restored` werden jetzt via `(Weiter)`-Aktion statt beim Bauzeit-Aufruf gesetzt. (3) Salzgitter Fan Backstage-Rede: `salzgitter_fan_speech_heard` und +5 BandMood werden via `(Weiter)`-Aktion vergeben. (4) VoidStation Kosmisches Echo: Wenn `cosmic_echo`-Flag bereits gesetzt, wird die Quest via `startAndFinishQuest` nacherfasst (Backfill für alte Spielstände). (5) VoidStation Marius' Ego: Quest-Abschluss nutzt jetzt atomares `completeQuestWithFlag('ego', 'egoContained', true)`. (6) TourBus Marius Social-7-Antwort hat wieder einen eigenen emotionalen Text (unterscheidet sich jetzt vom Normal-Mood-Greeting). (7) `startQuestWithFlag` setzt `completed`-Quests nicht mehr auf `active` zurück — nur `failed`-Quests werden reaktiviert._
 _Update 02.04.2026 (Quest API Error Handling): Die Quest-API (`completeQuest`, `failQuest`, `completeQuestWithFlag`) loggt nun eine Warnung via `console.warn` und gibt den unveränderten State zurück (bzw. setzt nur das Flag bei `completeQuestWithFlag`), wenn versucht wird, eine nicht registrierte Quest ohne Text abzuschließen oder fehlschlagen zu lassen._
+_Update 13.04.2026 (Scene Transition Pacing): Rückwärts-Übergänge zwischen Szenen (Salzgitter -> Kaminstube -> Backstage -> TourBus/VoidStation) sind nun via Interactable in der Spielwelt verankert. Ebenso gibt es einen direkten Übergang von Backstage zur Kaminstube._
 
 > **Wartungshinweis:** Diese Datei muss bei jeder Änderung an `src/components/scenes/*.tsx`, `src/dialogues/**/*.ts` (einschließlich Dialogue-Builder-Funktionen in `src/dialogues/*/` Verzeichnissen) oder `src/store.ts` aktualisiert werden — insbesondere bei Änderungen an Quest-Triggern, Item-Vergabe, Flag-Namen (z. B. `frequenz_1982`, `askedAbout1982`, `marius_tourbus_doubt`, `bassist_clue_*`), BandMood-Deltas und Trait-Anforderungen. Änderungen ohne gleichzeitige Doku-Aktualisierung führen zu Inkonsistenzen zwischen Code und Übersicht. Referenz-Dateien: `src/components/scenes/`, `src/dialogues/proberaum/`, `src/dialogues/tourbus/`, `src/dialogues/backstage/`, `src/dialogues/kaminstube/`, `src/dialogues/salzgitter/`, `src/dialogues/voidstation/`, `src/store.ts`.
 
@@ -221,6 +222,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - _Item (Verbotenes Riff):_ "Für Metal" (+10 BandMood) ODER "Was für ein Preis?" (kein Mood-Effekt).
 - **Ausgang:**
   - _Interaktion:_ Nur möglich, wenn "Repariertes Kabel" übergeben oder noch im Inventar ist (Matze hat ein Kabel). Wechselt zur Szene "backstage".
+- **Zurück zum Proberaum (Exit):**
+  - _Interaktion:_ Unkonditionaler Rückwärts-Übergang zum Proberaum ("Vielleicht haben wir was vergessen...").
 
 ---
 
@@ -285,6 +288,12 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Item (Plasma-Zünder):_ Anzünden (+30 BandMood).
   - _Item (Verbotenes Riff):_ Resonanz (+15 BandMood).
   - _Standard:_ (+5 BandMood, einmalig, Quest hinzugefügt: backstage_ritual).
+- **Zur Realitäts-Grenze (Exit):**
+  - _Bedingung:_ `mariusCalmed && setlistFound`
+  - _Interaktion:_ Startet Übergang zur Void Station. Fehlt eine Bedingung, wird auf fehlende Aufgaben hingewiesen.
+- **Zur Kaminstube (Exit):**
+  - _Bedingung:_ `mariusCalmed && setlistFound`
+  - _Interaktion:_ Vorwärts-Übergang zur Kaminstube ("Vielleicht gibt es am Feuer noch etwas zu bereden.").
 
 ---
 

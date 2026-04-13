@@ -12,7 +12,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../../store';
@@ -72,6 +72,16 @@ export function Salzgitter() {
   const spotLight2Ref = useRef<THREE.SpotLight>(null);
   const spotLight3Ref = useRef<THREE.SpotLight>(null);
   const tRef = useRef(0);
+  const exitTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   useFrame((_state, delta) => {
     tRef.current += delta || 0;
@@ -572,10 +582,14 @@ export function Salzgitter() {
         name="Zurück zur Kaminstube"
         onInteract={() => {
           useStore.getState().setDialogue('Wir haben noch etwas in der Kaminstube vergessen.');
-          window.setTimeout(() => {
+          if (exitTimeoutRef.current !== null) {
+            window.clearTimeout(exitTimeoutRef.current);
+          }
+          exitTimeoutRef.current = window.setTimeout(() => {
             if (useStore.getState().scene === 'salzgitter') {
               useStore.getState().setScene('kaminstube');
             }
+            exitTimeoutRef.current = null;
           }, 1000);
         }}
       />
