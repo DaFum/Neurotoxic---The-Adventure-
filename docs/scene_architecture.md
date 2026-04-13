@@ -64,7 +64,7 @@ All NPCs and interactive objects use `<Interactable>` with consistent structure:
 
   name="String"
 
-  [optional: isBandMember, idleType, scale]
+  [optional: appearance, scale]
 
   onInteract={() => { /* dialogue logic */ }}
 
@@ -72,11 +72,9 @@ All NPCs and interactive objects use `<Interactable>` with consistent structure:
 
 ```
 
-**Band member specific props:**
+**Band member specific appearance prop:**
 
-- `isBandMember={true}`
-
-- `idleType`: "headbang", "tap", "sway" (affects animation state)
+- `appearance={{ isBandMember: true, idleType: "headbang" | "tap" | "sway" }}` (affects animation state)
 
 #### Dialogue System Pattern
 

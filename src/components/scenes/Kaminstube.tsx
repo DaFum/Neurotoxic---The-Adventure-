@@ -613,7 +613,7 @@ export function Kaminstube() {
 
       {/* Exits */}
       <Interactable
-        position={[-8, 0, 8]}
+        position={[-8, 0, 6.5]}
         emoji="🔙"
         name="Zurück zum Backstage"
         onInteract={() => {

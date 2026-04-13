@@ -348,6 +348,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Option (Skill: Technical 6):_ Kalibrieren (+15 BandMood, +4 Technical).
 - **Verbotene Inschrift:**
   - _Quest-Abhängigkeit (cosmic_echo abgeschlossen):_ Vollständig entschlüsseln (+20 BandMood, **Lore:** `inschrift_warning`).
+- **Zurück zum Backstage (Exit):**
+  - _Interaktion:_ Unkonditionaler Rückwärts-Übergang zum Backstage ("Die Koordinaten sind fixiert. Rückkehr in die bekannte Realität.").
 
 ---
 
@@ -410,6 +412,11 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
 - **Flüsternder Kamin:**
   - _Option (Skill: Technical 7):_ Frequenz analysieren (+20 BandMood, +3 Technical).
   - _Option (Trait: Diplomat):_ Sprache deuten (+20 BandMood).
+- **Tourbus (Nach Salzgitter) (Exit):**
+  - _Bedingung:_ `ampRepaired`
+  - _Interaktion:_ Unkonditionaler Vorwärts-Übergang nach Salzgitter (Finale).
+- **Zurück zum Backstage (Exit):**
+  - _Interaktion:_ Unkonditionaler Rückwärts-Übergang zum Backstage ("Nochmal alles überprüfen? Zurück zum Backstage.").
 
 ## 6. Salzgitter (Das Finale)
 
@@ -418,6 +425,8 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Aktion "Beginne das Finale":_ Triggert die End-Auswertung basierend auf dem Echtzeit-Status der Flags (z.B. BandUnited, fanMovement, ritualPerformed, frequenz1982_complete, etc.) und entscheidet dynamisch zwischen True Ending, Secret Encore, Best Ending, Good Ending oder Standard Ending.
   - _Aktion "Wir brauchen noch Zeit":_ Bricht die Finalisierung ab und lässt den Spieler weiter interagieren.
   - _Hinweis:_ Die Finalisierung (Setzen von `salzgitter_finalized` und Quests) geschieht nun ausschließlich beim bewussten Starten des Finales, nicht mehr beim bloßen Betrachten der Bühne.
+- **Zurück zur Kaminstube (Exit):**
+  - _Interaktion:_ Unkonditionaler Rückwärts-Übergang zur Kaminstube ("Wir haben noch etwas in der Kaminstube vergessen.").
 
 - **Matze:**
   - _Item (Verbotenes Riff + Void-Plektrum):_ Ultimativer Sound.

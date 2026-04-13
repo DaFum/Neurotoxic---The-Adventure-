@@ -86,7 +86,6 @@ const SHARD_POSITIONS: ReadonlyArray<[number, number, number]> = [
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function VoidStation() {
-  const setScene = useStore((state) => state.setScene);
   const flags = useStore(useShallow((state) => ({
     egoContained: state.flags.egoContained,
     cosmic_echo: state.flags.cosmic_echo,
