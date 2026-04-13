@@ -1,7 +1,50 @@
 import { describe, it, expect, beforeEach, vi, afterEach, type MockInstance } from 'vitest';
-import { useStore, migrateFlags } from './store';
+import { useStore, migrateFlags, migrateLegacyQuests } from './store';
+import type { Quest } from './store/types';
 
 describe('useStore', () => {
+  describe('migrateLegacyQuests', () => {
+    it('should return original array if fix_cable is not present', () => {
+      const original: Quest[] = [{ id: 'other', status: 'active', text: '...' }];
+      const result = migrateLegacyQuests(original);
+      expect(result).toBe(original);
+    });
+
+    it('should rename fix_cable to cable if cable is not present', () => {
+      const original: Quest[] = [{ id: 'fix_cable', status: 'completed', text: 'fix it' }];
+      const result = migrateLegacyQuests(original);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({ id: 'cable', status: 'completed', text: 'fix it' });
+    });
+
+    it.each([
+      ['completed', 'active', 'completed'],
+      ['active', 'failed', 'active'],
+      ['failed', 'active', 'active'],
+    ] as const)(
+      'should merge statuses with precedence (%s vs %s => %s)',
+      (fixStatus, cableStatus, expected) => {
+        const original: Quest[] = [
+          { id: 'fix_cable', status: fixStatus, text: 'fix it' },
+          { id: 'cable', status: cableStatus, text: 'find it' },
+        ];
+        const result = migrateLegacyQuests(original);
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({ id: 'cable', status: expected, text: 'find it' });
+      }
+    );
+
+    it('should not mutate original quest objects when merging', () => {
+      const cableQuest: Quest = { id: 'cable', status: 'active', text: 'find it' };
+      const original: Quest[] = [
+        { id: 'fix_cable', status: 'completed', text: 'fix it' },
+        cableQuest,
+      ];
+      const result = migrateLegacyQuests(original);
+      expect(result[0]).not.toBe(cableQuest);
+    });
+  });
+
   beforeEach(() => {
     // Reset state before each test
     useStore.getState().resetGame();
