@@ -264,7 +264,7 @@ export function UI() {
 
   const toggleItemSelection = (item: string, availableCount: number) => {
     setSelectedItems((prev) => {
-      const selectedCount = prev.filter((i) => i === item).length;
+      const selectedCount = prev.reduce((count, s) => (s === item ? count + 1 : count), 0);
       const totalSelected = prev.length;
 
       if (selectedCount === 0) {
