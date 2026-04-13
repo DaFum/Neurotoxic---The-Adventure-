@@ -25,6 +25,10 @@ export function refreshQuestCache() {
   updateQuestsCache(useStore.getState().quests);
 }
 
+export function getCachedQuest(id: string): Quest | undefined {
+  return cachedQuestsMap.get(id);
+}
+
 /**
  * Checks whether a dialogue option's requirements are currently satisfied.
  * Returns true if the option can be selected; false if it is locked.

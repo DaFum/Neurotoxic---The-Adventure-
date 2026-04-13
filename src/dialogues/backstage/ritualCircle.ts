@@ -1,5 +1,6 @@
 import { type Dialogue } from '../../store';
 import { game, say } from '../shared/helpers';
+import { getCachedQuest } from '../../dialogueEngine';
 
 const FREQUENZ_1982_QUEST_ID = 'frequenz_1982';
 const FREQUENZ_1982_QUEST_TEXT = 'Sammle die Frequenzfragmente von 1982';
@@ -13,9 +14,7 @@ type RitualActionWrapper = (
 
 function hasCompletedFrequenz1982Quest(): boolean {
   const store = game();
-  const questStatus = store.quests.find(
-    (quest) => quest.id === FREQUENZ_1982_QUEST_ID
-  )?.status;
+  const questStatus = getCachedQuest(FREQUENZ_1982_QUEST_ID)?.status;
   return questStatus === 'completed' || store.flags.frequenz1982_complete;
 }
 
