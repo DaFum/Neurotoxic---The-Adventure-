@@ -17,15 +17,22 @@ describe('useStore', () => {
       expect(result[0]).toEqual({ id: 'cable', status: 'completed', text: 'fix it' });
     });
 
-    it('should merge statuses when both fix_cable and cable are present, prioritizing completed > active > failed', () => {
-      const original: Quest[] = [
-        { id: 'fix_cable', status: 'completed', text: 'fix it' },
-        { id: 'cable', status: 'active', text: 'find it' },
-      ];
-      const result = migrateLegacyQuests(original);
-      expect(result).toHaveLength(1);
-      expect(result[0]).toEqual({ id: 'cable', status: 'completed', text: 'find it' });
-    });
+    it.each([
+      ['completed', 'active', 'completed'],
+      ['active', 'failed', 'active'],
+      ['failed', 'active', 'active'],
+    ] as const)(
+      'should merge statuses with precedence (%s vs %s => %s)',
+      (fixStatus, cableStatus, expected) => {
+        const original: Quest[] = [
+          { id: 'fix_cable', status: fixStatus, text: 'fix it' },
+          { id: 'cable', status: cableStatus, text: 'find it' },
+        ];
+        const result = migrateLegacyQuests(original);
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({ id: 'cable', status: expected, text: 'find it' });
+      }
+    );
 
     it('should not mutate original quest objects when merging', () => {
       const cableQuest: Quest = { id: 'cable', status: 'active', text: 'find it' };
