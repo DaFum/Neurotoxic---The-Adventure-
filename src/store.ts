@@ -38,7 +38,7 @@ const migrateLegacyFeedbackMonitorFlag = (flags: Record<Flag, boolean>): Record<
   return newFlags;
 };
 
-const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
+export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
   const fixCableQuestIndex = quests.findIndex((q) => q.id === 'fix_cable');
   if (fixCableQuestIndex === -1) return quests;
 
@@ -54,11 +54,11 @@ const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
 
     // ⚡ Bolt Optimization: Use a single loop to avoid intermediate array allocations
     const len = quests.length;
-    const updatedQuests = [];
+    const updatedQuests: Quest[] = [];
     for (let i = 0; i < len; i++) {
       const q = quests[i];
       if (q.id !== 'fix_cable') {
-        updatedQuests.push(q.id === 'cable' ? { ...q, status: mergedStatus } : q);
+        updatedQuests.push(q.id === 'cable' && q.status !== mergedStatus ? { ...q, status: mergedStatus } : q);
       }
     }
     return updatedQuests;
