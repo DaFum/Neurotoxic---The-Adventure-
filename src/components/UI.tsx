@@ -264,11 +264,7 @@ export function UI() {
 
   const toggleItemSelection = (item: string, availableCount: number) => {
     setSelectedItems((prev) => {
-      // ⚡ Bolt Optimization: Use a standard for loop instead of reduce to avoid intermediate allocations and function call overhead
-      let selectedCount = 0;
-      for (let i = 0; i < prev.length; i++) {
-        if (prev[i] === item) selectedCount++;
-      }
+      const selectedCount = prev.filter((i) => i === item).length;
       const totalSelected = prev.length;
 
       if (selectedCount === 0) {
