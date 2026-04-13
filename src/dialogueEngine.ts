@@ -21,6 +21,10 @@ useStore.subscribe((state, prevState) => {
   }
 });
 
+export function getCachedQuest(questId: string): Quest | undefined {
+  return cachedQuestsMap.get(questId);
+}
+
 export function refreshQuestCache() {
   updateQuestsCache(useStore.getState().quests);
 }
