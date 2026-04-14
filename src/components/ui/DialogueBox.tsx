@@ -204,6 +204,7 @@ export function DialogueBox({
                         const traitReq = option.requiredTrait;
                         const questDeps = option.questDependencies;
                         const requiredItems = option.requiredItems;
+                        const consumeItems = option.consumeItems;
                         const requiredFlags = option.requiredFlags;
                         const forbiddenFlags = option.forbiddenFlags;
                         const isLocked = !canSelectOption(option);
@@ -211,7 +212,7 @@ export function DialogueBox({
                         return (
                           <button
                             key={option.id || idx}
-                            aria-describedby={isLocked ? `option-req-${option.id || idx}` : undefined}
+                            aria-describedby={(skillReq || traitReq || questDeps || requiredItems || consumeItems || requiredFlags || forbiddenFlags) ? `option-req-${option.id || idx}` : undefined}
                             aria-disabled={isLocked || isResolving}
                             onClick={() => {
                               if (
@@ -246,10 +247,12 @@ export function DialogueBox({
                               traitReq ||
                               questDeps ||
                               requiredItems ||
+                              consumeItems ||
                               requiredFlags ||
                               forbiddenFlags) && (
                               <div
                                 id={`option-req-${option.id || idx}`}
+                                aria-hidden="true"
                                 className={`text-[8px] mt-1 font-mono ${
                                   isLocked
                                     ? 'text-blood'
@@ -289,6 +292,12 @@ export function DialogueBox({
                                   requiredItems.map((item, itemIdx) => (
                                     <span key={`req-item-${itemIdx}`}>
                                       [ REQ: ITEM: {item.toUpperCase()} ]{' '}
+                                    </span>
+                                  ))}
+                                {consumeItems &&
+                                  consumeItems.map((item, itemIdx) => (
+                                    <span key={`consume-item-${itemIdx}`}>
+                                      [ CONSUMES: {item.toUpperCase()} ]{' '}
                                     </span>
                                   ))}
                                 {requiredFlags &&
