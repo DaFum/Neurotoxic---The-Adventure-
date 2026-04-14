@@ -103,7 +103,7 @@ export function LoreCodex({
           </div>
 
           <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 overflow-y-auto pr-2 md:pr-4 custom-scrollbar focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 overflow-y-auto pr-2 md:pr-4 custom-scrollbar focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             tabIndex={0}
             role="region"
             aria-label="Lore codex entries"
