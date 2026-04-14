@@ -47,6 +47,8 @@ const COLOR_ACCENT = '#adff2f';
 const COLOR_PROMPT_IN_RANGE = '#b3b3b3';
 const COLOR_PROMPT_OUT_OF_RANGE = '#8b0000';
 
+const DEFAULT_APPEARANCE = Object.freeze({});
+
 const textureCache = new Map<string, { texture: THREE.CanvasTexture; refCount: number }>();
 
 function getCachedTexture(key: string, createCanvas: () => HTMLCanvasElement): THREE.CanvasTexture {
@@ -156,7 +158,7 @@ export const Interactable = React.memo(function Interactable({
   name,
   onInteract,
   scale = 1,
-  appearance = {},
+  appearance = DEFAULT_APPEARANCE,
 }: InteractableProps) {
   const { isBandMember = false, idleType = 'sway' } = appearance;
   const ref = useRef<THREE.Group>(null);

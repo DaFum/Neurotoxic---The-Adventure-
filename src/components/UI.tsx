@@ -266,10 +266,9 @@ export function UI() {
     setSelectedItems((prev) => {
       let selectedCount = 0;
       for (let i = 0; i < prev.length; i++) {
-        if (prev[i] === item) {
-          selectedCount++;
-        }
+        if (prev[i] === item) selectedCount++;
       }
+
       const totalSelected = prev.length;
 
       if (selectedCount === 0) {
