@@ -483,6 +483,24 @@ export function TourBus() {
         }}
       />
 
+      <Interactable
+        position={[-5, 0.5, 4]}
+        emoji="🔙"
+        name="Zurück zum Proberaum"
+        onInteract={() => {
+          setDialogue('Vielleicht haben wir was vergessen...');
+          if (exitTimeoutRef.current !== null) {
+            window.clearTimeout(exitTimeoutRef.current);
+          }
+          exitTimeoutRef.current = window.setTimeout(() => {
+            if (useStore.getState().scene === 'tourbus') {
+              useStore.getState().setScene('proberaum');
+            }
+            exitTimeoutRef.current = null;
+          }, 1000);
+        }}
+      />
+
       {/* Decorative Bus Elements */}
       <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
         <mesh position={[0, 3, -4.5]}>
