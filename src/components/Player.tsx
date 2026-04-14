@@ -231,9 +231,8 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
     velocity.z += touchInput.z;
 
     // Update facing direction from combined input
-    // ⚡ Bolt Optimization: Only update the facingRight ref when the value actually changes to avoid redundant work in useFrame
-    if (velocity.x < -0.1 && facingRight.current) facingRight.current = false;
-    else if (velocity.x > 0.1 && !facingRight.current) facingRight.current = true;
+    if (velocity.x < -0.1) facingRight.current = false;
+    else if (velocity.x > 0.1) facingRight.current = true;
 
     const moving = velocity.length() > 0;
     if (moving !== isMoving) setIsMoving(moving);
