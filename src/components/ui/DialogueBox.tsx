@@ -212,7 +212,7 @@ export function DialogueBox({
                         return (
                           <button
                             key={option.id || idx}
-                            aria-describedby={isLocked && (skillReq || traitReq || questDeps || requiredItems || consumeItems || requiredFlags || forbiddenFlags) ? `option-req-${option.id || idx}` : undefined}
+                            aria-describedby={(skillReq || traitReq || questDeps || requiredItems || consumeItems || requiredFlags || forbiddenFlags) ? `option-req-${option.id || idx}` : undefined}
                             aria-disabled={isLocked || isResolving}
                             onClick={() => {
                               if (
@@ -297,7 +297,7 @@ export function DialogueBox({
                                 {consumeItems &&
                                   consumeItems.map((item, itemIdx) => (
                                     <span key={`consume-item-${itemIdx}`}>
-                                      [ REQUIRES: {item.toUpperCase()} ]{' '}
+                                      [ CONSUMES: {item.toUpperCase()} ]{' '}
                                     </span>
                                   ))}
                                 {requiredFlags &&
