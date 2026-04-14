@@ -211,6 +211,7 @@ export function DialogueBox({
                         return (
                           <button
                             key={option.id || idx}
+                            aria-describedby={isLocked ? `option-req-${option.id || idx}` : undefined}
                             aria-disabled={isLocked || isResolving}
                             onClick={() => {
                               if (
@@ -248,6 +249,7 @@ export function DialogueBox({
                               requiredFlags ||
                               forbiddenFlags) && (
                               <div
+                                id={`option-req-${option.id || idx}`}
                                 className={`text-[8px] mt-1 font-mono ${
                                   isLocked
                                     ? 'text-blood'
