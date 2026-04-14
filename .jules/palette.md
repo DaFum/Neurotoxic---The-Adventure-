@@ -12,3 +12,12 @@
 **Learning:** When using `aria-disabled` on list-rendered list items (e.g. dialogue option buttons in this app) instead of the native `disabled` attribute so the items remain focusable, screen readers won't announce why an action is blocked. Putting requirement or error text as a sibling element inside the same button structure doesn't automatically mean the screen reader will associate that specific contextual text with the button state.
 
 **Action:** Always link contextual requirement or error text specifically to the `aria-disabled` button using a dynamically generated unique `id` on the text container and referencing it via `aria-describedby` on the button itself. This is especially critical for dynamically generated lists of options.
+## 2026-04-14 - Focus Ring on Interactive Scroll Containers
+
+**Learning:** Scrollable containers (like `overflow-y-auto`) that have a `tabIndex={0}` to make them keyboard accessible (so users can scroll using keyboard arrows) must also have a clear visual focus indicator when they receive focus, otherwise keyboard users might not realize the region is focused.
+**Action:** Add `focus-visible:ring-2` (and associated focus styling classes) to scrollable containers with `tabIndex={0}` to provide clear visual feedback.
+
+## 2026-04-14 - Empty State Discoverability
+
+**Learning:** Using simple, plain text to indicate an empty state (e.g., "No assets detected") can be easily missed by users scanning the UI, and doesn't clearly guide them on what to do next.
+**Action:** Use visually distinct empty states with a faded icon, a clear title, and a helpful call-to-action (e.g., "Explore the area to find items.") to make empty states more recognizable and actionable.

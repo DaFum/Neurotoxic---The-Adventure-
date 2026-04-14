@@ -397,7 +397,13 @@ export function UI() {
                   Cargo_Manifest
                 </div>
                 {inventoryStacks.length === 0 ? (
-                  <div className="text-[10px] text-zinc-600 font-mono uppercase">No assets detected</div>
+                  <div className="flex flex-col items-center justify-center py-6 text-center gap-2 bg-zinc-900/30 border border-zinc-800/50">
+                    <Backpack size={20} className="text-zinc-700" />
+                    <div>
+                      <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">No Assets</div>
+                      <div className="text-[9px] text-zinc-600 font-mono mt-1">Explore the area to find items.</div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-2">
@@ -456,7 +462,13 @@ export function UI() {
                 </div>
                 <div className="flex flex-col gap-3">
                   {visibleQuests.length === 0 ? (
-                    <div className="text-[10px] text-zinc-600 font-mono uppercase">No mission objectives logged</div>
+                    <div className="flex flex-col items-center justify-center py-6 text-center gap-2 bg-zinc-900/30 border border-zinc-800/50">
+                      <CheckCircle2 size={20} className="text-zinc-700" />
+                      <div>
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">No Objectives</div>
+                        <div className="text-[9px] text-zinc-600 font-mono mt-1">Interact with objects and people.</div>
+                      </div>
+                    </div>
                   ) : (
                     visibleQuests.map((quest) => {
                       const statusMeta = getQuestStatusMeta(quest.status);
@@ -594,7 +606,13 @@ export function UI() {
                 Cargo_Manifest
               </div>
               {inventoryStacks.length === 0 ? (
-                <div className="text-[10px] text-zinc-600 font-mono uppercase">No assets detected</div>
+                <div className="flex flex-col items-center justify-center py-6 w-full text-center gap-2 bg-zinc-900/30 border border-zinc-800/50">
+                  <Backpack size={20} className="text-zinc-700" />
+                  <div>
+                    <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">No Assets</div>
+                    <div className="text-[9px] text-zinc-600 font-mono mt-1">Explore the area to find items.</div>
+                  </div>
+                </div>
               ) : (
                 <div className="flex flex-col gap-3 w-full">
                   <div className="grid grid-cols-2 gap-2">
@@ -652,7 +670,13 @@ export function UI() {
               </div>
               <div className="flex flex-col gap-3 w-full">
                 {visibleQuests.length === 0 ? (
-                  <div className="text-[10px] text-zinc-600 font-mono uppercase">No mission objectives logged</div>
+                  <div className="flex flex-col items-center justify-center py-6 w-full text-center gap-2 bg-zinc-900/30 border border-zinc-800/50">
+                    <CheckCircle2 size={20} className="text-zinc-700" />
+                    <div>
+                      <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">No Objectives</div>
+                      <div className="text-[9px] text-zinc-600 font-mono mt-1">Interact with objects and people.</div>
+                    </div>
+                  </div>
                 ) : (
                   visibleQuests.map((quest) => {
                     const statusMeta = getQuestStatusMeta(quest.status);
