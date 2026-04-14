@@ -231,8 +231,7 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
     velocity.z += touchInput.z;
 
     // Update facing direction from combined input
-    if (velocity.x < -0.1) facingRight.current = false;
-    else if (velocity.x > 0.1) facingRight.current = true;
+    if (Math.abs(velocity.x) > 0.1) facingRight.current = velocity.x > 0;
 
     const moving = velocity.length() > 0;
     if (moving !== isMoving) setIsMoving(moving);
