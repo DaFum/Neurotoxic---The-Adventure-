@@ -29,6 +29,16 @@ import {
 
 const TAPE_X_POSITIONS: ReadonlyArray<number> = [-6, -3, 0, 3, 6];
 const FLIGHTCASE_DETAIL_X_OFFSETS: ReadonlyArray<number> = [-0.72, 0.72];
+
+function buildBlockedExitDialogue(mariusCalmed: boolean, setlistFound: boolean): string {
+  if (!mariusCalmed && !setlistFound) {
+    return 'Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!';
+  } else if (!mariusCalmed) {
+    return 'Wir können noch nicht raus. Marius braucht Hilfe!';
+  } else {
+    return 'Wir können noch nicht raus. Die Setliste fehlt!';
+  }
+}
 const FLIGHTCASE_WHEEL_X_OFFSETS: ReadonlyArray<number> = [-0.45, 0.45];
 const RACK_POST_X_OFFSETS: ReadonlyArray<number> = [-0.7, 0.7];
 const MIRROR_POSITIONS: ReadonlyArray<[number, number, number]> = [
@@ -760,9 +770,39 @@ export function Backstage() {
               exitTimeoutRef.current = null;
             }, 1000);
           } else {
-            setDialogue(
-              'Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!'
-            );
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+              exitTimeoutRef.current = null;
+            }
+            setDialogue(buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound));
+          }
+        }}
+      />
+
+      {/* Exit to Kaminstube */}
+      <Interactable
+        position={[8, 0, 8]}
+        emoji="🔥"
+        name="Zur Kaminstube"
+        onInteract={() => {
+          const store = useStore.getState();
+          if (store.flags.mariusCalmed && store.flags.setlistFound) {
+            setDialogue('Vielleicht gibt es am Feuer noch etwas zu bereden.');
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+            }
+            exitTimeoutRef.current = window.setTimeout(() => {
+              if (useStore.getState().scene === 'backstage') {
+                useStore.getState().setScene('kaminstube');
+              }
+              exitTimeoutRef.current = null;
+            }, 1000);
+          } else {
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+              exitTimeoutRef.current = null;
+            }
+            setDialogue(buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound));
           }
         }}
       />
