@@ -29,8 +29,8 @@ import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
 
-const MATZE_POSITION: [number, number, number] = [-3, 1, 2.5];
-const MARIUS_POSITION: [number, number, number] = [3, 1, 2.5];
+const MATZE_POSITION: [number, number, number] = [-3, 1, -2];
+const MARIUS_POSITION: [number, number, number] = [3, 1, -2];
 const WINDOW_Z_POSITIONS: ReadonlyArray<number> = [-3.8, -1.2, 1.2, 3.8];
 const CEILING_RAIL_X_POSITIONS: ReadonlyArray<number> = [-4.5, -1.5, 1.5, 4.5];
 const SEAT_BLOCK_POSITIONS: ReadonlyArray<[number, number, number]> = [
