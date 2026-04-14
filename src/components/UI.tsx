@@ -290,16 +290,18 @@ export function UI() {
   };
 
   const handleCombine = () => {
-    if (selectedItems.length === 2) {
-      const success = combineItems(selectedItems[0], selectedItems[1]);
-      if (success) {
-        setDialogue(`Erfolg! Du hast ${selectedItems[0]} und ${selectedItems[1]} kombiniert.`);
-        setSelectedItems([]);
-      } else {
-        setDialogue('Diese Gegenstände lassen sich nicht kombinieren.');
-        setSelectedItems([]);
-      }
+    if (selectedItems.length !== 2) return;
+
+    const [item1, item2] = selectedItems;
+    const success = combineItems(item1, item2);
+
+    if (success) {
+      setDialogue(`Erfolg! Du hast ${item1} und ${item2} kombiniert.`);
+    } else {
+      setDialogue('Diese Gegenstände lassen sich nicht kombinieren.');
     }
+
+    setSelectedItems([]);
   };
 
   const glitchIntensity = Math.max(0, (bandMood - 70) / 30) + (scene === 'void_station' ? 0.3 : 0);
