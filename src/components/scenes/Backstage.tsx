@@ -760,6 +760,10 @@ export function Backstage() {
               exitTimeoutRef.current = null;
             }, 1000);
           } else {
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+              exitTimeoutRef.current = null;
+            }
             if (!store.flags.mariusCalmed && !store.flags.setlistFound) {
               setDialogue('Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!');
             } else if (!store.flags.mariusCalmed) {
@@ -790,6 +794,10 @@ export function Backstage() {
               exitTimeoutRef.current = null;
             }, 1000);
           } else {
+            if (exitTimeoutRef.current !== null) {
+              window.clearTimeout(exitTimeoutRef.current);
+              exitTimeoutRef.current = null;
+            }
             if (!store.flags.mariusCalmed && !store.flags.setlistFound) {
               setDialogue('Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!');
             } else if (!store.flags.mariusCalmed) {
