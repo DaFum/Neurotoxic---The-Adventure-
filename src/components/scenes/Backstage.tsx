@@ -29,6 +29,16 @@ import {
 
 const TAPE_X_POSITIONS: ReadonlyArray<number> = [-6, -3, 0, 3, 6];
 const FLIGHTCASE_DETAIL_X_OFFSETS: ReadonlyArray<number> = [-0.72, 0.72];
+
+function buildBlockedExitDialogue(mariusCalmed: boolean, setlistFound: boolean): string {
+  if (!mariusCalmed && !setlistFound) {
+    return 'Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!';
+  } else if (!mariusCalmed) {
+    return 'Wir können noch nicht raus. Marius braucht Hilfe!';
+  } else {
+    return 'Wir können noch nicht raus. Die Setliste fehlt!';
+  }
+}
 const FLIGHTCASE_WHEEL_X_OFFSETS: ReadonlyArray<number> = [-0.45, 0.45];
 const RACK_POST_X_OFFSETS: ReadonlyArray<number> = [-0.7, 0.7];
 const MIRROR_POSITIONS: ReadonlyArray<[number, number, number]> = [
@@ -764,13 +774,7 @@ export function Backstage() {
               window.clearTimeout(exitTimeoutRef.current);
               exitTimeoutRef.current = null;
             }
-            if (!store.flags.mariusCalmed && !store.flags.setlistFound) {
-              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!');
-            } else if (!store.flags.mariusCalmed) {
-              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe!');
-            } else {
-              setDialogue('Wir können noch nicht raus. Die Setliste fehlt!');
-            }
+            setDialogue(buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound));
           }
         }}
       />
@@ -798,13 +802,7 @@ export function Backstage() {
               window.clearTimeout(exitTimeoutRef.current);
               exitTimeoutRef.current = null;
             }
-            if (!store.flags.mariusCalmed && !store.flags.setlistFound) {
-              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe und die Setliste fehlt!');
-            } else if (!store.flags.mariusCalmed) {
-              setDialogue('Wir können noch nicht raus. Marius braucht Hilfe!');
-            } else {
-              setDialogue('Wir können noch nicht raus. Die Setliste fehlt!');
-            }
+            setDialogue(buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound));
           }
         }}
       />
