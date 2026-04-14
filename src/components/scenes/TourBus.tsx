@@ -29,6 +29,8 @@ import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
 
+const MATZE_POSITION: [number, number, number] = [-3, 1, 2.5];
+const MARIUS_POSITION: [number, number, number] = [3, 1, 2.5];
 const WINDOW_Z_POSITIONS: ReadonlyArray<number> = [-3.8, -1.2, 1.2, 3.8];
 const CEILING_RAIL_X_POSITIONS: ReadonlyArray<number> = [-4.5, -1.5, 1.5, 4.5];
 const SEAT_BLOCK_POSITIONS: ReadonlyArray<[number, number, number]> = [
@@ -291,7 +293,7 @@ export function TourBus() {
 
       {/* Band Members in the Bus */}
       <Interactable
-        position={[-3, 1, 2.5]}
+        position={MATZE_POSITION}
         emoji="🎸"
         name="Matze"
         appearance={{ isBandMember: true, idleType: 'sway' }}
@@ -301,7 +303,7 @@ export function TourBus() {
       />
 
       <Interactable
-        position={[3, 1, 2.5]}
+        position={MARIUS_POSITION}
         emoji="🎤"
         name="Marius"
         appearance={{ isBandMember: true, idleType: 'headbang' }}

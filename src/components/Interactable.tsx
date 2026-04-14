@@ -47,7 +47,7 @@ const COLOR_ACCENT = '#adff2f';
 const COLOR_PROMPT_IN_RANGE = '#b3b3b3';
 const COLOR_PROMPT_OUT_OF_RANGE = '#8b0000';
 
-const DEFAULT_APPEARANCE = {};
+const DEFAULT_APPEARANCE = Object.freeze({});
 
 const textureCache = new Map<string, { texture: THREE.CanvasTexture; refCount: number }>();
 
