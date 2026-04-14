@@ -36,6 +36,37 @@ export function getCachedQuest(id: string): Quest | undefined {
   return cachedQuestsMap.get(id);
 }
 
+function hasRequiredItems(option: DialogueOption, inventoryCounts: Record<string, number>): boolean {
+  if (!option.requiredItems && !option.consumeItems) return true;
+
+  const neededCounts: Record<string, number> = Object.create(null);
+
+  if (option.requiredItems) {
+    for (let i = 0; i < option.requiredItems.length; i++) {
+      const item = option.requiredItems[i];
+      neededCounts[item] = (neededCounts[item] || 0) + 1;
+    }
+  }
+
+  if (option.consumeItems) {
+    const consumeTallies: Record<string, number> = Object.create(null);
+    for (let i = 0; i < option.consumeItems.length; i++) {
+      const item = option.consumeItems[i];
+      const c = (consumeTallies[item] || 0) + 1;
+      consumeTallies[item] = c;
+      if (c > (neededCounts[item] || 0)) {
+        neededCounts[item] = c;
+      }
+    }
+  }
+
+  for (const item in neededCounts) {
+    if ((inventoryCounts[item] || 0) < neededCounts[item]) return false;
+  }
+
+  return true;
+}
+
 /**
  * Checks whether a dialogue option's requirements are currently satisfied.
  * Returns true if the option can be selected; false if it is locked.
@@ -72,29 +103,8 @@ export function canSelectOption(option: DialogueOption): boolean {
     return false;
   }
 
-  if (option.requiredItems || option.consumeItems) {
-    // Inventory needs to support multiple of the same item if `requiredItems` or `consumeItems` specifies duplicates
-    // the player must have max(requiredCount, consumeCount) of each item.
-    const neededCounts: Record<string, number> = Object.create(null);
-    if (option.requiredItems) {
-      for (const item of option.requiredItems) {
-        neededCounts[item] = (neededCounts[item] || 0) + 1;
-      }
-    }
-    if (option.consumeItems) {
-      const consumeTallies: Record<string, number> = Object.create(null);
-      for (const item of option.consumeItems) {
-        const c = (consumeTallies[item] || 0) + 1;
-        consumeTallies[item] = c;
-        if (c > (neededCounts[item] || 0)) {
-          neededCounts[item] = c;
-        }
-      }
-    }
-
-    for (const item in neededCounts) {
-      if ((inventoryCounts[item] || 0) < neededCounts[item]) return false;
-    }
+  if (!hasRequiredItems(option, inventoryCounts)) {
+    return false;
   }
 
   return true;
