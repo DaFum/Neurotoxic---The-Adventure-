@@ -70,6 +70,18 @@ const getQuestStatusMeta = (status: QuestStatus) => {
   };
 };
 
+function EmptyState({ icon: Icon, title, description }: { icon: React.ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>, title: string, description: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-6 w-full text-center gap-2 bg-zinc-900/30 border border-zinc-800/50">
+      <Icon size={20} className="text-zinc-700" aria-hidden="true" />
+      <div>
+        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{title}</div>
+        <div className="text-[9px] text-zinc-600 font-mono mt-1">{description}</div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Renders the 2D overlay user interface for the game.
  * Manages dialogue boxes, inventory screens, trait selection, lore menu, and notifications.
@@ -391,13 +403,13 @@ export function UI() {
             )}
 
             {compactHudTab === 'inventory' && (
-              <div className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto">
+              <div className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black" tabIndex={0}>
                 <div className="flex items-center gap-2 mb-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2">
                   <Backpack size={14} />
                   Cargo_Manifest
                 </div>
                 {inventoryStacks.length === 0 ? (
-                  <div className="text-[10px] text-zinc-600 font-mono uppercase">No assets detected</div>
+                  <EmptyState icon={Backpack} title="No Assets" description="Explore the area to find items." />
                 ) : (
                   <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-2">
@@ -449,14 +461,14 @@ export function UI() {
             )}
 
             {compactHudTab === 'quests' && (
-              <div className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto">
+              <div className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black" tabIndex={0}>
                 <div className="flex items-center gap-2 mb-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2">
                   <CheckCircle2 size={14} />
                   Mission_Objectives
                 </div>
                 <div className="flex flex-col gap-3">
                   {visibleQuests.length === 0 ? (
-                    <div className="text-[10px] text-zinc-600 font-mono uppercase">No mission objectives logged</div>
+                    <EmptyState icon={CheckCircle2} title="No Objectives" description="Interact with objects and people." />
                   ) : (
                     visibleQuests.map((quest) => {
                       const statusMeta = getQuestStatusMeta(quest.status);
@@ -594,7 +606,7 @@ export function UI() {
                 Cargo_Manifest
               </div>
               {inventoryStacks.length === 0 ? (
-                <div className="text-[10px] text-zinc-600 font-mono uppercase">No assets detected</div>
+                <EmptyState icon={Backpack} title="No Assets" description="Explore the area to find items." />
               ) : (
                 <div className="flex flex-col gap-3 w-full">
                   <div className="grid grid-cols-2 gap-2">
@@ -652,7 +664,7 @@ export function UI() {
               </div>
               <div className="flex flex-col gap-3 w-full">
                 {visibleQuests.length === 0 ? (
-                  <div className="text-[10px] text-zinc-600 font-mono uppercase">No mission objectives logged</div>
+                  <EmptyState icon={CheckCircle2} title="No Objectives" description="Interact with objects and people." />
                 ) : (
                   visibleQuests.map((quest) => {
                     const statusMeta = getQuestStatusMeta(quest.status);
