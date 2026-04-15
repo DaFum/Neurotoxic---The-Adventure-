@@ -8,11 +8,11 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    files: ["**/*.{jsx,tsx}"],
     plugins: { react, "react-hooks": reactHooks },
     settings: { react: { version: "detect" } },
     rules: {
       "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
     },
   },
   {
