@@ -105,6 +105,7 @@ This is CRITICAL for managing save compatibility:
 Runs AFTER storage loads.
 
 **GOTCHA:** The merge runs `onRehydrateStorage` callback with a setTimeout(0), allowing state updates AFTER initial hydration. This is crucial for migration logic.
+The migration routines (legacy quest migration, feedback monitor flag consolidation, legacyLoreMigrated flag handling) are guarded by idempotency checks (e.g., checking `legacyLoreMigrated` or the existing consolidated flag before applying changes) to ensure that future/repeated rehydrations are safe and don't re-run migrations unnecessarily.
 
 ---
 

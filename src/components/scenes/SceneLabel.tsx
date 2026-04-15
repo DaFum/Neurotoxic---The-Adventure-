@@ -5,7 +5,6 @@ type Props = {
   children: ReactNode;
   position: [number, number, number];
   fontSize?: number;
-  maxWidth?: number;
   color?: string;
 };
 
@@ -13,7 +12,7 @@ export function SceneLabel({
   children,
   position,
   fontSize = 0.35,
-  maxWidth = 6,
+
   color = "#ffffff",
 }: Props) {
   return (
@@ -21,10 +20,10 @@ export function SceneLabel({
       position={position}
       font="/fonts/pressstart2p-v16.ttf"
       fontSize={fontSize}
-      maxWidth={maxWidth}
+
       anchorX="center"
       anchorY="middle"
-      color={color}"
+      color={color}
     >
       {children}
     </Text>
