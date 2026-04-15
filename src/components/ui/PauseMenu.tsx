@@ -130,9 +130,13 @@ export function PauseMenu({
           RESUME_SESSION
         </button>
 
+        <div className="sr-only" aria-live="polite" aria-atomic="true">
+          {showRebootConfirm ? 'REBOOT_SYSTEM: Are you sure?' : ''}
+        </div>
+
         {showRebootConfirm ? (
           <div className="flex flex-col gap-2 p-3 bg-zinc-900 border border-zinc-800">
-            <p aria-live="polite" className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest text-center mb-2">
+            <p className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest text-center mb-2">
               REBOOT_SYSTEM: Are you sure?
             </p>
             <div className="grid grid-cols-2 gap-2">
