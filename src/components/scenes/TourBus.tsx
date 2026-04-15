@@ -23,7 +23,8 @@ import {
   buildTourbusGhostDialogue,
   buildTourbusBandMeetingDialogue
 } from '../../dialogues/tourbus';
-import { Sparkles, Float, Text } from '@react-three/drei';
+import { Sparkles, Float } from '@react-three/drei';
+import { SceneLabel } from './SceneLabel';
 import { useRef, useEffect } from 'react';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
@@ -507,14 +508,9 @@ export function TourBus() {
           <boxGeometry args={[4, 1, 0.1]} />
           <meshStandardMaterial color="#333" />
         </mesh>
-        <Text
-          position={[0, 3, -4.4]}
-          fontSize={0.3}
-          color="#00ff00"
-          font="/fonts/pressstart2p-v16.ttf"
-        >
+        <SceneLabel position={[0, 3, -4.4]} fontSize={0.3} color="#00ff00">
           NEUROTOXIC TOUR 2026
-        </Text>
+        </SceneLabel>
       </Float>
 
       <SceneEnvironmentSetpieces variant="tourbus" />

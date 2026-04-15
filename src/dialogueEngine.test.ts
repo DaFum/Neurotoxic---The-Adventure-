@@ -1,11 +1,10 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useStore, DialogueOption } from './store';
-import { canSelectOption, executeDialogueOption, refreshQuestCache } from './dialogueEngine';
+import { canSelectOption, executeDialogueOption } from './dialogueEngine';
 
 describe('dialogueEngine', () => {
   beforeEach(() => {
     useStore.getState().resetGame();
-    refreshQuestCache();
   });
 
   describe('canSelectOption', () => {

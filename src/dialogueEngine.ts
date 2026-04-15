@@ -21,9 +21,7 @@ useStore.subscribe((state, prevState) => {
   }
 });
 
-export function refreshQuestCache() {
-  updateQuestsCache(useStore.getState().quests);
-}
+
 
 /**
  * Note: `getCachedQuest` relies on synchronous Zustand subscriptions for freshness,
