@@ -7,5 +7,6 @@
 **Action:** When auditing stylized buttons across the app, always verify the presence of `focus-visible` classes (like `focus-visible:ring-2 focus-visible:ring-offset-2`). Use Tailwind's offset rings to ensure the focus state is clearly visible against both dark and light backgrounds.
 
 ## 2024-05-18 - [Accessibility: Native Browser Prompts vs Inline Confirmations]
+
 **Learning:** Native browser prompts like `window.confirm()` completely block the UI thread, provide zero visual customization, and are generally jarring for screen reader users as they abruptly trap focus in a system-level dialog without proper context.
 **Action:** Replace all `window.confirm()` or `window.alert()` calls with inline UI confirmation dialogs. This ensures focus states can be managed correctly, the styling matches the design system, and screen readers can properly announce the dialog using `role="dialog"` and `aria-modal`.

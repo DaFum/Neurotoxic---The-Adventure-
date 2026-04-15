@@ -27,6 +27,8 @@ export function PauseMenu({
   const pauseMenuContainerRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
   const [showRebootConfirm, setShowRebootConfirm] = useState(false);
+  const rebootButtonRef = useRef<HTMLButtonElement>(null);
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isPaused) {
@@ -35,6 +37,7 @@ export function PauseMenu({
         initialFocusRef.current.focus();
       }
     } else {
+      setShowRebootConfirm(false);
       if (previouslyFocusedElementRef.current) {
         previouslyFocusedElementRef.current.focus();
         previouslyFocusedElementRef.current = null;
@@ -42,11 +45,31 @@ export function PauseMenu({
     }
   }, [isPaused]);
 
+  const wasRebootConfirmShownRef = useRef(false);
+
+  useEffect(() => {
+    if (showRebootConfirm) {
+      if (cancelButtonRef.current) {
+        cancelButtonRef.current.focus();
+      }
+      wasRebootConfirmShownRef.current = true;
+    } else if (wasRebootConfirmShownRef.current) {
+      if (rebootButtonRef.current) {
+        rebootButtonRef.current.focus();
+      }
+      wasRebootConfirmShownRef.current = false;
+    }
+  }, [showRebootConfirm]);
+
   const handlePauseMenuKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.nativeEvent.stopImmediatePropagation();
       e.stopPropagation();
-      setPaused(false);
+      if (showRebootConfirm) {
+        setShowRebootConfirm(false);
+      } else {
+        setPaused(false);
+      }
       return;
     }
 
@@ -109,7 +132,7 @@ export function PauseMenu({
 
         {showRebootConfirm ? (
           <div className="flex flex-col gap-2 p-3 bg-zinc-900 border border-zinc-800">
-            <p className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest text-center mb-2">
+            <p aria-live="polite" className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest text-center mb-2">
               REBOOT_SYSTEM: Are you sure?
             </p>
             <div className="grid grid-cols-2 gap-2">
@@ -125,6 +148,8 @@ export function PauseMenu({
                 CONFIRM
               </button>
               <button
+                ref={cancelButtonRef}
+                autoFocus
                 onClick={() => setShowRebootConfirm(false)}
                 className="flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2 text-[10px] uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
@@ -135,6 +160,7 @@ export function PauseMenu({
           </div>
         ) : (
           <button
+            ref={rebootButtonRef}
             onClick={() => setShowRebootConfirm(true)}
             className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
