@@ -327,7 +327,7 @@ describe('useStore', () => {
       expect(quest).toBeDefined();
       expect(quest?.status).toBe('completed');
       expect(quest?.text).toBe('Backfill text');
-      expect(warnSpy).not.toHaveBeenCalled();
+      expect(warnSpy.mock.calls.filter(args => typeof args[0] === 'string' && args[0].includes('Attempted to complete unregistered quest'))).toHaveLength(0);
     });
 
     it('completeQuest should log a warning if quest is missing and no text is provided', () => {

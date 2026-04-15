@@ -10,7 +10,9 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit && eslint .",
     "format": "prettier . --write",
-    "test": "vitest --run"
+    "test": "pnpm run test:node && pnpm run test:vitest",
+    "test:node": "tsx --test \"src/**/*.test.node.ts\"",
+    "test:vitest": "vitest --run"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

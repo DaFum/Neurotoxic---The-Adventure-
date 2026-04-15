@@ -1,4 +1,5 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, afterEach, mock } from 'node:test';
+import assert from 'node:assert/strict';
 import { clampPlayerPosition, secureRandom } from './math';
 
 describe('secureRandom', () => {
@@ -10,26 +11,26 @@ describe('secureRandom', () => {
 
   it('returns a number between 0 and 1', () => {
     const val = secureRandom();
-    expect(val).toBeGreaterThanOrEqual(0);
-    expect(val).toBeLessThan(1);
+    assert.ok(val >= 0);
+    assert.ok(val < 1);
   });
 
   it('returns 0 when rng generates 0', () => {
-    global.crypto.getRandomValues = vi.fn().mockImplementation((arr: Uint32Array) => {
+    global.crypto.getRandomValues = mock.fn((arr: any) => {
       arr[0] = 0;
       return arr;
     });
-    expect(secureRandom()).toBe(0);
+    assert.equal(secureRandom(), 0);
   });
 
   it('returns a value strictly less than 1 when rng generates max uint32', () => {
-    global.crypto.getRandomValues = vi.fn().mockImplementation((arr: Uint32Array) => {
+    global.crypto.getRandomValues = mock.fn((arr: any) => {
       arr[0] = 0xFFFFFFFF;
       return arr;
     });
     const val = secureRandom();
-    expect(val).toBeLessThan(1);
-    expect(val).toBeGreaterThan(0);
+    assert.ok(val < 1);
+    assert.ok(val > 0);
   });
 });
 
@@ -42,54 +43,54 @@ describe('clampPlayerPosition', () => {
   it('leaves position unchanged when within bounds', () => {
     const pos = { x: 5, z: 2 };
     const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
-    expect(clampedX).toBe(5);
-    expect(clampedZ).toBe(2);
+    assert.equal(clampedX, 5);
+    assert.equal(clampedZ, 2);
   });
 
   it('leaves position unchanged when exactly on bounds', () => {
     const pos1 = { x: -10, z: -5 };
     const { clampedX: cx1, clampedZ: cz1 } = clampPlayerPosition(pos1, bounds);
-    expect(cx1).toBe(-10);
-    expect(cz1).toBe(-5);
+    assert.equal(cx1, -10);
+    assert.equal(cz1, -5);
 
     const pos2 = { x: 10, z: 5 };
     const { clampedX: cx2, clampedZ: cz2 } = clampPlayerPosition(pos2, bounds);
-    expect(cx2).toBe(10);
-    expect(cz2).toBe(5);
+    assert.equal(cx2, 10);
+    assert.equal(cz2, 5);
   });
 
   it('clamps position when out of bounds in -X direction', () => {
     const pos = { x: -15, z: 0 };
     const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
-    expect(clampedX).toBe(-10);
-    expect(clampedZ).toBe(0);
+    assert.equal(clampedX, -10);
+    assert.equal(clampedZ, 0);
   });
 
   it('clamps position when out of bounds in +X direction', () => {
     const pos = { x: 15, z: 0 };
     const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
-    expect(clampedX).toBe(10);
-    expect(clampedZ).toBe(0);
+    assert.equal(clampedX, 10);
+    assert.equal(clampedZ, 0);
   });
 
   it('clamps position when out of bounds in -Z direction', () => {
     const pos = { x: 0, z: -10 };
     const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
-    expect(clampedX).toBe(0);
-    expect(clampedZ).toBe(-5);
+    assert.equal(clampedX, 0);
+    assert.equal(clampedZ, -5);
   });
 
   it('clamps position when out of bounds in +Z direction', () => {
     const pos = { x: 0, z: 10 };
     const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
-    expect(clampedX).toBe(0);
-    expect(clampedZ).toBe(5);
+    assert.equal(clampedX, 0);
+    assert.equal(clampedZ, 5);
   });
 
   it('clamps position when out of bounds diagonally', () => {
     const pos = { x: 20, z: -20 };
     const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
-    expect(clampedX).toBe(10);
-    expect(clampedZ).toBe(-5);
+    assert.equal(clampedX, 10);
+    assert.equal(clampedZ, -5);
   });
 });
