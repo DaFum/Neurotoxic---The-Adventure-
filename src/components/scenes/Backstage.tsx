@@ -15,7 +15,8 @@
 import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
-import { Stars, Float, Text, Sparkles } from '@react-three/drei';
+import { Stars, Float, Sparkles } from '@react-three/drei';
+import { SceneLabel } from './SceneLabel';
 import { RigidBody } from '@react-three/rapier';
 import { useCallback, useEffect, useRef } from 'react';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
@@ -582,14 +583,9 @@ export function Backstage() {
 
       {/* Backstage Elements */}
       <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-        <Text
-          position={[0, 6, -9.4]}
-          fontSize={1.5}
-          color="#adff2f"
-          font="/fonts/pressstart2p-v16.ttf"
-        >
+        <SceneLabel position={[0, 6, -9.4]} fontSize={1.5} color="#adff2f">
           BACKSTAGE_ZONE
-        </Text>
+        </SceneLabel>
       </Float>
 
       {/* Absurd NPC: Sentient Feedback Monitor */}

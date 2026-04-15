@@ -102,15 +102,10 @@ This is CRITICAL for managing save compatibility:
 
 **Rehydration Migration (lines 318-368):**
 
-Runs AFTER storage loads. Two migration patterns:
-
-1. **Legacy Lore Migration**: If old flag (e.g., `posterLoreRead`) is true, sets corresponding loreEntry.discovered = true
-
-2. **Feedback Monitor Flag Migration**: Consolidates old `feedbackMonitorQuestStarted` into `feedbackMonitorBackstageTalked` + `feedbackMonitorBackstageQuestStarted`
-
-3. Sets `legacyLoreMigrated` flag to prevent re-running migrations
+Runs AFTER storage loads.
 
 **GOTCHA:** The merge runs `onRehydrateStorage` callback with a setTimeout(0), allowing state updates AFTER initial hydration. This is crucial for migration logic.
+The migration routines (legacy quest migration, feedback monitor flag consolidation, legacyLoreMigrated flag handling) are guarded by idempotency checks (e.g., checking `legacyLoreMigrated` or the existing consolidated flag before applying changes) to ensure that future/repeated rehydrations are safe and don't re-run migrations unnecessarily.
 
 ---
 
