@@ -149,6 +149,7 @@ export function DialogueBox({
           <div
             className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto"
             role="dialog"
+            aria-modal="true"
             aria-labelledby="dialogue-title"
           >
             <motion.div
@@ -184,6 +185,7 @@ export function DialogueBox({
                   <button
                     onClick={() => setDialogue(null)}
                     aria-label="Close transmission"
+                    title="Close transmission"
                     className="text-toxic hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
                   >
                     <X size={16} />

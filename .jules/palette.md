@@ -22,3 +22,13 @@
 
 **Learning:** Using simple, plain text to indicate an empty state (e.g., "No assets detected") can be easily missed by users scanning the UI, and doesn't clearly guide them on what to do next.
 **Action:** Use visually distinct empty states with a faded icon, a clear title, and a helpful call-to-action (e.g., "Explore the area to find items.") to make empty states more recognizable and actionable.
+
+## 2026-04-16 - Toggle Button Accessibility
+
+**Learning:** Buttons that act as tabs or toggles and visually display their active state (e.g., via highlighted styling) must also communicate this state programmatically to screen readers.
+**Action:** Use the `aria-pressed` attribute (e.g., `aria-pressed={isActive}`) on toggle or tab buttons to ensure their state is accessible.
+
+## 2026-04-16 - Icon-Only Button Discoverability
+
+**Learning:** While `aria-label` provides essential accessibility for icon-only buttons for screen reader users, it does not provide any visual feedback for sighted mouse users.
+**Action:** Always include a `title` attribute alongside `aria-label` on icon-only buttons to provide a native hover tooltip, ensuring the action is discoverable for all users.
