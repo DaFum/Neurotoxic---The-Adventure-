@@ -3,11 +3,7 @@ import { game, say } from '../shared/helpers';
 
 type SkillName = keyof Skills;
 
-const bassistActionWrapper = (
-  mood: number,
-  skillName: SkillName,
-  skillIncrease: number
-) => {
+const bassistActionWrapper = (mood: number, skillName: SkillName, skillIncrease: number) => {
   const store = game();
   if (store.flags.voidBassistRewarded) {
     return;
@@ -21,9 +17,7 @@ const bassistActionWrapper = (
 export function buildVoidTerminalDialogue(): Dialogue {
   const store = game();
   if (store.flags.voidTerminalRead) {
-    return say(
-      'Das Terminal flackert nur noch schwach. Du kennst die 1982-Logs bereits.'
-    );
+    return say('Das Terminal flackert nur noch schwach. Du kennst die 1982-Logs bereits.');
   }
 
   return {
@@ -37,30 +31,24 @@ export function buildVoidTerminalDialogue(): Dialogue {
           currentStore.discoverLore('void_1982');
           currentStore.increaseBandMood(5, 'id_15515ca2');
           currentStore.setDialogue(
-            'Log: "Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback."'
+            'Log: "Tag 44. Der Bassist ist in die 4. Dimension gefallen. Der Sound ist jetzt viel klarer. Wir haben die Kaminstube erreicht. Die Fans bestehen aus reinem Feedback."',
           );
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 }
 
 export function buildVoidCosmicEchoDialogue(): Dialogue {
   const store = game();
   if (store.flags.cosmic_echo) {
-    store.startAndFinishQuest(
-      'cosmic_echo',
-      'Untersuche das kosmische Echo in der Void Station'
-    );
+    store.startAndFinishQuest('cosmic_echo', 'Untersuche das kosmische Echo in der Void Station');
     return say(
-      'Das kosmische Echo ist bereits entschlüsselt. Die Koordinaten nach Salzgitter stehen fest.'
+      'Das kosmische Echo ist bereits entschlüsselt. Die Koordinaten nach Salzgitter stehen fest.',
     );
   }
 
-  store.addQuest(
-    'cosmic_echo',
-    'Untersuche das kosmische Echo in der Void Station'
-  );
+  store.addQuest('cosmic_echo', 'Untersuche das kosmische Echo in der Void Station');
 
   return {
     text: 'Du hörst ein Flüstern aus der Leere. Es klingt wie eine alte NEUROTOXIC-Aufnahme, die rückwärts abgespielt wird.',
@@ -75,8 +63,10 @@ export function buildVoidCosmicEchoDialogue(): Dialogue {
         questToComplete: 'cosmic_echo',
         flagToSet: { flag: 'cosmic_echo', value: true },
         action: () => {
-            const currentStore = game();
-          currentStore.setDialogue('Du erkennst ein Muster in der Verzerrung. Es ist ein Koordinaten-Code für Salzgitter! Du hast das Echo entschlüsselt.');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Du erkennst ein Muster in der Verzerrung. Es ist ein Koordinaten-Code für Salzgitter! Du hast das Echo entschlüsselt.',
+          );
           if (!currentStore.flags.voidCosmicEchoRewarded) {
             currentStore.setFlag('voidCosmicEchoRewarded', true);
             currentStore.discoverLore('cosmic_echo_decoded');
@@ -106,8 +96,10 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         questToComplete: 'bassist_mystery',
         action: () => {
-            const currentStore = game();
-              currentStore.setDialogue('Bassist: "Sie vermissen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Bassist: "Sie vermissen mich? Nach all der Zeit? Ich... ich spüre den Groove wieder. Sag ihnen, ich bin bereit. Für das eine, wahre Riff."',
+          );
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(25, 'social', 3);
         },
@@ -122,7 +114,9 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         questToComplete: 'bassist_mystery',
         action: () => {
-            game().setDialogue('Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"');
+          game().setDialogue(
+            'Du justierst die Phasenverschiebung in der Umgebung des Bassisten. Bassist: "Die Dissonanz ist weg! Ich höre den Grundton wieder! Wir sehen uns in Salzgitter!"',
+          );
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(50, 'technical', 3);
         },
@@ -137,7 +131,9 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         questToComplete: 'bassist_mystery',
         action: () => {
-            game().setDialogue('Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."');
+          game().setDialogue(
+            'Bassist: "Du hast recht. Ich muss nicht in den Körper zurück, ich muss nur in den Song zurück. Der Bass ist überall."',
+          );
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(40, 'chaos', 3);
         },
@@ -152,7 +148,9 @@ export function buildVoidBassistEncounterDialogue(): Dialogue {
         },
         questToComplete: 'bassist_mystery',
         action: () => {
-            game().setDialogue('Bassist: "Du siehst das ganze Bild... Ich bin nicht verloren, ich bin das Fundament. Ich werde den Gig in Salzgitter stützen."');
+          game().setDialogue(
+            'Bassist: "Du siehst das ganze Bild... Ich bin nicht verloren, ich bin das Fundament. Ich werde den Gig in Salzgitter stützen."',
+          );
           game().setFlag('voidBassistSpoken', true);
           bassistActionWrapper(40, 'chaos', 3);
         },
@@ -178,7 +176,7 @@ function getVoidEgoOptions(): DialogueOption[] {
     const currentStore = game();
     if (currentStore.flags.egoContained) {
       currentStore.setDialogue(
-        "Marius' Ego ist bereits gebunden und kann nicht erneut eingefangen werden."
+        "Marius' Ego ist bereits gebunden und kann nicht erneut eingefangen werden.",
       );
       return false;
     }
@@ -189,11 +187,7 @@ function getVoidEgoOptions(): DialogueOption[] {
       return false;
     }
 
-    currentStore.completeQuestWithFlag(
-      'ego',
-      'egoContained',
-      true
-    );
+    currentStore.completeQuestWithFlag('ego', 'egoContained', true);
     return true;
   };
 
@@ -205,13 +199,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            'Marius\' Ego: "Endlich jemand, der meine wahre Bedeutung versteht! Die Vision ist zu groß für die Leere. Ich kehre zurück, um die Welt zu erleuchten."'
+            'Marius\' Ego: "Endlich jemand, der meine wahre Bedeutung versteht! Die Vision ist zu groß für die Leere. Ich kehre zurück, um die Welt zu erleuchten."',
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          'Marius\' Ego: "Endlich jemand, der meine wahre Bedeutung versteht! Die Vision ist zu groß für die Leere. Ich kehre zurück, um die Welt zu erleuchten."'
+          'Marius\' Ego: "Endlich jemand, der meine wahre Bedeutung versteht! Die Vision ist zu groß für die Leere. Ich kehre zurück, um die Welt zu erleuchten."',
         );
         game().increaseBandMood(30, 'id_b603686a');
         game().increaseSkill('chaos', 5);
@@ -224,13 +218,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            'Marius\' Ego: "Instabil?! Ich bin die perfekte Schwingung! ... Warte, du hast recht. Die Entropie hier draußen zersetzt meine Brillanz. Schnell, fang mich ein!"'
+            'Marius\' Ego: "Instabil?! Ich bin die perfekte Schwingung! ... Warte, du hast recht. Die Entropie hier draußen zersetzt meine Brillanz. Schnell, fang mich ein!"',
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          'Marius\' Ego: "Instabil?! Ich bin die perfekte Schwingung! ... Warte, du hast recht. Die Entropie hier draußen zersetzt meine Brillanz. Schnell, fang mich ein!"'
+          'Marius\' Ego: "Instabil?! Ich bin die perfekte Schwingung! ... Warte, du hast recht. Die Entropie hier draußen zersetzt meine Brillanz. Schnell, fang mich ein!"',
         );
         game().increaseBandMood(20, 'id_b9a8043e');
         game().increaseSkill('technical', 5);
@@ -243,13 +237,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            'Marius\' Ego: "Die Fans... ja. Meine Anbetung ist hier draußen so... abstrakt. Ich brauche den Schweiß und die Tränen der ersten Reihe. Bring mich zurück!"'
+            'Marius\' Ego: "Die Fans... ja. Meine Anbetung ist hier draußen so... abstrakt. Ich brauche den Schweiß und die Tränen der ersten Reihe. Bring mich zurück!"',
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          'Marius\' Ego: "Die Fans... ja. Meine Anbetung ist hier draußen so... abstrakt. Ich brauche den Schweiß und die Tränen der ersten Reihe. Bring mich zurück!"'
+          'Marius\' Ego: "Die Fans... ja. Meine Anbetung ist hier draußen so... abstrakt. Ich brauche den Schweiß und die Tränen der ersten Reihe. Bring mich zurück!"',
         );
         game().increaseBandMood(25, 'id_fc8b8d21');
         game().increaseSkill('social', 5);
@@ -261,13 +255,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            'Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."'
+            'Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."',
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          'Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."'
+          'Marius\' Ego: "Wie unhöflich! Aber die Leere ist langweilig. Na gut, aber ich erwarte eine Sonderbehandlung im Tourbus."',
         );
         game().increaseBandMood(10, 'id_f9e2d024');
       }),
@@ -279,13 +273,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            "Du packst die leuchtende Sphäre mit roher Gewalt. Marius' Ego wimmert und fügt sich."
+            "Du packst die leuchtende Sphäre mit roher Gewalt. Marius' Ego wimmert und fügt sich.",
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          "Du packst die leuchtende Sphäre mit roher Gewalt. Marius' Ego wimmert und fügt sich."
+          "Du packst die leuchtende Sphäre mit roher Gewalt. Marius' Ego wimmert und fügt sich.",
         );
         game().increaseBandMood(15, 'id_5c92986e');
         game().increaseSkill('chaos', 3);
@@ -298,13 +292,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            'Marius\' Ego: "Eine Verhandlung? Endlich jemand mit Kultur. Ich stimme den Konditionen zu."'
+            'Marius\' Ego: "Eine Verhandlung? Endlich jemand mit Kultur. Ich stimme den Konditionen zu."',
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          'Marius\' Ego: "Eine Verhandlung? Endlich jemand mit Kultur. Ich stimme den Konditionen zu."'
+          'Marius\' Ego: "Eine Verhandlung? Endlich jemand mit Kultur. Ich stimme den Konditionen zu."',
         );
         game().increaseBandMood(25, 'id_1b23de68');
         game().increaseSkill('social', 3);
@@ -319,13 +313,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            'Marius\' Ego: "Ah, die Strategie! Perfekte Synthese. Ich füge mich nahtlos ein!"'
+            'Marius\' Ego: "Ah, die Strategie! Perfekte Synthese. Ich füge mich nahtlos ein!"',
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          'Marius\' Ego: "Ah, die Strategie! Perfekte Synthese. Ich füge mich nahtlos ein!"'
+          'Marius\' Ego: "Ah, die Strategie! Perfekte Synthese. Ich füge mich nahtlos ein!"',
         );
         game().increaseBandMood(35, 'id_93b03b84');
       }),
@@ -340,13 +334,13 @@ function getVoidEgoOptions(): DialogueOption[] {
         const currentStore = game();
         if (
           !addContainedEgo(
-            'Marius\' Ego: "Was?! Dieser weinerliche Fleischsack verzweifelt ohne mich?! Das kann ich nicht zulassen! Ich bin der Gott des Lärms, nicht der Gott des Jammers! Fang mich ein, schnell!"'
+            'Marius\' Ego: "Was?! Dieser weinerliche Fleischsack verzweifelt ohne mich?! Das kann ich nicht zulassen! Ich bin der Gott des Lärms, nicht der Gott des Jammers! Fang mich ein, schnell!"',
           )
         ) {
           return;
         }
         currentStore.setDialogue(
-          'Marius\' Ego: "Was?! Dieser weinerliche Fleischsack verzweifelt ohne mich?! Das kann ich nicht zulassen! Ich bin der Gott des Lärms, nicht der Gott des Jammers! Fang mich ein, schnell!"'
+          'Marius\' Ego: "Was?! Dieser weinerliche Fleischsack verzweifelt ohne mich?! Das kann ich nicht zulassen! Ich bin der Gott des Lärms, nicht der Gott des Jammers! Fang mich ein, schnell!"',
         );
         currentStore.setFlag('mariusConfidenceBoost', true);
         game().increaseBandMood(40, 'id_087e60e5');
@@ -379,11 +373,11 @@ export function buildVoidDarkMatterPickupDialogue(): Dialogue {
 
           if (pickedUpDarkMatter) {
             currentStore.setDialogue(
-              'Du hast einen Klumpen Dunkle Materie aufgehoben. Er saugt das Licht aus deiner Umgebung.'
+              'Du hast einen Klumpen Dunkle Materie aufgehoben. Er saugt das Licht aus deiner Umgebung.',
             );
           } else {
             currentStore.setDialogue(
-              'Die Dunkle Materie entgleitet dir. Du kannst gerade keinen weiteren Klumpen tragen.'
+              'Die Dunkle Materie entgleitet dir. Du kannst gerade keinen weiteren Klumpen tragen.',
             );
           }
         },
@@ -391,9 +385,9 @@ export function buildVoidDarkMatterPickupDialogue(): Dialogue {
       {
         text: 'Liegen lassen',
         nextDialogue: {
-          text: 'Du lässt die Dunkle Materie dort schweben.'
-        }
-      }
+          text: 'Du lässt die Dunkle Materie dort schweben.',
+        },
+      },
     ],
   };
 }
@@ -402,7 +396,7 @@ export function buildVoidPortalDialogue(): Dialogue {
   const store = game();
   if (store.flags.voidRefueled) {
     return say(
-      'Das Portal stabilisiert sich. Nächster Halt: Die Kaminstube... oder was davon übrig ist.'
+      'Das Portal stabilisiert sich. Nächster Halt: Die Kaminstube... oder was davon übrig ist.',
     );
   }
   return say('Das Portal ist instabil. Wir brauchen den Treibstoff!');
@@ -425,7 +419,9 @@ export function buildVoidDiplomatenInterfaceDialogue(): Dialogue {
             requiredTrait: 'Diplomat',
             flagToSet: { flag: 'void_diplomat_negotiation', value: true },
             action: () => {
-            game().setDialogue('Du triffst eine Vereinbarung mit den abstrakten Mächten dieses Ortes. Der Gig in Salzgitter wird durch das Gefüge der Raumzeit geschützt.');
+              game().setDialogue(
+                'Du triffst eine Vereinbarung mit den abstrakten Mächten dieses Ortes. Der Gig in Salzgitter wird durch das Gefüge der Raumzeit geschützt.',
+              );
               game().discoverLore('schaltpult_record');
               game().increaseBandMood(30, 'id_91b76ef4');
               game().increaseSkill('social', 5);
@@ -434,8 +430,10 @@ export function buildVoidDiplomatenInterfaceDialogue(): Dialogue {
       {
         text: 'Lies die Aufzeichnungen.',
         action: () => {
-            const currentStore = game();
-              currentStore.setDialogue('Du entzifferst die fragmentierten Logs: Aufnahmen von Frequenzen, die 1982 in Salzgitter gemessen wurden. Etwas hat damals angefangen - und noch nicht aufgehört.');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Du entzifferst die fragmentierten Logs: Aufnahmen von Frequenzen, die 1982 in Salzgitter gemessen wurden. Etwas hat damals angefangen - und noch nicht aufgehört.',
+          );
           currentStore.discoverLore('schaltpult_record');
         },
       },
@@ -464,7 +462,9 @@ export function buildVoidMagnetbandDialogue(): Dialogue {
             requiredSkill: { name: 'technical', level: 5 },
             flagToSet: { flag: 'magnetbandPlayed', value: true },
             action: () => {
-            game().setDialogue('Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.');
+              game().setDialogue(
+                'Du bastelst ein Abspielgerät aus dem Nichts. Du hörst den Moment, als die Leere sich öffnete.',
+              );
               game().discoverLore('magnetband_session');
               game().increaseBandMood(10, 'id_74124307');
               game().increaseSkill('technical', 3);
@@ -494,9 +494,9 @@ export function buildVoidDetektorDialogue(): Dialogue {
             currentStore.setFlag('frequenzDetektorRead', true);
             game().discoverLore('frequenz_anomaly');
             currentStore.setDialogue(buildVoidDetektorDialogue());
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   }
 
@@ -515,8 +515,10 @@ export function buildVoidDetektorDialogue(): Dialogue {
             requiredSkill: { name: 'technical', level: 6 },
             flagToSet: { flag: 'frequenzCalibrated', value: true },
             action: () => {
-            const currentStore = game();
-              currentStore.setDialogue('Du justierst die Antennen. Die Anzeige offenbart: Die gesamte Station atmet. Sie ist am Leben.');
+              const currentStore = game();
+              currentStore.setDialogue(
+                'Du justierst die Antennen. Die Anzeige offenbart: Die gesamte Station atmet. Sie ist am Leben.',
+              );
               game().increaseBandMood(15, 'id_a59ff433');
               game().increaseSkill('technical', 4);
             },
@@ -546,8 +548,10 @@ export function buildVoidInschriftDialogue(): Dialogue {
             questDependencies: ['cosmic_echo'],
             flagToSet: { flag: 'inschriftDecoded', value: true },
             action: () => {
-            const currentStore = game();
-              currentStore.setDialogue('Die Inschrift warnt vor einer Kadenz, die die Stille für immer töten wird. Salzgitter ist der Katalysator.');
+              const currentStore = game();
+              currentStore.setDialogue(
+                'Die Inschrift warnt vor einer Kadenz, die die Stille für immer töten wird. Salzgitter ist der Katalysator.',
+              );
               game().discoverLore('inschrift_warning');
               game().increaseBandMood(20, 'id_6275141e');
             },

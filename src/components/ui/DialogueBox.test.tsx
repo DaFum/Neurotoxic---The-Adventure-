@@ -10,7 +10,9 @@ import { useStore } from '../../store';
 vi.mock('motion/react', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   motion: {
-    div: ({ children, className }: { children: React.ReactNode, className?: string }) => <div className={className}>{children}</div>,
+    div: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+      <div className={className}>{children}</div>
+    ),
   },
 }));
 
@@ -56,7 +58,7 @@ describe('DialogueBox', () => {
         dialogue={mockDialogue as any}
         setDialogue={vi.fn()}
         questDictionary={new Map()}
-      />
+      />,
     );
 
     const dialogElement = screen.getByRole('dialog');
@@ -72,7 +74,7 @@ describe('DialogueBox', () => {
         dialogue={mockDialogue as any}
         setDialogue={vi.fn()}
         questDictionary={new Map()}
-      />
+      />,
     );
 
     // The sr-only div has aria-live="polite"

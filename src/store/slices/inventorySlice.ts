@@ -14,12 +14,10 @@ export interface InventorySlice {
   combineItems: (item1: string, item2: string) => boolean;
 }
 
-export const createInventorySlice: StateCreator<
-  GameState,
-  [],
-  [],
-  InventorySlice
-> = (set, get) => ({
+export const createInventorySlice: StateCreator<GameState, [], [], InventorySlice> = (
+  set,
+  get,
+) => ({
   inventory: initialState.inventory,
   inventoryCounts: initialState.inventoryCounts,
   itemPickupCounts: initialState.itemPickupCounts,
@@ -65,9 +63,7 @@ export const createInventorySlice: StateCreator<
         }
         return { inventory: newInventory, inventoryCounts: newCounts };
       }
-      console.warn(
-        `Attempted to remove item from inventory that does not exist: ${item}`
-      );
+      console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
       return state;
     });
   },

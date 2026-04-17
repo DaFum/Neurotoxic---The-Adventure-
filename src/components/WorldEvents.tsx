@@ -2,10 +2,10 @@
  * #1: UPDATES
  * - Integrated music tempo control based on band mood.
  * - Added occasional camera shake for high band mood.
- * 
+ *
  * #2: NEXT STEPS & IDEAS
  * - Add more world events based on game state.
- * 
+ *
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */

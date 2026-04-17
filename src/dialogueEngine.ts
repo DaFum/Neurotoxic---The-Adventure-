@@ -21,8 +21,6 @@ useStore.subscribe((state, prevState) => {
   }
 });
 
-
-
 /**
  * Note: `getCachedQuest` relies on synchronous Zustand subscriptions for freshness,
  * and this subscription only refreshes the cache when the `quests` array reference changes.
@@ -34,7 +32,10 @@ export function getCachedQuest(id: string): Quest | undefined {
   return cachedQuestsMap.get(id);
 }
 
-function hasRequiredItems(option: DialogueOption, inventoryCounts: Record<string, number>): boolean {
+function hasRequiredItems(
+  option: DialogueOption,
+  inventoryCounts: Record<string, number>,
+): boolean {
   if (!option.requiredItems && !option.consumeItems) return true;
 
   const neededCounts: Record<string, number> = Object.create(null);
@@ -93,11 +94,11 @@ export function canSelectOption(option: DialogueOption): boolean {
     }
   }
 
-  if (option.requiredFlags && !option.requiredFlags.every(flag => flags[flag] === true)) {
+  if (option.requiredFlags && !option.requiredFlags.every((flag) => flags[flag] === true)) {
     return false;
   }
 
-  if (option.forbiddenFlags && option.forbiddenFlags.some(flag => flags[flag] === true)) {
+  if (option.forbiddenFlags && option.forbiddenFlags.some((flag) => flags[flag] === true)) {
     return false;
   }
 
@@ -120,12 +121,14 @@ export function executeDialogueOption(option: DialogueOption): boolean {
   if (!canSelectOption(option)) return false;
 
   if (option.nextDialogue && option.action) {
-    throw new Error('executeDialogueOption: option.nextDialogue and option.action are mutually exclusive. This conflicting pattern is deprecated and no longer allowed.');
+    throw new Error(
+      'executeDialogueOption: option.nextDialogue and option.action are mutually exclusive. This conflicting pattern is deprecated and no longer allowed.',
+    );
   }
 
   // 1. Consume items
   if (option.consumeItems) {
-    option.consumeItems.forEach(item => {
+    option.consumeItems.forEach((item) => {
       useStore.getState().removeFromInventory(item);
     });
   }

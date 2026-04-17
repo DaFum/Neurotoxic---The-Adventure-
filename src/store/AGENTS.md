@@ -12,6 +12,7 @@ Zustand store containing the entire game state. Organized into 5 slices (coreSli
 ## Persistence
 
 Only these 9 fields persist to localStorage (via Zustand's `persist` middleware):
+
 - `inventory`, `itemPickupCounts`, `flags`, `quests`, `bandMood`, `bandMoodGainClaims`, `loreEntries`, `trait`, `skills`
 
 Non-persisted fields reset on reload: `scene`, `playerPos`, `dialogue`, `isPaused`, `cameraShake`.

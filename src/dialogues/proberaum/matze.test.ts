@@ -66,7 +66,9 @@ describe('buildProberaumMatzeDialogue', () => {
     });
 
     const dialogue = buildProberaumMatzeDialogue();
-    expect(dialogue.text).toContain('Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?');
+    expect(dialogue.text).toContain(
+      'Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?',
+    );
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2);
     expect(options[0]).toContain('Lass hören!');
@@ -85,8 +87,8 @@ describe('buildProberaumMatzeDialogue', () => {
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(5);
     expect(options).toContain('Immer doch. Rock on!');
-    expect(options.some(o => o.includes('[Performer]'))).toBe(true);
-    expect(options.some(o => o.includes('[Cynic]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Performer]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Cynic]'))).toBe(true);
     expect(options).toContain('Erzähl mir von der Tour 1982.');
     expect(options).toContain('Eigentlich wollte ich nur die Buchhaltung machen.');
   });
@@ -107,8 +109,8 @@ describe('buildProberaumMatzeDialogue', () => {
     const options = getOptionTexts(dialogue);
 
     expect(options).toHaveLength(3);
-    expect(options.some(o => o.includes('[Performer]'))).toBe(false);
-    expect(options.some(o => o.includes('[Cynic]'))).toBe(false);
+    expect(options.some((o) => o.includes('[Performer]'))).toBe(false);
+    expect(options.some((o) => o.includes('[Cynic]'))).toBe(false);
     expect(options).toContain('Erzähl mir von der Tour 1982.');
   });
 });
@@ -124,7 +126,7 @@ describe('buildMatze1982Dialogue', () => {
     store.addToInventory('Frequenzfragment');
 
     const dialogue = buildMatze1982Dialogue();
-    const mysticOption = dialogue.options?.find(o => o.text.includes('[Mystic]'));
+    const mysticOption = dialogue.options?.find((o) => o.text.includes('[Mystic]'));
     expect(mysticOption).toBeDefined();
 
     executeDialogueOption(mysticOption!);
@@ -132,6 +134,8 @@ describe('buildMatze1982Dialogue', () => {
     const stateAfter = useStore.getState();
     expect(stateAfter.flags.bassist_clue_matze).toBe(true);
     expect(stateAfter.flags.frequenz1982_proberaum).toBe(false);
-    expect(stateAfter.dialogue?.text).toContain('Das Fragment ist echt, aber du kannst gerade keins mehr tragen.');
+    expect(stateAfter.dialogue?.text).toContain(
+      'Das Fragment ist echt, aber du kannst gerade keins mehr tragen.',
+    );
   });
 });

@@ -80,22 +80,26 @@ export function Backstage() {
   const canPickupItem = useStore((state) => state.canPickupItem);
   const setDialogue = useStore((state) => state.setDialogue);
   const setScene = useStore((state) => state.setScene);
-  const flags = useStore(useShallow((state) => ({
-    setlistFound: state.flags.setlistFound,
-    tourbus_sabotage_discovered: state.flags.tourbus_sabotage_discovered,
-    backstage_blueprint_found: state.flags.backstage_blueprint_found
-  })));
+  const flags = useStore(
+    useShallow((state) => ({
+      setlistFound: state.flags.setlistFound,
+      tourbus_sabotage_discovered: state.flags.tourbus_sabotage_discovered,
+      backstage_blueprint_found: state.flags.backstage_blueprint_found,
+    })),
+  );
   const setFlag = useStore((state) => state.setFlag);
   const addQuest = useStore((state) => state.addQuest);
   const completeQuest = useStore((state) => state.completeQuest);
   const startAndFinishQuest = useStore((state) => state.startAndFinishQuest);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const increaseSkill = useStore((state) => state.increaseSkill);
-  const inventoryIncludes = useStore(useShallow((state) => ({
-    Setliste: !!state.inventoryCounts['Setliste'],
-    Stift: !!state.inventoryCounts['Stift'],
-    Lötkolben: !!state.inventoryCounts['Lötkolben']
-  })));
+  const inventoryIncludes = useStore(
+    useShallow((state) => ({
+      Setliste: !!state.inventoryCounts['Setliste'],
+      Stift: !!state.inventoryCounts['Stift'],
+      Lötkolben: !!state.inventoryCounts['Lötkolben'],
+    })),
+  );
   const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -113,15 +117,9 @@ export function Backstage() {
     // For legacy saves where the ritual was already performed, use startAndFinishQuest
     // to avoid incorrectly leaving it as 'active' after the scene exit.
     if (flags.backstageRitualPerformed) {
-      startAndFinishQuest(
-        'backstage_ritual',
-        'Führe ein Bandritual vor dem Auftritt durch'
-      );
+      startAndFinishQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
     } else {
-      addQuest(
-        'backstage_ritual',
-        'Führe ein Bandritual vor dem Auftritt durch'
-      );
+      addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
     }
 
     return () => {
@@ -137,31 +135,21 @@ export function Backstage() {
       mood: number,
       skillName: 'chaos' | 'social' | 'technical' | null,
       skillIncrease: number,
-      dialogueText: string
+      dialogueText: string,
     ) => {
       setDialogue(dialogueText);
       setFlag('backstageRitualPerformed', true);
       // addQuest is idempotent; completeQuest then transitions the quest regardless of
       // whether it was already registered as 'active' (via the ritual-circle discovery path)
       // or not yet registered at all.
-      addQuest(
-        'backstage_ritual',
-        'Führe ein Bandritual vor dem Auftritt durch'
-      );
+      addQuest('backstage_ritual', 'Führe ein Bandritual vor dem Auftritt durch');
       completeQuest('backstage_ritual');
       increaseBandMood(mood, 'id_da78bc93');
       if (skillName) {
         increaseSkill(skillName, skillIncrease);
       }
     },
-    [
-      setDialogue,
-      setFlag,
-      addQuest,
-      completeQuest,
-      increaseBandMood,
-      increaseSkill,
-    ]
+    [setDialogue, setFlag, addQuest, completeQuest, increaseBandMood, increaseSkill],
   );
 
   return (
@@ -175,15 +163,7 @@ export function Backstage() {
       <pointLight position={[-10, 3, -4]} intensity={2.3} color="#6eff9d" />
       <pointLight position={[10, 3, -4]} intensity={2.3} color="#8c6eff" />
       <pointLight position={[0, 4, 6]} intensity={2.1} color="#ff68d2" />
-      <Stars
-        radius={100}
-        depth={50}
-        count={5000}
-        factor={4}
-        saturation={0}
-        fade
-        speed={1}
-      />
+      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
       <Sparkles
         count={80}
         scale={[28, 10, 22]}
@@ -243,26 +223,14 @@ export function Backstage() {
 
       {/* Stage tape and runway lines */}
       {TAPE_X_POSITIONS.map((x) => (
-        <mesh
-          key={`tape-${x}`}
-          position={[x, -0.48, -0.5]}
-          rotation={[-Math.PI / 2, 0, 0]}
-        >
+        <mesh key={`tape-${x}`} position={[x, -0.48, -0.5]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.22, 13]} />
-          <meshStandardMaterial
-            color="#d4ff3d"
-            emissive="#d4ff3d"
-            emissiveIntensity={0.45}
-          />
+          <meshStandardMaterial color="#d4ff3d" emissive="#d4ff3d" emissiveIntensity={0.45} />
         </mesh>
       ))}
       <mesh position={[0, -0.49, -6]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[22, 0.25]} />
-        <meshStandardMaterial
-          color="#ff7b5f"
-          emissive="#ff7b5f"
-          emissiveIntensity={0.38}
-        />
+        <meshStandardMaterial color="#ff7b5f" emissive="#ff7b5f" emissiveIntensity={0.38} />
       </mesh>
 
       {/* Makeup mirrors with bulbs */}
@@ -285,21 +253,13 @@ export function Backstage() {
           {BULB_X_POSITIONS.map((x) => (
             <mesh key={`bulb-top-${idx}-${x}`} position={[x, 1.2, 0.05]}>
               <sphereGeometry args={[0.11, 10, 10]} />
-              <meshStandardMaterial
-                color="#fff3bf"
-                emissive="#fff3bf"
-                emissiveIntensity={1.5}
-              />
+              <meshStandardMaterial color="#fff3bf" emissive="#fff3bf" emissiveIntensity={1.5} />
             </mesh>
           ))}
           {BULB_X_POSITIONS.map((x) => (
             <mesh key={`bulb-bottom-${idx}-${x}`} position={[x, -1.2, 0.05]}>
               <sphereGeometry args={[0.11, 10, 10]} />
-              <meshStandardMaterial
-                color="#fff3bf"
-                emissive="#fff3bf"
-                emissiveIntensity={1.3}
-              />
+              <meshStandardMaterial color="#fff3bf" emissive="#fff3bf" emissiveIntensity={1.3} />
             </mesh>
           ))}
         </group>
@@ -310,31 +270,18 @@ export function Backstage() {
         <group key={`truss-${x}`} position={[x, 7.2, -6]}>
           <mesh>
             <boxGeometry args={[1.8, 0.14, 0.14]} />
-            <meshStandardMaterial
-              color="#20242b"
-              metalness={0.75}
-              roughness={0.35}
-            />
+            <meshStandardMaterial color="#20242b" metalness={0.75} roughness={0.35} />
           </mesh>
           <mesh position={[0, -0.25, 0]}>
             <sphereGeometry args={[0.16, 12, 12]} />
-            <meshStandardMaterial
-              color="#adff2f"
-              emissive="#adff2f"
-              emissiveIntensity={1.8}
-            />
+            <meshStandardMaterial color="#adff2f" emissive="#adff2f" emissiveIntensity={1.8} />
           </mesh>
         </group>
       ))}
 
       {/* Backstage interior props */}
       {FLIGHTCASE_X_POSITIONS.map((x) => (
-        <mesh
-          key={`flightcase-${x}`}
-          position={[x, 0.55, -2.2]}
-          castShadow
-          receiveShadow
-        >
+        <mesh key={`flightcase-${x}`} position={[x, 0.55, -2.2]} castShadow receiveShadow>
           <boxGeometry args={[1.6, 1.1, 1]} />
           <meshStandardMaterial
             color="#2a3440"
@@ -360,11 +307,7 @@ export function Backstage() {
           {FLIGHTCASE_DETAIL_X_OFFSETS.map((px) => (
             <mesh key={`flightcase-edge-${idx}-${px}`} position={[px, 0, 0]}>
               <boxGeometry args={[0.08, 0.9, 0.92]} />
-              <meshStandardMaterial
-                color="#aeb8c5"
-                metalness={0.9}
-                roughness={0.22}
-              />
+              <meshStandardMaterial color="#aeb8c5" metalness={0.9} roughness={0.22} />
             </mesh>
           ))}
           {FLIGHTCASE_WHEEL_X_OFFSETS.map((px) => (
@@ -374,11 +317,7 @@ export function Backstage() {
               rotation={[Math.PI / 2, 0, 0]}
             >
               <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
-              <meshStandardMaterial
-                color="#1a2128"
-                metalness={0.6}
-                roughness={0.4}
-              />
+              <meshStandardMaterial color="#1a2128" metalness={0.6} roughness={0.4} />
             </mesh>
           ))}
           {FLIGHTCASE_WHEEL_X_OFFSETS.map((px) => (
@@ -388,31 +327,18 @@ export function Backstage() {
               rotation={[Math.PI / 2, 0, 0]}
             >
               <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
-              <meshStandardMaterial
-                color="#1a2128"
-                metalness={0.6}
-                roughness={0.4}
-              />
+              <meshStandardMaterial color="#1a2128" metalness={0.6} roughness={0.4} />
             </mesh>
           ))}
         </group>
       ))}
       <mesh position={[0, 3.8, -9.4]}>
         <planeGeometry args={[26, 5.8]} />
-        <meshStandardMaterial
-          color="#1b0f17"
-          emissive="#2b1025"
-          emissiveIntensity={0.45}
-        />
+        <meshStandardMaterial color="#1b0f17" emissive="#2b1025" emissiveIntensity={0.45} />
       </mesh>
       {/* Racks */}
       {RACK_X_POSITIONS.map((x) => (
-        <mesh
-          key={`rack-${x}`}
-          position={[x, 1.6, 6.8]}
-          castShadow
-          receiveShadow
-        >
+        <mesh key={`rack-${x}`} position={[x, 1.6, 6.8]} castShadow receiveShadow>
           <boxGeometry args={[2.2, 3.2, 0.7]} />
           <meshStandardMaterial
             color="#28303a"
@@ -440,22 +366,13 @@ export function Backstage() {
           {RACK_POST_X_OFFSETS.map((px) => (
             <mesh key={`rack-post-${idx}-${px}`} position={[px, 0, 0.35]}>
               <boxGeometry args={[0.08, 2.9, 0.08]} />
-              <meshStandardMaterial
-                color="#bbc4cf"
-                metalness={0.88}
-                roughness={0.22}
-              />
+              <meshStandardMaterial color="#bbc4cf" metalness={0.88} roughness={0.22} />
             </mesh>
           ))}
         </group>
       ))}
       {STACK_X_POSITIONS.map((x) => (
-        <mesh
-          key={`stack-${x}`}
-          position={[x, 1.7, -7.3]}
-          castShadow
-          receiveShadow
-        >
+        <mesh key={`stack-${x}`} position={[x, 1.7, -7.3]} castShadow receiveShadow>
           <boxGeometry args={[2.4, 3.4, 1.4]} />
           <meshStandardMaterial
             color="#3a2a1c"
@@ -467,12 +384,7 @@ export function Backstage() {
         </mesh>
       ))}
       {SOFA_POSITIONS.map((pos, idx) => (
-        <mesh
-          key={`sofa-${idx}`}
-          position={pos}
-          castShadow
-          receiveShadow
-        >
+        <mesh key={`sofa-${idx}`} position={pos} castShadow receiveShadow>
           <boxGeometry args={[1.8, 1.1, 2.2]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#2a3a52' : '#4b2936'}
@@ -500,18 +412,9 @@ export function Backstage() {
             />
           </mesh>
           {DESK_LEG_X_POSITIONS.map((x) => (
-            <mesh
-              key={`desk-leg-${idx}-${x}`}
-              position={[x, -0.48, 0.4]}
-              castShadow
-              receiveShadow
-            >
+            <mesh key={`desk-leg-${idx}-${x}`} position={[x, -0.48, 0.4]} castShadow receiveShadow>
               <boxGeometry args={[0.16, 1, 0.16]} />
-              <meshStandardMaterial
-                color="#b7c1cf"
-                metalness={0.86}
-                roughness={0.22}
-              />
+              <meshStandardMaterial color="#b7c1cf" metalness={0.86} roughness={0.22} />
             </mesh>
           ))}
           {DESK_LEG_X_POSITIONS.map((x) => (
@@ -522,19 +425,11 @@ export function Backstage() {
               receiveShadow
             >
               <boxGeometry args={[0.16, 1, 0.16]} />
-              <meshStandardMaterial
-                color="#b7c1cf"
-                metalness={0.86}
-                roughness={0.22}
-              />
+              <meshStandardMaterial color="#b7c1cf" metalness={0.86} roughness={0.22} />
             </mesh>
           ))}
           {DESK_ITEM_X_POSITIONS.map((x, n) => (
-            <mesh
-              key={`desk-item-${idx}-${n}`}
-              position={[x, 0.15, 0]}
-              castShadow
-            >
+            <mesh key={`desk-item-${idx}-${n}`} position={[x, 0.15, 0]} castShadow>
               <boxGeometry args={[0.22, 0.08, 0.12]} />
               <meshStandardMaterial
                 color={n % 2 === 0 ? '#ff79d3' : '#72d8ff'}
@@ -548,10 +443,7 @@ export function Backstage() {
         </group>
       ))}
       {AMP_RACK_POSITIONS.map((pos, idx) => (
-        <group
-          key={`amp-rack-${idx}`}
-          position={pos}
-        >
+        <group key={`amp-rack-${idx}`} position={pos}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.2, 1.4, 0.9]} />
             <meshStandardMaterial
@@ -564,19 +456,11 @@ export function Backstage() {
           </mesh>
           <mesh position={[0, 0.26, 0.46]}>
             <planeGeometry args={[0.86, 0.22]} />
-            <meshStandardMaterial
-              color="#88ff70"
-              emissive="#88ff70"
-              emissiveIntensity={0.75}
-            />
+            <meshStandardMaterial color="#88ff70" emissive="#88ff70" emissiveIntensity={0.75} />
           </mesh>
           <mesh position={[0, -0.2, 0.46]}>
             <planeGeometry args={[0.86, 0.22]} />
-            <meshStandardMaterial
-              color="#6ac8ff"
-              emissive="#6ac8ff"
-              emissiveIntensity={0.72}
-            />
+            <meshStandardMaterial color="#6ac8ff" emissive="#6ac8ff" emissiveIntensity={0.72} />
           </mesh>
         </group>
       ))}
@@ -624,23 +508,19 @@ export function Backstage() {
       />
 
       {/* Items */}
-      {!flags.setlistFound &&
-        canPickupItem('Setliste') &&
-        !inventoryIncludes['Setliste'] && (
-          <Interactable
-            position={[0, 0, -2]}
-            emoji="📜"
-            name="Setliste"
-            onInteract={() => {
-              addToInventory('Setliste');
-              setFlag('setlistFound', true);
-              completeQuest('setlist');
-              setDialogue(
-                'Du hast die Setliste gefunden. Die Reihenfolge der Songs ist... gewagt.'
-              );
-            }}
-          />
-        )}
+      {!flags.setlistFound && canPickupItem('Setliste') && !inventoryIncludes['Setliste'] && (
+        <Interactable
+          position={[0, 0, -2]}
+          emoji="📜"
+          name="Setliste"
+          onInteract={() => {
+            addToInventory('Setliste');
+            setFlag('setlistFound', true);
+            completeQuest('setlist');
+            setDialogue('Du hast die Setliste gefunden. Die Reihenfolge der Songs ist... gewagt.');
+          }}
+        />
+      )}
 
       {canPickupItem('Stift') && !inventoryIncludes['Stift'] && (
         <Interactable
@@ -650,7 +530,7 @@ export function Backstage() {
           onInteract={() => {
             addToInventory('Stift');
             setDialogue(
-              'Ein wasserfester Edding. Perfekt für Autogramme auf verschwitzten T-Shirts oder um "NEUROTOXIC" auf fremde Tourbusse zu schreiben.'
+              'Ein wasserfester Edding. Perfekt für Autogramme auf verschwitzten T-Shirts oder um "NEUROTOXIC" auf fremde Tourbusse zu schreiben.',
             );
           }}
         />
@@ -664,57 +544,50 @@ export function Backstage() {
           scale={0.8}
           onInteract={() => {
             addToInventory('Lötkolben');
-            setDialogue(
-              'Ein heißer Lötkolben. Vorsicht, nicht die Finger verbrennen!'
-            );
+            setDialogue('Ein heißer Lötkolben. Vorsicht, nicht die Finger verbrennen!');
           }}
         />
       )}
 
-      {flags.tourbus_sabotage_discovered &&
-        !flags.backstage_blueprint_found && (
-          <Interactable
-            position={[6, 0.5, 8]}
-            emoji="🗺️"
-            name="Alte Blaupause"
-            onInteract={() => {
-              const store = useStore.getState();
-              store.setDialogue({
-                text: 'Eine vergilbte Blaupause der Halle. Jemand hat die Frequenzen des Stromnetzes markiert... mit roter Tinte. "Die Resonanz von 1982 liegt auf 432Hz." Das ergibt keinen Sinn für ein normales Stromnetz.',
-                options: [
-                  {
-                    text: 'Untersuche die Frequenzen. [Technical 7]',
-                    requiredSkill: { name: 'technical', level: 7 },
-                    action: () => {
-                      useStore
-                        .getState()
-                        .setDialogue(
-                          'Die Zahlenkombination... Wenn man sie mit dem Magnetband aus dem Tourbus kreuzt... Die Frequenz ist ein Schlüssel!'
-                        );
-                      useStore
-                        .getState()
-                        .setFlag('backstage_blueprint_found', true);
-                      useStore.getState().increaseSkill('technical', 3);
-                    },
+      {flags.tourbus_sabotage_discovered && !flags.backstage_blueprint_found && (
+        <Interactable
+          position={[6, 0.5, 8]}
+          emoji="🗺️"
+          name="Alte Blaupause"
+          onInteract={() => {
+            const store = useStore.getState();
+            store.setDialogue({
+              text: 'Eine vergilbte Blaupause der Halle. Jemand hat die Frequenzen des Stromnetzes markiert... mit roter Tinte. "Die Resonanz von 1982 liegt auf 432Hz." Das ergibt keinen Sinn für ein normales Stromnetz.',
+              options: [
+                {
+                  text: 'Untersuche die Frequenzen. [Technical 7]',
+                  requiredSkill: { name: 'technical', level: 7 },
+                  action: () => {
+                    useStore
+                      .getState()
+                      .setDialogue(
+                        'Die Zahlenkombination... Wenn man sie mit dem Magnetband aus dem Tourbus kreuzt... Die Frequenz ist ein Schlüssel!',
+                      );
+                    useStore.getState().setFlag('backstage_blueprint_found', true);
+                    useStore.getState().increaseSkill('technical', 3);
                   },
-                  {
-                    text: 'Behalte das im Hinterkopf.',
-                    action: () => {
-                      useStore
-                        .getState()
-                        .setDialogue(
-                          'Du steckst die Blaupause ein. Das könnte später nützlich sein.'
-                        );
-                      useStore
-                        .getState()
-                        .setFlag('backstage_blueprint_found', true);
-                    },
+                },
+                {
+                  text: 'Behalte das im Hinterkopf.',
+                  action: () => {
+                    useStore
+                      .getState()
+                      .setDialogue(
+                        'Du steckst die Blaupause ein. Das könnte später nützlich sein.',
+                      );
+                    useStore.getState().setFlag('backstage_blueprint_found', true);
                   },
-                ],
-              });
-            }}
-          />
-        )}
+                },
+              ],
+            });
+          }}
+        />
+      )}
 
       <Interactable
         position={[-10, 0, 5]}
@@ -722,9 +595,7 @@ export function Backstage() {
         name="Ritual-Kreis"
         onInteract={() => {
           const store = useStore.getState();
-          store.setDialogue(
-            buildBackstageRitualCircleDialogue(ritualActionWrapper)
-          );
+          store.setDialogue(buildBackstageRitualCircleDialogue(ritualActionWrapper));
         }}
       />
 
@@ -753,9 +624,7 @@ export function Backstage() {
         onInteract={() => {
           const store = useStore.getState();
           if (store.flags.mariusCalmed && store.flags.setlistFound) {
-            setDialogue(
-              'Die Welt beginnt zu flimmern. Wir verlassen die bekannte Realität.'
-            );
+            setDialogue('Die Welt beginnt zu flimmern. Wir verlassen die bekannte Realität.');
             if (exitTimeoutRef.current !== null) {
               window.clearTimeout(exitTimeoutRef.current);
             }
@@ -770,7 +639,9 @@ export function Backstage() {
               window.clearTimeout(exitTimeoutRef.current);
               exitTimeoutRef.current = null;
             }
-            setDialogue(buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound));
+            setDialogue(
+              buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound),
+            );
           }
         }}
       />
@@ -798,7 +669,9 @@ export function Backstage() {
               window.clearTimeout(exitTimeoutRef.current);
               exitTimeoutRef.current = null;
             }
-            setDialogue(buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound));
+            setDialogue(
+              buildBlockedExitDialogue(store.flags.mariusCalmed, store.flags.setlistFound),
+            );
           }
         }}
       />

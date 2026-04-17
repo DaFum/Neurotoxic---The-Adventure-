@@ -9,13 +9,13 @@ class AudioContextMock {
       start: vi.fn(),
       stop: vi.fn(),
       frequency: { value: 0, setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
-      type: 'sine'
+      type: 'sine',
     };
   }
   createGain() {
     return {
       connect: vi.fn(),
-      gain: { value: 1, setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }
+      gain: { value: 1, setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
     };
   }
   resume = vi.fn();
@@ -40,7 +40,7 @@ const localStorageMock = (function () {
     },
     clear: function () {
       store = {};
-    }
+    },
   };
 })();
 
@@ -50,7 +50,7 @@ if (!g.window) {
 }
 Object.defineProperty(g.window, 'localStorage', {
   value: localStorageMock,
-  configurable: true
+  configurable: true,
 });
 
 // Mock console.error to silence react-three-fiber and jsdom warnings about custom elements

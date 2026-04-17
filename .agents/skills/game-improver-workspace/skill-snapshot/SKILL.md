@@ -20,7 +20,7 @@ argument-hint: |
   draftOnly: boolean — show draft only, do not write files
 metadata:
   scope: user
-  version: "0.3.0"
+  version: '0.3.0'
 ---
 
 # Game Improver
@@ -31,18 +31,18 @@ Implement production-ready improvements—bug fixes, features, optimizations, an
 
 **Is the issue primarily...?**
 
-| Issue Type                                               | Use This Skill | Else Use                                                        |
-| -------------------------------------------------------- | -------------- | --------------------------------------------------------------- |
-| **Gameplay balance** (costs, rewards, difficulty)        | ❌             | `game-balancing-assistant`                                      |
-| **Audio playback** (ambient vs gig, suspended context)   | ❌             | `audio-debugger-ambient-vs-gig` or `webaudio-reliability-fixer` |
-| **UI design** (colors, borders, layout, typography)      | ❌             | `convention-keeper-brutalist-ui`                                |
-| **State bugs** (reducer errors, invalid transitions; persistence issues) | ✅ | `state-safety-action-creator-guard`                             |
-| **Core logic bug** (game loop, travel cost calc)         | ✅             | —                                                               |
-| **New feature** (upgrade, item, system)                  | ✅             | —                                                               |
-| **Performance** (render loops, memory, bundle)           | ✅             | —                                                               |
-| **Testing** (regression, integration, edge cases)        | ✅             | —                                                               |
-| **Refactoring** (extract components, reduce duplication) | ✅             | —                                                               |
-| **Scene wiring / three.js** (missing physics bodies, camera issues) | ✅ | —                                                               |
+| Issue Type                                                               | Use This Skill | Else Use                                                        |
+| ------------------------------------------------------------------------ | -------------- | --------------------------------------------------------------- |
+| **Gameplay balance** (costs, rewards, difficulty)                        | ❌             | `game-balancing-assistant`                                      |
+| **Audio playback** (ambient vs gig, suspended context)                   | ❌             | `audio-debugger-ambient-vs-gig` or `webaudio-reliability-fixer` |
+| **UI design** (colors, borders, layout, typography)                      | ❌             | `convention-keeper-brutalist-ui`                                |
+| **State bugs** (reducer errors, invalid transitions; persistence issues) | ✅             | `state-safety-action-creator-guard`                             |
+| **Core logic bug** (game loop, travel cost calc)                         | ✅             | —                                                               |
+| **New feature** (upgrade, item, system)                                  | ✅             | —                                                               |
+| **Performance** (render loops, memory, bundle)                           | ✅             | —                                                               |
+| **Testing** (regression, integration, edge cases)                        | ✅             | —                                                               |
+| **Refactoring** (extract components, reduce duplication)                 | ✅             | —                                                               |
+| **Scene wiring / three.js** (missing physics bodies, camera issues)      | ✅             | —                                                               |
 
 **Unsure?** Proceed here. If we need a specialist, we'll delegate mid-workflow.
 
@@ -51,6 +51,7 @@ Implement production-ready improvements—bug fixes, features, optimizations, an
 ### 1. Understand the Request
 
 - What problem are we solving? (user pain, crash, balance, performance)
+
 ## Game Improver — Purpose
 
 Help contributors and automated agents implement small-to-medium scoped changes in the Neurotoxic repo with minimal risk: bug fixes, correctness patches, small features, scene wiring, audio fixes, and test-backed state changes.
@@ -146,13 +147,13 @@ Deliverables: draft summary, unified diff (patch), tests, verification steps
 
 ## Invocation Examples
 
-1) Diagnose inventory/quest bug on branch:
+1. Diagnose inventory/quest bug on branch:
 
 ```
 /game-improver action=diagnoseInventoryQuestBug scope=workspace skillName=inventory-quest-diagnostics branch=fix-quest-inventory-bugs-3736012791563995728
 ```
 
-2) Draft audio ambient fix (ask before writing):
+2. Draft audio ambient fix (ask before writing):
 
 ```
 /game-improver action=fixAudioAmbient target=src/audio.ts askConfirm=true
@@ -165,6 +166,7 @@ Deliverables: draft summary, unified diff (patch), tests, verification steps
 - Mutating store state in component render rather than in action handlers.
 
 ## Quick References
+
 - `src/store.ts` — state and recipes
 - `src/components/scenes/*` — scene conventions and physics
 - `src/audio.ts` — ambient handling
@@ -172,6 +174,7 @@ Deliverables: draft summary, unified diff (patch), tests, verification steps
 - `src/store.test.ts` — test style reference
 
 ---
-Change log:
-- 0.3.0: reorganized content, added inputs/outputs, prompt template, checklist, and examples.
 
+Change log:
+
+- 0.3.0: reorganized content, added inputs/outputs, prompt template, checklist, and examples.

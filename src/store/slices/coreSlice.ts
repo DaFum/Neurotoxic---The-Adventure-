@@ -18,12 +18,7 @@ export interface CoreSlice {
   resetGame: () => void;
 }
 
-export const createCoreSlice: StateCreator<
-  GameState,
-  [],
-  [],
-  CoreSlice
-> = (set) => ({
+export const createCoreSlice: StateCreator<GameState, [], [], CoreSlice> = (set) => ({
   scene: initialState.scene,
   setScene: (scene) => set({ scene, playerPos: [0, 1, 0], dialogue: null }),
   trait: initialState.trait,
@@ -34,8 +29,7 @@ export const createCoreSlice: StateCreator<
       skills: { ...state.skills, [skill]: state.skills[skill] + amount },
     })),
   flags: initialState.flags,
-  setFlag: (flag, value) =>
-    set((state) => ({ flags: { ...state.flags, [flag]: value } })),
+  setFlag: (flag, value) => set((state) => ({ flags: { ...state.flags, [flag]: value } })),
   playerPos: initialState.playerPos,
   setPlayerPos: (playerPos) =>
     set((state) => {

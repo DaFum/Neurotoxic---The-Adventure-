@@ -21,7 +21,7 @@ vi.mock('../store', () => {
     setDialogue: vi.fn(),
   };
 
-  const useStoreMock = vi.fn((selector) => selector ? selector(mockState) : mockState) as any;
+  const useStoreMock = vi.fn((selector) => (selector ? selector(mockState) : mockState)) as any;
   useStoreMock.getState = () => mockState;
 
   return {
@@ -34,7 +34,9 @@ vi.mock('@react-three/fiber', () => ({
 }));
 
 vi.mock('@react-three/rapier', () => ({
-  RigidBody: ({ children }: { children: React.ReactNode }) => <div data-testid="rigid-body">{children}</div>,
+  RigidBody: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="rigid-body">{children}</div>
+  ),
   CuboidCollider: () => null,
 }));
 
@@ -77,19 +79,9 @@ describe('Interactable', () => {
   it('registers interactables with stable prefixed unique IDs and unregisters them on unmount', () => {
     const { unmount } = render(
       <>
-        <Interactable
-          position={[0, 0, 0]}
-          emoji="🎸"
-          name="Test Item 1"
-          onInteract={() => {}}
-        />
-        <Interactable
-          position={[1, 0, 0]}
-          emoji="🥁"
-          name="Test Item 2"
-          onInteract={() => {}}
-        />
-      </>
+        <Interactable position={[0, 0, 0]} emoji="🎸" name="Test Item 1" onInteract={() => {}} />
+        <Interactable position={[1, 0, 0]} emoji="🥁" name="Test Item 2" onInteract={() => {}} />
+      </>,
     );
 
     expect(mockRegister).toHaveBeenCalledTimes(2);
@@ -117,19 +109,9 @@ describe('Interactable', () => {
 
     const { rerender, unmount } = render(
       <>
-        <Interactable
-          position={[0, 0, 0]}
-          emoji="🎸"
-          name="Guitar"
-          onInteract={() => {}}
-        />
-        <Interactable
-          position={[1, 0, 0]}
-          emoji="🎸"
-          name="Guitar"
-          onInteract={() => {}}
-        />
-      </>
+        <Interactable position={[0, 0, 0]} emoji="🎸" name="Guitar" onInteract={() => {}} />
+        <Interactable position={[1, 0, 0]} emoji="🎸" name="Guitar" onInteract={() => {}} />
+      </>,
     );
 
     // Initial render creates the textures (one for emoji, two for in/out range labels per unique identity)
@@ -139,13 +121,8 @@ describe('Interactable', () => {
     // Rerender with only one interactable
     rerender(
       <>
-        <Interactable
-          position={[0, 0, 0]}
-          emoji="🎸"
-          name="Guitar"
-          onInteract={() => {}}
-        />
-      </>
+        <Interactable position={[0, 0, 0]} emoji="🎸" name="Guitar" onInteract={() => {}} />
+      </>,
     );
 
     // One instance unmounted, but the other is still using the textures, so dispose should not be called

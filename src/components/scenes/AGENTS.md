@@ -1,6 +1,7 @@
 # scenes — Agent Instructions
 
 ## New Scene Checklist
+
 1. Create `src/components/scenes/YourScene.tsx`
 2. Add scene name to `Scene` union type in `src/store.ts` (lowercase, underscores for spaces)
 3. Import and add to scene switch in `src/components/Game.tsx`
@@ -9,12 +10,14 @@
 6. If the scene needs shared decorative environment props, add/update its `variant` in `src/components/scenes/SceneEnvironmentSetpieces.tsx` and render `<SceneEnvironmentSetpieces variant="..." />` in the scene.
 
 ## Required Structure
+
 - Floor: `<RigidBody type="fixed">` at `position={[0, -0.1, 0]}` with `rotation={[-Math.PI / 2, 0, 0]}`
 - All physics bodies must be inside the scene component (which renders inside `<Physics>`)
 - Set `<Player bounds={{ x: [min, max], z: [min, max] }} />` — align with any invisible wall RigidBodies
 - Player spawns at `[0, 1, 0]` — ensure this position is accessible and not inside geometry
 
 ## Dialogue Conventions
+
 - Simple: `setDialogue('Text string')` — auto-wrapped into `{ text: '...' }`
 - With options: `setDialogue({ text: '...', options: [...] })` — never pass string if you need options
 - Skill names are lowercase: `'technical'`, `'social'`, `'chaos'`

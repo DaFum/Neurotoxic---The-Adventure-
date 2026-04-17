@@ -290,18 +290,8 @@ export interface GameState {
   completeQuest: (id: string, text?: string) => void;
   failQuest: (id: string, text?: string) => void;
   startAndFinishQuest: (id: string, text: string) => void;
-  startQuestWithFlag: (
-    id: string,
-    text: string,
-    flag: Flag,
-    flagValue?: boolean
-  ) => void;
-  completeQuestWithFlag: (
-    id: string,
-    flag: Flag,
-    flagValue?: boolean,
-    text?: string
-  ) => void;
+  startQuestWithFlag: (id: string, text: string, flag: Flag, flagValue?: boolean) => void;
+  completeQuestWithFlag: (id: string, flag: Flag, flagValue?: boolean, text?: string) => void;
   bandMood: number;
   increaseBandMood: (amount: number, sourceId?: string) => void;
   bandMoodGainClaims: Record<string, boolean>;

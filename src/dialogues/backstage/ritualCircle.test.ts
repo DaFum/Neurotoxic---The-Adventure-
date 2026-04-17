@@ -62,9 +62,7 @@ describe('buildBackstageRitualCircleDialogue', () => {
     const moodBefore = store.bandMood;
 
     const dialogue = buildBackstageRitualCircleDialogue(vi.fn());
-    const option = dialogue.options?.find(
-      (entry) => entry.text === 'Plasma-Zünder einsetzen.'
-    );
+    const option = dialogue.options?.find((entry) => entry.text === 'Plasma-Zünder einsetzen.');
 
     expect(option).toBeDefined();
 
@@ -81,9 +79,7 @@ describe('buildBackstageRitualCircleDialogue', () => {
 
     const first = buildBackstageRitualCircleDialogue(vi.fn());
     const afterFirst = useStore.getState();
-    const questAfterFirst = afterFirst.quests.filter(
-      (quest) => quest.id === 'backstage_ritual'
-    );
+    const questAfterFirst = afterFirst.quests.filter((quest) => quest.id === 'backstage_ritual');
 
     expect(first.text).toContain('Marius muss erst beruhigt werden');
     // Quest registration now happens at Backstage scene entry, not in the dialogue
@@ -93,9 +89,7 @@ describe('buildBackstageRitualCircleDialogue', () => {
 
     const second = buildBackstageRitualCircleDialogue(vi.fn());
     const afterSecond = useStore.getState();
-    const questAfterSecond = afterSecond.quests.filter(
-      (quest) => quest.id === 'backstage_ritual'
-    );
+    const questAfterSecond = afterSecond.quests.filter((quest) => quest.id === 'backstage_ritual');
 
     expect(second.text).toContain('Marius muss erst beruhigt werden');
     expect(questAfterSecond).toHaveLength(0);

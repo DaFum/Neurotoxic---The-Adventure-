@@ -1,7 +1,5 @@
 ## Comprehensive Analysis
 
-
-
 ### 1. FULL STORE SHAPE AND ALL ACTIONS/STATE
 
 **File:** `/home/user/Neurotoxic---The-Adventure-/src/store.ts`
@@ -140,7 +138,6 @@ export const audio = new AudioEngine();
 2. **playTone(freq, type, duration, vol)** - Low-level tone generator using OscillatorNode + GainNode
 
 3. **Sound Effects** (all call init internally):
-
    - `playInteract()` - 440Hz + 880Hz square waves (dialogue interaction)
 
    - `playPickup()` - Sawtooth sweep 300→400→500→800Hz (item pickup)
@@ -152,7 +149,6 @@ export const audio = new AudioEngine();
    - `playTypewriter()` - Random 600-800Hz sine (text typing)
 
 4. **Ambient Tracks** (scene-specific, loop every 1000ms except Kaminstube=100ms):
-
    - `proberaum`: Muffled thumping (40Hz sine)
 
    - `tourbus`: Engine hum (50Hz sine)
@@ -166,7 +162,6 @@ export const audio = new AudioEngine();
    - `salzgitter`: City hum (60Hz sine with occasional 200-300Hz bursts)
 
 5. **Music System**:
-
    - `startMusic()` - Plays hardcoded bassline + kick + snare pattern
 
    - Bassline: [A1, A1, C2, A1, D2, A1, E2, C2] repeating
@@ -216,7 +211,6 @@ export const audio = new AudioEngine();
 **C. Quest Deduplication**
 
 - `addQuest()` filters out old quest with same ID before adding
-
   - Line 257: `...state.quests.filter(q => q.id !== id), { id, text, completed: false }`
 
 - This allows replacing quest text without duplicates
@@ -302,7 +296,6 @@ export const audio = new AudioEngine();
 **Initialization Flow:**
 
 1. Zustand store hydrates from localStorage (auto on create)
-
    - Merge function reconciles old + new state
 
    - onRehydrateStorage migrations run async (setTimeout)
@@ -310,19 +303,15 @@ export const audio = new AudioEngine();
 2. Game component renders
 
 3. useEffects execute:
-
    - Effect 1 (line 50-56): Watches `scene` state
-
      - Starts ambient audio for non-menu scenes
 
      - Stops ambient for menu
 
    - Effect 2 (line 58-66): Sets up Escape key listener
-
      - Toggles `isPaused` state
 
 4. **Menu Screen Flow** (if scene === 'menu'):
-
    - Displays animated "NEUROTOXIC" title
 
    - Shows "Initialize_Tour" button
@@ -331,7 +320,7 @@ export const audio = new AudioEngine();
 
    - Trait selection triggers:
 
-     a. `setTrait(traitId)` 
+     a. `setTrait(traitId)`
 
      b. Loop through trait's skills and `increaseSkill()`
 
@@ -341,12 +330,8 @@ export const audio = new AudioEngine();
 
      e. `setScene('proberaum')` - transitions to game
 
-   
-
 5. **Game Scene Rendering** (if scene !== 'menu'):
-
    - Three.js `<Canvas>` with:
-
      - Camera at [0, 5, 10]
 
      - `<KeyboardControls>` for WASD/arrows
@@ -396,6 +381,3 @@ Game mounts → scene is forced to menu during merge
 9. **Lore discovery is idempotent**: Calling discoverLore() twice on same ID is safe
 
 10. **Physics pauses with game**: Escape key pauses physics + allows resume mid-scene
-
-
-

@@ -37,7 +37,7 @@ const LED_PANEL_X_POSITIONS: ReadonlyArray<number> = [-12, -4, 4, 12];
 const LED_STRIP_Y_POSITIONS: ReadonlyArray<number> = [-1.4, -0.4, 0.6, 1.6];
 const BARRIER_X_POSITIONS: ReadonlyArray<number> = [-12, -8, -4, 0, 4, 8, 12];
 const RUNWAY_RAIL_X_POSITIONS: ReadonlyArray<number> = [-13.5, 13.5];
-const SKYLINE_DATA: ReadonlyArray<{ pos: [number, number, number], height: number }> = [
+const SKYLINE_DATA: ReadonlyArray<{ pos: [number, number, number]; height: number }> = [
   { pos: [-18, 2.5, -10.4], height: 2.4 },
   { pos: [-14, 3.2, -10.3], height: 3.6 },
   { pos: [-10, 2.2, -10.35], height: 2.1 },
@@ -197,26 +197,14 @@ export function Salzgitter() {
         <group key={`truss-${x}`} position={[x, 3, -8.8]}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[0.45, 6, 0.45]} />
-            <meshStandardMaterial
-              color="#1a1d23"
-              metalness={0.8}
-              roughness={0.35}
-            />
+            <meshStandardMaterial color="#1a1d23" metalness={0.8} roughness={0.35} />
           </mesh>
           <mesh position={[0, 3.05, 0]} castShadow receiveShadow>
             <boxGeometry args={[1.2, 0.25, 0.45]} />
-            <meshStandardMaterial
-              color="#1d2027"
-              metalness={0.8}
-              roughness={0.3}
-            />
+            <meshStandardMaterial color="#1d2027" metalness={0.8} roughness={0.3} />
           </mesh>
           {TRUSS_NODE_Y_POSITIONS.map((y, idx) => (
-            <mesh
-              key={`truss-node-${x}-${idx}`}
-              position={[0, y, 0.26]}
-              castShadow
-            >
+            <mesh key={`truss-node-${x}-${idx}`} position={[0, y, 0.26]} castShadow>
               <sphereGeometry args={[0.08, 10, 10]} />
               <meshStandardMaterial
                 color={idx % 2 === 0 ? '#78f8ff' : '#ff6ed3'}
@@ -261,11 +249,7 @@ export function Salzgitter() {
         <group key={`barrier-${x}`} position={[x, 0.6, 1.8]}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.8, 1.2, 0.18]} />
-            <meshStandardMaterial
-              color="#222831"
-              metalness={0.7}
-              roughness={0.45}
-            />
+            <meshStandardMaterial color="#222831" metalness={0.7} roughness={0.45} />
           </mesh>
           <mesh position={[0, 0, 0.12]}>
             <planeGeometry args={[1.4, 0.2]} />
@@ -273,19 +257,11 @@ export function Salzgitter() {
           </mesh>
           <mesh position={[-0.55, -0.62, 0]} rotation={[0, 0, 0.2]}>
             <boxGeometry args={[0.22, 0.18, 0.42]} />
-            <meshStandardMaterial
-              color="#8d99a8"
-              metalness={0.82}
-              roughness={0.22}
-            />
+            <meshStandardMaterial color="#8d99a8" metalness={0.82} roughness={0.22} />
           </mesh>
           <mesh position={[0.55, -0.62, 0]} rotation={[0, 0, -0.2]}>
             <boxGeometry args={[0.22, 0.18, 0.42]} />
-            <meshStandardMaterial
-              color="#8d99a8"
-              metalness={0.82}
-              roughness={0.22}
-            />
+            <meshStandardMaterial color="#8d99a8" metalness={0.82} roughness={0.22} />
           </mesh>
         </group>
       ))}
@@ -316,10 +292,7 @@ export function Salzgitter() {
 
       {/* Distant skyline silhouettes */}
       {SKYLINE_DATA.map((entry, idx) => (
-        <mesh
-          key={`skyline-${idx}`}
-          position={entry.pos}
-        >
+        <mesh key={`skyline-${idx}`} position={entry.pos}>
           <boxGeometry args={[1.8, entry.height, 0.3]} />
           <meshStandardMaterial color="#0a0d12" />
         </mesh>
@@ -359,22 +332,13 @@ export function Salzgitter() {
           {SPEAKER_EDGE_X_OFFSETS.map((px) => (
             <mesh key={`speaker-edge-${x}-${px}`} position={[px, 0, 0.58]}>
               <boxGeometry args={[0.06, 2.9, 0.08]} />
-              <meshStandardMaterial
-                color="#aab6c4"
-                metalness={0.85}
-                roughness={0.24}
-              />
+              <meshStandardMaterial color="#aab6c4" metalness={0.85} roughness={0.24} />
             </mesh>
           ))}
         </group>
       ))}
       {ROAD_CASE_POSITIONS.map((pos, idx) => (
-        <mesh
-          key={`road-case-${idx}`}
-          position={pos}
-          castShadow
-          receiveShadow
-        >
+        <mesh key={`road-case-${idx}`} position={pos} castShadow receiveShadow>
           <boxGeometry args={[2.2, 1.3, 1.1]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#2b2140' : '#1f3140'}
@@ -386,10 +350,7 @@ export function Salzgitter() {
         </mesh>
       ))}
       {ROAD_CASE_LID_POSITIONS.map((pos, idx) => (
-        <mesh
-          key={`road-case-lid-${idx}`}
-          position={pos}
-        >
+        <mesh key={`road-case-lid-${idx}`} position={pos}>
           <boxGeometry args={[2.08, 0.08, 0.98]} />
           <meshStandardMaterial
             color="#aeb7c9"
@@ -433,27 +394,15 @@ export function Salzgitter() {
         <group key={`mic-${x}`} position={[x, 1.05, -5.6]}>
           <mesh castShadow receiveShadow>
             <cylinderGeometry args={[0.04, 0.05, 1.7, 10]} />
-            <meshStandardMaterial
-              color="#bcc7d5"
-              metalness={0.9}
-              roughness={0.2}
-            />
+            <meshStandardMaterial color="#bcc7d5" metalness={0.9} roughness={0.2} />
           </mesh>
           <mesh position={[0, 0.86, 0.12]} rotation={[0.45, 0, 0]} castShadow>
             <cylinderGeometry args={[0.05, 0.05, 0.34, 10]} />
-            <meshStandardMaterial
-              color="#d8e1eb"
-              metalness={0.88}
-              roughness={0.2}
-            />
+            <meshStandardMaterial color="#d8e1eb" metalness={0.88} roughness={0.2} />
           </mesh>
           <mesh position={[0, 1.02, 0.26]}>
             <sphereGeometry args={[0.1, 12, 12]} />
-            <meshStandardMaterial
-              color="#64f3ff"
-              emissive="#64f3ff"
-              emissiveIntensity={0.75}
-            />
+            <meshStandardMaterial color="#64f3ff" emissive="#64f3ff" emissiveIntensity={0.75} />
           </mesh>
         </group>
       ))}
@@ -465,19 +414,11 @@ export function Salzgitter() {
       </mesh>
       <mesh position={[0, 0.02, 2.8]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[30, 0.35]} />
-        <meshStandardMaterial
-          color="#2dffe7"
-          emissive="#2dffe7"
-          emissiveIntensity={0.52}
-        />
+        <meshStandardMaterial color="#2dffe7" emissive="#2dffe7" emissiveIntensity={0.52} />
       </mesh>
       <mesh position={[0, 0.02, 4.8]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[26, 0.28]} />
-        <meshStandardMaterial
-          color="#ff58c6"
-          emissive="#ff58c6"
-          emissiveIntensity={0.46}
-        />
+        <meshStandardMaterial color="#ff58c6" emissive="#ff58c6" emissiveIntensity={0.46} />
       </mesh>
 
       {/* Poster */}
@@ -488,11 +429,7 @@ export function Salzgitter() {
       <group position={[-6, 5, -10.86]}>
         <mesh>
           <planeGeometry args={[3.6, 2.6]} />
-          <meshStandardMaterial
-            color="#3b185f"
-            emissive="#1f0c35"
-            emissiveIntensity={0.6}
-          />
+          <meshStandardMaterial color="#3b185f" emissive="#1f0c35" emissiveIntensity={0.6} />
         </mesh>
         <mesh position={[0, 0.95, 0.01]}>
           <planeGeometry args={[1.7, 0.2]} />
@@ -600,13 +537,7 @@ export function Salzgitter() {
       <SceneEnvironmentSetpieces variant="salzgitter" />
 
       <Player bounds={{ x: [-18, 18], z: [-9, 9] }} />
-      <ContactShadows
-        position={[0, 0, 0]}
-        opacity={0.6}
-        scale={30}
-        blur={2}
-        far={10}
-      />
+      <ContactShadows position={[0, 0, 0]} opacity={0.6} scale={30} blur={2} far={10} />
     </>
   );
 }

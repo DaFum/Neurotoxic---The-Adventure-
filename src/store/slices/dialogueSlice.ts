@@ -14,12 +14,7 @@ export interface DialogueSlice {
   setCameraShake: (intensity: number) => void;
 }
 
-export const createDialogueSlice: StateCreator<
-  GameState,
-  [],
-  [],
-  DialogueSlice
-> = (set, get) => ({
+export const createDialogueSlice: StateCreator<GameState, [], [], DialogueSlice> = (set, get) => ({
   dialogue: initialState.dialogue,
   bandMood: initialState.bandMood,
   bandMoodGainClaims: initialState.bandMoodGainClaims,
@@ -43,7 +38,7 @@ export const createDialogueSlice: StateCreator<
       if (amount > 0) {
         if (!sourceId && process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
           console.warn(
-            `increaseBandMood called with a positive amount (${amount}) but no sourceId. This will allow infinite farming of this reward.`
+            `increaseBandMood called with a positive amount (${amount}) but no sourceId. This will allow infinite farming of this reward.`,
           );
         }
         if (sourceId && state.bandMoodGainClaims[sourceId]) {
@@ -62,5 +57,6 @@ export const createDialogueSlice: StateCreator<
 
       return { bandMood: nextMood };
     }),
-  setCameraShake: (cameraShakeIntensity) => set((state) => ({ cameraShakeIntensity, cameraShakeKick: state.cameraShakeKick + 1 })),
+  setCameraShake: (cameraShakeIntensity) =>
+    set((state) => ({ cameraShakeIntensity, cameraShakeKick: state.cameraShakeKick + 1 })),
 });

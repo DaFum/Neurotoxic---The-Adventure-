@@ -82,6 +82,7 @@ export function KeyboardInteractionProvider({ children }: { children: ReactNode 
  */
 export function useKeyboardInteraction() {
   const ctx = useContext(KeyboardInteractionContext);
-  if (!ctx) throw new Error('useKeyboardInteraction must be used within KeyboardInteractionProvider');
+  if (!ctx)
+    throw new Error('useKeyboardInteraction must be used within KeyboardInteractionProvider');
   return ctx;
 }

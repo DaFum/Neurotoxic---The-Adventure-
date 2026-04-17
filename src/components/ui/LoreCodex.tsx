@@ -45,7 +45,7 @@ export function LoreCodex({
     if (e.key === 'Tab') {
       if (!loreCodexContainerRef.current) return;
       const focusableElements = loreCodexContainerRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       if (focusableElements.length === 0) return;
 
@@ -115,9 +115,7 @@ export function LoreCodex({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
                 className={`p-4 border ${
-                  entry.discovered
-                    ? 'border-toxic/50 bg-toxic/5'
-                    : 'border-zinc-800 bg-zinc-900/30'
+                  entry.discovered ? 'border-toxic/50 bg-toxic/5' : 'border-zinc-800 bg-zinc-900/30'
                 }`}
               >
                 <h3

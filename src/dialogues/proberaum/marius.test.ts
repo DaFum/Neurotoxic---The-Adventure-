@@ -9,9 +9,7 @@ describe('buildProberaumMariusDialogue', () => {
 
   it('prompts for beer when missing', () => {
     const dialogue = buildProberaumMariusDialogue();
-    expect(dialogue.text).toContain(
-      'Ohne ein kühles Bier kann ich nicht singen'
-    );
+    expect(dialogue.text).toContain('Ohne ein kühles Bier kann ich nicht singen');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2); // 'Ich beeile mich' and 'Trink doch Wasser'
   });
@@ -19,9 +17,7 @@ describe('buildProberaumMariusDialogue', () => {
   it('shows beer handover option when player has beer', () => {
     useStore.getState().addToInventory('Bier');
     const dialogue = buildProberaumMariusDialogue();
-    expect(dialogue.text).toContain(
-      'Ohne ein kühles Bier kann ich nicht singen'
-    );
+    expect(dialogue.text).toContain('Ohne ein kühles Bier kann ich nicht singen');
     const options = getOptionTexts(dialogue);
     expect(options).toContain('Hier ist dein Bier.');
   });
@@ -33,9 +29,7 @@ describe('buildProberaumMariusDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildProberaumMariusDialogue();
-    const beerOption = dialogue.options?.find(
-      (o) => o.text === 'Hier ist dein Bier.'
-    );
+    const beerOption = dialogue.options?.find((o) => o.text === 'Hier ist dein Bier.');
     if (!beerOption) throw new Error('Beer option not found');
 
     executeDialogueOption(beerOption);
@@ -53,9 +47,7 @@ describe('buildProberaumMariusDialogue', () => {
     useStore.getState().addQuest('marius', 'Beruhige Marius vor dem Auftritt');
 
     const dialogue = buildProberaumMariusDialogue();
-    const calmOption = dialogue.options?.find((o) =>
-      o.text?.includes('[Social 5]')
-    );
+    const calmOption = dialogue.options?.find((o) => o.text?.includes('[Social 5]'));
     if (!calmOption) throw new Error('Social 5 calm option not found');
 
     executeDialogueOption(calmOption);

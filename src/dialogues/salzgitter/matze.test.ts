@@ -17,9 +17,7 @@ describe('buildSalzgitterMatzeDialogue', () => {
     });
 
     const dialogue = buildSalzgitterMatzeDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Chaos 10]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Chaos 10]'));
 
     expect(option).toBeDefined();
 
@@ -27,8 +25,6 @@ describe('buildSalzgitterMatzeDialogue', () => {
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.matzeRiffDialogueDone).toBe(true);
-    expect(stateAfter.dialogue?.text).toContain(
-      'DER LÄRM WIRD UNSER GOTT SEIN'
-    );
+    expect(stateAfter.dialogue?.text).toContain('DER LÄRM WIRD UNSER GOTT SEIN');
   });
 });
