@@ -366,7 +366,6 @@ export function UI() {
       </div>
 
       <button
-        aria-hidden={!!dialogue}
         disabled={!!dialogue}
         onClick={() => setShowHudPanels((prev) => !prev)}
         className="absolute top-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
@@ -381,13 +380,14 @@ export function UI() {
       {/* Top Bar */}
       {showHudPanels && isCompactViewport && (
         <div
-          aria-hidden={!!dialogue}
+          inert={dialogue ? '' : undefined}
           className="absolute top-20 left-3 right-3 pointer-events-none z-20"
         >
           <div className="bg-black/90 border border-toxic/30 p-2 pointer-events-auto">
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setCompactHudTab('status')}
+                aria-pressed={compactHudTab === 'status'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'status'
                     ? 'border-toxic bg-toxic/20 text-toxic'
@@ -398,6 +398,7 @@ export function UI() {
               </button>
               <button
                 onClick={() => setCompactHudTab('inventory')}
+                aria-pressed={compactHudTab === 'inventory'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'inventory'
                     ? 'border-toxic bg-toxic/20 text-toxic'
@@ -408,6 +409,7 @@ export function UI() {
               </button>
               <button
                 onClick={() => setCompactHudTab('quests')}
+                aria-pressed={compactHudTab === 'quests'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'quests'
                     ? 'border-toxic bg-toxic/20 text-toxic'
@@ -566,7 +568,7 @@ export function UI() {
       )}
 
       {!isCompactViewport && (
-        <div aria-hidden={!!dialogue} className="flex justify-between items-start">
+        <div inert={dialogue ? '' : undefined} className="flex justify-between items-start">
           {showHudPanels && (
             <div className="flex flex-col gap-6">
               <div className="bg-black/90 p-5 brutal-border-toxic pointer-events-auto flex flex-col gap-3 animate-reveal">
@@ -808,7 +810,6 @@ export function UI() {
 
       {/* Touch-accessible Pause Button */}
       <button
-        aria-hidden={!!dialogue}
         disabled={!!dialogue}
         onClick={() => setPaused(!isPaused)}
         className="absolute bottom-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"

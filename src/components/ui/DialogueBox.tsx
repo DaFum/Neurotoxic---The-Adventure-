@@ -33,16 +33,21 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
 
   useEffect(() => {
     if (dialogue) {
-      previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
+      if (!previouslyFocusedElementRef.current) {
+        previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
+      }
       if (dialogueContainerRef.current) {
-        // Focus the container to start the trap
         dialogueContainerRef.current.focus();
       }
     } else {
-      if (previouslyFocusedElementRef.current) {
+      if (
+        previouslyFocusedElementRef.current &&
+        previouslyFocusedElementRef.current.isConnected &&
+        typeof previouslyFocusedElementRef.current.focus === 'function'
+      ) {
         previouslyFocusedElementRef.current.focus();
-        previouslyFocusedElementRef.current = null;
       }
+      previouslyFocusedElementRef.current = null;
     }
   }, [dialogue]);
 
@@ -127,9 +132,12 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
 
       if (e.key === 'Tab') {
         if (!dialogueContainerRef.current) return;
-        const focusableElements = dialogueContainerRef.current.querySelectorAll<HTMLElement>(
-          'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
+        const focusableElements = Array.from(
+          dialogueContainerRef.current.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        ).filter((el) => el.getAttribute('aria-disabled') !== 'true' && el.offsetParent !== null);
+
         if (focusableElements.length === 0) return;
 
         const firstElement = focusableElements[0];
@@ -233,6 +241,7 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
                     <button
                       onClick={() => setDialogue(null)}
                       aria-label="Close transmission"
+                      title="Close transmission"
                       className="text-toxic hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
                     >
                       <X size={16} />

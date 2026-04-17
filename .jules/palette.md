@@ -23,8 +23,3 @@
 
 **Learning:** Using simple, plain text to indicate an empty state (e.g., "No assets detected") can be easily missed by users scanning the UI, and doesn't clearly guide them on what to do next.
 **Action:** Use visually distinct empty states with a faded icon, a clear title, and a helpful call-to-action (e.g., "Explore the area to find items.") to make empty states more recognizable and actionable.
-
-## 2026-04-16 - Modal Dialog Background Inertness
-
-**Learning:** Merely setting `role="dialog"` and `aria-modal="true"` does not trap screen reader focus or make the rest of the application inert, especially for dynamically rendered overlays like a dialogue box. Screen readers can still navigate to background content unless it is explicitly hidden.
-**Action:** Always ensure that when a custom modal overlay is open, the background content (the rest of the UI) is marked with `aria-hidden="true"` (or `inert`) to prevent screen readers from reading background elements. Add this conditionally to top-level background layout wrappers.
