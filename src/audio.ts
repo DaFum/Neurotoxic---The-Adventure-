@@ -1,9 +1,17 @@
-export type AmbientScene = 'proberaum' | 'tourbus' | 'backstage' | 'void_station' | 'kaminstube' | 'salzgitter';
+export type AmbientScene =
+  | 'proberaum'
+  | 'tourbus'
+  | 'backstage'
+  | 'void_station'
+  | 'kaminstube'
+  | 'salzgitter';
 
 import { secureRandom } from './utils/math';
 
 export const isAmbientScene = (scene: string): scene is AmbientScene => {
-  return ['proberaum', 'tourbus', 'backstage', 'void_station', 'kaminstube', 'salzgitter'].includes(scene);
+  return ['proberaum', 'tourbus', 'backstage', 'void_station', 'kaminstube', 'salzgitter'].includes(
+    scene,
+  );
 };
 
 /**
@@ -137,54 +145,57 @@ class AudioEngine {
     this.stopAmbient();
     this.currentAmbient = type;
 
-    this.ambientInterval = window.setInterval(() => {
-      if (!this.ctx || this.ctx.state !== 'running') return;
+    this.ambientInterval = window.setInterval(
+      () => {
+        if (!this.ctx || this.ctx.state !== 'running') return;
 
-      if (type === 'proberaum') {
-        // Muffled thumping
-        this.playTone(40 + secureRandom() * 10, 'sine', 0.5, 0.02);
-      } else if (type === 'tourbus') {
-        // Engine hum
-        this.playTone(50, 'sine', 1.0, 0.01);
-      } else if (type === 'backstage') {
-        // Muffled crowd chatter
-        this.playTone(200 + secureRandom() * 50, 'sine', 0.1, 0.005);
-      } else if (type === 'void_station') {
-        // Cosmic glitches
-        this.playTone(800 + secureRandom() * 2000, 'sawtooth', 0.05, 0.005);
-        this.playTone(20 + secureRandom() * 30, 'square', 0.2, 0.05);
-      } else if (type === 'kaminstube') {
-        // Fire crackling (noise bursts)
-        try {
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          const filter = this.ctx.createBiquadFilter();
+        if (type === 'proberaum') {
+          // Muffled thumping
+          this.playTone(40 + secureRandom() * 10, 'sine', 0.5, 0.02);
+        } else if (type === 'tourbus') {
+          // Engine hum
+          this.playTone(50, 'sine', 1.0, 0.01);
+        } else if (type === 'backstage') {
+          // Muffled crowd chatter
+          this.playTone(200 + secureRandom() * 50, 'sine', 0.1, 0.005);
+        } else if (type === 'void_station') {
+          // Cosmic glitches
+          this.playTone(800 + secureRandom() * 2000, 'sawtooth', 0.05, 0.005);
+          this.playTone(20 + secureRandom() * 30, 'square', 0.2, 0.05);
+        } else if (type === 'kaminstube') {
+          // Fire crackling (noise bursts)
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            const filter = this.ctx.createBiquadFilter();
 
-          filter.type = 'bandpass';
-          filter.frequency.value = 1000 + secureRandom() * 2000;
-          filter.Q.value = 10;
+            filter.type = 'bandpass';
+            filter.frequency.value = 1000 + secureRandom() * 2000;
+            filter.Q.value = 10;
 
-          osc.type = 'sawtooth';
-          osc.frequency.value = 100;
+            osc.type = 'sawtooth';
+            osc.frequency.value = 100;
 
-          gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
 
-          osc.connect(filter);
-          filter.connect(gain);
-          gain.connect(this.ctx.destination);
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
 
-          osc.start();
-          osc.stop(this.ctx.currentTime + 0.05);
-        } catch (e) {
-          console.warn('Error playing kaminstube ambient:', e);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.05);
+          } catch (e) {
+            console.warn('Error playing kaminstube ambient:', e);
+          }
+        } else if (type === 'salzgitter') {
+          // Distant city hum
+          this.playTone(60, 'sine', 1.0, 0.01);
+          if (secureRandom() > 0.9) this.playTone(200 + secureRandom() * 100, 'sine', 2.0, 0.005);
         }
-      } else if (type === 'salzgitter') {
-        // Distant city hum
-        this.playTone(60, 'sine', 1.0, 0.01);
-        if (secureRandom() > 0.9) this.playTone(200 + secureRandom() * 100, 'sine', 2.0, 0.005);
-      }
-    }, type === 'kaminstube' ? 100 : 1000);
+      },
+      type === 'kaminstube' ? 100 : 1000,
+    );
   }
 
   /**
@@ -208,23 +219,23 @@ class AudioEngine {
 
     let step = 0;
     const bassline = [
-      55.00, // A1
-      55.00,
+      55.0, // A1
+      55.0,
       65.41, // C2
-      55.00,
+      55.0,
       73.42, // D2
-      55.00,
+      55.0,
       82.41, // E2
       65.41,
     ];
 
     this.musicInterval = window.setInterval(() => {
       if (!this.ctx || this.ctx.state !== 'running') return;
-      
+
       // Play bass note
       const freq = bassline[step % bassline.length];
       this.playTone(freq, 'sawtooth', 0.2, 0.15);
-      
+
       // Play kick drum (low sine sweep)
       if (step % 2 === 0) {
         try {

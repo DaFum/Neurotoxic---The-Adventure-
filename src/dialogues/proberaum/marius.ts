@@ -17,7 +17,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
             currentStore.completeQuestWithFlag('beer', 'gaveBeerToMarius');
             currentStore.increaseBandMood(15, 'id_10fa71ff');
             currentStore.setDialogue(
-              'Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"'
+              'Marius: "Endlich! Mein Treibstoff. Jetzt kann die Probe losgehen!"',
             );
           },
         } as DialogueOption),
@@ -25,7 +25,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
           text: 'Ich beeile mich.',
           action: () =>
             game().setDialogue(
-              'Marius: "Gut. Meine Stimmbänder fühlen sich an wie Schleifpapier."'
+              'Marius: "Gut. Meine Stimmbänder fühlen sich an wie Schleifpapier."',
             ),
         },
         {
@@ -33,7 +33,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"'
+              'Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"',
             );
             currentStore.increaseBandMood(-5, 'id_e769cd73');
           },
@@ -44,7 +44,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."'
+              'Marius: "Du verstehst mich? Die Reinheit des Schreiens... Du bist anders als die anderen Manager. Lass uns Geschichte schreiben."',
             );
             currentStore.setFlag('mariusVisionShared', true);
             currentStore.increaseBandMood(20, 'id_79a5c0f5');
@@ -57,7 +57,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."'
+              'Marius: "Puh... du hast ja recht. Ich bin ein bisschen drüber. Danke für die Erdung."',
             );
             currentStore.setFlag('mariusCalmedDown', true);
             currentStore.increaseBandMood(15, 'id_78680db7');
@@ -88,7 +88,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                     action: () => {
                       const currentStore = game();
                       currentStore.setDialogue(
-                        'Marius: "Ah, von einem Meister lernen. Zeig mir, wie ich das Licht fange."'
+                        'Marius: "Ah, von einem Meister lernen. Zeig mir, wie ich das Licht fange."',
                       );
                       currentStore.increaseBandMood(15, 'id_ae754a5b');
                       currentStore.increaseSkill('social', 3);
@@ -101,7 +101,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                     action: () => {
                       const currentStore = game();
                       currentStore.setDialogue(
-                        'Marius: "WAS?! ...Nein, du hast recht. Ich muss wütender werden!"'
+                        'Marius: "WAS?! ...Nein, du hast recht. Ich muss wütender werden!"',
                       );
                       currentStore.increaseBandMood(10, 'id_943e1377');
                       currentStore.increaseSkill('chaos', 3);
@@ -114,7 +114,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
                     action: () => {
                       const currentStore = game();
                       currentStore.setDialogue(
-                        'Marius: "Ein... Plan? Ok, das könnte helfen, nicht die Kontrolle zu verlieren."'
+                        'Marius: "Ein... Plan? Ok, das könnte helfen, nicht die Kontrolle zu verlieren."',
                       );
                       currentStore.increaseBandMood(20, 'id_a6ace3a9');
                       currentStore.setFlag('mariusEgoStrategy', true);
@@ -122,13 +122,11 @@ export function buildProberaumMariusDialogue(): Dialogue {
                   },
                   {
                     text: 'Bleib einfach cool.',
-                    action: () =>
-                      game().setDialogue('Marius: "Ich bin immer cool."'),
+                    action: () => game().setDialogue('Marius: "Ich bin immer cool."'),
                   },
                   {
                     text: 'Zurück.',
-                    action: () =>
-                      game().setDialogue(buildProberaumMariusDialogue()),
+                    action: () => game().setDialogue(buildProberaumMariusDialogue()),
                   },
                 ],
               });
@@ -140,7 +138,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue(
-                'Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."'
+                'Marius: "Ehrlich gesagt... ich habe das Gefühl, ich bin nicht gut genug. Die anderen sind so talentiert."',
               );
               currentStore.setFlag('mariusSelfDoubtRevealed', true);
               currentStore.setFlag('marius_tourbus_doubt', true);
@@ -154,7 +152,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue(
-                'Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"'
+                'Marius: "Haha! Das stimmt. Und bald wird es aus mir herausbrechen!"',
               );
               currentStore.setFlag('mariusEgoComplimented', true);
               currentStore.increaseBandMood(5, 'id_4d4988ff');

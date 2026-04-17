@@ -9,7 +9,9 @@ export function buildProberaumMatzeDialogue(): Dialogue {
   const hasTalisman = store.hasItem('Industrie-Talisman');
 
   if (flags.matzeDeepTalk) {
-    return say('Matze: "Ich denke immer noch über das nach, was du gesagt hast. Der Lärm... er ist die einzige Wahrheit. Wir sind bereit für Salzgitter."');
+    return say(
+      'Matze: "Ich denke immer noch über das nach, was du gesagt hast. Der Lärm... er ist die einzige Wahrheit. Wir sind bereit für Salzgitter."',
+    );
   }
 
   if (hasTalisman) {
@@ -20,21 +22,25 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           text: 'Es ist für die Band.',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Matze: "Wir werden die Welt mit diesem Ding verändern. Danke, Boss. Der Sound wird legendär."');
+            currentStore.setDialogue(
+              'Matze: "Wir werden die Welt mit diesem Ding verändern. Danke, Boss. Der Sound wird legendär."',
+            );
             currentStore.increaseBandMood(30, 'id_18af0178');
             currentStore.setFlag('matzeDeepTalk', true);
-          }
+          },
         },
         {
           text: 'Behalte es für dich.',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Matze: "Verstehe. Ein Geheimnis zwischen uns und dem Stahl. Ich mag das. Lass uns die Bühne abreißen."');
+            currentStore.setDialogue(
+              'Matze: "Verstehe. Ein Geheimnis zwischen uns und dem Stahl. Ich mag das. Lass uns die Bühne abreißen."',
+            );
             currentStore.increaseBandMood(15, 'id_fe0c518a');
             currentStore.setFlag('matzeDeepTalk', true);
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   }
 
@@ -46,40 +52,49 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           text: 'Ja, es vibriert in meinem Rucksack.',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Matze: "UNGLAUBLICH! Damit werden wir die Kaminstube in Schutt und Asche legen! Du bist der beste Manager aller Zeiten!"');
+            currentStore.setDialogue(
+              'Matze: "UNGLAUBLICH! Damit werden wir die Kaminstube in Schutt und Asche legen! Du bist der beste Manager aller Zeiten!"',
+            );
             currentStore.setFlag('showedRiffToMatze', true);
             currentStore.increaseBandMood(30, 'id_b5b88f73');
-          }
+          },
         },
         {
           text: 'Nur ein altes Demo-Tape.',
-          action: () => game().setDialogue('Matze: "Hm, sah von hier aus mächtiger aus. Egal, lass uns weitermachen."')
-        }
-      ]
+          action: () =>
+            game().setDialogue(
+              'Matze: "Hm, sah von hier aus mächtiger aus. Egal, lass uns weitermachen."',
+            ),
+        },
+      ],
     };
   }
 
   if (!flags.waterCleaned) {
     return {
-      text: bandMood > 60
-        ? 'Matze: "Hey Manager! Ich hab ein paar neue Riffs geschrieben! Kriegen wir das Wasser weg, damit ich sie dir zeigen kann?"'
-        : bandMood > 40
-        ? 'Matze: "Hey Manager! Der Raum ist zwar nass, aber ich bin heiß wie Frittenfett! Kriegen wir das Wasser weg?"'
-        : 'Matze: "Verdammt, der Proberaum ist geflutet! Wir müssen das Wasser wegkriegen, bevor die Amps kaputtgehen!"',
+      text:
+        bandMood > 60
+          ? 'Matze: "Hey Manager! Ich hab ein paar neue Riffs geschrieben! Kriegen wir das Wasser weg, damit ich sie dir zeigen kann?"'
+          : bandMood > 40
+            ? 'Matze: "Hey Manager! Der Raum ist zwar nass, aber ich bin heiß wie Frittenfett! Kriegen wir das Wasser weg?"'
+            : 'Matze: "Verdammt, der Proberaum ist geflutet! Wir müssen das Wasser wegkriegen, bevor die Amps kaputtgehen!"',
       options: [
         {
           text: 'Ich kümmere mich darum.',
-          action: () => game().setDialogue('Matze: "Beeil dich, ich höre schon das Kurzschluss-Zischen!"')
+          action: () =>
+            game().setDialogue('Matze: "Beeil dich, ich höre schon das Kurzschluss-Zischen!"'),
         },
         {
           text: 'Vielleicht ist es ein Zeichen für ein neues Genre?',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Matze: "Sub-Aquatic Industrial? Klingt teuer. Wisch einfach auf."');
+            currentStore.setDialogue(
+              'Matze: "Sub-Aquatic Industrial? Klingt teuer. Wisch einfach auf."',
+            );
             currentStore.increaseBandMood(-5, 'id_43a4e8ae');
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   }
 
@@ -92,10 +107,12 @@ export function buildProberaumMatzeDialogue(): Dialogue {
           requiredSkill: { name: 'chaos', level: 5 },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Matze schlägt die Saiten an. Ein Riss in der Wand entsteht. "WHOOPS! Aber geil, oder?"');
+            currentStore.setDialogue(
+              'Matze schlägt die Saiten an. Ein Riss in der Wand entsteht. "WHOOPS! Aber geil, oder?"',
+            );
             currentStore.increaseBandMood(15, 'id_63f0878f');
             currentStore.setFlag('matzeRiffWarning', true);
-          }
+          },
         },
         {
           text: 'Heb es dir für Salzgitter auf.',
@@ -103,15 +120,16 @@ export function buildProberaumMatzeDialogue(): Dialogue {
             const currentStore = game();
             currentStore.setDialogue('Matze: "Stimmt, die Wände hier halten das eh nicht aus."');
             currentStore.setFlag('matzeRiffWarning', true);
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   }
 
-  const moodText = bandMood > 70
-    ? 'Matze: "Alter, ich fühl mich wie ein junger Gott! Lass uns Tangermünde zeigen, was Lärm wirklich bedeutet!"'
-    : 'Matze: "Puh, danke! Jetzt können wir endlich für den Gig in Tangermünde proben. Bist du bereit für den Wahnsinn?"';
+  const moodText =
+    bandMood > 70
+      ? 'Matze: "Alter, ich fühl mich wie ein junger Gott! Lass uns Tangermünde zeigen, was Lärm wirklich bedeutet!"'
+      : 'Matze: "Puh, danke! Jetzt können wir endlich für den Gig in Tangermünde proben. Bist du bereit für den Wahnsinn?"';
 
   return {
     text: moodText,
@@ -120,45 +138,53 @@ export function buildProberaumMatzeDialogue(): Dialogue {
         text: 'Immer doch. Rock on!',
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."');
+          currentStore.setDialogue(
+            'Matze: "Das ist die Einstellung! Lass uns die Nachbarn ärgern."',
+          );
           currentStore.increaseBandMood(10, 'id_ad6e67a1');
-        }
+        },
       },
       ...when(!flags.matzePerformerTalk, {
         text: 'Zeig mir, wie du die Crowd liest. [Performer]',
         requiredTrait: 'Performer',
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."');
+          currentStore.setDialogue(
+            'Matze: "Es geht alles um den ersten Akkord. Wenn der sitzt, gehören sie dir."',
+          );
           currentStore.setFlag('matzePerformerTalk', true);
           currentStore.increaseBandMood(20, 'id_95782860');
           currentStore.increaseSkill('social', 3);
-        }
+        },
       } as DialogueOption),
       ...when(!flags.matzeCynicOneShot, {
         text: 'Absolut. Wir sind nur Statisten in einer billigen Industrial-Soap. [Cynic]',
         requiredTrait: 'Cynic',
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"');
+          currentStore.setDialogue(
+            'Matze: "Haha! Endlich jemand, der es kapiert. Lass uns den Witz so laut wie möglich erzählen!"',
+          );
           currentStore.increaseBandMood(20, 'id_aa52d079');
           currentStore.increaseSkill('chaos', 5);
           currentStore.setFlag('matzeCynicOneShot', true);
-        }
+        },
       } as DialogueOption),
       {
         text: 'Erzähl mir von der Tour 1982.',
-        action: () => game().setDialogue(buildMatze1982Dialogue())
+        action: () => game().setDialogue(buildMatze1982Dialogue()),
       },
       {
         text: 'Eigentlich wollte ich nur die Buchhaltung machen.',
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Buchhaltung? Wir sind eine Metal-Band, kein Steuerbüro! Geh und hol uns ein Bier."');
+          currentStore.setDialogue(
+            'Matze: "Buchhaltung? Wir sind eine Metal-Band, kein Steuerbüro! Geh und hol uns ein Bier."',
+          );
           currentStore.increaseBandMood(-2, 'id_c1b7f39b');
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 }
 
@@ -182,14 +208,20 @@ export function buildMatze1982Dialogue(): Dialogue {
               currentStore.setFlag('frequenz1982_proberaum', true);
               currentStore.increaseBandMood(25, 'id_6c147e54');
               currentStore.increaseSkill('chaos', 4);
-              currentStore.setDialogue('Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."');
+              currentStore.setDialogue(
+                'Matze: "Du... spürst sie? Die Wände hier wurden auf dem alten Gießerei-Fundament gebaut! Vielleicht ist das hier ein Teil von ihm..."',
+              );
             } else {
-              currentStore.setDialogue('Matze: "Du... spürst sie? Das Fragment ist echt, aber du kannst gerade keins mehr tragen."');
+              currentStore.setDialogue(
+                'Matze: "Du... spürst sie? Das Fragment ist echt, aber du kannst gerade keins mehr tragen."',
+              );
             }
           } else {
-            currentStore.setDialogue('Matze: "Du hast die Frequenz in dieser Wand bereits gefunden. Lass uns weiter machen."');
+            currentStore.setDialogue(
+              'Matze: "Du hast die Frequenz in dieser Wand bereits gefunden. Lass uns weiter machen."',
+            );
           }
-        }
+        },
       },
       {
         text: 'Lass mich die Wand einschlagen, da ist was dahinter. [Brutalist]',
@@ -208,63 +240,75 @@ export function buildMatze1982Dialogue(): Dialogue {
               currentStore.setFlag('frequenz1982_proberaum', true);
               currentStore.increaseBandMood(10, 'id_6c147e54');
               currentStore.increaseSkill('chaos', 3);
-              currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"');
+              currentStore.setDialogue(
+                'Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Geheimfach! Und... was ist das für ein Fragment?"',
+              );
             } else {
-              currentStore.setDialogue('Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Fragment, aber du kannst keins mehr aufnehmen."');
+              currentStore.setDialogue(
+                'Matze: "WAS?! Nein, warte! -- *CRASH* ...Da ist ein Fragment, aber du kannst keins mehr aufnehmen."',
+              );
             }
           } else {
             currentStore.setDialogue('Matze: "Die Wand ist schon kaputt. Lass uns weiter proben."');
           }
-        }
+        },
       },
       {
         text: 'Ich sehe Muster im Lärm. [Visionary]',
         requiredTrait: 'Visionary',
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Du siehst sie auch?! Die Geometrie des Feedbacks... Du bist der Manager, den wir brauchen. In Salzgitter wird alles zusammenfallen."');
+          currentStore.setDialogue(
+            'Matze: "Du siehst sie auch?! Die Geometrie des Feedbacks... Du bist der Manager, den wir brauchen. In Salzgitter wird alles zusammenfallen."',
+          );
           currentStore.setFlag('matzeDeepTalk', true);
           currentStore.discoverLore('matze_1982_truth');
           currentStore.increaseBandMood(30, 'id_505a7b59');
           currentStore.increaseSkill('chaos', 5);
-        }
+        },
       },
       {
         text: 'Analysiere die Frequenz. [Technical 5]',
         requiredSkill: { name: 'technical', level: 5 },
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Die Frequenz der Gießerei lag bei exakt 432Hz. Es war, als ob der Stahl selbst schreit. Du hast ein Ohr für Details, Manager."');
+          currentStore.setDialogue(
+            'Matze: "Die Frequenz der Gießerei lag bei exakt 432Hz. Es war, als ob der Stahl selbst schreit. Du hast ein Ohr für Details, Manager."',
+          );
           currentStore.setFlag('matzeDeepTalk', true);
           currentStore.increaseBandMood(20, 'id_0afc985e');
           currentStore.increaseSkill('technical', 3);
-        }
+        },
       },
       {
         text: 'Beruhige dich, Matze. [Social 3]',
         requiredSkill: { name: 'social', level: 3 },
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Du hast recht. Ich steigere mich da zu sehr rein. Lass uns einfach spielen. Danke, Manager."');
+          currentStore.setDialogue(
+            'Matze: "Du hast recht. Ich steigere mich da zu sehr rein. Lass uns einfach spielen. Danke, Manager."',
+          );
           currentStore.setFlag('matzeDeepTalk', true);
           currentStore.increaseBandMood(15, 'id_c6580f62');
           currentStore.increaseSkill('social', 2);
-        }
+        },
       },
       {
         text: 'Interessante Geschichte.',
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue('Matze: "Manche Dinge lassen sich nicht in Worte fassen. Lass uns weitermachen."');
+          currentStore.setDialogue(
+            'Matze: "Manche Dinge lassen sich nicht in Worte fassen. Lass uns weitermachen."',
+          );
           currentStore.setFlag('askedAbout1982', true);
           currentStore.setFlag('bassist_clue_matze', true);
           currentStore.increaseBandMood(10, 'id_f0bc0fe3');
-        }
+        },
       },
       {
         text: 'Zurück.',
-        action: () => game().setDialogue(buildProberaumMatzeDialogue())
-      }
-    ]
+        action: () => game().setDialogue(buildProberaumMatzeDialogue()),
+      },
+    ],
   };
 }

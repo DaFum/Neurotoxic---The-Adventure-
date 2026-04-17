@@ -2,8 +2,7 @@ import { type Dialogue, type DialogueOption } from '../../store';
 import { game } from '../shared/helpers';
 
 const BACKSTAGE_MONITOR_QUEST_ID = 'feedback_monitor_backstage';
-const BACKSTAGE_MONITOR_QUEST_TEXT =
-  'Finde den Verstärker-Schaltplan für den Feedback-Monitor';
+const BACKSTAGE_MONITOR_QUEST_TEXT = 'Finde den Verstärker-Schaltplan für den Feedback-Monitor';
 
 const MASCHINEN_SEELE_QUEST_ID = 'maschinen_seele';
 
@@ -11,8 +10,7 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
   const store = game();
   const { flags } = store;
   const hasSchaltplan = store.hasItem('Verstärker-Schaltplan');
-  const hasMaschinenSeele =
-    flags.maschinen_seele_amp && flags.maschinen_seele_tr8080;
+  const hasMaschinenSeele = flags.maschinen_seele_amp && flags.maschinen_seele_tr8080;
 
   if (flags.maschinen_seele_complete) {
     return {
@@ -36,7 +34,9 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             action: () => {
               const store = game();
-              store.setDialogue('Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.');
+              store.setDialogue(
+                'Die Bildschirme flackern grün. Ein tiefer Summton erfüllt den Raum. Das Bewusstsein ist vollständig.',
+              );
               store.discoverLore('maschinen_bewusstsein');
               store.increaseBandMood(40, 'id_b4f7027d');
               store.increaseSkill('chaos', 5);
@@ -53,7 +53,9 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             action: () => {
               const store = game();
-              store.setDialogue('Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.');
+              store.setDialogue(
+                'Du schließt die Systeme kurz. Ein Funkenregen, dann Stabilität. Das Netzwerk steht.',
+              );
               store.discoverLore('maschinen_bewusstsein');
               store.increaseBandMood(30, 'id_7ffa8585');
               store.increaseSkill('technical', 5);
@@ -69,7 +71,9 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
             questToComplete: MASCHINEN_SEELE_QUEST_ID,
             action: () => {
               const store = game();
-              store.setDialogue('Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."');
+              store.setDialogue(
+                'Monitor: "BZZZT... Unkonventionell. Aber es funktioniert. Die Stimmen werden eins. Wir sind bereit."',
+              );
               store.discoverLore('maschinen_bewusstsein');
               store.increaseBandMood(20, 'id_4899db3c');
             },
@@ -105,7 +109,9 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const store = game();
-            store.setDialogue('Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."');
+            store.setDialogue(
+              'Monitor: "BZZZT. Exzellent. Die Verzerrung ist nun mathematisch perfekt. Danke, Manager."',
+            );
             store.increaseBandMood(30, 'id_e0e8aacd');
             store.increaseSkill('technical', 5);
           },
@@ -125,7 +131,9 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
           },
           action: () => {
             const store = game();
-            store.setDialogue('Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."');
+            store.setDialogue(
+              'Monitor: "BZZZT. Ich sehe... die Musik der Sphären. Danke, Visionär."',
+            );
             store.increaseBandMood(40, 'id_1f6ffb9b');
             store.increaseSkill('chaos', 5);
           },
@@ -175,7 +183,9 @@ export function buildBackstageFeedbackMonitorDialogue(): Dialogue {
         },
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue({ text: 'Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."' });
+          currentStore.setDialogue({
+            text: 'Monitor: "Der Amp... er hat gesprochen? Dann gibt es Hoffnung. Verbinde unsere Schaltkreise, Manager. Du musst den Schaltplan finden. Wir sind Brüder im Rauschen."',
+          });
           currentStore.increaseBandMood(25, 'id_24bc329a');
           currentStore.increaseSkill('technical', 5);
         },

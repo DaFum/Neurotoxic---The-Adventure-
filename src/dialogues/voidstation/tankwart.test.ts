@@ -13,9 +13,7 @@ describe('buildVoidTankwartDialogue', () => {
     });
 
     const dialogue = buildVoidTankwartDialogue();
-    const option = dialogue.options?.find(
-      (entry) => entry.text === 'Ich suche die Wahrheit.'
-    );
+    const option = dialogue.options?.find((entry) => entry.text === 'Ich suche die Wahrheit.');
 
     expect(option).toBeDefined();
 
@@ -36,8 +34,6 @@ describe('buildVoidTankwartDialogue', () => {
 
     expect(dialogue.text).toContain('Dunkle Materie');
     expect(optionTexts).toContain('440Hz - Standard Industrial Power.');
-    expect(optionTexts).toContain(
-      '432Hz - Wir wollen die Chakren der Fans öffnen.'
-    );
+    expect(optionTexts).toContain('432Hz - Wir wollen die Chakren der Fans öffnen.');
   });
 });

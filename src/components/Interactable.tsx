@@ -2,11 +2,11 @@
  * #1: UPDATES
  * - Implemented interactive component with hover, range, and interaction logic.
  * - Added visual feedback for interaction and range.
- * 
+ *
  * #2: NEXT STEPS & IDEAS
  * - Add more interaction types.
  * - Refine interaction UI.
- * 
+ *
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
@@ -84,7 +84,14 @@ const getEmojiTexture = (emoji: string): THREE.CanvasTexture => {
     const ctx = canvas.getContext('2d');
     if (ctx) {
       ctx.clearRect(0, 0, EMOJI_TEXTURE_SIZE, EMOJI_TEXTURE_SIZE);
-      const gradient = ctx.createRadialGradient(EMOJI_TEXTURE_SIZE / 2, EMOJI_TEXTURE_SIZE / 2, 20, EMOJI_TEXTURE_SIZE / 2, EMOJI_TEXTURE_SIZE / 2, 120);
+      const gradient = ctx.createRadialGradient(
+        EMOJI_TEXTURE_SIZE / 2,
+        EMOJI_TEXTURE_SIZE / 2,
+        20,
+        EMOJI_TEXTURE_SIZE / 2,
+        EMOJI_TEXTURE_SIZE / 2,
+        120,
+      );
       gradient.addColorStop(0, 'rgba(173,255,47,0.22)');
       gradient.addColorStop(1, 'rgba(173,255,47,0)');
       ctx.fillStyle = gradient;
@@ -127,7 +134,11 @@ const getLabelTexture = (name: string, isInRange: boolean): THREE.CanvasTexture 
 
       ctx.fillStyle = isInRange ? COLOR_PROMPT_IN_RANGE : COLOR_PROMPT_OUT_OF_RANGE;
       ctx.font = FONT_LABEL_PROMPT;
-      ctx.fillText(isInRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]', LABEL_TEXTURE_WIDTH / 2, 90);
+      ctx.fillText(
+        isInRange ? '[ TAP OR E TO INTERACT ]' : '[ MOVE CLOSER ]',
+        LABEL_TEXTURE_WIDTH / 2,
+        90,
+      );
     }
     return canvas;
   });
@@ -227,7 +238,11 @@ export const Interactable = React.memo(function Interactable({
     return () => {
       if (spriteRef.current) {
         const material = spriteRef.current.material;
-        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial && material.map === texture) {
+        if (
+          !Array.isArray(material) &&
+          material instanceof THREE.SpriteMaterial &&
+          material.map === texture
+        ) {
           material.map = null;
           material.needsUpdate = true;
         }
@@ -257,8 +272,11 @@ export const Interactable = React.memo(function Interactable({
     return () => {
       if (labelSpriteRef.current) {
         const material = labelSpriteRef.current.material;
-        if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial &&
-           (material.map === inRangeTexture || material.map === outOfRangeTexture)) {
+        if (
+          !Array.isArray(material) &&
+          material instanceof THREE.SpriteMaterial &&
+          (material.map === inRangeTexture || material.map === outOfRangeTexture)
+        ) {
           material.map = null;
           material.needsUpdate = true;
         }
@@ -304,8 +322,8 @@ export const Interactable = React.memo(function Interactable({
     if (ref.current) {
       timeRef.current += delta;
       const time = timeRef.current;
-      const moodFactor = 0.5 + (bandMood / 100);
-      
+      const moodFactor = 0.5 + bandMood / 100;
+
       if (isBandMember) {
         if (idleType === 'headbang') {
           ref.current.rotation.x = Math.sin(time * 8 * moodFactor) * 0.15 * moodFactor;
@@ -336,7 +354,8 @@ export const Interactable = React.memo(function Interactable({
       coreRef.current.position.y = 0.26 * scale + Math.sin(time * 3.5) * 0.035 * scale;
       const material = coreRef.current.material;
       if (!Array.isArray(material) && material instanceof THREE.MeshStandardMaterial) {
-        material.emissiveIntensity = 0.45 + (hoveredRef.current ? 0.35 : 0) + Math.abs(Math.sin(time * 6)) * 0.22;
+        material.emissiveIntensity =
+          0.45 + (hoveredRef.current ? 0.35 : 0) + Math.abs(Math.sin(time * 6)) * 0.22;
       }
     }
 
@@ -347,13 +366,15 @@ export const Interactable = React.memo(function Interactable({
         labelSpriteRef.current.scale.set(
           hoveredRef.current ? 2.8 * scale : 2.55 * scale,
           hoveredRef.current ? 0.7 * scale : 0.64 * scale,
-          1
+          1,
         );
         const material = labelSpriteRef.current.material;
         if (!Array.isArray(material) && material instanceof THREE.SpriteMaterial) {
           material.opacity = hoveredRef.current ? 1 : 0.9;
 
-          const targetMap = inRangeNow ? labelTextureInRangeRef.current : labelTextureOutOfRangeRef.current;
+          const targetMap = inRangeNow
+            ? labelTextureInRangeRef.current
+            : labelTextureOutOfRangeRef.current;
           if (material.map !== targetMap) {
             material.map = targetMap;
             material.needsUpdate = true;
@@ -364,14 +385,20 @@ export const Interactable = React.memo(function Interactable({
   });
 
   const handleInteract = () => {
-    const { isPaused: currentIsPaused, dialogue: currentDialogue, setCameraShake } = useStore.getState();
+    const {
+      isPaused: currentIsPaused,
+      dialogue: currentDialogue,
+      setCameraShake,
+    } = useStore.getState();
     if (currentDialogue) return;
     if (inRangeRef.current && !currentIsPaused) {
       audio.playInteraction();
       setCameraShake(0.2);
       onInteract();
       interactedRef.current = true;
-      setTimeout(() => { interactedRef.current = false; }, 500);
+      setTimeout(() => {
+        interactedRef.current = false;
+      }, 500);
     } else if (!currentIsPaused) {
       useStore.getState().setDialogue('OUT_OF_RANGE: Move closer to target.');
     }
@@ -389,29 +416,65 @@ export const Interactable = React.memo(function Interactable({
       <group ref={ref}>
         <mesh position={[0, -0.68 * scale, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.78 * scale, 0.92 * scale, 0.24 * scale, 24]} />
-          <meshStandardMaterial color={palette.base} emissive="#151a22" emissiveIntensity={0.3} metalness={0.55} roughness={0.5} />
+          <meshStandardMaterial
+            color={palette.base}
+            emissive="#151a22"
+            emissiveIntensity={0.3}
+            metalness={0.55}
+            roughness={0.5}
+          />
         </mesh>
         <mesh position={[0, -0.56 * scale, 0]} rotation={[-Math.PI / 2, 0, 0]} ref={ringRef}>
           <torusGeometry args={[0.78 * scale, 0.06 * scale, 12, 42]} />
-          <meshStandardMaterial color={palette.accent} emissive={palette.accent} emissiveIntensity={0.8} metalness={0.85} roughness={0.24} />
+          <meshStandardMaterial
+            color={palette.accent}
+            emissive={palette.accent}
+            emissiveIntensity={0.8}
+            metalness={0.85}
+            roughness={0.24}
+          />
         </mesh>
         <mesh position={[0, -0.47 * scale, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[0.45 * scale, 0.68 * scale, 28]} />
-          <meshStandardMaterial color={palette.trim} emissive={palette.accentSoft} emissiveIntensity={0.3} metalness={0.4} roughness={0.5} />
+          <meshStandardMaterial
+            color={palette.trim}
+            emissive={palette.accentSoft}
+            emissiveIntensity={0.3}
+            metalness={0.4}
+            roughness={0.5}
+          />
         </mesh>
         <mesh ref={coreRef} position={[0, 0.26 * scale, 0]} castShadow>
           <octahedronGeometry args={[0.26 * scale, 0]} />
-          <meshStandardMaterial color={palette.trim} emissive={palette.accent} emissiveIntensity={0.5} metalness={0.75} roughness={0.25} />
+          <meshStandardMaterial
+            color={palette.trim}
+            emissive={palette.accent}
+            emissiveIntensity={0.5}
+            metalness={0.75}
+            roughness={0.25}
+          />
         </mesh>
         {isBandMember && (
           <group>
             <mesh position={[0, -0.08 * scale, -0.05 * scale]} castShadow receiveShadow>
               <cylinderGeometry args={[0.2 * scale, 0.25 * scale, 0.55 * scale, 12]} />
-              <meshStandardMaterial color="#39465c" emissive="#1d2736" emissiveIntensity={0.25} metalness={0.5} roughness={0.45} />
+              <meshStandardMaterial
+                color="#39465c"
+                emissive="#1d2736"
+                emissiveIntensity={0.25}
+                metalness={0.5}
+                roughness={0.45}
+              />
             </mesh>
             <mesh position={[0, 0.28 * scale, -0.05 * scale]} castShadow>
               <sphereGeometry args={[0.16 * scale, 14, 14]} />
-              <meshStandardMaterial color="#e3edf9" emissive="#9eb7d6" emissiveIntensity={0.22} metalness={0.2} roughness={0.45} />
+              <meshStandardMaterial
+                color="#e3edf9"
+                emissive="#9eb7d6"
+                emissiveIntensity={0.22}
+                metalness={0.2}
+                roughness={0.45}
+              />
             </mesh>
           </group>
         )}
@@ -419,13 +482,22 @@ export const Interactable = React.memo(function Interactable({
           ref={spriteRef}
           scale={[1.8 * scale, 1.8 * scale, 1]}
           renderOrder={30}
-          onPointerOver={() => { hoveredRef.current = true; }}
-          onPointerOut={() => { hoveredRef.current = false; }}
+          onPointerOver={() => {
+            hoveredRef.current = true;
+          }}
+          onPointerOut={() => {
+            hoveredRef.current = false;
+          }}
           onClick={(e) => {
             handleDomInteract(e);
           }}
         >
-          <spriteMaterial map={emojiTextureRef.current ?? undefined} transparent depthWrite={false} depthTest={false} />
+          <spriteMaterial
+            map={emojiTextureRef.current ?? undefined}
+            transparent
+            depthWrite={false}
+            depthTest={false}
+          />
         </sprite>
         <sprite
           ref={labelSpriteRef}
@@ -433,11 +505,7 @@ export const Interactable = React.memo(function Interactable({
           renderOrder={31}
           visible={false}
         >
-          <spriteMaterial
-            transparent
-            depthWrite={false}
-            depthTest={false}
-          />
+          <spriteMaterial transparent depthWrite={false} depthTest={false} />
         </sprite>
       </group>
     </RigidBody>

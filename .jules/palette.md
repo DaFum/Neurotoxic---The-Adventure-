@@ -4,6 +4,7 @@
 **Action:** When a core UI action depends on state (like having exactly two items selected), render the button unconditionally but in a disabled state, and use tooltips to explain the requirements.
 
 ## 2026-04-11 - [Accessibility: Modal Dialog Attributes]
+
 **Learning:** Components that function as modal dialogs (interrupting the main flow and requiring interaction before returning to the underlying page) should use `role="dialog"` together with `aria-modal="true"` to communicate that the dialog is intended to be modal. However, `aria-modal="true"` does not by itself trap focus or make content outside the dialog inert for assistive technologies.
 **Action:** When auditing or creating custom modal dialog components, verify the presence of both `role="dialog"` and `aria-modal="true"`, and also verify the behaviors that make the dialog truly modal: trap focus within the dialog, restore focus when it closes, and make the rest of the UI non-navigable to assistive technologies while the dialog is open (for example with `inert` or `aria-hidden` on background content).
 
@@ -23,12 +24,7 @@
 **Learning:** Using simple, plain text to indicate an empty state (e.g., "No assets detected") can be easily missed by users scanning the UI, and doesn't clearly guide them on what to do next.
 **Action:** Use visually distinct empty states with a faded icon, a clear title, and a helpful call-to-action (e.g., "Explore the area to find items.") to make empty states more recognizable and actionable.
 
-## 2026-04-16 - Toggle Button Accessibility
+## 2026-04-16 - Modal Dialog Background Inertness
 
-**Learning:** Buttons that act as tabs or toggles and visually display their active state (e.g., via highlighted styling) must also communicate this state programmatically to screen readers.
-**Action:** Use the `aria-pressed` attribute (e.g., `aria-pressed={isActive}`) on toggle or tab buttons to ensure their state is accessible.
-
-## 2026-04-16 - Icon-Only Button Discoverability
-
-**Learning:** While `aria-label` provides essential accessibility for icon-only buttons for screen reader users, it does not provide any visual feedback for sighted mouse users.
-**Action:** Always include a `title` attribute alongside `aria-label` on icon-only buttons to provide a native hover tooltip, ensuring the action is discoverable for all users.
+**Learning:** Merely setting `role="dialog"` and `aria-modal="true"` does not trap screen reader focus or make the rest of the application inert, especially for dynamically rendered overlays like a dialogue box. Screen readers can still navigate to background content unless it is explicitly hidden.
+**Action:** Always ensure that when a custom modal overlay is open, the background content (the rest of the UI) is marked with `aria-hidden="true"` (or `inert`) to prevent screen readers from reading background elements. Add this conditionally to top-level background layout wrappers.

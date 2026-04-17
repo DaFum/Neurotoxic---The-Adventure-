@@ -4,5 +4,5 @@ export {
   buildTourbusAmpDialogue,
   buildTourbusHiddenStashDialogue,
   buildTourbusGhostDialogue,
-  buildTourbusBandMeetingDialogue
+  buildTourbusBandMeetingDialogue,
 } from './objects';

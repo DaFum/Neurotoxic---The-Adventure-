@@ -15,7 +15,7 @@ describe('buildSalzgitterMariusDialogue', () => {
 
     const dialogue = buildSalzgitterMariusDialogue();
     const option = dialogue.options?.find(
-      (entry) => entry.text === 'Fokussiere dich auf die erste Reihe.'
+      (entry) => entry.text === 'Fokussiere dich auf die erste Reihe.',
     );
 
     if (!option) throw new Error('Expected performer opener option');

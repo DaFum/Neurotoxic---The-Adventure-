@@ -33,17 +33,14 @@ describe('buildBackstageMariusDialogue', () => {
     const options = getOptionTexts(dialogue);
 
     expect(options[0]).toBe('Erinnerst du dich an unsere Strategie?');
-    expect(options).toContain(
-      'Du bist ein Gott am Mikrofon. Vertrau dir. [Social 5]'
-    );
+    expect(options).toContain('Du bist ein Gott am Mikrofon. Vertrau dir. [Social 5]');
   });
 
   it('applies nervous branch penalty when 1982 is not unlocked', () => {
     const moodBefore = useStore.getState().bandMood;
     const dialogue = buildBackstageMariusDialogue();
     const option = dialogue.options?.find(
-      (entry) =>
-        entry.text === 'Denk an den Gig 1982. Wir haben Schlimmeres überlebt.'
+      (entry) => entry.text === 'Denk an den Gig 1982. Wir haben Schlimmeres überlebt.',
     );
 
     if (!option) {
@@ -55,9 +52,7 @@ describe('buildBackstageMariusDialogue', () => {
     const stateAfter = useStore.getState();
     expect(stateAfter.bandMood).toBe(moodBefore - 5);
     expect(stateAfter.flags.mariusCalmed).toBe(false);
-    expect(stateAfter.dialogue?.text).toContain(
-      'Da war ich noch nicht mal in der Band'
-    );
+    expect(stateAfter.dialogue?.text).toContain('Da war ich noch nicht mal in der Band');
   });
 
   it('calms Marius and boosts confidence when social option is chosen', () => {
@@ -70,9 +65,7 @@ describe('buildBackstageMariusDialogue', () => {
 
     const moodBefore = useStore.getState().bandMood;
     const dialogue = buildBackstageMariusDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Social 5]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Social 5]'));
 
     if (!option) {
       throw new Error('Expected social option in Marius dialogue');

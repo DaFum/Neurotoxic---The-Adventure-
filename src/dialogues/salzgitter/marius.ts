@@ -15,7 +15,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Marius: "Gute Idee. Die erste Reihe ist der Anker für die gesamte Energie. Ich werde sie hypnotisieren!"'
+              'Marius: "Gute Idee. Die erste Reihe ist der Anker für die gesamte Energie. Ich werde sie hypnotisieren!"',
             );
             currentStore.setFlag('salzgitter_performer_talked', true);
             currentStore.increaseBandMood(30, 'id_d7c3f0fc');
@@ -32,8 +32,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
     store.flags.egoContained &&
     !store.flags.salzgitterBandUnited
   ) {
-    const bandReady =
-      store.flags.matzeDeepTalk && store.flags.larsDrumPhilosophy;
+    const bandReady = store.flags.matzeDeepTalk && store.flags.larsDrumPhilosophy;
     return {
       text: 'Marius: "Du hast mich gerettet, Manager. Mein Ego, meine Angst... alles ist jetzt gebündelt in pure Energie. Wie stehen wir da?"',
       options: [
@@ -43,12 +42,12 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
               action: () => {
                 const currentStore = game();
                 currentStore.setDialogue(
-                  'Marius: "Wir sind eine Wand aus Lärm. Lasst uns die Welt niederreißen!"'
+                  'Marius: "Wir sind eine Wand aus Lärm. Lasst uns die Welt niederreißen!"',
                 );
                 currentStore.setFlag('salzgitterBandUnited', true);
                 currentStore.startAndFinishQuest(
                   'unite_band',
-                  'Vereinige die Band vor dem Finale in Salzgitter'
+                  'Vereinige die Band vor dem Finale in Salzgitter',
                 );
                 currentStore.increaseBandMood(30, 'id_14d8d982');
               },
@@ -74,7 +73,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
                 const currentStore = game();
                 currentStore.setFlag('salzgitter_marius_chaos_claimed', true);
                 currentStore.setDialogue(
-                  'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"'
+                  'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"',
                 );
                 currentStore.increaseBandMood(40, 'id_f382013b');
                 currentStore.increaseSkill('chaos', 5);
@@ -91,7 +90,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
                 const currentStore = game();
                 currentStore.setFlag('salzgitter_marius_social_claimed', true);
                 currentStore.setDialogue(
-                  'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."'
+                  'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."',
                 );
                 currentStore.increaseBandMood(30, 'id_536e150a');
                 currentStore.increaseSkill('social', 5);
@@ -107,7 +106,10 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
       },
     ];
 
-    if (store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed) {
+    if (
+      store.flags.backstage_performer_speech &&
+      !store.flags.salzgitter_marius_performer_claimed
+    ) {
       options.unshift({
         text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
         requiredTrait: 'Performer',
@@ -115,7 +117,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
           const currentStore = game();
           currentStore.setFlag('salzgitter_marius_performer_claimed', true);
           currentStore.setDialogue(
-            'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"'
+            'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"',
           );
           currentStore.increaseBandMood(30, 'id_e74c6cca');
           currentStore.increaseSkill('social', 5);
@@ -130,7 +132,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"'
+            'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"',
           );
           currentStore.setFlag('salzgitter_true_ending', true);
           currentStore.increaseBandMood(50, 'id_cf381586');
@@ -145,9 +147,7 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
           const currentStore = game();
           currentStore.setFlag('salzgitter_marius_greeted', true);
           currentStore.increaseBandMood(15, 'id_8ded0f13');
-          currentStore.setDialogue(
-            'Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"'
-          );
+          currentStore.setDialogue('Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"');
         },
       });
     }
@@ -160,17 +160,13 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
 
   if (bandMood > 90) {
     return say(
-      'Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"'
+      'Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"',
     );
   }
 
   if (bandMood > 50) {
-    return say(
-      'Marius: "Danke, dass du uns als Manager hierher gebracht hast! NEUROTOXIC RULES!"'
-    );
+    return say('Marius: "Danke, dass du uns als Manager hierher gebracht hast! NEUROTOXIC RULES!"');
   }
 
-  return say(
-    'Marius: "Ich bin nervös, aber wir ziehen das durch. Für den Metal!"'
-  );
+  return say('Marius: "Ich bin nervös, aber wir ziehen das durch. Für den Metal!"');
 }

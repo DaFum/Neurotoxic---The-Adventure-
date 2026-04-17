@@ -36,9 +36,7 @@ describe('buildBackstageLarsDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildBackstageLarsDialogue();
-    const option = dialogue.options?.find(
-      (entry) => entry.text === 'Trink es auf Ex!'
-    );
+    const option = dialogue.options?.find((entry) => entry.text === 'Trink es auf Ex!');
 
     if (!option) {
       throw new Error('Expected turbo drink option for Lars');
@@ -76,18 +74,14 @@ describe('buildBackstageLarsDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildBackstageLarsDialogue();
-    const option = dialogue.options?.find(
-      (entry) => entry.text === 'Gib Lars den Energydrink.'
-    );
+    const option = dialogue.options?.find((entry) => entry.text === 'Gib Lars den Energydrink.');
 
     expect(option).toBeDefined();
 
     executeDialogueOption(option!);
     const stateAfter = useStore.getState();
 
-    expect(stateAfter.dialogue?.text).toContain(
-      'Nicht so gut wie Turbo-Koffein'
-    );
+    expect(stateAfter.dialogue?.text).toContain('Nicht so gut wie Turbo-Koffein');
     expect(stateAfter.flags.larsEnergized).toBe(true);
     expect(stateAfter.inventory).not.toContain('Energiedrink');
     expect(stateAfter.bandMood).toBe(moodBefore + 10);
@@ -104,9 +98,7 @@ describe('buildBackstageLarsDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildBackstageLarsDialogue();
-    const option = dialogue.options?.find(
-      (entry) => entry.text === 'Gib Lars den Energydrink.'
-    );
+    const option = dialogue.options?.find((entry) => entry.text === 'Gib Lars den Energydrink.');
 
     expect(option).toBeDefined();
 
@@ -116,8 +108,6 @@ describe('buildBackstageLarsDialogue', () => {
     expect(stateAfter.flags.larsEnergized).toBe(true);
     expect(stateAfter.inventory).not.toContain('Energiedrink');
     expect(stateAfter.bandMood).toBe(moodBefore + 35);
-    expect(stateAfter.dialogue?.text).toContain(
-      'Der Treibstoff für unseren Pakt'
-    );
+    expect(stateAfter.dialogue?.text).toContain('Der Treibstoff für unseren Pakt');
   });
 });

@@ -24,7 +24,7 @@ export function setupTestState(partialState?: Partial<GameState>) {
  */
 export function getOptionTexts(dialogue: Dialogue | string): string[] {
   if (typeof dialogue === 'string') return [];
-  return dialogue.options?.map(o => o.text) || [];
+  return dialogue.options?.map((o) => o.text) || [];
 }
 
 /**

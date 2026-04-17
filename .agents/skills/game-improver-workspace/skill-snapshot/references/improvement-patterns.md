@@ -7,6 +7,7 @@ Purpose: small, repeatable patterns for common changes (bug fix, feature, perf, 
 When: deterministic wrong result, crash, or regression.
 
 Steps:
+
 1. Reproduce and write a minimal failing unit test (add to `src/*.test.ts`).
 2. Locate source-of-truth (`src/store.ts` `useStore`, utils, hooks, scene handlers).
 3. Make the minimal change (update `useStore` mutator or a pure util) and run tests.
@@ -33,6 +34,7 @@ Tests:
 When: add one UX affordance, a small upgrade, or an HQ item.
 
 Steps:
+
 1. Design minimal data model addition (data file + TypeScript type).
 2. Implement state changes by adding/updating `useStore` mutator functions in `src/store.ts`.
 3. Add unit tests for the new behavior and update `partialize`/`merge` in the persist config if the persisted shape changes.
@@ -45,6 +47,7 @@ PR summary guidance: include a short game-design rationale and test cases.
 When: memory leak, FPS drop, or excessive allocations.
 
 Steps:
+
 1. Profile to identify the root cause (DevTools, heap snapshots).
 2. Confirm leak path (e.g., Pixi app not destroyed, event listeners retained, AudioContext nodes persistent).
 3. Add cleanup in `useEffect` returns and validate with memory snapshots.
@@ -55,6 +58,7 @@ Steps:
 When: reduce complexity, extract component, or move logic to hooks.
 
 Steps:
+
 1. Prepare unit tests that pin behavior before refactor.
 2. Apply extract/inline changes in small commits.
 3. Run full test suite and build.
@@ -70,19 +74,19 @@ PR description: explain why refactor is needed and list the behavior-preserving 
 ## Example test scaffold (Vitest)
 
 ```ts
-import { describe, it, expect } from 'vitest'
-import { useStore } from '@/store'
+import { describe, it, expect } from 'vitest';
+import { useStore } from '@/store';
 
 describe('combineItems', () => {
   it('removes both input items when recipe matches', () => {
     // Setup a minimal store state
-    useStore.setState({ inventory: ['A', 'B'] })
-    const result = useStore.getState().combineItems('A', 'B')
-    expect(result).toBe(true)
-    expect(useStore.getState().inventory).not.toContain('A')
-    expect(useStore.getState().inventory).not.toContain('B')
-  })
-})
+    useStore.setState({ inventory: ['A', 'B'] });
+    const result = useStore.getState().combineItems('A', 'B');
+    expect(result).toBe(true);
+    expect(useStore.getState().inventory).not.toContain('A');
+    expect(useStore.getState().inventory).not.toContain('B');
+  });
+});
 ```
 
 Run the example test with Vitest via pnpm:

@@ -8,26 +8,11 @@ export interface QuestSlice {
   completeQuest: (id: string, text?: string) => void;
   failQuest: (id: string, text?: string) => void;
   startAndFinishQuest: (id: string, text: string) => void;
-  startQuestWithFlag: (
-    id: string,
-    text: string,
-    flag: Flag,
-    flagValue?: boolean
-  ) => void;
-  completeQuestWithFlag: (
-    id: string,
-    flag: Flag,
-    flagValue?: boolean,
-    text?: string
-  ) => void;
+  startQuestWithFlag: (id: string, text: string, flag: Flag, flagValue?: boolean) => void;
+  completeQuestWithFlag: (id: string, flag: Flag, flagValue?: boolean, text?: string) => void;
 }
 
-export const createQuestSlice: StateCreator<
-  GameState,
-  [],
-  [],
-  QuestSlice
-> = (set) => ({
+export const createQuestSlice: StateCreator<GameState, [], [], QuestSlice> = (set) => ({
   quests: initialState.quests,
   addQuest: (id, text) =>
     set((state) => {
@@ -39,10 +24,7 @@ export const createQuestSlice: StateCreator<
         return { quests: newQuests };
       }
       return {
-        quests: [
-          ...state.quests,
-          { id, text, status: 'active' as QuestStatus },
-        ],
+        quests: [...state.quests, { id, text, status: 'active' as QuestStatus }],
       };
     }),
   completeQuest: (id, text) =>
@@ -51,10 +33,7 @@ export const createQuestSlice: StateCreator<
       if (index === -1) {
         if (text) {
           return {
-            quests: [
-              ...state.quests,
-              { id, text, status: 'completed' as QuestStatus },
-            ],
+            quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }],
           };
         }
         console.warn(`Attempted to complete unregistered quest: ${id}`);
@@ -71,10 +50,7 @@ export const createQuestSlice: StateCreator<
       if (index === -1) {
         if (text) {
           return {
-            quests: [
-              ...state.quests,
-              { id, text, status: 'failed' as QuestStatus },
-            ],
+            quests: [...state.quests, { id, text, status: 'failed' as QuestStatus }],
           };
         }
         console.warn(`Attempted to fail unregistered quest: ${id}`);
@@ -104,10 +80,7 @@ export const createQuestSlice: StateCreator<
         };
       }
       return {
-        quests: [
-          ...state.quests,
-          { id, text, status: 'active' as QuestStatus },
-        ],
+        quests: [...state.quests, { id, text, status: 'active' as QuestStatus }],
         flags: { ...state.flags, [flag]: flagValue },
       };
     }),
@@ -117,15 +90,14 @@ export const createQuestSlice: StateCreator<
       if (index === -1) {
         if (text) {
           return {
-            quests: [
-              ...state.quests,
-              { id, text, status: 'completed' as QuestStatus },
-            ],
+            quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }],
             flags: { ...state.flags, [flag]: flagValue },
           };
         }
         console.warn(`Attempted to complete unregistered quest: ${id}`);
-        return state.flags[flag] !== flagValue ? { flags: { ...state.flags, [flag]: flagValue } } : state;
+        return state.flags[flag] !== flagValue
+          ? { flags: { ...state.flags, [flag]: flagValue } }
+          : state;
       }
       const quest = state.quests[index];
       const statusChanged = quest.status !== 'completed';
@@ -152,10 +124,7 @@ export const createQuestSlice: StateCreator<
         return state;
       }
       return {
-        quests: [
-          ...state.quests,
-          { id, text, status: 'completed' as QuestStatus },
-        ],
+        quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }],
       };
     }),
 });

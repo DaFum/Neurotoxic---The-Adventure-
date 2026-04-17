@@ -33,7 +33,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue(
-                'Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."'
+                'Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."',
               );
               currentStore.increaseBandMood(60, 'id_021d65a1');
               currentStore.increaseSkill('technical', 5);
@@ -45,7 +45,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue(
-                'Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."'
+                'Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."',
               );
               currentStore.increaseBandMood(20, 'id_72faf9b5');
               currentStore.setFlag('matzeRiffDialogueDone', true);
@@ -79,7 +79,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue(
-                'Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."'
+                'Matze: "Präzision im Chaos. Das ist die wahre Kunst. Jede Note wird ein chirurgischer Schnitt in die Stille."',
               );
               currentStore.increaseBandMood(40, 'id_ac700d73');
               currentStore.increaseSkill('technical', 5);
@@ -91,7 +91,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue(
-                'Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."'
+                'Matze: "Danke, Boss. Wir sehen uns auf der anderen Seite."',
               );
               currentStore.increaseBandMood(20, 'id_38473f78');
               currentStore.setFlag('matzeRiffDialogueDone', true);
@@ -102,7 +102,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
     }
 
     return say(
-      'Matze: "Manager, das Verbotene Riff... es brennt in meinen Fingern! Es ist schwer zu kontrollieren. Ich hoffe, ich zerreiße nicht die ganze Realität heute Abend!"'
+      'Matze: "Manager, das Verbotene Riff... es brennt in meinen Fingern! Es ist schwer zu kontrollieren. Ich hoffe, ich zerreiße nicht die ganze Realität heute Abend!"',
     );
   }
 
@@ -121,13 +121,11 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             const currentStore = game();
             if (currentStore.flags.backstageRitualPerformed) {
               currentStore.setDialogue(
-                'Matze: "Unser Ritual hat die Frequenzen besiegelt. Wir sind unaufhaltsam!"'
+                'Matze: "Unser Ritual hat die Frequenzen besiegelt. Wir sind unaufhaltsam!"',
               );
               currentStore.increaseBandMood(40, 'id_325f4251');
             } else {
-              currentStore.setDialogue(
-                'Matze: "Ich spüre es. Die Luft flirrt."'
-              );
+              currentStore.setDialogue('Matze: "Ich spüre es. Die Luft flirrt."');
               currentStore.increaseBandMood(20, 'id_10724903');
             }
             currentStore.setFlag('salzgitterMatzeWirtDone', true);
@@ -137,9 +135,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
           text: 'Wir brechen den Fluch.',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Mit jedem Akkord ein Stück mehr. Für den Metal!"'
-            );
+            currentStore.setDialogue('Matze: "Mit jedem Akkord ein Stück mehr. Für den Metal!"');
             currentStore.increaseBandMood(20, 'id_b732ea82');
             currentStore.setFlag('salzgitterMatzeWirtDone', true);
           },
@@ -159,7 +155,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
             action: () => {
               const currentStore = game();
               currentStore.setDialogue(
-                'Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."'
+                'Matze: "Die Geometrie des Feedbacks... sie ist heute Abend perfekt. Wir werden eins mit der Frequenz."',
               );
               if (!currentStore.flags.salzgitterMatzeDeepTalkDone) {
                 currentStore.increaseBandMood(40, 'id_be96cb15');
@@ -181,7 +177,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
       };
     }
     return say(
-      'Matze: "Ich hab über das nachgedacht, was du über den Lärm gesagt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"'
+      'Matze: "Ich hab über das nachgedacht, was du über den Lärm gesagt hast. Heute Abend spielen wir für die, die nicht mehr da sind. Mit vollem Zorn!"',
     );
   }
 
@@ -210,9 +206,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
   }
 
   if (bandMood > 80) {
-    return say(
-      'Matze: "Ich hab noch nie so eine Energie gespürt! Salzgitter wird brennen!"'
-    );
+    return say('Matze: "Ich hab noch nie so eine Energie gespürt! Salzgitter wird brennen!"');
   }
 
   return say('Matze: "SZaturday 3 Riff Night! Das wird der Wahnsinn!"');

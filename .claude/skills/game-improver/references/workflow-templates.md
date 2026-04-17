@@ -63,6 +63,7 @@ Commit: `refactor(scope): short description`
 3. **Validate**: Confirm the improvement
 
 Common leaks in this codebase:
+
 - `setInterval` in scenes not cleared on unmount (scenes fully remount on transition)
 - Audio nodes not stopped on scene change
 - Event listeners not removed in cleanup
@@ -98,6 +99,7 @@ pnpm run build         # Production build
 ```
 
 Code-level checks:
+
 - [ ] No direct state mutation (use `set()` with spread)
 - [ ] New mutators added to `useStore` when state behavior changes
 - [ ] Numbers clamped (bandMood via `increaseBandMood()`, not manual `set()`)

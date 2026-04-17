@@ -9,7 +9,7 @@ description: |
 user-invocable: true
 metadata:
   scope: user
-  version: "1.1.0"
+  version: '1.1.0'
 ---
 
 # Game Improver
@@ -22,15 +22,15 @@ Implement production-ready changes for Neurotoxic — bug fixes, features, refac
 
 Identify which systems the request touches, then use Read on the relevant files and their AGENTS.md before writing any code. Claude Code auto-loads AGENTS.md files — these contain the authoritative conventions for each subsystem.
 
-| System | Key Files | AGENTS.md to Read |
-|--------|-----------|-------------------|
-| State / store | `src/store.ts` | `src/AGENTS.md` |
-| Dialogue trees | Scene files + `dialog_uebersicht.md` | `src/components/scenes/AGENTS.md` |
-| Scenes / physics | `src/components/scenes/*.tsx`, `Game.tsx` | `src/components/scenes/AGENTS.md` |
-| Audio | `src/audio.ts` | `src/AGENTS.md` (Audio section) |
-| UI / components | `src/components/*.tsx` | `src/components/AGENTS.md` |
-| Inventory / crafting | `src/store.ts` (RECIPES array + mutators) | `src/AGENTS.md` (Store section) |
-| Quests | `src/store.ts` + scene files | `src/AGENTS.md` (Quest API section) |
+| System               | Key Files                                 | AGENTS.md to Read                   |
+| -------------------- | ----------------------------------------- | ----------------------------------- |
+| State / store        | `src/store.ts`                            | `src/AGENTS.md`                     |
+| Dialogue trees       | Scene files + `dialog_uebersicht.md`      | `src/components/scenes/AGENTS.md`   |
+| Scenes / physics     | `src/components/scenes/*.tsx`, `Game.tsx` | `src/components/scenes/AGENTS.md`   |
+| Audio                | `src/audio.ts`                            | `src/AGENTS.md` (Audio section)     |
+| UI / components      | `src/components/*.tsx`                    | `src/components/AGENTS.md`          |
+| Inventory / crafting | `src/store.ts` (RECIPES array + mutators) | `src/AGENTS.md` (Store section)     |
+| Quests               | `src/store.ts` + scene files              | `src/AGENTS.md` (Quest API section) |
 
 ### 2. Locate and Inspect
 
@@ -42,6 +42,7 @@ Identify which systems the request touches, then use Read on the relevant files 
 - Use Grep to find the actual call site before diagnosing a bug — the issue is often in a different file than expected
 
 **For bugs specifically — diagnose before fixing:**
+
 1. Find the code path that produces the symptom (Grep for the relevant function or item name)
 2. Read the implementation to understand what it actually does vs. what it should do
 3. Identify the exact gap — missing call, wrong field, wrong condition
@@ -78,7 +79,7 @@ When adding a new scene, all 6 steps are required. Missing any one causes a sile
 3. **Game.tsx wiring** — Import and add `{scene === 'your_scene' && <YourScene />}` in the Physics block
 4. **Ambient audio** — Add a `'your_scene'` branch to `startAmbient()` in `src/audio.ts` (also add it to the union type on that function)
 5. **dialog_uebersicht.md** — Add a section with dialogue trees, quest triggers, items, and BandMood deltas
-6. **SceneEnvironmentSetpieces** *(if shared décor is needed)* — Add a `variant` to `src/components/scenes/SceneEnvironmentSetpieces.tsx` and render `<SceneEnvironmentSetpieces variant="..." />` in the scene
+6. **SceneEnvironmentSetpieces** _(if shared décor is needed)_ — Add a `variant` to `src/components/scenes/SceneEnvironmentSetpieces.tsx` and render `<SceneEnvironmentSetpieces variant="..." />` in the scene
 
 ## Critical Gotchas
 

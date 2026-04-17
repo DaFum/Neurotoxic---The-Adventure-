@@ -72,7 +72,7 @@ describe('checkHasSavedGame', () => {
         quests: [{ status: 'active', completed: false }],
         loreEntries: [{ discovered: false }],
         bandMood: 20,
-        skills: { technical: 0, social: 0, chaos: 0 }
+        skills: { technical: 0, social: 0, chaos: 0 },
       };
       expect(checkHasSavedGame(JSON.stringify({ state }))).toBe(false);
     });
@@ -112,9 +112,15 @@ describe('checkHasSavedGame', () => {
     });
 
     it('returns true when a skill is increased even if bandMood is 20', () => {
-      expect(checkHasSavedGame(JSON.stringify({ state: { bandMood: 20, skills: { technical: 1 } } }))).toBe(true);
-      expect(checkHasSavedGame(JSON.stringify({ state: { bandMood: 20, skills: { social: 1 } } }))).toBe(true);
-      expect(checkHasSavedGame(JSON.stringify({ state: { bandMood: 20, skills: { chaos: 1 } } }))).toBe(true);
+      expect(
+        checkHasSavedGame(JSON.stringify({ state: { bandMood: 20, skills: { technical: 1 } } })),
+      ).toBe(true);
+      expect(
+        checkHasSavedGame(JSON.stringify({ state: { bandMood: 20, skills: { social: 1 } } })),
+      ).toBe(true);
+      expect(
+        checkHasSavedGame(JSON.stringify({ state: { bandMood: 20, skills: { chaos: 1 } } })),
+      ).toBe(true);
     });
   });
 });

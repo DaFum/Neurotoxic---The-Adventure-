@@ -2,23 +2,20 @@ import { type Dialogue, type DialogueOption } from '../../store';
 import { game } from '../shared/helpers';
 
 const FORGOTTEN_LORE_QUEST_ID = 'forgotten_lore';
-const FORGOTTEN_LORE_QUEST_TEXT =
-  'Entschlüssele die vergessene Lore in der Kaminstube';
+const FORGOTTEN_LORE_QUEST_TEXT = 'Entschlüssele die vergessene Lore in der Kaminstube';
 
 function completeForgottenLoreQuest(): void {
   game().completeQuestWithFlag(
     FORGOTTEN_LORE_QUEST_ID,
     'kaminFeuerPact',
     true,
-    FORGOTTEN_LORE_QUEST_TEXT
+    FORGOTTEN_LORE_QUEST_TEXT,
   );
 }
 
 export function buildKaminstubeFireplaceDialogue(): Dialogue {
   const store = game();
-  const loreQuest = store.quests.find(
-    (quest) => quest.id === FORGOTTEN_LORE_QUEST_ID
-  );
+  const loreQuest = store.quests.find((quest) => quest.id === FORGOTTEN_LORE_QUEST_ID);
   const loreQuestCompleted = loreQuest?.status === 'completed';
   const loreAlreadyResolved = loreQuestCompleted || store.flags.kaminFeuerPact;
   const options: DialogueOption[] = [];
@@ -31,7 +28,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setDialogue(
-          'Du verbindest dich mit der uralten Asche. Der Kamin flüstert von Salzgitter: "Dort wird die Grenze zwischen Musik und Realität brechen. Nur eine vereinte Band kann den Riss schließen."'
+          'Du verbindest dich mit der uralten Asche. Der Kamin flüstert von Salzgitter: "Dort wird die Grenze zwischen Musik und Realität brechen. Nur eine vereinte Band kann den Riss schließen."',
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();
@@ -46,7 +43,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setDialogue(
-          'Du schreist in die Flammen. Das Feuer lodert rot auf und faucht: "Salzgitter wird brennen! Nur Einigkeit rettet euch vor der Leere!"'
+          'Du schreist in die Flammen. Das Feuer lodert rot auf und faucht: "Salzgitter wird brennen! Nur Einigkeit rettet euch vor der Leere!"',
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();
@@ -62,7 +59,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setDialogue(
-          'Du decodierst die Frequenzen des Knisterns. Eine Nachricht aus der Vergangenheit: "In Salzgitter wird die Grenze brechen. Vereint die Band."'
+          'Du decodierst die Frequenzen des Knisterns. Eine Nachricht aus der Vergangenheit: "In Salzgitter wird die Grenze brechen. Vereint die Band."',
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();
@@ -78,7 +75,7 @@ export function buildKaminstubeFireplaceDialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setDialogue(
-          'Du verstehst das Flüstern! Es erzählt von einem versteckten Archiv unter der Bühne, das die wahren Ursprünge des Industrial Metal enthält. Du hast die Lore entschlüsselt.'
+          'Du verstehst das Flüstern! Es erzählt von einem versteckten Archiv unter der Bühne, das die wahren Ursprünge des Industrial Metal enthält. Du hast die Lore entschlüsselt.',
         );
         currentStore.discoverLore('kamin_prophecy');
         completeForgottenLoreQuest();

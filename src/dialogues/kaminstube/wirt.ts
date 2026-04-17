@@ -17,13 +17,13 @@ function buildLegacy1982Dialogue(): Dialogue {
               action: () => {
                 const currentStore = game();
                 currentStore.setDialogue(
-                  'Wirt: "Na gut. Er machte einen Pakt mit der Void. Der Bassist war der Preis für den ultimativen Riff. Salzgitter war nur der Anfang. Passt auf euch auf."'
+                  'Wirt: "Na gut. Er machte einen Pakt mit der Void. Der Bassist war der Preis für den ultimativen Riff. Salzgitter war nur der Anfang. Passt auf euch auf."',
                 );
                 currentStore.completeQuestWithFlag(
                   'wirt_legacy',
                   'wirtLegacy1982',
                   true,
-                  'Erfahre die vollständige Geschichte von 1982 vom Wirt'
+                  'Erfahre die vollständige Geschichte von 1982 vom Wirt',
                 );
                 currentStore.increaseBandMood(25, 'id_400587e0');
                 currentStore.increaseSkill('social', 5);
@@ -35,13 +35,13 @@ function buildLegacy1982Dialogue(): Dialogue {
               action: () => {
                 const currentStore = game();
                 currentStore.setDialogue(
-                  'Wirt: "Für die Band... okay. Der Manager verkaufte den Bassisten an die Leere, um den perfekten Industrial-Sound zu erschaffen. Begeht nicht den gleichen Fehler."'
+                  'Wirt: "Für die Band... okay. Der Manager verkaufte den Bassisten an die Leere, um den perfekten Industrial-Sound zu erschaffen. Begeht nicht den gleichen Fehler."',
                 );
                 currentStore.completeQuestWithFlag(
                   'wirt_legacy',
                   'wirtLegacy1982',
                   true,
-                  'Erfahre die vollständige Geschichte von 1982 vom Wirt'
+                  'Erfahre die vollständige Geschichte von 1982 vom Wirt',
                 );
                 currentStore.increaseBandMood(20, 'id_10f1e0b8');
                 currentStore.increaseSkill('social', 3);
@@ -53,13 +53,13 @@ function buildLegacy1982Dialogue(): Dialogue {
               action: () => {
                 const currentStore = game();
                 currentStore.setDialogue(
-                  'Wirt: "Schrei nicht so! Okay, okay. Der Manager hat den Bassisten geopfert. An die Frequenz! Zufrieden?! Jetzt geh spielen!"'
+                  'Wirt: "Schrei nicht so! Okay, okay. Der Manager hat den Bassisten geopfert. An die Frequenz! Zufrieden?! Jetzt geh spielen!"',
                 );
                 currentStore.completeQuestWithFlag(
                   'wirt_legacy',
                   'wirtLegacy1982',
                   true,
-                  'Erfahre die vollständige Geschichte von 1982 vom Wirt'
+                  'Erfahre die vollständige Geschichte von 1982 vom Wirt',
                 );
                 currentStore.increaseBandMood(15, 'id_de677e46');
                 currentStore.increaseSkill('chaos', 3);
@@ -68,9 +68,7 @@ function buildLegacy1982Dialogue(): Dialogue {
             {
               text: 'Lass gut sein.',
               action: () => {
-                game().setDialogue(
-                  'Wirt: "Besser ist das. Die Wände hier haben Ohren."'
-                );
+                game().setDialogue('Wirt: "Besser ist das. Die Wände hier haben Ohren."');
               },
             },
             {
@@ -91,13 +89,13 @@ function buildLegacy1982Dialogue(): Dialogue {
       action: () => {
         const currentStore = game();
         currentStore.setDialogue(
-          'Wirt: "Der Roadie?! Er ist noch da... dann weißt du es schon. Der Manager hat den Bassisten geopfert. Er hat einen Pakt mit der Void geschlossen. Passt auf, dass euch in Salzgitter nicht dasselbe passiert."'
+          'Wirt: "Der Roadie?! Er ist noch da... dann weißt du es schon. Der Manager hat den Bassisten geopfert. Er hat einen Pakt mit der Void geschlossen. Passt auf, dass euch in Salzgitter nicht dasselbe passiert."',
         );
         currentStore.completeQuestWithFlag(
           'wirt_legacy',
           'wirtLegacy1982',
           true,
-          'Erfahre die vollständige Geschichte von 1982 vom Wirt'
+          'Erfahre die vollständige Geschichte von 1982 vom Wirt',
         );
         currentStore.increaseBandMood(30, 'id_f77e6a44');
       },
@@ -119,7 +117,7 @@ function buildHighMoodDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Wirt: "Es war laut. So laut, dass die Fenster in ganz Tangermünde zersprangen. Der Manager verschwand im Feedback. Manche sagen, er ist immer noch da draußen."'
+            'Wirt: "Es war laut. So laut, dass die Fenster in ganz Tangermünde zersprangen. Der Manager verschwand im Feedback. Manche sagen, er ist immer noch da draußen."',
           );
           currentStore.increaseBandMood(10, 'id_2826501b');
         },
@@ -128,7 +126,7 @@ function buildHighMoodDialogue(): Dialogue {
         text: 'Wie kommen wir nach Salzgitter?',
         action: () => {
           game().setDialogue(
-            'Wirt: "Folgt dem Lärm. Wenn die Realität dünn wird, seid ihr fast da."'
+            'Wirt: "Folgt dem Lärm. Wenn die Realität dünn wird, seid ihr fast da."',
           );
         },
       },
@@ -138,7 +136,7 @@ function buildHighMoodDialogue(): Dialogue {
 
 function buildLowMoodDialogue(): Dialogue {
   return say(
-    'Wirt: "Ihr seht aus, als hättet ihr gerade eure letzte Kassette im Regen verloren. Trinkt was, oder verschwindet. In der Kaminstube überleben nur die Harten."'
+    'Wirt: "Ihr seht aus, als hättet ihr gerade eure letzte Kassette im Regen verloren. Trinkt was, oder verschwindet. In der Kaminstube überleben nur die Harten."',
   );
 }
 
@@ -151,22 +149,20 @@ function buildNeutralDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           if (currentStore.hasItem('Bier')) {
-            currentStore.setDialogue(
-              'Wirt: "Du hast doch schon eins! Trink das erst mal aus."'
-            );
+            currentStore.setDialogue('Wirt: "Du hast doch schon eins! Trink das erst mal aus."');
             return;
           }
 
           const pickedUpBeer = currentStore.addToInventory('Bier');
           if (pickedUpBeer) {
             currentStore.setDialogue(
-              'Wirt: "Klar, hier. Das offizielle Schmiermittel für den Industrial-Motor."'
+              'Wirt: "Klar, hier. Das offizielle Schmiermittel für den Industrial-Motor."',
             );
             return;
           }
 
           currentStore.setDialogue(
-            'Wirt: "Heute ist Schluss mit Freibier. Ich geb dir keins mehr."'
+            'Wirt: "Heute ist Schluss mit Freibier. Ich geb dir keins mehr."',
           );
         },
       },
@@ -174,7 +170,7 @@ function buildNeutralDialogue(): Dialogue {
         text: 'Wer bist du?',
         action: () => {
           game().setDialogue(
-            'Wirt: "Ich bin der Hüter der Stille, die nach dem Knall kommt. Und ich zapfe das beste Bier der Region."'
+            'Wirt: "Ich bin der Hüter der Stille, die nach dem Knall kommt. Und ich zapfe das beste Bier der Region."',
           );
         },
       },

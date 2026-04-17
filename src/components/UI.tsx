@@ -7,20 +7,34 @@
  * - Enhanced dialogue system with visual feedback for locked options.
  * - Options now grey out and disable if requirements are not met.
  * - Added skill/trait requirement labels to locked options.
- * 
+ *
  * #2: NEXT STEPS & IDEAS
  * - Expand questlines with branching outcomes.
  * - Refine NPC dialogue and lore.
  * - Introduce scene-specific quests for remaining scenes.
  * - Integrate character traits/skills deeper into dialogue.
  * - Add more complex dialogue branching and visual effects.
- * 
+ *
  * #3: ERRORS & SOLUTIONS
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
 import { type QuestStatus, type Quest, useStore } from '../store';
 import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
-import { Backpack, X, RotateCcw, Play, LogOut, CheckCircle2, Heart, Plus, Activity, BookOpen, Eye, EyeOff, Pause } from 'lucide-react';
+import {
+  Backpack,
+  X,
+  RotateCcw,
+  Play,
+  LogOut,
+  CheckCircle2,
+  Heart,
+  Plus,
+  Activity,
+  BookOpen,
+  Eye,
+  EyeOff,
+  Pause,
+} from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'motion/react';
 import { GlitchOverlay } from './ui/GlitchOverlay';
@@ -70,7 +84,19 @@ const getQuestStatusMeta = (status: QuestStatus) => {
   };
 };
 
-function EmptyState({ icon: Icon, title, description }: { icon: React.ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>, title: string, description: string }) {
+function EmptyState({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: React.ComponentType<{
+    size?: number;
+    className?: string;
+    'aria-hidden'?: boolean | 'true' | 'false';
+  }>;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="flex flex-col items-center justify-center py-6 w-full text-center gap-2 bg-zinc-900/30 border border-zinc-800/50">
       <Icon size={20} className="text-zinc-700" aria-hidden="true" />
@@ -104,12 +130,12 @@ export function UI() {
   const loreEntries = useStore((state) => state.loreEntries);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showLoreCodex, setShowLoreCodex] = useState(false);
-  const [showHudPanels, setShowHudPanels] = useState(() => (
-    typeof window === 'undefined' ? true : window.innerWidth >= 1280
-  ));
-  const [isCompactViewport, setIsCompactViewport] = useState(() => (
-    typeof window === 'undefined' ? false : window.innerWidth < 1280
-  ));
+  const [showHudPanels, setShowHudPanels] = useState(() =>
+    typeof window === 'undefined' ? true : window.innerWidth >= 1280,
+  );
+  const [isCompactViewport, setIsCompactViewport] = useState(() =>
+    typeof window === 'undefined' ? false : window.innerWidth < 1280,
+  );
   const [compactHudTab, setCompactHudTab] = useState<'status' | 'inventory' | 'quests'>('status');
   const hasSyncedViewportRef = useRef(false);
 
@@ -207,17 +233,18 @@ export function UI() {
       return changed ? newSelected : prev;
     });
   }, [inventoryCounts]);
-  const sceneLabel = scene === 'proberaum'
-    ? 'PROBERAUM_01'
-    : scene === 'tourbus'
-      ? 'VAN_INTERIOR'
-      : scene === 'backstage'
-        ? 'BACKSTAGE_ZONE'
-        : scene === 'void_station'
-          ? 'VOID_STATION_440HZ'
-          : scene === 'kaminstube'
-            ? 'TANGERMÜNDE_STUBE'
-            : 'SALZGITTER_RIFF';
+  const sceneLabel =
+    scene === 'proberaum'
+      ? 'PROBERAUM_01'
+      : scene === 'tourbus'
+        ? 'VAN_INTERIOR'
+        : scene === 'backstage'
+          ? 'BACKSTAGE_ZONE'
+          : scene === 'void_station'
+            ? 'VOID_STATION_440HZ'
+            : scene === 'kaminstube'
+              ? 'TANGERMÜNDE_STUBE'
+              : 'SALZGITTER_RIFF';
 
   useEffect(() => {
     if (!isPaused) {
@@ -319,10 +346,15 @@ export function UI() {
   const glitchIntensity = Math.max(0, (bandMood - 70) / 30) + (scene === 'void_station' ? 0.3 : 0);
 
   return (
-    <div className={`absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 ${bandMood > 85 ? 'animate-pulse brightness-125' : ''} ${bandMood > 90 ? 'animate-glitch' : ''}`}>
+    <div
+      className={`absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 ${bandMood > 85 ? 'animate-pulse brightness-125' : ''} ${bandMood > 90 ? 'animate-glitch' : ''}`}
+    >
       <GlitchOverlay glitchIntensity={glitchIntensity} />
 
-      <div className={`absolute top-4 left-1/2 -translate-x-1/2 pointer-events-auto z-20 ${isCompactViewport ? 'w-[calc(100%-7rem)]' : 'w-[min(560px,calc(100%-9rem))]'}`}>
+      <div
+        aria-hidden={!!dialogue}
+        className={`absolute top-4 left-1/2 -translate-x-1/2 pointer-events-auto z-20 ${isCompactViewport ? 'w-[calc(100%-7rem)]' : 'w-[min(560px,calc(100%-9rem))]'}`}
+      >
         <div className="bg-black/80 border border-toxic/30 px-3 py-2 backdrop-blur-sm">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[9px] md:text-[10px] font-mono uppercase tracking-wider">
             <span className="text-toxic font-bold">{sceneLabel}</span>
@@ -334,6 +366,8 @@ export function UI() {
       </div>
 
       <button
+        aria-hidden={!!dialogue}
+        disabled={!!dialogue}
         onClick={() => setShowHudPanels((prev) => !prev)}
         className="absolute top-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         aria-label="Toggle HUD panels"
@@ -346,32 +380,38 @@ export function UI() {
 
       {/* Top Bar */}
       {showHudPanels && isCompactViewport && (
-        <div className="absolute top-20 left-3 right-3 pointer-events-none z-20">
+        <div
+          aria-hidden={!!dialogue}
+          className="absolute top-20 left-3 right-3 pointer-events-none z-20"
+        >
           <div className="bg-black/90 border border-toxic/30 p-2 pointer-events-auto">
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setCompactHudTab('status')}
-                aria-pressed={compactHudTab === 'status'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
-                  compactHudTab === 'status' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
+                  compactHudTab === 'status'
+                    ? 'border-toxic bg-toxic/20 text-toxic'
+                    : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
               >
                 Status
               </button>
               <button
                 onClick={() => setCompactHudTab('inventory')}
-                aria-pressed={compactHudTab === 'inventory'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
-                  compactHudTab === 'inventory' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
+                  compactHudTab === 'inventory'
+                    ? 'border-toxic bg-toxic/20 text-toxic'
+                    : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
               >
                 Cargo
               </button>
               <button
                 onClick={() => setCompactHudTab('quests')}
-                aria-pressed={compactHudTab === 'quests'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
-                  compactHudTab === 'quests' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
+                  compactHudTab === 'quests'
+                    ? 'border-toxic bg-toxic/20 text-toxic'
+                    : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
               >
                 Quests
@@ -394,7 +434,9 @@ export function UI() {
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-2 text-[10px] font-mono">
                   <div className="text-zinc-500">TRAIT</div>
-                  <div className="text-right text-toxic font-black uppercase">{trait || 'NONE'}</div>
+                  <div className="text-right text-toxic font-black uppercase">
+                    {trait || 'NONE'}
+                  </div>
                   <div className="text-zinc-500">TECHNICAL</div>
                   <div className="text-right text-zinc-200">{skills.technical}</div>
                   <div className="text-zinc-500">SOCIAL</div>
@@ -406,13 +448,20 @@ export function UI() {
             )}
 
             {compactHudTab === 'inventory' && (
-              <div className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black" tabIndex={0}>
+              <div
+                className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                tabIndex={0}
+              >
                 <div className="flex items-center gap-2 mb-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2">
                   <Backpack size={14} />
                   Cargo_Manifest
                 </div>
                 {inventoryStacks.length === 0 ? (
-                  <EmptyState icon={Backpack} title="No Assets" description="Explore the area to find items." />
+                  <EmptyState
+                    icon={Backpack}
+                    title="No Assets"
+                    description="Explore the area to find items."
+                  />
                 ) : (
                   <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-2">
@@ -421,7 +470,7 @@ export function UI() {
                         return (
                           <motion.button
                             whileTap={{ scale: 0.96 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                             key={item}
                             onClick={() => toggleItemSelection(item, count)}
                             aria-pressed={selectedCount > 0}
@@ -443,7 +492,9 @@ export function UI() {
                         handleCombine();
                       }}
                       aria-disabled={selectedItems.length !== 2}
-                      aria-describedby={selectedItems.length !== 2 ? "compact-merge-helper" : undefined}
+                      aria-describedby={
+                        selectedItems.length !== 2 ? 'compact-merge-helper' : undefined
+                      }
                       className={`w-full mt-1 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                         selectedItems.length === 2
                           ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
@@ -454,7 +505,10 @@ export function UI() {
                       Execute_Merge
                     </button>
                     {selectedItems.length !== 2 && (
-                      <div id="compact-merge-helper" className="text-zinc-500 text-[8px] text-center mt-1 uppercase tracking-widest">
+                      <div
+                        id="compact-merge-helper"
+                        className="text-zinc-500 text-[8px] text-center mt-1 uppercase tracking-widest"
+                      >
                         Select exactly two items to merge
                       </div>
                     )}
@@ -464,25 +518,41 @@ export function UI() {
             )}
 
             {compactHudTab === 'quests' && (
-              <div className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black" tabIndex={0}>
+              <div
+                className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                tabIndex={0}
+              >
                 <div className="flex items-center gap-2 mb-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2">
                   <CheckCircle2 size={14} />
                   Mission_Objectives
                 </div>
                 <div className="flex flex-col gap-3">
                   {visibleQuests.length === 0 ? (
-                    <EmptyState icon={CheckCircle2} title="No Objectives" description="Interact with objects and people." />
+                    <EmptyState
+                      icon={CheckCircle2}
+                      title="No Objectives"
+                      description="Interact with objects and people."
+                    />
                   ) : (
                     visibleQuests.map((quest) => {
                       const statusMeta = getQuestStatusMeta(quest.status);
                       return (
-                        <div key={quest.id} className={`flex items-start gap-2 text-[10px] font-mono leading-tight ${statusMeta.textClass}`}>
-                          <div className={`mt-0.5 shrink-0 w-2 h-2 border ${statusMeta.dotClass}`} />
+                        <div
+                          key={quest.id}
+                          className={`flex items-start gap-2 text-[10px] font-mono leading-tight ${statusMeta.textClass}`}
+                        >
+                          <div
+                            className={`mt-0.5 shrink-0 w-2 h-2 border ${statusMeta.dotClass}`}
+                          />
                           <div className="flex-1 min-w-0">
-                            <span className={`inline-flex items-center border px-1 py-0.5 text-[8px] font-black uppercase tracking-widest ${statusMeta.badgeClass}`}>
+                            <span
+                              className={`inline-flex items-center border px-1 py-0.5 text-[8px] font-black uppercase tracking-widest ${statusMeta.badgeClass}`}
+                            >
                               {statusMeta.label}
                             </span>
-                            <div className={`mt-1 ${statusMeta.crossedOut ? 'line-through' : ''}`}>{quest.text}</div>
+                            <div className={`mt-1 ${statusMeta.crossedOut ? 'line-through' : ''}`}>
+                              {quest.text}
+                            </div>
                           </div>
                         </div>
                       );
@@ -496,211 +566,250 @@ export function UI() {
       )}
 
       {!isCompactViewport && (
-        <div className="flex justify-between items-start">
+        <div aria-hidden={!!dialogue} className="flex justify-between items-start">
           {showHudPanels && (
-          <div className="flex flex-col gap-6">
-            <div className="bg-black/90 p-5 brutal-border-toxic pointer-events-auto flex flex-col gap-3 animate-reveal">
-              <div>
-                <h1 className="text-4xl text-toxic leading-none mb-1">
-                  NEUROTOXIC
-                </h1>
-                <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] font-bold">
-                  Industrial Management Interface // v2.6
-                </p>
-                <div className="mt-4 flex items-center gap-2 text-xs font-mono text-toxic/80 bg-toxic/5 px-2 py-1 border border-toxic/20">
-                  <span className="animate-pulse">●</span>
-                  LOCATION: {sceneLabel}
-                </div>
-              </div>
-            </div>
-
-            {/* Band Mood Meter */}
-            <div
-              className="bg-black/90 p-4 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:100ms]"
-              role="progressbar"
-              aria-valuenow={bandMood}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label="Band Vibe"
-            >
-              <div className="flex justify-between items-center mb-3">
-                <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                  <Heart size={12} className={bandMood > 50 ? "text-toxic" : "text-blood"} fill={bandMood > 50 ? "currentColor" : "none"} />
-                  Band_Vibe
-                </div>
-                <span className="text-[10px] font-mono text-toxic">{bandMood}%</span>
-              </div>
-              <div className="w-full h-1.5 bg-zinc-900 overflow-hidden flex gap-0.5">
-                {METER_SEGMENTS.map((i) => (
-                  <div
-                    key={i}
-                    className={`h-full w-full transition-colors duration-500 ${
-                      (i / 20) * 100 < bandMood
-                        ? (bandMood > 70 ? 'bg-toxic' : bandMood > 40 ? 'bg-yellow-500' : 'bg-blood')
-                        : 'bg-zinc-800'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* System Status Panel (New) */}
-            <div className="bg-black/90 p-3 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:150ms] border-l-toxic">
-              <div className="text-[8px] font-mono text-zinc-500 uppercase mb-2 flex items-center gap-2">
-                <Activity size={10} />
-                Manager_Profile
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between text-[10px] font-mono">
-                  <span className="text-zinc-500">TRAIT:</span>
-                  <span className="text-toxic font-black uppercase tracking-widest">{trait || 'NONE'}</span>
-                </div>
-                <div className="h-px bg-zinc-800 w-full" />
-                <div className="grid grid-cols-1 gap-1">
-                  <div className="flex justify-between text-[9px] font-mono">
-                    <span className="text-zinc-500">TECHNICAL:</span>
-                    <span className="text-zinc-200">{skills.technical}</span>
-                  </div>
-                  <div className="flex justify-between text-[9px] font-mono">
-                    <span className="text-zinc-500">SOCIAL:</span>
-                    <span className="text-zinc-200">{skills.social}</span>
-                  </div>
-                  <div className="flex justify-between text-[9px] font-mono">
-                    <span className="text-zinc-500">CHAOS:</span>
-                    <span className="text-zinc-200">{skills.chaos}</span>
+            <div className="flex flex-col gap-6">
+              <div className="bg-black/90 p-5 brutal-border-toxic pointer-events-auto flex flex-col gap-3 animate-reveal">
+                <div>
+                  <h1 className="text-4xl text-toxic leading-none mb-1">NEUROTOXIC</h1>
+                  <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] font-bold">
+                    Industrial Management Interface // v2.6
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-xs font-mono text-toxic/80 bg-toxic/5 px-2 py-1 border border-toxic/20">
+                    <span className="animate-pulse">●</span>
+                    LOCATION: {sceneLabel}
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* System Status Panel (Original) */}
-            <div className="bg-black/90 p-3 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:180ms] border-l-toxic">
-              <div className="text-[8px] font-mono text-zinc-500 uppercase mb-2 flex items-center gap-2">
-                <Activity size={10} />
-                System_Telemetry
+              {/* Band Mood Meter */}
+              <div
+                className="bg-black/90 p-4 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:100ms]"
+                role="progressbar"
+                aria-valuenow={bandMood}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Band Vibe"
+              >
+                <div className="flex justify-between items-center mb-3">
+                  <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                    <Heart
+                      size={12}
+                      className={bandMood > 50 ? 'text-toxic' : 'text-blood'}
+                      fill={bandMood > 50 ? 'currentColor' : 'none'}
+                    />
+                    Band_Vibe
+                  </div>
+                  <span className="text-[10px] font-mono text-toxic">{bandMood}%</span>
+                </div>
+                <div className="w-full h-1.5 bg-zinc-900 overflow-hidden flex gap-0.5">
+                  {METER_SEGMENTS.map((i) => (
+                    <div
+                      key={i}
+                      className={`h-full w-full transition-colors duration-500 ${
+                        (i / 20) * 100 < bandMood
+                          ? bandMood > 70
+                            ? 'bg-toxic'
+                            : bandMood > 40
+                              ? 'bg-yellow-500'
+                              : 'bg-blood'
+                          : 'bg-zinc-800'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <div className="flex justify-between text-[10px] font-mono">
-                  <span className="text-zinc-500">SONIC_OUTPUT:</span>
-                  <span className="text-toxic">{bandMood * 12}db</span>
+
+              {/* System Status Panel (New) */}
+              <div className="bg-black/90 p-3 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:150ms] border-l-toxic">
+                <div className="text-[8px] font-mono text-zinc-500 uppercase mb-2 flex items-center gap-2">
+                  <Activity size={10} />
+                  Manager_Profile
                 </div>
-                <div className="flex justify-between text-[10px] font-mono">
-                  <span className="text-zinc-500">SYNC_RATE:</span>
-                  <span className="text-toxic">{(bandMood * 0.98).toFixed(1)}%</span>
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between text-[10px] font-mono">
+                    <span className="text-zinc-500">TRAIT:</span>
+                    <span className="text-toxic font-black uppercase tracking-widest">
+                      {trait || 'NONE'}
+                    </span>
+                  </div>
+                  <div className="h-px bg-zinc-800 w-full" />
+                  <div className="grid grid-cols-1 gap-1">
+                    <div className="flex justify-between text-[9px] font-mono">
+                      <span className="text-zinc-500">TECHNICAL:</span>
+                      <span className="text-zinc-200">{skills.technical}</span>
+                    </div>
+                    <div className="flex justify-between text-[9px] font-mono">
+                      <span className="text-zinc-500">SOCIAL:</span>
+                      <span className="text-zinc-200">{skills.social}</span>
+                    </div>
+                    <div className="flex justify-between text-[9px] font-mono">
+                      <span className="text-zinc-500">CHAOS:</span>
+                      <span className="text-zinc-200">{skills.chaos}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between text-[10px] font-mono">
-                  <span className="text-zinc-500">STRESS_LEVEL:</span>
-                  <span className={bandMood > 80 ? "text-blood animate-pulse" : "text-zinc-400"}>
-                    {bandMood > 80 ? 'CRITICAL' : bandMood > 50 ? 'STABLE' : 'LOW'}
-                  </span>
+              </div>
+
+              {/* System Status Panel (Original) */}
+              <div className="bg-black/90 p-3 brutal-border pointer-events-auto w-56 animate-reveal [animation-delay:180ms] border-l-toxic">
+                <div className="text-[8px] font-mono text-zinc-500 uppercase mb-2 flex items-center gap-2">
+                  <Activity size={10} />
+                  System_Telemetry
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex justify-between text-[10px] font-mono">
+                    <span className="text-zinc-500">SONIC_OUTPUT:</span>
+                    <span className="text-toxic">{bandMood * 12}db</span>
+                  </div>
+                  <div className="flex justify-between text-[10px] font-mono">
+                    <span className="text-zinc-500">SYNC_RATE:</span>
+                    <span className="text-toxic">{(bandMood * 0.98).toFixed(1)}%</span>
+                  </div>
+                  <div className="flex justify-between text-[10px] font-mono">
+                    <span className="text-zinc-500">STRESS_LEVEL:</span>
+                    <span className={bandMood > 80 ? 'text-blood animate-pulse' : 'text-zinc-400'}>
+                      {bandMood > 80 ? 'CRITICAL' : bandMood > 50 ? 'STABLE' : 'LOW'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           )}
 
           {/* Inventory & Quests */}
           {showHudPanels && (
-          <div className="flex flex-col gap-6 items-end">
-            {/* Inventory */}
-            <div className="bg-black/90 p-4 brutal-border pointer-events-auto flex flex-col items-end min-w-[240px] animate-reveal [animation-delay:200ms]">
-              <div className="flex items-center gap-2 mb-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 w-full pb-2">
-                <Backpack size={14} />
-                Cargo_Manifest
-              </div>
-              {inventoryStacks.length === 0 ? (
-                <EmptyState icon={Backpack} title="No Assets" description="Explore the area to find items." />
-              ) : (
-                <div className="flex flex-col gap-3 w-full">
-                  <div className="grid grid-cols-2 gap-2">
-                    {inventoryStacks.map(({ item, count }) => {
-                      const selectedCount = selectedItemCounts.get(item) ?? 0;
-                      return (
-                      <motion.button
-                        whileHover={{ scale: 1.06 }}
-                        whileTap={{ scale: 0.94 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                        key={item}
-                        onClick={() => toggleItemSelection(item, count)}
-                        aria-pressed={selectedCount > 0}
-                        className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic ${
-                          selectedCount > 0
-                          ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
-                          : 'bg-zinc-900/50 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-500'
-                        }`}
-                      >
-                        {count > 1 ? `${item} x${count}` : item}
-                        {selectedCount > 0 ? ` [${selectedCount}/2]` : ''}
-                      </motion.button>
-                    )})}
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (selectedItems.length !== 2) return;
-                      handleCombine();
-                    }}
-                    aria-disabled={selectedItems.length !== 2}
-                    aria-describedby={selectedItems.length !== 2 ? "full-merge-helper" : undefined}
-                    className={`w-full mt-2 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
-                      selectedItems.length === 2
-                        ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
-                        : 'bg-zinc-900/50 border border-zinc-800 text-zinc-600 cursor-not-allowed'
-                    }`}
-                  >
-                    <Plus size={14} />
-                    Execute_Merge
-                  </button>
-                  {selectedItems.length !== 2 && (
-                    <div id="full-merge-helper" className="text-zinc-500 text-[8px] text-center mt-1 uppercase tracking-widest">
-                      Select exactly two items to merge
-                    </div>
-                  )}
+            <div className="flex flex-col gap-6 items-end">
+              {/* Inventory */}
+              <div className="bg-black/90 p-4 brutal-border pointer-events-auto flex flex-col items-end min-w-[240px] animate-reveal [animation-delay:200ms]">
+                <div className="flex items-center gap-2 mb-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 w-full pb-2">
+                  <Backpack size={14} />
+                  Cargo_Manifest
                 </div>
-              )}
-            </div>
-
-            {/* Quest Log */}
-            <div className="bg-black/90 p-4 brutal-border pointer-events-auto flex flex-col items-end min-w-[240px] animate-reveal [animation-delay:300ms]">
-              <div className="flex items-center gap-2 mb-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 w-full pb-2">
-                <CheckCircle2 size={14} />
-                Mission_Objectives
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                {visibleQuests.length === 0 ? (
-                  <EmptyState icon={CheckCircle2} title="No Objectives" description="Interact with objects and people." />
+                {inventoryStacks.length === 0 ? (
+                  <EmptyState
+                    icon={Backpack}
+                    title="No Assets"
+                    description="Explore the area to find items."
+                  />
                 ) : (
-                  visibleQuests.map((quest) => {
-                    const statusMeta = getQuestStatusMeta(quest.status);
-                    return (
-                      <div key={quest.id} className={`flex items-start gap-3 text-[10px] font-mono leading-tight ${statusMeta.textClass}`}>
-                        <div className={`mt-0.5 shrink-0 w-2 h-2 border ${statusMeta.dotClass}`} />
-                        <div className="flex-1 min-w-0">
-                          <span className={`inline-flex items-center border px-1 py-0.5 text-[8px] font-black uppercase tracking-widest ${statusMeta.badgeClass}`}>
-                            {statusMeta.label}
-                          </span>
-                          <div className={`mt-1 ${statusMeta.crossedOut ? 'line-through' : ''}`}>{quest.text}</div>
-                        </div>
+                  <div className="flex flex-col gap-3 w-full">
+                    <div className="grid grid-cols-2 gap-2">
+                      {inventoryStacks.map(({ item, count }) => {
+                        const selectedCount = selectedItemCounts.get(item) ?? 0;
+                        return (
+                          <motion.button
+                            whileHover={{ scale: 1.06 }}
+                            whileTap={{ scale: 0.94 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                            key={item}
+                            onClick={() => toggleItemSelection(item, count)}
+                            aria-pressed={selectedCount > 0}
+                            className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic ${
+                              selectedCount > 0
+                                ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
+                                : 'bg-zinc-900/50 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-500'
+                            }`}
+                          >
+                            {count > 1 ? `${item} x${count}` : item}
+                            {selectedCount > 0 ? ` [${selectedCount}/2]` : ''}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (selectedItems.length !== 2) return;
+                        handleCombine();
+                      }}
+                      aria-disabled={selectedItems.length !== 2}
+                      aria-describedby={
+                        selectedItems.length !== 2 ? 'full-merge-helper' : undefined
+                      }
+                      className={`w-full mt-2 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+                        selectedItems.length === 2
+                          ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
+                          : 'bg-zinc-900/50 border border-zinc-800 text-zinc-600 cursor-not-allowed'
+                      }`}
+                    >
+                      <Plus size={14} />
+                      Execute_Merge
+                    </button>
+                    {selectedItems.length !== 2 && (
+                      <div
+                        id="full-merge-helper"
+                        className="text-zinc-500 text-[8px] text-center mt-1 uppercase tracking-widest"
+                      >
+                        Select exactly two items to merge
                       </div>
-                    );
-                  })
+                    )}
+                  </div>
                 )}
               </div>
+
+              {/* Quest Log */}
+              <div className="bg-black/90 p-4 brutal-border pointer-events-auto flex flex-col items-end min-w-[240px] animate-reveal [animation-delay:300ms]">
+                <div className="flex items-center gap-2 mb-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest border-b border-zinc-800 w-full pb-2">
+                  <CheckCircle2 size={14} />
+                  Mission_Objectives
+                </div>
+                <div className="flex flex-col gap-3 w-full">
+                  {visibleQuests.length === 0 ? (
+                    <EmptyState
+                      icon={CheckCircle2}
+                      title="No Objectives"
+                      description="Interact with objects and people."
+                    />
+                  ) : (
+                    visibleQuests.map((quest) => {
+                      const statusMeta = getQuestStatusMeta(quest.status);
+                      return (
+                        <div
+                          key={quest.id}
+                          className={`flex items-start gap-3 text-[10px] font-mono leading-tight ${statusMeta.textClass}`}
+                        >
+                          <div
+                            className={`mt-0.5 shrink-0 w-2 h-2 border ${statusMeta.dotClass}`}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <span
+                              className={`inline-flex items-center border px-1 py-0.5 text-[8px] font-black uppercase tracking-widest ${statusMeta.badgeClass}`}
+                            >
+                              {statusMeta.label}
+                            </span>
+                            <div className={`mt-1 ${statusMeta.crossedOut ? 'line-through' : ''}`}>
+                              {quest.text}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
           )}
         </div>
       )}
 
       {/* Controls Hint */}
-      <div className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none">
-        <span className="text-toxic font-bold">Joystick / WASD</span> = Bewegen<br/>
-        <span className="text-toxic font-bold">Tippen / Klick / E</span> = Interagieren<br/>
-        <span className="text-toxic font-bold">H</span> = HUD ein/aus<br/>
+      <div
+        aria-hidden={!!dialogue}
+        className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none"
+      >
+        <span className="text-toxic font-bold">Joystick / WASD</span> = Bewegen
+        <br />
+        <span className="text-toxic font-bold">Tippen / Klick / E</span> = Interagieren
+        <br />
+        <span className="text-toxic font-bold">H</span> = HUD ein/aus
+        <br />
         <span className="text-toxic font-bold">ESC</span> = Pause
       </div>
 
       {/* Touch-accessible Pause Button */}
       <button
+        aria-hidden={!!dialogue}
+        disabled={!!dialogue}
         onClick={() => setPaused(!isPaused)}
         className="absolute bottom-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         aria-label="Toggle pause menu"

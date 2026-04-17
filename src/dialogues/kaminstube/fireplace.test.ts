@@ -26,16 +26,11 @@ describe('buildKaminstubeFireplaceDialogue', () => {
     });
     useStore
       .getState()
-      .addQuest(
-        'forgotten_lore',
-        'Entschlüssele die vergessene Lore in der Kaminstube'
-      );
+      .addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
 
     const moodBefore = useStore.getState().bandMood;
     const dialogue = buildKaminstubeFireplaceDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Mystic]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Mystic]'));
 
     if (!option) {
       throw new Error('Expected Mystic fireplace option');
@@ -43,16 +38,12 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     executeDialogueOption(option);
     const stateAfter = useStore.getState();
-    const loreQuest = stateAfter.quests.find(
-      (quest) => quest.id === 'forgotten_lore'
-    );
+    const loreQuest = stateAfter.quests.find((quest) => quest.id === 'forgotten_lore');
 
     expect(stateAfter.flags.kaminFeuerPact).toBe(true);
     expect(loreQuest?.status).toBe('completed');
     expect(stateAfter.bandMood).toBe(moodBefore + 20);
-    expect(stateAfter.dialogue?.text).toContain(
-      'Der Kamin flüstert von Salzgitter'
-    );
+    expect(stateAfter.dialogue?.text).toContain('Der Kamin flüstert von Salzgitter');
   });
 
   it('applies chaos skill gain for chaos option', () => {
@@ -64,16 +55,11 @@ describe('buildKaminstubeFireplaceDialogue', () => {
     });
     useStore
       .getState()
-      .addQuest(
-        'forgotten_lore',
-        'Entschlüssele die vergessene Lore in der Kaminstube'
-      );
+      .addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
     const chaosBefore = useStore.getState().skills.chaos;
 
     const dialogue = buildKaminstubeFireplaceDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Chaos 7]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Chaos 7]'));
 
     if (!option) {
       throw new Error('Expected Chaos fireplace option');
@@ -81,9 +67,7 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     executeDialogueOption(option);
     const stateAfter = useStore.getState();
-    const loreQuest = stateAfter.quests.find(
-      (quest) => quest.id === 'forgotten_lore'
-    );
+    const loreQuest = stateAfter.quests.find((quest) => quest.id === 'forgotten_lore');
 
     expect(loreQuest?.status).toBe('completed');
     expect(stateAfter.skills.chaos).toBe(chaosBefore + 3);
@@ -96,7 +80,7 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     const withoutQuest = buildKaminstubeFireplaceDialogue();
     const mysticWithoutQuest = withoutQuest.options?.find((entry) =>
-      entry.text.includes('[Mystic]')
+      entry.text.includes('[Mystic]'),
     );
 
     if (!mysticWithoutQuest) {
@@ -107,14 +91,11 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     useStore
       .getState()
-      .addQuest(
-        'forgotten_lore',
-        'Entschlüssele die vergessene Lore in der Kaminstube'
-      );
+      .addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
 
     const withActiveQuest = buildKaminstubeFireplaceDialogue();
     const mysticWithActiveQuest = withActiveQuest.options?.find((entry) =>
-      entry.text.includes('[Mystic]')
+      entry.text.includes('[Mystic]'),
     );
 
     if (!mysticWithActiveQuest) {
@@ -130,15 +111,10 @@ describe('buildKaminstubeFireplaceDialogue', () => {
     });
     useStore
       .getState()
-      .addQuest(
-        'forgotten_lore',
-        'Entschlüssele die vergessene Lore in der Kaminstube'
-      );
+      .addQuest('forgotten_lore', 'Entschlüssele die vergessene Lore in der Kaminstube');
 
     const firstDialogue = buildKaminstubeFireplaceDialogue();
-    const firstOption = firstDialogue.options?.find((entry) =>
-      entry.text.includes('[Mystic]')
-    );
+    const firstOption = firstDialogue.options?.find((entry) => entry.text.includes('[Mystic]'));
 
     if (!firstOption) {
       throw new Error('Expected first-run Mystic reward option');
@@ -153,23 +129,13 @@ describe('buildKaminstubeFireplaceDialogue', () => {
 
     const secondDialogue = buildKaminstubeFireplaceDialogue();
     const secondOptionTexts = getOptionTexts(secondDialogue);
-    const loreQuestAfterFirst = afterFirst.quests.find(
-      (quest) => quest.id === 'forgotten_lore'
-    );
+    const loreQuestAfterFirst = afterFirst.quests.find((quest) => quest.id === 'forgotten_lore');
 
     expect(loreQuestAfterFirst?.status).toBe('completed');
-    expect(secondOptionTexts.some((text) => text.includes('[Mystic]'))).toBe(
-      false
-    );
-    expect(secondOptionTexts.some((text) => text.includes('[Chaos 7]'))).toBe(
-      false
-    );
-    expect(
-      secondOptionTexts.some((text) => text.includes('[Technical 8]'))
-    ).toBe(false);
-    expect(secondOptionTexts.some((text) => text.includes('[Diplomat]'))).toBe(
-      false
-    );
+    expect(secondOptionTexts.some((text) => text.includes('[Mystic]'))).toBe(false);
+    expect(secondOptionTexts.some((text) => text.includes('[Chaos 7]'))).toBe(false);
+    expect(secondOptionTexts.some((text) => text.includes('[Technical 8]'))).toBe(false);
+    expect(secondOptionTexts.some((text) => text.includes('[Diplomat]'))).toBe(false);
     expect(useStore.getState().bandMood).toBe(moodAfterFirst);
     expect(useStore.getState().skills.social).toBe(socialAfterFirst);
     expect(useStore.getState().skills.technical).toBe(technicalAfterFirst);

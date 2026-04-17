@@ -43,19 +43,14 @@ describe('Proberaum Objects Dialogues', () => {
     it('requests riff absorption when riff is found', () => {
       useStore.getState().addToInventory('Verbotenes Riff');
       const dialogue = buildProberaumDrumMachineDialogue();
-      expect(dialogue.text).toContain(
-        'DIESE FREQUENZ! Es ist das Verbotene Riff!'
-      );
+      expect(dialogue.text).toContain('DIESE FREQUENZ! Es ist das Verbotene Riff!');
       expect(getOptionTexts(dialogue)).toHaveLength(2);
     });
 
     it('does not complete quest or grant rewards when Quanten-Kabel pickup limit is exhausted', () => {
       const store = useStore.getState();
       store.addToInventory('Verbotenes Riff');
-      store.addQuest(
-        'drum_machine',
-        'Finde das Verbotene Riff für die TR-8080'
-      );
+      store.addQuest('drum_machine', 'Finde das Verbotene Riff für die TR-8080');
 
       // Exhaust default pickup limit (1) for Quanten-Kabel.
       store.addToInventory('Quanten-Kabel');
@@ -66,7 +61,7 @@ describe('Proberaum Objects Dialogues', () => {
 
       const dialogue = buildProberaumDrumMachineDialogue();
       const feedOption = dialogue.options?.find(
-        (o) => o.text === 'Ja, füttere deine Schaltkreise.'
+        (o) => o.text === 'Ja, füttere deine Schaltkreise.',
       );
       expect(feedOption).toBeDefined();
 
@@ -113,9 +108,7 @@ describe('Proberaum Objects Dialogues', () => {
         flags: { ...useStore.getState().flags, talkingAmpHeard: true },
       });
       const dialogue = buildProberaumAmpDialogue();
-      expect(dialogue.text).toContain(
-        'Ich brauche einen Lötkolben und Schrottmetall'
-      );
+      expect(dialogue.text).toContain('Ich brauche einen Lötkolben und Schrottmetall');
       const options = getOptionTexts(dialogue);
       expect(options).toContain('Ich suche weiter.');
       expect(options).not.toContain('Repariere den Amp.');
@@ -128,15 +121,11 @@ describe('Proberaum Objects Dialogues', () => {
       useStore.getState().addToInventory('Lötkolben');
       useStore.getState().addToInventory('Schrottmetall');
       const dialogue = buildProberaumAmpDialogue();
-      expect(dialogue.text).toContain(
-        'kannst du meine Schaltkreise neu verlöten'
-      );
+      expect(dialogue.text).toContain('kannst du meine Schaltkreise neu verlöten');
       const options = getOptionTexts(dialogue);
       expect(options).toContain('Repariere den Amp.');
 
-      const repairOption = dialogue.options?.find(
-        (o) => o.text === 'Repariere den Amp.'
-      );
+      const repairOption = dialogue.options?.find((o) => o.text === 'Repariere den Amp.');
       expect(repairOption).toBeDefined();
       executeDialogueOption(repairOption!);
       const state = useStore.getState();
@@ -162,20 +151,13 @@ describe('Proberaum Objects Dialogues', () => {
       });
       useStore
         .getState()
-        .addQuest(
-          'amp_therapy',
-          'Führe eine Therapie-Sitzung mit dem sprechenden Amp durch'
-        );
+        .addQuest('amp_therapy', 'Führe eine Therapie-Sitzung mit dem sprechenden Amp durch');
       const dialogue = buildProberaumAmpDialogue();
-      expect(dialogue.text).toContain(
-        'Bin ich nur ein Werkzeug oder ein Bewusstsein?'
-      );
+      expect(dialogue.text).toContain('Bin ich nur ein Werkzeug oder ein Bewusstsein?');
       const options = getOptionTexts(dialogue);
       expect(options.length).toBeGreaterThan(0);
 
-      const brutalistOption = dialogue.options?.find((o) =>
-        o.text.includes('Werkzeug')
-      );
+      const brutalistOption = dialogue.options?.find((o) => o.text.includes('Werkzeug'));
       expect(brutalistOption).toBeDefined();
       executeDialogueOption(brutalistOption!);
       const state = useStore.getState();
@@ -196,7 +178,7 @@ describe('Proberaum Objects Dialogues', () => {
     it('gives quest on first talk', () => {
       const dialogue = buildProberaumMonitorDialogue();
       expect(dialogue.text).toContain(
-        'Meine Schaltkreise sind mit dem Rauschen der Ewigkeit gefüllt.'
+        'Meine Schaltkreise sind mit dem Rauschen der Ewigkeit gefüllt.',
       );
       expect(getOptionTexts(dialogue)).toHaveLength(2);
     });
@@ -208,7 +190,7 @@ describe('Proberaum Objects Dialogues', () => {
       useStore.getState().addToInventory('Quanten-Kabel');
       const dialogue = buildProberaumMonitorDialogue();
       expect(dialogue.text).toContain(
-        'Das Quanten-Kabel! Meine Frequenzen... sie stabilisieren sich!'
+        'Das Quanten-Kabel! Meine Frequenzen... sie stabilisieren sich!',
       );
       expect(getOptionTexts(dialogue)).toHaveLength(1);
     });

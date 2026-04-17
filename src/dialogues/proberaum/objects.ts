@@ -13,20 +13,17 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
         requiredTrait: 'Visionary',
         action: () => {
           const store = game();
-          store.addQuest(
-            'frequenz_1982',
-            'Sammle die Frequenzfragmente von 1982'
-          );
+          store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
           const pickedUpFragment = store.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
             store.increaseBandMood(15, 'id_b5b87115');
             store.setFlag('frequenz1982_proberaum', true);
             store.setDialogue(
-              'Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.'
+              'Du entschlüsselst die Wand! Die Frequenz von 1982 wurde buchstäblich in die Wände gebrannt. Ein loses Stück Mauerwerk fällt heraus.',
             );
           } else {
             store.setDialogue(
-              'Du entschlüsselst die Wand, aber dein Inventar ist für weitere Frequenzfragmente bereits am Limit.'
+              'Du entschlüsselst die Wand, aber dein Inventar ist für weitere Frequenzfragmente bereits am Limit.',
             );
           }
         },
@@ -36,24 +33,21 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
         requiredSkill: { name: 'technical', level: 8 },
         action: () => {
           const store = game();
-          store.addQuest(
-            'frequenz_1982',
-            'Sammle die Frequenzfragmente von 1982'
-          );
+          store.addQuest('frequenz_1982', 'Sammle die Frequenzfragmente von 1982');
           const pickedUpFragment = store.addToInventory('Frequenzfragment');
           if (pickedUpFragment) {
             store.increaseBandMood(15, 'id_715484e6');
             store.setFlag('frequenz1982_proberaum', true);
             store.setDialogue(
-              'Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.'
+              'Die Wand vibriert, als du die Frequenz bestätigst. Ein loses Stück Mauerwerk mit einer seltsamen Struktur fällt heraus.',
             );
           } else {
             store.setDialogue(
-              'Die Wand vibriert, aber du kannst kein weiteres Frequenzfragment mehr aufnehmen.'
+              'Die Wand vibriert, aber du kannst kein weiteres Frequenzfragment mehr aufnehmen.',
             );
           }
         },
-      }
+      },
     );
   } else {
     options.push({
@@ -77,7 +71,7 @@ export function buildProberaumWallCracksDialogue(): Dialogue {
 
 export function buildProberaumPuddleDialogue(): Dialogue {
   return say(
-    'Das ist eine riesige Pfütze. Sie scheint aus dem Nichts zu kommen und vibriert im Takt eines vergessenen Drum-Computers.'
+    'Das ist eine riesige Pfütze. Sie scheint aus dem Nichts zu kommen und vibriert im Takt eines vergessenen Drum-Computers.',
   );
 }
 
@@ -87,7 +81,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
 
   if (flags.ampTherapyCompleted) {
     return say(
-      'Amp: "Ich fühle mich... besser. Die 5. Dimension ist gar nicht so schlimm, wenn man jemanden zum Reden hat."'
+      'Amp: "Ich fühle mich... besser. Die 5. Dimension ist gar nicht so schlimm, wenn man jemanden zum Reden hat."',
     );
   }
 
@@ -106,7 +100,9 @@ export function buildProberaumAmpDialogue(): Dialogue {
           flagToSet: { flag: 'ampTherapyCompleted', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"');
+            currentStore.setDialogue(
+              'Amp: "Du siehst mich... wie ich wirklich bin! Die Frequenzen singen in Harmonie!"',
+            );
             currentStore.setFlag('ampSentient', true);
             currentStore.increaseBandMood(20, 'id_ba40c619');
           },
@@ -122,7 +118,9 @@ export function buildProberaumAmpDialogue(): Dialogue {
           flagToSet: { flag: 'ampTherapyCompleted', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."');
+            currentStore.setDialogue(
+              'Amp: "Danke, Manager. Das bedeutet mir alles. Ich werde für dich den besten Sound aller Zeiten liefern."',
+            );
             currentStore.increaseBandMood(30, 'id_1a39e6b3');
           },
         },
@@ -137,7 +135,9 @@ export function buildProberaumAmpDialogue(): Dialogue {
           flagToSet: { flag: 'ampTherapyCompleted', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Amp: "So kalt... aber vielleicht hast du recht. Ich bin nur hier, um zu schreien."');
+            currentStore.setDialogue(
+              'Amp: "So kalt... aber vielleicht hast du recht. Ich bin nur hier, um zu schreien."',
+            );
             currentStore.increaseBandMood(10, 'id_91b5381f');
           },
         },
@@ -187,7 +187,9 @@ export function buildProberaumAmpDialogue(): Dialogue {
           flagToSet: { flag: 'talkingAmpHeard', value: true },
           action: () => {
             const currentStore = game();
-          currentStore.setDialogue('Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."');
+            currentStore.setDialogue(
+              'Amp: "Ich brauche einen Lötkolben und Schrottmetall, um meine Schaltkreise zu reparieren."',
+            );
             game().increaseBandMood(2, 'id_0a6f2302');
           },
         },
@@ -205,7 +207,9 @@ export function buildProberaumAmpDialogue(): Dialogue {
           text: 'Entdecke die Verbindung zwischen den Maschinen',
         },
         action: () => {
-            game().setDialogue('Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."');
+          game().setDialogue(
+            'Amp: "Das ist die Erinnerung an den Gig in der Gießerei 1982. Die Maschinen... wir waren verbunden."',
+          );
           game().increaseBandMood(10, 'id_d3a45839');
           game().increaseSkill('chaos', 2);
         },
@@ -222,7 +226,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
         questToComplete: 'repair_amp',
         flagToSet: { flag: 'talkingAmpRepaired', value: true },
         action: () => {
-            const currentStore = game();
+          const currentStore = game();
           currentStore.setDialogue('Amp: "BZZZT-KRRR-KLANG! Ich bin wieder da! Danke, Manager."');
           currentStore.increaseBandMood(20, 'id_f3211ce8');
           currentStore.increaseSkill('technical', 5);
@@ -247,22 +251,17 @@ export function buildProberaumAmpDialogue(): Dialogue {
 export function buildProberaumDrumMachineDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
-  const drumMachineQuestStatus = store.quests.find(
-    (quest) => quest.id === 'drum_machine'
-  )?.status;
+  const drumMachineQuestStatus = store.quests.find((quest) => quest.id === 'drum_machine')?.status;
 
   const hasRiff = hasItem('Verbotenes Riff');
-  const questCompleted =
-    drumMachineQuestStatus === 'completed' || flags.drumMachineQuestCompleted;
+  const questCompleted = drumMachineQuestStatus === 'completed' || flags.drumMachineQuestCompleted;
   const questStarted =
     drumMachineQuestStatus === 'active' ||
     drumMachineQuestStatus === 'completed' ||
     flags.drumMachineQuestStarted;
 
   if (questCompleted) {
-    return say(
-      'TR-8080: "BOOM-TCHAK-BOOM. Mein Geist ist eins mit dem Riff. Danke, Fleischsack."'
-    );
+    return say('TR-8080: "BOOM-TCHAK-BOOM. Mein Geist ist eins mit dem Riff. Danke, Fleischsack."');
   }
 
   if (hasRiff) {
@@ -280,16 +279,16 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
                 'drum_machine',
                 'drumMachineQuestCompleted',
                 true,
-                'Finde das Verbotene Riff für die TR-8080'
+                'Finde das Verbotene Riff für die TR-8080',
               );
               game().increaseBandMood(25, 'id_7935aed1');
               game().increaseSkill('chaos', 10);
               currentStore.setDialogue(
-                'TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."'
+                'TR-8080: "BZZZT-KRRR-BOOM! Unglaublich! Ich sehe die Matrix des Lärms! Hier, nimm dieses Quanten-Kabel. Es wird deine Amps in die Knie zwingen."',
               );
             } else {
               currentStore.setDialogue(
-                'TR-8080: "BZZZT-KRRR-BOOM! Dein Inventarlimit blockiert weitere Quanten-Kabel. Komm wieder, sobald du Platz hast."'
+                'TR-8080: "BZZZT-KRRR-BOOM! Dein Inventarlimit blockiert weitere Quanten-Kabel. Komm wieder, sobald du Platz hast."',
               );
             }
           },
@@ -335,8 +334,10 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
         requiredSkill: { name: 'technical', level: 5 },
         flagToSet: { flag: 'maschinen_seele_tr8080', value: true },
         action: () => {
-            const currentStore = game();
-          currentStore.setDialogue('TR-8080: "Korrekt. Ich wurde 1982 aus dem Amp eines Bassisten gelötet. Wir teilen eine Seele."');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'TR-8080: "Korrekt. Ich wurde 1982 aus dem Amp eines Bassisten gelötet. Wir teilen eine Seele."',
+          );
           game().increaseBandMood(10, 'id_8947463e');
           game().increaseSkill('technical', 3);
         },
@@ -358,16 +359,13 @@ export function buildProberaumMonitorDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
   const feedbackMonitorQuestStatus = store.quests.find(
-    (quest) => quest.id === 'feedback_monitor'
+    (quest) => quest.id === 'feedback_monitor',
   )?.status;
   const feedbackMonitorCompleted =
-    feedbackMonitorQuestStatus === 'completed' ||
-    flags.feedbackMonitorQuestCompleted;
+    feedbackMonitorQuestStatus === 'completed' || flags.feedbackMonitorQuestCompleted;
 
   if (feedbackMonitorCompleted) {
-    return say(
-      'Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."'
-    );
+    return say('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
   }
 
   if (!flags.feedbackMonitorTalked) {
@@ -410,7 +408,9 @@ export function buildProberaumMonitorDialogue(): Dialogue {
           flagToSet: { flag: 'feedbackMonitorQuestCompleted', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."');
+            currentStore.setDialogue(
+              'Monitor: "Du bist nun ein Meister der Frequenzen. Salzgitter wird erzittern."',
+            );
             game().increaseBandMood(20, 'id_7702e666');
             game().increaseSkill('technical', 5);
           },
@@ -418,8 +418,6 @@ export function buildProberaumMonitorDialogue(): Dialogue {
       ],
     };
   } else {
-    return say(
-      'Monitor: "Das Rauschen... hast du das Quanten-Kabel gefunden?"'
-    );
+    return say('Monitor: "Das Rauschen... hast du das Quanten-Kabel gefunden?"');
   }
 }

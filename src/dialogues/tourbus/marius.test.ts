@@ -9,7 +9,9 @@ describe('buildTourbusMariusDialogue', () => {
   it('prompts to return ego when player has it', () => {
     useStore.getState().addToInventory('Marius Ego');
     const dialogue = buildTourbusMariusDialogue();
-    expect(getDialogueText(dialogue)).toContain('Ist das... mein Ego? Es fühlt sich so... klein an');
+    expect(getDialogueText(dialogue)).toContain(
+      'Ist das... mein Ego? Es fühlt sich so... klein an',
+    );
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2);
     expect(options).toContain('Es ist jetzt sicher.');
@@ -22,11 +24,13 @@ describe('buildTourbusMariusDialogue', () => {
       flags: { ...useStore.getState().flags, marius_tourbus_doubt: true },
     });
     const dialogue = buildTourbusMariusDialogue();
-    expect(getDialogueText(dialogue)).toContain('Ich bin ein Betrug. Ohne mein Ego bin ich nur ein Typ, der in ein Mikrofon schreit.');
+    expect(getDialogueText(dialogue)).toContain(
+      'Ich bin ein Betrug. Ohne mein Ego bin ich nur ein Typ, der in ein Mikrofon schreit.',
+    );
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(3);
-    expect(options.some(o => o.includes('[Social 7]'))).toBe(true);
-    expect(options.some(o => o.includes('[Diplomat]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Social 7]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Diplomat]'))).toBe(true);
     expect(options).toContain('Dann hör auf zu jammern.');
   });
 
@@ -36,7 +40,7 @@ describe('buildTourbusMariusDialogue', () => {
     expect(getDialogueText(dialogue)).toContain('Die Energie im Bus ist fantastisch!');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2);
-    expect(options.some(o => o.includes('[Performer]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Performer]'))).toBe(true);
     expect(options).toContain('Wir sind auf dem Weg.');
   });
 });

@@ -49,10 +49,20 @@ let mockBodyMethods = {
 vi.mock('@react-three/rapier', async () => {
   const React = await import('react');
   return {
-    RigidBody: React.forwardRef(({ children }: { children: React.ReactNode }, ref: React.Ref<{ setTranslation: (...args: any[]) => void; setLinvel: (...args: any[]) => void; setAngvel: (...args: any[]) => void; translation: () => { x: number; y: number; z: number } }>) => {
-      React.useImperativeHandle(ref, () => mockBodyMethods);
-      return <>{children}</>;
-    }),
+    RigidBody: React.forwardRef(
+      (
+        { children }: { children: React.ReactNode },
+        ref: React.Ref<{
+          setTranslation: (...args: any[]) => void;
+          setLinvel: (...args: any[]) => void;
+          setAngvel: (...args: any[]) => void;
+          translation: () => { x: number; y: number; z: number };
+        }>,
+      ) => {
+        React.useImperativeHandle(ref, () => mockBodyMethods);
+        return <>{children}</>;
+      },
+    ),
     CuboidCollider: () => null,
   };
 });
@@ -116,7 +126,9 @@ describe('Player Rigidbody Initialization Error Handling', () => {
     // Now trigger the store subscription with a new position
     const posSubscription = mockStoreSubscriptions[0];
 
-    expect(() => posSubscription(makeMockGameState({ ...mockStoreState, playerPos: [10, 10, 10] }))).not.toThrow();
+    expect(() =>
+      posSubscription(makeMockGameState({ ...mockStoreState, playerPos: [10, 10, 10] })),
+    ).not.toThrow();
 
     // In the subscription, setTranslation should be called and the error caught
     expect(mockBodyMethods.setTranslation).toHaveBeenCalledTimes(1);

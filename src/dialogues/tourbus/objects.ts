@@ -8,7 +8,7 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
 
   if (flags.tourbusAmpTechnician) {
     return say(
-      'Du hast den Röhrenverstärker bereits repariert. Er klingt jetzt klar und deutlich.'
+      'Du hast den Röhrenverstärker bereits repariert. Er klingt jetzt klar und deutlich.',
     );
   }
 
@@ -26,7 +26,7 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
               currentStore.increaseSkill('technical', 10);
             }
             currentStore.setDialogue(
-              'Mit geübten Handgriffen lötest du die Verbindung nach. Der Verstärker klingt jetzt klarer als je zuvor!'
+              'Mit geübten Handgriffen lötest du die Verbindung nach. Der Verstärker klingt jetzt klarer als je zuvor!',
             );
           },
         },
@@ -34,7 +34,7 @@ export function buildTourbusAmpDialogue(): Dialogue | string {
     };
   } else {
     return say(
-      'Ein alter Röhrenverstärker. Er brummt nervtötend, aber du hast keine Ahnung, wie man das repariert.'
+      'Ein alter Röhrenverstärker. Er brummt nervtötend, aber du hast keine Ahnung, wie man das repariert.',
     );
   }
 }
@@ -51,13 +51,9 @@ export function buildTourbusHiddenStashDialogue(): Dialogue | string {
         if (pickedUp) {
           currentStore.increaseSkill('social', 2);
           currentStore.setFlag('tourbusHiddenStashTaken', true);
-          currentStore.setDialogue(
-            'Du steckst die Notiz ein. Matze verbirgt etwas Großes.'
-          );
+          currentStore.setDialogue('Du steckst die Notiz ein. Matze verbirgt etwas Großes.');
         } else {
-          currentStore.setDialogue(
-            'Du kannst die Notiz gerade nicht aufnehmen.'
-          );
+          currentStore.setDialogue('Du kannst die Notiz gerade nicht aufnehmen.');
         }
       },
     });
@@ -74,11 +70,11 @@ export function buildTourbusHiddenStashDialogue(): Dialogue | string {
           currentStore.setFlag('frequenz1982_tourbus', true);
           currentStore.increaseBandMood(10, 'id_25c06611');
           currentStore.setDialogue(
-            'Du analysierst das Versteck genauer und findest hinter der Notiz ein Frequenzfragment, das in der Wandverkleidung verborgen war.'
+            'Du analysierst das Versteck genauer und findest hinter der Notiz ein Frequenzfragment, das in der Wandverkleidung verborgen war.',
           );
         } else {
           currentStore.setDialogue(
-            'Du spürst das Frequenzfragment, aber dein Inventar hat keinen Platz mehr.'
+            'Du spürst das Frequenzfragment, aber dein Inventar hat keinen Platz mehr.',
           );
         }
       },
@@ -88,9 +84,7 @@ export function buildTourbusHiddenStashDialogue(): Dialogue | string {
   options.push({
     text: 'Die Notiz ignorieren.',
     action: () =>
-      game().setDialogue(
-        'Du entscheidest dich, dass manche Geheimnisse besser unberührt bleiben.'
-      ),
+      game().setDialogue('Du entscheidest dich, dass manche Geheimnisse besser unberührt bleiben.'),
   });
 
   return {
@@ -104,8 +98,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
   const { flags, hasItem } = store;
   const hasGeisterDrink = hasItem('Geister-Drink');
   const ghostRecipeStatus = getCachedQuest('ghost_recipe')?.status;
-  const ghostRecipeCompleted =
-    ghostRecipeStatus === 'completed' || flags.ghostRecipeQuestCompleted;
+  const ghostRecipeCompleted = ghostRecipeStatus === 'completed' || flags.ghostRecipeQuestCompleted;
   const ghostRecipeStarted =
     ghostRecipeStatus === 'active' ||
     ghostRecipeStatus === 'completed' ||
@@ -119,9 +112,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           text: 'Prost!',
           action: () => {
             const currentStore = game();
-            const received = currentStore.addToInventory(
-              'Verstärker-Schaltplan'
-            );
+            const received = currentStore.addToInventory('Verstärker-Schaltplan');
             if (received) {
               // Only complete quest if inventory add succeeded
               currentStore.removeFromInventory('Geister-Drink');
@@ -129,17 +120,17 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
                 'ghost_recipe',
                 'ghostRecipeQuestCompleted',
                 true,
-                'Mixe den Geister-Drink für den Geist des Roadies'
+                'Mixe den Geister-Drink für den Geist des Roadies',
               );
               currentStore.increaseBandMood(40, 'id_402ae06c');
               currentStore.increaseSkill('social', 5);
               currentStore.setDialogue(
-                'Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."'
+                'Geist: "Du hast mir mehr gegeben als nur ein Getränk. Du hast mir ein Stück meiner Vergangenheit zurückgegeben. Hier, nimm diesen alten Verstärker-Schaltplan. Er könnte in Salzgitter nützlich sein."',
               );
             } else {
               // Inventory full: do not complete quest, do not consume drink
               currentStore.setDialogue(
-                'Geist: "Ich habe ein Geschenk für dich, aber du kannst den Verstärker-Schaltplan nicht noch einmal aufnehmen. Dein Pickup-Limit ist erreicht."'
+                'Geist: "Ich habe ein Geschenk für dich, aber du kannst den Verstärker-Schaltplan nicht noch einmal aufnehmen. Dein Pickup-Limit ist erreicht."',
               );
             }
           },
@@ -163,7 +154,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           flagToSet: { flag: 'ghostTrustEarned', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."');
+            currentStore.setDialogue(
+              'Geist: "Du fühlst meine Unruhe... Du bist nicht wie die anderen Manager. Ich vertraue dir."',
+            );
             currentStore.increaseBandMood(25, 'id_cfcd3f76');
             currentStore.discoverLore('ghost_legacy');
           },
@@ -179,17 +172,16 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           flagToSet: { flag: 'ghostTrustEarned', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."');
+            currentStore.setDialogue(
+              'Geist: "Meine Geschichte... sie ist ein Echo. Aber du hörst zu. Das ist selten. Ich vertraue dir."',
+            );
             currentStore.increaseBandMood(20, 'id_907b6e1d');
             currentStore.discoverLore('ghost_legacy');
           },
         },
         {
           text: 'Nur aus Neugier.',
-          action: () =>
-            game().setDialogue(
-              'Geist: "Neugier tötet die Katze. Oder den Roadie."'
-            ),
+          action: () => game().setDialogue('Geist: "Neugier tötet die Katze. Oder den Roadie."'),
         },
       ],
     };
@@ -197,14 +189,12 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
 
   if (ghostRecipeStarted && !hasGeisterDrink && !ghostRecipeCompleted) {
     return say(
-      'Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."'
+      'Geist: "Hast du den Geister-Drink schon gemixt? Turbo-Koffein und ein rostiges Plektrum... das ist die einzige Lösung."',
     );
   }
 
   if (flags.ghostSecretRevealed) {
-    return say(
-      'Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."'
-    );
+    return say('Geist: "Du weißt jetzt, was zu tun ist. Der Stahl vergisst nie."');
   }
 
   if (flags.bassist_clue_matze && !flags.bassist_clue_ghost) {
@@ -216,7 +206,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Dabei? Ich war derjenige, der sein Kabel eingesteckt hat. Das letzte Kabel, das er je brauchte. Die Frequenz... sie hat ihn einfach verschluckt."'
+              'Geist: "Dabei? Ich war derjenige, der sein Kabel eingesteckt hat. Das letzte Kabel, das er je brauchte. Die Frequenz... sie hat ihn einfach verschluckt."',
             );
             currentStore.setFlag('bassist_clue_ghost', true);
             currentStore.increaseBandMood(15, 'id_bd4e4f74');
@@ -233,21 +223,18 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
             currentStore.increaseBandMood(20, 'id_314564ec');
             if (received) {
               currentStore.setDialogue(
-                'Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."'
+                'Geist: "Du hast die Gabe... hier, nimm dies. Es ist alles, was von ihm übrig blieb, nachdem das Feedback abebbte. Die Bassist-Saite."',
               );
             } else {
               currentStore.setDialogue(
-                'Geist: "Du hast die Gabe. Ich kann dir die Saite gerade nicht geben, aber die Wahrheit gehört dir trotzdem."'
+                'Geist: "Du hast die Gabe. Ich kann dir die Saite gerade nicht geben, aber die Wahrheit gehört dir trotzdem."',
               );
             }
           },
         },
         {
           text: 'Erzähl mir nichts.',
-          action: () =>
-            game().setDialogue(
-              'Geist: "Der Lärm ist lauter als die Wahrheit."'
-            ),
+          action: () => game().setDialogue('Geist: "Der Lärm ist lauter als die Wahrheit."'),
         },
       ],
     };
@@ -263,7 +250,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Du siehst die Muster, nicht wahr? Er ist nicht einfach verschwunden. Er wurde Teil der Frequenz. Er ist jetzt der Lärm, den ihr in Salzgitter spielen werdet. Er wartet auf euch."'
+              'Geist: "Du siehst die Muster, nicht wahr? Er ist nicht einfach verschwunden. Er wurde Teil der Frequenz. Er ist jetzt der Lärm, den ihr in Salzgitter spielen werdet. Er wartet auf euch."',
             );
             currentStore.setFlag('ghostSecretRevealed', true);
             currentStore.increaseBandMood(30, 'id_8fa37f29');
@@ -276,7 +263,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Die Frequenzverschiebung war massiv. 1982 gab es einen Riss im Raum-Zeit-Gefüge der Gießerei. Er wurde in die Oberschwingungen gesaugt. Faszinierend, oder?"'
+              'Geist: "Die Frequenzverschiebung war massiv. 1982 gab es einen Riss im Raum-Zeit-Gefüge der Gießerei. Er wurde in die Oberschwingungen gesaugt. Faszinierend, oder?"',
             );
             currentStore.setFlag('ghostSecretRevealed', true);
             currentStore.increaseBandMood(25, 'id_151ab1b7');
@@ -289,7 +276,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Deine Stimme ist... beruhigend. Fast wie ein sanfter Chorus-Effekt. Na gut, ich erzähle es dir. Er ist jetzt Teil des Feedbacks. Er wartet in Salzgitter."'
+              'Geist: "Deine Stimme ist... beruhigend. Fast wie ein sanfter Chorus-Effekt. Na gut, ich erzähle es dir. Er ist jetzt Teil des Feedbacks. Er wartet in Salzgitter."',
             );
             currentStore.setFlag('ghostSecretRevealed', true);
             currentStore.discoverLore('roadie_bassist');
@@ -302,7 +289,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Er ist nicht einfach verschwunden. Er wurde Teil der Frequenz. Er ist jetzt der Lärm, den ihr in Salzgitter spielen werdet. Er wartet auf euch."'
+              'Geist: "Er ist nicht einfach verschwunden. Er wurde Teil der Frequenz. Er ist jetzt der Lärm, den ihr in Salzgitter spielen werdet. Er wartet auf euch."',
             );
             currentStore.setFlag('ghostSecretRevealed', true);
             currentStore.increaseBandMood(20, 'id_014ce102');
@@ -311,9 +298,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
         {
           text: 'Vielleicht später.',
           action: () =>
-            game().setDialogue(
-              'Geist: "Die Wahrheit wartet nicht. Aber der Lärm schon."'
-            ),
+            game().setDialogue('Geist: "Die Wahrheit wartet nicht. Aber der Lärm schon."'),
         },
       ],
     };
@@ -328,7 +313,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Der Sound war so perfekt, dass er ein Tor öffnete. Er ist nicht verschwunden... er ist Teil des Feedbacks geworden. Er IST jetzt der Lärm. Wenn ihr in Salzgitter spielt, werdet ihr ihn hören."'
+              'Geist: "Der Sound war so perfekt, dass er ein Tor öffnete. Er ist nicht verschwunden... er ist Teil des Feedbacks geworden. Er IST jetzt der Lärm. Wenn ihr in Salzgitter spielt, werdet ihr ihn hören."',
             );
             currentStore.setFlag('ghostSecretRevealed', true);
             currentStore.increaseBandMood(20, 'id_81a66f98');
@@ -339,7 +324,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Vielleicht hast du recht. Aber der Lärm findet immer einen Weg."'
+              'Geist: "Vielleicht hast du recht. Aber der Lärm findet immer einen Weg."',
             );
             if (!currentStore.flags.ghostSecretRevealed) {
               currentStore.increaseBandMood(5, 'id_413f08e9');
@@ -363,13 +348,13 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               currentStore.setFlag('tourbusGhostRiffUsed', true);
               currentStore.increaseBandMood(10, 'id_b70013f8');
               currentStore.setDialogue(
-                'Geist: "Ein mutiger Narr. Das Riff wird dich verändern. Aber der Gig wird unvergesslich."'
+                'Geist: "Ein mutiger Narr. Das Riff wird dich verändern. Aber der Gig wird unvergesslich."',
               );
               return;
             }
 
             currentStore.setDialogue(
-              'Geist: "Du hast den Preis bereits akzeptiert. Jetzt liegt es an dir, den Ton zu treffen."'
+              'Geist: "Du hast den Preis bereits akzeptiert. Jetzt liegt es an dir, den Ton zu treffen."',
             );
           },
         },
@@ -378,7 +363,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Geist: "Deine Ohren werden bluten, dein Herz wird im Takt der Maschinen schlagen. Ein fairer Tausch."'
+              'Geist: "Deine Ohren werden bluten, dein Herz wird im Takt der Maschinen schlagen. Ein fairer Tausch."',
             );
           },
         },
@@ -397,7 +382,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               currentStore.increaseBandMood(5, 'id_8e427e79');
             }
             currentStore.setDialogue(
-              'Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."'
+              'Geist: "Hör niemals auf zu spielen. Wenn die Stille kommt, kommen sie. Die Schatten des Feedbacks."',
             );
           },
         },
@@ -410,7 +395,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               currentStore.increaseBandMood(5, 'id_8c8fdc6a');
             }
             currentStore.setDialogue(
-              'Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."'
+              'Geist: "In der Vergangenheit. Aber das im Kühlschrank tut es auch. Es schmeckt nach Reue."',
             );
           },
         },
@@ -423,7 +408,7 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
               currentStore.increaseBandMood(5, 'id_dd873afe');
             }
             currentStore.setDialogue(
-              'Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."'
+              'Geist: "Ich war derjenige, der die Kabel rollte, als die Welt noch aus Röhrenverstärkern bestand. Jetzt bin ich nur noch eine statische Entladung."',
             );
           },
         },
@@ -436,7 +421,9 @@ export function buildTourbusGhostDialogue(): Dialogue | string {
           flagToSet: { flag: 'ghostRecipeQuestStarted', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."');
+            currentStore.setDialogue(
+              'Geist: "Ich sehne mich nach dem Geister-Drink. Er erinnert mich an die guten alten Zeiten. Wenn du ihn mir bringst, werde ich dir helfen."',
+            );
             currentStore.increaseBandMood(5, 'id_01cc9775');
           },
         },
@@ -462,8 +449,10 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const currentStore = game();
-          currentStore.setDialogue('Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Manager: "Wir sind hier, weil wir den Lärm lieben. Egal was kommt, wir halten zusammen." Matze nickt zustimmend.',
+          );
           currentStore.increaseBandMood(30, 'id_d4779a66');
         },
       },
@@ -477,8 +466,10 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const currentStore = game();
-          currentStore.setDialogue('Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Manager: "Schluss mit dem Gejammer! Wir sind NEUROTOXIC. Wir spielen, bis die Wände bluten!"',
+          );
           currentStore.increaseBandMood(20, 'id_765a4f14');
         },
       },
@@ -492,8 +483,10 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const currentStore = game();
-          currentStore.setDialogue('Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Manager: "Stellt euch das Scheinwerferlicht vor. Die schreiende Menge. Heute Nacht schreiben wir Geschichte!" Marius jubelt.',
+          );
           currentStore.increaseBandMood(25, 'id_2e217dda');
         },
       },
@@ -506,8 +499,10 @@ export function buildTourbusBandMeetingDialogue(): Dialogue | string {
         questToComplete: 'band_meeting',
         flagToSet: { flag: 'tourbusBandMeeting', value: true },
         action: () => {
-            const currentStore = game();
-          currentStore.setDialogue('Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"');
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Manager: "Ausrüstung checken, pünktlich sein, keinen Mist bauen. Klar?"',
+          );
           currentStore.increaseBandMood(10, 'id_5b53bc9a');
         },
       },

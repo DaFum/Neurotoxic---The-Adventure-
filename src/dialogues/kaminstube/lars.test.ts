@@ -48,9 +48,7 @@ describe('buildKaminstubeLarsDialogue', () => {
     const technicalBefore = useStore.getState().skills.technical;
 
     const dialogue = buildKaminstubeLarsDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Technical 5]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Technical 5]'));
 
     if (!option) {
       throw new Error('Expected technical Lars option');
@@ -75,9 +73,7 @@ describe('buildKaminstubeLarsDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildKaminstubeLarsDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Chaos 5]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Chaos 5]'));
 
     if (!option) {
       throw new Error('Expected chaos Lars option');
