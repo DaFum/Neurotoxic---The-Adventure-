@@ -11,7 +11,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useKeyboardControls, Sparkles } from '@react-three/drei';
 import { RigidBody, RapierRigidBody, CuboidCollider } from '@react-three/rapier';
@@ -50,7 +50,8 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
   const initialPos = useRef(useStore.getState().playerPos).current;
   const lastSentPosRef = useRef(new THREE.Vector3(initialPos[0], initialPos[1], initialPos[2])).current;
   const facingRight = useRef(true);
-  const [isMoving, setIsMoving] = useState(false);
+  const isMovingRef = useRef(false);
+  const sparklesGroupRef = useRef<THREE.Group>(null);
   const footstepTimer = useRef(0);
 
   const speed = 5;
@@ -234,7 +235,13 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
     if (Math.abs(velocity.x) > 0.1) facingRight.current = velocity.x > 0;
 
     const moving = velocity.length() > 0;
-    if (moving !== isMoving) setIsMoving(moving);
+    // ⚡ Bolt Optimization: Use refs for frequent state changes like isMoving instead of useState to prevent re-renders in useFrame.
+    if (moving !== isMovingRef.current) {
+      isMovingRef.current = moving;
+      if (sparklesGroupRef.current) {
+        sparklesGroupRef.current.visible = moving;
+      }
+    }
 
     if (moving) {
       velocity.normalize().multiplyScalar(speed);
@@ -322,7 +329,7 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
       <CuboidCollider args={[0.75, 1, 0.5]} />
       <group ref={modelRef}>
         {/* Dust particles when moving */}
-        {isMoving && (
+        <group ref={sparklesGroupRef} visible={false}>
           <Sparkles 
             count={20} 
             scale={2} 
@@ -331,7 +338,7 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
             color="#adff2f" 
             opacity={0.5} 
           />
-        )}
+        </group>
 
         <mesh position={[0, -0.72, 0]} rotation={[-Math.PI / 2, 0, 0]} ref={ringRef}>
           <torusGeometry args={[0.85, 0.07, 12, 36]} />
