@@ -63,3 +63,6 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 ## 2026-04-12 - Intermediate Array Allocations from `.filter().length`
 **Learning:** Using `array.filter(condition).length` to count matching items in React components or frequent operations creates an unnecessary intermediate array just to calculate its size, generating garbage collection pressure.
 **Action:** Replace `.filter(condition).length` with a standard `for` loop that maintains a local counter, entirely eliminating the intermediate array allocation.
+## 2026-04-18 - Eliminating useState from useFrame High-Frequency Events
+**Learning:** Using `useState` to track frequently updated statuses like `isMoving` triggers React's reconciliation engine inside R3F `useFrame` blocks, even if optimized. This creates render queue congestion and degrades framerate.
+**Action:** Use `useRef` for primitive state tracking inside `useFrame` loops, and mutate imperative 3D properties (like `groupRef.current.visible`) directly when the ref's value changes to bypass the React component lifecycle completely.
