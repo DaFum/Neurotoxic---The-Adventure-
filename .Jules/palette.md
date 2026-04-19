@@ -10,3 +10,7 @@
 
 **Learning:** Native browser prompts like `window.confirm()` completely block the UI thread, provide zero visual customization, and are generally jarring for screen reader users as they abruptly trap focus in a system-level dialog without proper context.
 **Action:** Replace all `window.confirm()` or `window.alert()` calls with inline UI confirmation dialogs. This ensures focus states can be managed correctly, the styling matches the design system, and screen readers can properly announce the dialog using `role="dialog"` and `aria-modal`.
+## 2025-04-19 - Accessible Tab States and Tooltips
+
+**Learning:** When implementing custom tab-like navigation (such as the HUD toggle buttons for Status/Inventory/Quests) using standard `<button>` elements instead of native `[role="tab"]` constructs, providing visual active states (like `bg-toxic/20`) is insufficient for screen readers. Additionally, icon-only buttons with `aria-label` are accessible to screen readers, but sighted mouse users rely on the native `title` attribute for tooltip discoverability.
+**Action:** Always append `aria-pressed={isActive}` to custom toggle or tab buttons to programmatically communicate their state, and pair `aria-label` with `title` on icon-only buttons to ensure parity between assistive technologies and mouse hover discoverability.
