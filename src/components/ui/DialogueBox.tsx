@@ -184,6 +184,7 @@ export function DialogueBox({
                   <button
                     onClick={() => setDialogue(null)}
                     aria-label="Close transmission"
+                    title="Close transmission"
                     className="text-toxic hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
                   >
                     <X size={16} />
