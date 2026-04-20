@@ -351,6 +351,7 @@ export function UI() {
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setCompactHudTab('status')}
+                aria-pressed={compactHudTab === 'status'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'status' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
@@ -359,6 +360,7 @@ export function UI() {
               </button>
               <button
                 onClick={() => setCompactHudTab('inventory')}
+                aria-pressed={compactHudTab === 'inventory'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'inventory' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
@@ -367,6 +369,7 @@ export function UI() {
               </button>
               <button
                 onClick={() => setCompactHudTab('quests')}
+                aria-pressed={compactHudTab === 'quests'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'quests' ? 'border-toxic bg-toxic/20 text-toxic' : 'border-zinc-700 bg-zinc-900 text-zinc-400'
                 }`}
