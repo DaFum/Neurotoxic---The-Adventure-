@@ -63,3 +63,7 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 ## 2026-04-12 - Intermediate Array Allocations from `.filter().length`
 **Learning:** Using `array.filter(condition).length` to count matching items in React components or frequent operations creates an unnecessary intermediate array just to calculate its size, generating garbage collection pressure.
 **Action:** Replace `.filter(condition).length` with a standard `for` loop that maintains a local counter, entirely eliminating the intermediate array allocation.
+
+## 2025-02-12 - Prevent Re-renders in High-Frequency R3F Loops
+**Learning:** Using `useState` to track primitive values (like a boolean for movement state) inside high-frequency loops such as React Three Fiber's `useFrame` is a performance anti-pattern. Every state change triggers a component re-render, leading to excessive garbage collection overhead and potential frame drops.
+**Action:** When tracking high-frequency state changes that only affect visual properties in R3F, use `useRef` to store the value and imperatively mutate 3D object properties (e.g., `ref.current.visible = true`). This bypasses the React component lifecycle entirely, improving performance.
