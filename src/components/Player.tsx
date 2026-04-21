@@ -233,7 +233,8 @@ bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
     // Update facing direction from combined input
     if (Math.abs(velocity.x) > 0.1) facingRight.current = velocity.x > 0;
 
-    const moving = velocity.length() > 0;
+    // ⚡ Bolt Optimization: Use lengthSq() instead of length() to avoid expensive Math.sqrt() in useFrame
+    const moving = velocity.lengthSq() > 0;
     if (moving !== isMoving) setIsMoving(moving);
 
     if (moving) {

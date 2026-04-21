@@ -63,3 +63,7 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 ## 2026-04-12 - Intermediate Array Allocations from `.filter().length`
 **Learning:** Using `array.filter(condition).length` to count matching items in React components or frequent operations creates an unnecessary intermediate array just to calculate its size, generating garbage collection pressure.
 **Action:** Replace `.filter(condition).length` with a standard `for` loop that maintains a local counter, entirely eliminating the intermediate array allocation.
+
+## 2025-02-24 - [Vector Distance Calculation Optimization in useFrame]
+**Learning:** In Three.js and React Three Fiber applications, checking `vector.length() > 0` inside high-frequency loops (like `useFrame`) unnecessarily triggers the computationally expensive `Math.sqrt()` operation just to determine if a vector has a magnitude.
+**Action:** Always optimize boolean vector magnitude checks (e.g., checking if a player is moving) by using `vector.lengthSq() > 0` instead of `vector.length() > 0` to completely bypass the square root calculation while maintaining identical logic.
