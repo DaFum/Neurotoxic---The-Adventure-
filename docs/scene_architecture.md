@@ -83,23 +83,17 @@ Two dialogue types are used across all scenes:
 **Simple dialogue (string):**
 
 ```typescript
-
 setDialogue('Text');
-
 ```
 
 **Complex dialogue (with options):**
 
 ```typescript
-
 setDialogue({
-
   text: 'Main dialogue text',
 
   options: [
-
-    { 
-
+    {
       text: 'Option text. [SkillName Level]',
 
       requiredSkill: { name: 'skillname', level: X },
@@ -108,14 +102,12 @@ setDialogue({
 
       questDependencies: ['quest_id'],
 
-      action: () => { /* handler */ }
-
-    }
-
-  ]
-
+      action: () => {
+        /* handler */
+      },
+    },
+  ],
 });
-
 ```
 
 **Gotcha:** Skill checks use lowercase names ('technical', 'chaos', 'social'), but traits use Title Case ('Visionary', 'Cynic', 'Diplomat', 'Mystic', 'Technician', 'Performer').
@@ -197,13 +189,7 @@ Items disappear once acquired or after quest completion using conditional render
 `bandMood` is used as a branching factor for dialogue throughout ALL scenes:
 
 ```typescript
-
-const moodText = bandMood > 60 
-
-  ? 'Enthusiastic response'
-
-  : 'Neutral/Sad response';
-
+const moodText = bandMood > 60 ? 'Enthusiastic response' : 'Neutral/Sad response';
 ```
 
 **Pattern:** High mood (60+) unlocks "positive" dialogue branches. This is used to gate player-facing consequences of earlier choices.
@@ -213,11 +199,9 @@ const moodText = bandMood > 60
 Inside `onInteract` callbacks, accessing state that doesn't need reactivity uses `useStore.getState()`:
 
 ```typescript
-
 const hasForbiddenRiff = hasItem('Verbotenes Riff'); // Direct destructured call
 
 const trait = useStore.getState().trait; // Within callback for non-reactive access
-
 ```
 
 **Gotcha:** Don't destructure `trait` or `skills` at the top level if you only use them inside callbacks during initialization—it won't update. Use `useStore.getState()` inside the callback.
@@ -285,9 +269,7 @@ In Proberaum, there are TWO Feedback-Monitor interactables (lines 612 & 635):
 In TourBus line 256, after giving the Geister-Drink to the Ghost NPC:
 
 ```typescript
-
 removeFromInventory('Geister-Drink');
-
 ```
 
 **Gotcha:** Simply showing the item in dialogue doesn't consume it. You MUST call `removeFromInventory` or the player keeps the item AND completes the quest.
@@ -359,9 +341,7 @@ requiredSkill: { name: 'chaos', level: 10 }
 Incorrect pattern (will fail silently):
 
 ```typescript
-
-requiredSkill: 'chaos'
-
+requiredSkill: 'chaos';
 ```
 
 #### Critical Gotcha #7: Float Component Usage
@@ -385,9 +365,7 @@ Used in multiple scenes (TourBus line 405, Backstage line 69, VoidStation line 5
 In VoidStation line 104:
 
 ```typescript
-
 discoverLore('tankwart_truth');
-
 ```
 
 **Gotcha:** There's no validation that a lore ID is valid. If you call `discoverLore('invalid_id')`, it silently adds it to state without warning. Ensure lore IDs are consistent across all scenes where they're referenced.
@@ -397,19 +375,13 @@ discoverLore('tankwart_truth');
 In Salzgitter and Kaminstube, `useRef` is used for light animation:
 
 ```typescript
-
 const spotLight1Ref = useRef<THREE.SpotLight>(null);
 
 useFrame((state) => {
-
   if (spotLight1Ref.current) {
-
     spotLight1Ref.current.intensity = 5 + beat * 20;
-
   }
-
 });
-
 ```
 
 **Gotcha:** If refs aren't checked for `null` before access, you'll get runtime errors. The pattern of `if (ref.current)` is MANDATORY.
@@ -441,9 +413,7 @@ Some interactables provide special dialogue if the player has a specific trait:
 Skills are increased via:
 
 ```typescript
-
 useStore.getState().increaseSkill('skillname', amount);
-
 ```
 
 **Gotcha:** This happens INSIDE dialogue option actions, not in the main component. If you increase a skill at component level, it will increase every frame. Always put skill increases inside action callbacks.
@@ -507,6 +477,3 @@ Different scenes use different `<Environment>` presets:
 - `/home/user/Neurotoxic---The-Adventure-/src/components/scenes/Kaminstube.tsx`
 
 - `/home/user/Neurotoxic---The-Adventure-/src/components/scenes/Salzgitter.tsx`
-
-
-

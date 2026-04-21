@@ -9,9 +9,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
   const trait = store.trait;
 
   if (store.flags.tankwartPhilosophy) {
-    return say(
-      'Tankwart: "Die Zeit ist nur ein Loop in einem kaputten Tape-Deck. Spielt weiter."'
-    );
+    return say('Tankwart: "Die Zeit ist nur ein Loop in einem kaputten Tape-Deck. Spielt weiter."');
   }
 
   if (store.flags.ghostTrustEarned && !store.flags.tankwartBargain) {
@@ -23,7 +21,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Tankwart: "Für einen Freund des Geistes gibt es einen besonderen Rabatt in der Leere."'
+              'Tankwart: "Für einen Freund des Geistes gibt es einen besonderen Rabatt in der Leere."',
             );
             currentStore.setFlag('tankwartBargain', true);
             currentStore.increaseBandMood(20, 'id_18a44b8a');
@@ -41,11 +39,10 @@ export function buildVoidTankwartDialogue(): Dialogue {
           text: 'Ich suche die Wahrheit.',
           action: () => {
             const currentStore = game();
-            const pickedUpShard =
-              currentStore.addToInventory('Splitter der Leere');
+            const pickedUpShard = currentStore.addToInventory('Splitter der Leere');
             if (pickedUpShard) {
               currentStore.setDialogue(
-                'Tankwart: "Die Wahrheit ist ein Riff, das niemals endet. Hier, nimm diesen Splitter der Leere. Er wird dir helfen, das Verbotene Riff zu verstehen."'
+                'Tankwart: "Die Wahrheit ist ein Riff, das niemals endet. Hier, nimm diesen Splitter der Leere. Er wird dir helfen, das Verbotene Riff zu verstehen."',
               );
               currentStore.setFlag('tankwartMysticDone', true);
               currentStore.increaseBandMood(30, 'id_43444833');
@@ -53,7 +50,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
             }
 
             currentStore.setDialogue(
-              'Tankwart: "Der Splitter ist für dich bestimmt, aber du kannst gerade keinen weiteren tragen."'
+              'Tankwart: "Der Splitter ist für dich bestimmt, aber du kannst gerade keinen weiteren tragen."',
             );
           },
         },
@@ -71,7 +68,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
             const currentStore = game();
             currentStore.discoverLore('tankwart_truth');
             currentStore.setDialogue(
-              'Tankwart: "Lärm ist nicht das Chaos. Lärm ist die Ordnung, die wir noch nicht verstehen. Jedes Feedback ist ein Gebet an die Leere. In Salzgitter werdet ihr die Antwort finden."'
+              'Tankwart: "Lärm ist nicht das Chaos. Lärm ist die Ordnung, die wir noch nicht verstehen. Jedes Feedback ist ein Gebet an die Leere. In Salzgitter werdet ihr die Antwort finden."',
             );
             currentStore.setFlag('tankwartPhilosophy', true);
             currentStore.increaseBandMood(20, 'id_c8d2805d');
@@ -82,7 +79,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Tankwart: "So begrenzt. Aber okay. Die Leere braucht auch Handwerker."'
+              'Tankwart: "So begrenzt. Aber okay. Die Leere braucht auch Handwerker."',
             );
             currentStore.increaseBandMood(5, 'id_6d4efe53');
           },
@@ -100,7 +97,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Tankwart: "Spielt es laut, spielt es stolz. Die Leere wartet auf diesen Akkord. Er wird die Sterne zum Erlöschen bringen."'
+              'Tankwart: "Spielt es laut, spielt es stolz. Die Leere wartet auf diesen Akkord. Er wird die Sterne zum Erlöschen bringen."',
             );
             currentStore.setFlag('tankwartReactedToRiff', true);
             currentStore.increaseBandMood(15, 'id_f37a5f2c');
@@ -110,7 +107,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           text: 'Was für Konsequenzen?',
           action: () => {
             game().setDialogue(
-              'Tankwart: "Die Realität wird sich biegen, die Fans werden zu Schatten. Ein kleiner Preis für den perfekten Gig."'
+              'Tankwart: "Die Realität wird sich biegen, die Fans werden zu Schatten. Ein kleiner Preis für den perfekten Gig."',
             );
           },
         },
@@ -122,7 +119,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
     return say(
       bandMood > 60
         ? 'Tankwart: "Eure Aura strahlt heller als eine Supernova. Der Gig wird die Galaxie erschüttern. Die Kaminstube ist bereit für die Transzendenz."'
-        : 'Tankwart: "Die Leere ist gesättigt. Eure Reise durch den Lärm kann fortgesetzt werden. Vergesst nicht: Stille ist der Feind."'
+        : 'Tankwart: "Die Leere ist gesättigt. Eure Reise durch den Lärm kann fortgesetzt werden. Vergesst nicht: Stille ist der Feind."',
     );
   }
 
@@ -134,7 +131,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Tankwart: "Eine solide Wahl. Der Lärm wird mächtig sein und die Wände der Realität einreißen."'
+            'Tankwart: "Eine solide Wahl. Der Lärm wird mächtig sein und die Wände der Realität einreißen."',
           );
           currentStore.removeFromInventory('Dunkle Materie');
           currentStore.completeQuestWithFlag('void', 'voidRefueled');
@@ -146,7 +143,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Tankwart: "Interessant. Die Fans werden verwirrt sein, aber ihre Seelen werden im Takt des Universums schwingen."'
+            'Tankwart: "Interessant. Die Fans werden verwirrt sein, aber ihre Seelen werden im Takt des Universums schwingen."',
           );
           currentStore.removeFromInventory('Dunkle Materie');
           currentStore.completeQuestWithFlag('void', 'voidRefueled');
@@ -162,7 +159,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Tankwart: "Die Frequenz von 1982... Du hast sie gefunden! Der Van wird nicht fahren, er wird DURCH die Realität schneiden. Salzgitter wird niemals wieder dasselbe sein."'
+            'Tankwart: "Die Frequenz von 1982... Du hast sie gefunden! Der Van wird nicht fahren, er wird DURCH die Realität schneiden. Salzgitter wird niemals wieder dasselbe sein."',
           );
           currentStore.removeFromInventory('Dunkle Materie');
           currentStore.completeQuestWithFlag('void', 'voidRefueled');
@@ -189,7 +186,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
         text: 'Nur Treibstoff für den Gig.',
         action: () => {
           game().setDialogue(
-            'Tankwart: "So pragmatisch. Sucht in den Ecken der Existenz, wo das Licht sich krümmt."'
+            'Tankwart: "So pragmatisch. Sucht in den Ecken der Existenz, wo das Licht sich krümmt."',
           );
         },
       },
@@ -202,7 +199,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
               action: () => {
                 const currentStore = game();
                 currentStore.setDialogue(
-                  'Tankwart: "Quatsch? Schau dich um, Fleischsack. Du stehst in der 5. Dimension. Hier ist der Sprit."'
+                  'Tankwart: "Quatsch? Schau dich um, Fleischsack. Du stehst in der 5. Dimension. Hier ist der Sprit."',
                 );
                 currentStore.increaseBandMood(15, 'id_85c3c140');
                 currentStore.increaseSkill('chaos', 3);
@@ -216,7 +213,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
               action: () => {
                 const currentStore = game();
                 currentStore.setDialogue(
-                  'Tankwart: "Ein Arrangement? Die Leere nimmt nur, aber für einen Vermittler des Lärms mache ich eine Ausnahme."'
+                  'Tankwart: "Ein Arrangement? Die Leere nimmt nur, aber für einen Vermittler des Lärms mache ich eine Ausnahme."',
                 );
                 currentStore.increaseBandMood(20, 'id_3a16474f');
                 currentStore.increaseSkill('social', 5);
@@ -230,7 +227,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
               action: () => {
                 const currentStore = game();
                 currentStore.setDialogue(
-                  'Du legst eine kosmische Performance hin. Der Tankwart applaudiert lautlos. "Bravo. Die Leere liebt eine gute Show."'
+                  'Du legst eine kosmische Performance hin. Der Tankwart applaudiert lautlos. "Bravo. Die Leere liebt eine gute Show."',
                 );
                 currentStore.increaseBandMood(25, 'id_13855dd1');
                 currentStore.increaseSkill('social', 5);
@@ -244,7 +241,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Tankwart: "Das Riff ist in dir... und in der Pfütze im Proberaum, die seit 1982 niemals getrocknet ist."'
+            'Tankwart: "Das Riff ist in dir... und in der Pfütze im Proberaum, die seit 1982 niemals getrocknet ist."',
           );
           currentStore.increaseBandMood(5, 'id_97b4b7de');
         },
@@ -256,7 +253,7 @@ export function buildVoidTankwartDialogue(): Dialogue {
           const currentStore = game();
           currentStore.discoverLore('cosmic_echo_decoded');
           currentStore.setDialogue(
-            'Tankwart: "Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort - sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge."'
+            'Tankwart: "Das Echo... du hast es entschlüsselt. Dann weißt du, was in Salzgitter passieren wird. Die Koordinaten sind nicht nur ein Ort - sie sind ein Zeitpunkt. Ihr spielt am Ende aller Dinge."',
           );
           currentStore.increaseBandMood(15, 'id_4f6f9630');
           currentStore.setFlag('tankwartPhilosophy', true);

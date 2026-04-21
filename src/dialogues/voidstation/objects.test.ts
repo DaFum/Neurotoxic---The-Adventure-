@@ -18,9 +18,7 @@ describe('VoidStation object builders', () => {
     });
 
     const dialogue = buildVoidCosmicEchoDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Visionary]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Visionary]'));
 
     if (!option) {
       throw new Error('Expected visionary cosmic echo option');
@@ -30,9 +28,7 @@ describe('VoidStation object builders', () => {
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.cosmic_echo).toBe(true);
-    expect(
-      stateAfter.quests.find((quest) => quest.id === 'cosmic_echo')?.status
-    ).toBe('completed');
+    expect(stateAfter.quests.find((quest) => quest.id === 'cosmic_echo')?.status).toBe('completed');
   });
 
   it('allows picking up dark matter multiple times', () => {
@@ -47,7 +43,7 @@ describe('VoidStation object builders', () => {
     expect(dialogue.options).toBeDefined();
 
     // Simulate picking it up
-    const pickupOption = dialogue.options!.find(o => o.text === 'Aufheben');
+    const pickupOption = dialogue.options!.find((o) => o.text === 'Aufheben');
     expect(pickupOption).toBeDefined();
 
     executeDialogueOption(pickupOption!);
@@ -75,9 +71,7 @@ describe('VoidStation object builders', () => {
     });
 
     const dialogue = buildVoidEgoDialogue();
-    const option = dialogue.options?.find(
-      (entry) => entry.text === 'Wende unsere Strategie an.'
-    );
+    const option = dialogue.options?.find((entry) => entry.text === 'Wende unsere Strategie an.');
 
     if (!option) {
       throw new Error('Expected ego strategy option');
@@ -87,9 +81,7 @@ describe('VoidStation object builders', () => {
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.egoContained).toBe(true);
-    expect(stateAfter.quests.find((quest) => quest.id === 'ego')?.status).toBe(
-      'completed'
-    );
+    expect(stateAfter.quests.find((quest) => quest.id === 'ego')?.status).toBe('completed');
   });
 
   it('returns stabilized portal line only when void is refueled', () => {

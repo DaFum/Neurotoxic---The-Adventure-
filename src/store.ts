@@ -48,9 +48,10 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
   if (cableQuestIndex !== -1) {
     const cableQuest = quests[cableQuestIndex];
     const statusPriority: Record<QuestStatus, number> = { completed: 3, active: 2, failed: 1 };
-    const mergedStatus = statusPriority[fixCableQuest.status] > statusPriority[cableQuest.status]
-      ? fixCableQuest.status
-      : cableQuest.status;
+    const mergedStatus =
+      statusPriority[fixCableQuest.status] > statusPriority[cableQuest.status]
+        ? fixCableQuest.status
+        : cableQuest.status;
 
     // ⚡ Bolt Optimization: Use a single loop to avoid intermediate array allocations
     const len = quests.length;
@@ -59,7 +60,9 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
       const q = quests[i];
       if (q.id !== 'fix_cable') {
         // Only spread (creating a new object) if the status actually changes, preserving object identity otherwise
-        updatedQuests.push(q.id === 'cable' && q.status !== mergedStatus ? { ...q, status: mergedStatus } : q);
+        updatedQuests.push(
+          q.id === 'cable' && q.status !== mergedStatus ? { ...q, status: mergedStatus } : q,
+        );
       }
     }
     return updatedQuests;
@@ -105,8 +108,7 @@ export const useStore = create<GameState>()(
           ? typedPersistedState.loreEntries
           : [];
         const rawPersistedFlags =
-          typedPersistedState.flags !== null &&
-          typeof typedPersistedState.flags === 'object'
+          typedPersistedState.flags !== null && typeof typedPersistedState.flags === 'object'
             ? (typedPersistedState.flags as Record<string, boolean>)
             : {};
 
@@ -120,27 +122,14 @@ export const useStore = create<GameState>()(
           ? typedPersistedState.inventory
           : [];
 
-        const normalizeQuestStatus = (
-          status: unknown,
-          completed: unknown
-        ): QuestStatus => {
-          if (
-            status === 'active' ||
-            status === 'completed' ||
-            status === 'failed'
-          )
-            return status;
+        const normalizeQuestStatus = (status: unknown, completed: unknown): QuestStatus => {
+          if (status === 'active' || status === 'completed' || status === 'failed') return status;
           return completed === true ? 'completed' : 'active';
         };
 
         const persistedQuestsMap = new Map<string, unknown>();
         for (const pq of persistedQuests) {
-          if (
-            pq !== null &&
-            typeof pq === 'object' &&
-            'id' in pq &&
-            typeof pq.id === 'string'
-          ) {
+          if (pq !== null && typeof pq === 'object' && 'id' in pq && typeof pq.id === 'string') {
             persistedQuestsMap.set(pq.id, pq);
           }
         }
@@ -192,12 +181,7 @@ export const useStore = create<GameState>()(
 
         const persistedLoreMap = new Map<string, Record<string, unknown>>();
         for (const pe of persistedLore) {
-          if (
-            pe !== null &&
-            typeof pe === 'object' &&
-            'id' in pe &&
-            typeof pe.id === 'string'
-          ) {
+          if (pe !== null && typeof pe === 'object' && 'id' in pe && typeof pe.id === 'string') {
             persistedLoreMap.set(pe.id, pe as unknown as Record<string, unknown>);
           }
         }
@@ -235,10 +219,7 @@ export const useStore = create<GameState>()(
           }
         }
         for (const [item, count] of Object.entries(inventoryCounts)) {
-          mergedPickupCounts[item] = Math.max(
-            mergedPickupCounts[item] ?? 0,
-            count
-          );
+          mergedPickupCounts[item] = Math.max(mergedPickupCounts[item] ?? 0, count);
         }
 
         return {
@@ -256,10 +237,19 @@ export const useStore = create<GameState>()(
             ...currentState.flags,
             ...persistedFlags,
           },
-          ...(typedPersistedState.bandMoodGainClaims !== null && typeof typedPersistedState.bandMoodGainClaims === 'object' && { bandMoodGainClaims: typedPersistedState.bandMoodGainClaims as Record<string, boolean> }),
-          ...(typeof typedPersistedState.bandMood === 'number' && { bandMood: typedPersistedState.bandMood }),
-          ...((typeof typedPersistedState.trait === 'string' || typedPersistedState.trait === null) && { trait: typedPersistedState.trait }),
-          ...(typedPersistedState.skills !== null && typeof typedPersistedState.skills === 'object' && { skills: typedPersistedState.skills as Skills }),
+          ...(typedPersistedState.bandMoodGainClaims !== null &&
+            typeof typedPersistedState.bandMoodGainClaims === 'object' && {
+              bandMoodGainClaims: typedPersistedState.bandMoodGainClaims as Record<string, boolean>,
+            }),
+          ...(typeof typedPersistedState.bandMood === 'number' && {
+            bandMood: typedPersistedState.bandMood,
+          }),
+          ...((typeof typedPersistedState.trait === 'string' ||
+            typedPersistedState.trait === null) && { trait: typedPersistedState.trait }),
+          ...(typedPersistedState.skills !== null &&
+            typeof typedPersistedState.skills === 'object' && {
+              skills: typedPersistedState.skills as Skills,
+            }),
         };
       },
       onRehydrateStorage: () => (state) => {
@@ -283,16 +273,11 @@ export const useStore = create<GameState>()(
                 };
 
                 if (!currentState.flags.legacyLoreMigrated) {
-                  if (currentState.flags.posterLoreRead)
-                    migrateEntry('poster_lore');
-                  if (currentState.flags.forbiddenRiffFound)
-                    migrateEntry('forbidden_riff');
-                  if (currentState.flags.egoContained)
-                    migrateEntry('ego_philosophy');
-                  if (currentState.flags.tankwartPhilosophy)
-                    migrateEntry('tankwart_truth');
-                  if (currentState.flags.cosmic_echo)
-                    migrateEntry('cosmic_echo_decoded');
+                  if (currentState.flags.posterLoreRead) migrateEntry('poster_lore');
+                  if (currentState.flags.forbiddenRiffFound) migrateEntry('forbidden_riff');
+                  if (currentState.flags.egoContained) migrateEntry('ego_philosophy');
+                  if (currentState.flags.tankwartPhilosophy) migrateEntry('tankwart_truth');
+                  if (currentState.flags.cosmic_echo) migrateEntry('cosmic_echo_decoded');
                 }
 
                 const newFlags = migrateLegacyFeedbackMonitorFlag(currentState.flags);
@@ -302,9 +287,7 @@ export const useStore = create<GameState>()(
                 const hasQuestChanges = updatedQuests !== currentState.quests;
 
                 return {
-                  loreEntries: migratedLore
-                    ? newEntries
-                    : currentState.loreEntries,
+                  loreEntries: migratedLore ? newEntries : currentState.loreEntries,
                   flags: newFlags,
                   ...(hasQuestChanges && { quests: updatedQuests }),
                 };
@@ -313,6 +296,6 @@ export const useStore = create<GameState>()(
           }
         }
       },
-    }
-  )
+    },
+  ),
 );

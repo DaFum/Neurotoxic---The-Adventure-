@@ -50,7 +50,7 @@ describe('dialogueEngine', () => {
     it('should check questDependencies with object notation', () => {
       const option: DialogueOption = {
         text: 'Test',
-        questDependencies: [{ id: 'test_quest', status: 'active' }]
+        questDependencies: [{ id: 'test_quest', status: 'active' }],
       };
 
       expect(canSelectOption(option)).toBe(false);
@@ -97,7 +97,7 @@ describe('dialogueEngine', () => {
       const option: DialogueOption = {
         text: 'Test',
         questToComplete: 'missing_quest', // This will throw in store.ts
-        action: actionSpy
+        action: actionSpy,
       };
 
       const success = executeDialogueOption(option);
@@ -111,14 +111,13 @@ describe('dialogueEngine', () => {
       const option: DialogueOption = {
         text: 'Test',
         questToFail: 'missing_quest', // This will throw in store.ts
-        action: actionSpy
+        action: actionSpy,
       };
 
       const success = executeDialogueOption(option);
 
       expect(success).toBe(true);
       expect(actionSpy).toHaveBeenCalled();
-
     });
 
     it('should throw an error if both action and nextDialogue are defined', () => {
@@ -131,7 +130,7 @@ describe('dialogueEngine', () => {
       };
 
       expect(() => executeDialogueOption(option)).toThrow(
-        'executeDialogueOption: option.nextDialogue and option.action are mutually exclusive. This conflicting pattern is deprecated and no longer allowed.'
+        'executeDialogueOption: option.nextDialogue and option.action are mutually exclusive. This conflicting pattern is deprecated and no longer allowed.',
       );
     });
   });

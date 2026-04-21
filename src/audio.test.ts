@@ -100,14 +100,20 @@ describe('AudioEngine', () => {
 
     it('should handle initialization errors gracefully', () => {
       const expectedError = new Error('Init failed');
-      vi.stubGlobal('AudioContext', vi.fn(function() {
-        throw expectedError;
-      }));
+      vi.stubGlobal(
+        'AudioContext',
+        vi.fn(function () {
+          throw expectedError;
+        }),
+      );
 
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       audio.init();
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('AudioContext initialization failed:', expectedError);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'AudioContext initialization failed:',
+        expectedError,
+      );
       // Should not throw and fail silently
     });
   });
@@ -245,19 +251,22 @@ describe('AudioEngine', () => {
     });
 
     it('should handle kaminstube filter creation error gracefully', () => {
-        audio.init();
-        const ctx = audio.ctx as unknown as MockAudioContext;
-        ctx.state = 'running';
-        const expectedError = new Error('Filter failed');
-        ctx.createBiquadFilter.mockImplementationOnce(() => {
-            throw expectedError;
-        });
+      audio.init();
+      const ctx = audio.ctx as unknown as MockAudioContext;
+      ctx.state = 'running';
+      const expectedError = new Error('Filter failed');
+      ctx.createBiquadFilter.mockImplementationOnce(() => {
+        throw expectedError;
+      });
 
-        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        audio.startAmbient('kaminstube');
-        vi.advanceTimersByTime(100);
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      audio.startAmbient('kaminstube');
+      vi.advanceTimersByTime(100);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing kaminstube ambient:', expectedError);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Error playing kaminstube ambient:',
+        expectedError,
+      );
     });
 
     it('should not play ambient if context is suspended', () => {
@@ -270,34 +279,34 @@ describe('AudioEngine', () => {
     });
 
     it('should play ambient sounds based on type', () => {
-        audio.init();
-        const ctx = audio.ctx as unknown as MockAudioContext;
-        ctx.state = 'running';
+      audio.init();
+      const ctx = audio.ctx as unknown as MockAudioContext;
+      ctx.state = 'running';
 
-        // test each type
-        audio.startAmbient('proberaum');
-        vi.advanceTimersByTime(1000);
-        expect(audio.playTone).toHaveBeenCalledWith(expect.any(Number), 'sine', 0.5, 0.02);
+      // test each type
+      audio.startAmbient('proberaum');
+      vi.advanceTimersByTime(1000);
+      expect(audio.playTone).toHaveBeenCalledWith(expect.any(Number), 'sine', 0.5, 0.02);
 
-        audio.startAmbient('tourbus');
-        vi.advanceTimersByTime(1000);
-        expect(audio.playTone).toHaveBeenCalledWith(50, 'sine', 1.0, 0.01);
+      audio.startAmbient('tourbus');
+      vi.advanceTimersByTime(1000);
+      expect(audio.playTone).toHaveBeenCalledWith(50, 'sine', 1.0, 0.01);
 
-        audio.startAmbient('backstage');
-        vi.advanceTimersByTime(1000);
-        expect(audio.playTone).toHaveBeenCalledWith(expect.any(Number), 'sine', 0.1, 0.005);
+      audio.startAmbient('backstage');
+      vi.advanceTimersByTime(1000);
+      expect(audio.playTone).toHaveBeenCalledWith(expect.any(Number), 'sine', 0.1, 0.005);
 
-        audio.startAmbient('void_station');
-        vi.advanceTimersByTime(1000);
-        expect(audio.playTone).toHaveBeenCalledWith(expect.any(Number), 'sawtooth', 0.05, 0.005);
+      audio.startAmbient('void_station');
+      vi.advanceTimersByTime(1000);
+      expect(audio.playTone).toHaveBeenCalledWith(expect.any(Number), 'sawtooth', 0.05, 0.005);
 
-        audio.startAmbient('kaminstube');
-        vi.advanceTimersByTime(100);
-        expect(ctx.createBiquadFilter).toHaveBeenCalled();
+      audio.startAmbient('kaminstube');
+      vi.advanceTimersByTime(100);
+      expect(ctx.createBiquadFilter).toHaveBeenCalled();
 
-        audio.startAmbient('salzgitter');
-        vi.advanceTimersByTime(1000);
-        expect(audio.playTone).toHaveBeenCalledWith(60, 'sine', 1.0, 0.01);
+      audio.startAmbient('salzgitter');
+      vi.advanceTimersByTime(1000);
+      expect(audio.playTone).toHaveBeenCalledWith(60, 'sine', 1.0, 0.01);
     });
   });
 
@@ -327,51 +336,51 @@ describe('AudioEngine', () => {
     });
 
     it('should play notes when context is running', () => {
-        audio.init();
-        const ctx = audio.ctx as unknown as MockAudioContext;
-        ctx.state = 'running';
+      audio.init();
+      const ctx = audio.ctx as unknown as MockAudioContext;
+      ctx.state = 'running';
 
-        audio.startMusic();
+      audio.startMusic();
 
-        // step 0: kick drum and bass
-        vi.advanceTimersByTime(audio.tempo);
-        expect(audio.playTone).toHaveBeenCalledWith(55.00, 'sawtooth', 0.2, 0.15);
-        expect(ctx.createOscillator).toHaveBeenCalled(); // kick drum
+      // step 0: kick drum and bass
+      vi.advanceTimersByTime(audio.tempo);
+      expect(audio.playTone).toHaveBeenCalledWith(55.0, 'sawtooth', 0.2, 0.15);
+      expect(ctx.createOscillator).toHaveBeenCalled(); // kick drum
 
-        // step 1: bass
-        vi.advanceTimersByTime(audio.tempo);
-        expect(audio.playTone).toHaveBeenCalledWith(55.00, 'sawtooth', 0.2, 0.15);
+      // step 1: bass
+      vi.advanceTimersByTime(audio.tempo);
+      expect(audio.playTone).toHaveBeenCalledWith(55.0, 'sawtooth', 0.2, 0.15);
 
-        // step 2: kick drum, snare and bass
-        vi.advanceTimersByTime(audio.tempo);
-        expect(audio.playTone).toHaveBeenCalledWith(65.41, 'sawtooth', 0.2, 0.15);
-        expect(audio.playTone).toHaveBeenCalledWith(800, 'square', 0.1, 0.05); // snare
+      // step 2: kick drum, snare and bass
+      vi.advanceTimersByTime(audio.tempo);
+      expect(audio.playTone).toHaveBeenCalledWith(65.41, 'sawtooth', 0.2, 0.15);
+      expect(audio.playTone).toHaveBeenCalledWith(800, 'square', 0.1, 0.05); // snare
     });
 
     it('should not play notes when context is suspended', () => {
-        audio.init();
-        const ctx = audio.ctx as unknown as MockAudioContext;
-        ctx.state = 'suspended';
+      audio.init();
+      const ctx = audio.ctx as unknown as MockAudioContext;
+      ctx.state = 'suspended';
 
-        audio.startMusic();
-        vi.advanceTimersByTime(audio.tempo);
-        expect(audio.playTone).not.toHaveBeenCalled();
+      audio.startMusic();
+      vi.advanceTimersByTime(audio.tempo);
+      expect(audio.playTone).not.toHaveBeenCalled();
     });
 
     it('should handle kick drum error gracefully', () => {
-        audio.init();
-        const ctx = audio.ctx as unknown as MockAudioContext;
-        ctx.state = 'running';
-        const expectedError = new Error('Kick drum failed');
-        ctx.createGain.mockImplementationOnce(() => {
-            throw expectedError;
-        });
+      audio.init();
+      const ctx = audio.ctx as unknown as MockAudioContext;
+      ctx.state = 'running';
+      const expectedError = new Error('Kick drum failed');
+      ctx.createGain.mockImplementationOnce(() => {
+        throw expectedError;
+      });
 
-        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        audio.startMusic();
-        vi.advanceTimersByTime(audio.tempo);
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      audio.startMusic();
+      vi.advanceTimersByTime(audio.tempo);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing kick drum:', expectedError);
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Error playing kick drum:', expectedError);
     });
   });
 });

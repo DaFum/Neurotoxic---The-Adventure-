@@ -34,9 +34,7 @@ describe('buildKaminstubeMatzeDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildKaminstubeMatzeDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Diplomat]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Diplomat]'));
 
     if (!option) {
       throw new Error('Expected diplomat confession option');
@@ -46,9 +44,9 @@ describe('buildKaminstubeMatzeDialogue', () => {
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.tourbus_matze_confession).toBe(true);
-    expect(
-      stateAfter.quests.find((quest) => quest.id === 'tourbus_saboteur')?.status
-    ).toBe('completed');
+    expect(stateAfter.quests.find((quest) => quest.id === 'tourbus_saboteur')?.status).toBe(
+      'completed',
+    );
     expect(stateAfter.bandMood).toBe(moodBefore + 30);
     expect(stateAfter.dialogue?.text).toContain('Die Röhren glühen wieder');
   });

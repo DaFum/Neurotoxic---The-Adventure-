@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { touchInput } from '../touchInput';
 
-const BASE_R = 56;   // outer ring radius px
-const KNOB_R = 22;   // inner knob radius px
+const BASE_R = 56; // outer ring radius px
+const KNOB_R = 22; // inner knob radius px
 const MAX = BASE_R - KNOB_R; // max knob travel px
 
 function useTouchDeviceDetection() {
@@ -123,8 +123,28 @@ export function VirtualJoystick() {
     >
       {/* Crosshair guide lines */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.18 }}>
-        <div style={{ position: 'absolute', top: '50%', left: 8, right: 8, height: 1, background: '#adff2f', transform: 'translateY(-50%)' }} />
-        <div style={{ position: 'absolute', left: '50%', top: 8, bottom: 8, width: 1, background: '#adff2f', transform: 'translateX(-50%)' }} />
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: 8,
+            right: 8,
+            height: 1,
+            background: '#adff2f',
+            transform: 'translateY(-50%)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: 8,
+            bottom: 8,
+            width: 1,
+            background: '#adff2f',
+            transform: 'translateX(-50%)',
+          }}
+        />
       </div>
 
       {/* Knob */}

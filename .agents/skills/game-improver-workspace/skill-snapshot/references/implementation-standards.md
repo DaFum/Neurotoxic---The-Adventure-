@@ -8,7 +8,7 @@ Purpose: concrete coding, testing, and PR standards contributors must follow whe
 - No direct state mutations: prefer immutable updates when using `set(...)` or updater callbacks inside `useStore`.
 - Keep changes small and focused: a single behavioral change per PR when possible.
 - Add or update unit tests for any behavior change; tests are the source of truth for regressions.
- - If the change affects persisted fields, update the `partialize`/`merge` logic in `src/store.ts` and include migration code if required.
+- If the change affects persisted fields, update the `partialize`/`merge` logic in `src/store.ts` and include migration code if required.
 
 ## Commit & PR conventions
 

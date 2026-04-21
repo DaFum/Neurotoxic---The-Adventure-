@@ -9,7 +9,7 @@ description: |
 user-invocable: true
 metadata:
   scope: user
-  version: "1.0.0"
+  version: '1.0.0'
 ---
 
 # Game Improver
@@ -22,15 +22,15 @@ Implement production-ready changes for Neurotoxic — bug fixes, features, refac
 
 Identify which systems the request touches, then use Read on the relevant files and their AGENTS.md before writing any code. Claude Code auto-loads AGENTS.md files — these contain the authoritative conventions for each subsystem.
 
-| System | Key Files | AGENTS.md to Read |
-|--------|-----------|-------------------|
-| State / store | `src/store.ts` | `src/AGENTS.md` |
-| Dialogue trees | Scene files + `dialog_uebersicht.md` | `src/components/scenes/AGENTS.md` |
-| Scenes / physics | `src/components/scenes/*.tsx`, `Game.tsx` | `src/components/scenes/AGENTS.md` |
-| Audio | `src/audio.ts` | `src/AGENTS.md` (Audio section) |
-| UI / components | `src/components/*.tsx` | `src/components/AGENTS.md` |
-| Inventory / crafting | `src/store.ts` (RECIPES array + mutators) | `src/AGENTS.md` (Store section) |
-| Quests | `src/store.ts` + scene files | `src/AGENTS.md` (Quest API section) |
+| System               | Key Files                                 | AGENTS.md to Read                   |
+| -------------------- | ----------------------------------------- | ----------------------------------- |
+| State / store        | `src/store.ts`                            | `src/AGENTS.md`                     |
+| Dialogue trees       | Scene files + `dialog_uebersicht.md`      | `src/components/scenes/AGENTS.md`   |
+| Scenes / physics     | `src/components/scenes/*.tsx`, `Game.tsx` | `src/components/scenes/AGENTS.md`   |
+| Audio                | `src/audio.ts`                            | `src/AGENTS.md` (Audio section)     |
+| UI / components      | `src/components/*.tsx`                    | `src/components/AGENTS.md`          |
+| Inventory / crafting | `src/store.ts` (RECIPES array + mutators) | `src/AGENTS.md` (Store section)     |
+| Quests               | `src/store.ts` + scene files              | `src/AGENTS.md` (Quest API section) |
 
 ### 2. Locate and Inspect
 

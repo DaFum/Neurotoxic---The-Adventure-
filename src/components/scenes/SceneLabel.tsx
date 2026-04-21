@@ -13,14 +13,13 @@ export function SceneLabel({
   position,
   fontSize = 0.35,
 
-  color = "#ffffff",
+  color = '#ffffff',
 }: Props) {
   return (
     <Text
       position={position}
       font="/fonts/pressstart2p-v16.ttf"
       fontSize={fontSize}
-
       anchorX="center"
       anchorY="middle"
       color={color}

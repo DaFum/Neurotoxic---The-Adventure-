@@ -36,16 +36,16 @@ resetBandMood: () => set((state) => ({
 Test pattern:
 
 ```ts
-import { describe, it, expect } from 'vitest'
-import { useStore } from '@/src/store'
+import { describe, it, expect } from 'vitest';
+import { useStore } from '@/src/store';
 
 describe('resetBandMood', () => {
   it('resets bandMood to 50', () => {
-    useStore.setState({ bandMood: 85 })
-    useStore.getState().resetBandMood()
-    expect(useStore.getState().bandMood).toBe(50)
-  })
-})
+    useStore.setState({ bandMood: 85 });
+    useStore.getState().resetBandMood();
+    expect(useStore.getState().bandMood).toBe(50);
+  });
+});
 ```
 
 ## Adding a Crafting Recipe
@@ -60,6 +60,7 @@ Recipes live in the `RECIPES` array defined above `useStore`. `combineItems()` c
 Both `combineItems('Neues Teil A', 'Neues Teil B')` and the reverse will work. `combineItems` removes both inputs and adds the result — no separate `removeFromInventory()` needed for recipes.
 
 Existing recipes (for reference):
+
 ```
 'Defektes Kabel' + 'Klebeband' -> 'Repariertes Kabel'
 'Setliste' + 'Stift' -> 'Signierte Setliste'
@@ -78,14 +79,18 @@ Existing recipes (for reference):
 3. Use in scene code:
 
 ```ts
-const flags = useStore(s => s.flags)
-const setFlag = useStore(s => s.setFlag)
+const flags = useStore((s) => s.flags);
+const setFlag = useStore((s) => s.setFlag);
 
 // Read
-if (flags.new_flag_name) { /* ... */ }
+if (flags.new_flag_name) {
+  /* ... */
+}
 
 // Write (inside dialogue action callback)
-action: () => { setFlag('new_flag_name', true) }
+action: () => {
+  setFlag('new_flag_name', true);
+};
 ```
 
 ## Quest Patterns
@@ -95,19 +100,19 @@ The quest API is idempotent — safe to call multiple times.
 ```ts
 // Register on scene mount
 useEffect(() => {
-  addQuest('quest_id', 'Quest description')
-}, [])
+  addQuest('quest_id', 'Quest description');
+}, []);
 
 // Complete when condition met (inside dialogue action)
 action: () => {
-  completeQuestWithFlag('quest_id', 'completion_flag')
-}
+  completeQuestWithFlag('quest_id', 'completion_flag');
+};
 
 // One-shot milestone (no prior registration needed)
-startAndFinishQuest('milestone_id', 'Milestone text')
+startAndFinishQuest('milestone_id', 'Milestone text');
 
 // Atomic quest + flag in one call
-startQuestWithFlag('quest_id', 'Quest text', 'associated_flag')
+startQuestWithFlag('quest_id', 'Quest text', 'associated_flag');
 ```
 
 Key: quest `status` is `'active' | 'completed' | 'failed'` — check with `q.status === 'completed'`, not `q.completed`.
@@ -126,24 +131,22 @@ Always use immutable updates inside `set()`:
 
 ```ts
 // Add to array
-set(state => ({ ...state, inventory: [...state.inventory, item] }))
+set((state) => ({ ...state, inventory: [...state.inventory, item] }));
 
 // Remove from array
-set(state => ({ ...state, inventory: state.inventory.filter(i => i !== item) }))
+set((state) => ({ ...state, inventory: state.inventory.filter((i) => i !== item) }));
 
 // Update item in array
-set(state => ({
+set((state) => ({
   ...state,
-  quests: state.quests.map(q =>
-    q.id === id ? { ...q, status: 'completed' } : q
-  )
-}))
+  quests: state.quests.map((q) => (q.id === id ? { ...q, status: 'completed' } : q)),
+}));
 
 // Clamp number
-set(state => ({
+set((state) => ({
   ...state,
-  bandMood: Math.max(0, Math.min(100, state.bandMood + delta))
-}))
+  bandMood: Math.max(0, Math.min(100, state.bandMood + delta)),
+}));
 ```
 
 Never use `push()`, `splice()`, or direct mutation on state arrays.

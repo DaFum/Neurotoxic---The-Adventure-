@@ -51,9 +51,7 @@ describe('Salzgitter object dialogues', () => {
     });
 
     const dialogue = buildSalzgitterFanDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Social 8]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Social 8]'));
 
     if (!option) throw new Error('Expected social fan movement option');
 
@@ -61,9 +59,7 @@ describe('Salzgitter object dialogues', () => {
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.fanMovement).toBe(true);
-    expect(stateAfter.quests.find((q) => q.id === 'fan_movement')?.status).toBe(
-      'completed'
-    );
+    expect(stateAfter.quests.find((q) => q.id === 'fan_movement')?.status).toBe('completed');
   });
 
   it('returns finalized text when finale already triggered', () => {
@@ -76,9 +72,7 @@ describe('Salzgitter object dialogues', () => {
 
     const dialogue = buildSalzgitterFinaleDialogue();
 
-    expect(dialogue.text).toContain(
-      'Die Buhne schweigt'.replace('Buhne', 'Bühne')
-    );
+    expect(dialogue.text).toContain('Die Buhne schweigt'.replace('Buhne', 'Bühne'));
   });
 
   it('returns finalized text when final quest is already completed', () => {
@@ -94,8 +88,6 @@ describe('Salzgitter object dialogues', () => {
 
     const dialogue = buildSalzgitterFinaleDialogue();
 
-    expect(dialogue.text).toContain(
-      'Die Buhne schweigt'.replace('Buhne', 'Bühne')
-    );
+    expect(dialogue.text).toContain('Die Buhne schweigt'.replace('Buhne', 'Bühne'));
   });
 });

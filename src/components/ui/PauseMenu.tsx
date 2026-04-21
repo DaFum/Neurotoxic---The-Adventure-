@@ -76,7 +76,7 @@ export function PauseMenu({
     if (e.key === 'Tab') {
       if (!pauseMenuContainerRef.current) return;
       const focusableElements = pauseMenuContainerRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       if (focusableElements.length === 0) return;
 

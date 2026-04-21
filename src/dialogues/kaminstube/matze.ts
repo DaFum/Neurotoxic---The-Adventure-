@@ -8,7 +8,7 @@ function handleMatzeConfession(text: string, moodDelta: number) {
     'tourbus_saboteur',
     'tourbus_matze_confession',
     true,
-    'Matze gesteht die Tourbus-Sabotage'
+    'Matze gesteht die Tourbus-Sabotage',
   );
   currentStore.increaseBandMood(moodDelta, 'id_dc796c39');
 }
@@ -18,19 +18,19 @@ export function buildKaminstubeMatzeDialogue(): Dialogue {
 
   if (!store.flags.ampRepaired) {
     return say(
-      'Matze: "Mein Amp hat den Geist aufgegeben! Er hat wohl zu viel von der 432Hz-Energie aus der Void Station abbekommen."'
+      'Matze: "Mein Amp hat den Geist aufgegeben! Er hat wohl zu viel von der 432Hz-Energie aus der Void Station abbekommen."',
     );
   }
 
   if (!store.flags.tourbus_sabotage_discovered) {
     return say(
-      'Matze: "Der Amp läuft wieder! Er klingt jetzt so dreckig wie ein Fabrikgelände im Ruhrpott. Perfekt."'
+      'Matze: "Der Amp läuft wieder! Er klingt jetzt so dreckig wie ein Fabrikgelände im Ruhrpott. Perfekt."',
     );
   }
 
   if (store.flags.tourbus_matze_confession) {
     return say(
-      'Matze: "Der Amp läuft... Ich spiele heute Abend nur für uns. Und für das Riff. Keine Angst, Manager."'
+      'Matze: "Der Amp läuft... Ich spiele heute Abend nur für uns. Und für das Riff. Keine Angst, Manager."',
     );
   }
 
@@ -43,7 +43,7 @@ export function buildKaminstubeMatzeDialogue(): Dialogue {
         action: () => {
           handleMatzeConfession(
             'Matze: "Danke. Ich werde dich nicht enttäuschen. Die Röhren glühen wieder."',
-            30
+            30,
           );
         },
       },
@@ -53,7 +53,7 @@ export function buildKaminstubeMatzeDialogue(): Dialogue {
         action: () => {
           handleMatzeConfession(
             'Matze: "Du hast Recht... ich werde meine Angst in jedem verdammten Akkord spielen!"',
-            25
+            25,
           );
           game().increaseSkill('chaos', 3);
         },
@@ -62,10 +62,7 @@ export function buildKaminstubeMatzeDialogue(): Dialogue {
         text: 'Kein Fehler mehr, oder du fliegst. [Brutalist]',
         requiredTrait: 'Brutalist',
         action: () => {
-          handleMatzeConfession(
-            'Matze: "Verstanden. Nur noch Hass und Lärm."',
-            15
-          );
+          handleMatzeConfession('Matze: "Verstanden. Nur noch Hass und Lärm."', 15);
         },
       },
     ],

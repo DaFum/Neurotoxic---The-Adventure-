@@ -36,9 +36,7 @@ describe('buildBackstageFeedbackMonitorDialogue', () => {
     expect(dialogue.text).toContain('Sollen wir uns verbinden?');
     expect(options).toHaveLength(4);
     expect(options).toContain('Vereinige das Maschinen-Bewusstsein. [Mystic]');
-    expect(options).toContain(
-      'Verbinde die Schaltkreise logisch. [Technical 7]'
-    );
+    expect(options).toContain('Verbinde die Schaltkreise logisch. [Technical 7]');
   });
 
   it('offers optimization branch when quest has started and blueprint is in inventory', () => {
@@ -78,9 +76,7 @@ describe('buildBackstageFeedbackMonitorDialogue', () => {
   it('sets talked flag and band mood when selecting initial hello option', () => {
     const moodBefore = useStore.getState().bandMood;
     const dialogue = buildBackstageFeedbackMonitorDialogue();
-    const helloOption = dialogue.options?.find(
-      (option) => option.text === 'Hallo?'
-    );
+    const helloOption = dialogue.options?.find((option) => option.text === 'Hallo?');
 
     if (!helloOption) {
       throw new Error('Expected hello option in initial monitor dialogue');

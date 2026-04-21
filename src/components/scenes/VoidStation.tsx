@@ -15,13 +15,7 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
-import {
-  Float,
-  MeshDistortMaterial,
-  MeshWobbleMaterial,
-  Sparkles,
-  Stars,
-} from '@react-three/drei';
+import { Float, MeshDistortMaterial, MeshWobbleMaterial, Sparkles, Stars } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
@@ -86,13 +80,15 @@ const SHARD_POSITIONS: ReadonlyArray<[number, number, number]> = [
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function VoidStation() {
-  const flags = useStore(useShallow((state) => ({
-    egoContained: state.flags.egoContained,
-    cosmic_echo: state.flags.cosmic_echo,
-    bassist_clue_matze: state.flags.bassist_clue_matze,
-    bassist_clue_ghost: state.flags.bassist_clue_ghost,
-    bassist_contacted: state.flags.bassist_contacted
-  })));
+  const flags = useStore(
+    useShallow((state) => ({
+      egoContained: state.flags.egoContained,
+      cosmic_echo: state.flags.cosmic_echo,
+      bassist_clue_matze: state.flags.bassist_clue_matze,
+      bassist_clue_ghost: state.flags.bassist_clue_ghost,
+      bassist_contacted: state.flags.bassist_contacted,
+    })),
+  );
   const addQuest = useStore((state) => state.addQuest);
   const hasDunkleMaterie = useStore((state) => !!state.inventoryCounts['Dunkle Materie']);
   const exitTimeoutRef = useRef<number | null>(null);
@@ -135,15 +131,7 @@ export function VoidStation() {
       <pointLight position={[5, 5, 5]} intensity={2.8} color="#00ffff" />
       <pointLight position={[-6, 5, -5]} intensity={2.5} color="#8a7dff" />
       <pointLight position={[0, 4, -7]} intensity={2.4} color="#7bff6d" />
-      <Stars
-        radius={140}
-        depth={70}
-        count={9000}
-        factor={5}
-        saturation={0}
-        fade
-        speed={0.8}
-      />
+      <Stars radius={140} depth={70} count={9000} factor={5} saturation={0} fade speed={0.8} />
       <Sparkles
         count={120}
         scale={[60, 20, 60]}
@@ -157,12 +145,7 @@ export function VoidStation() {
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
         <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[50, 50]} />
-          <MeshDistortMaterial
-            color="#34255a"
-            speed={2}
-            distort={0.4}
-            radius={1}
-          />
+          <MeshDistortMaterial color="#34255a" speed={2} distort={0.4} radius={1} />
         </mesh>
       </RigidBody>
 
@@ -170,11 +153,7 @@ export function VoidStation() {
       <Float speed={5} rotationIntensity={2} floatIntensity={2}>
         <mesh position={[-10, 5, -10]}>
           <boxGeometry args={[2, 10, 2]} />
-          <meshStandardMaterial
-            color="#adff2f"
-            emissive="#adff2f"
-            emissiveIntensity={2}
-          />
+          <meshStandardMaterial color="#adff2f" emissive="#adff2f" emissiveIntensity={2} />
         </mesh>
         {OBELISK_RING_Y_OFFSETS.map((y, idx) => (
           <mesh
@@ -229,22 +208,13 @@ export function VoidStation() {
           rotation={[Math.PI / 2.2, 0, 0]}
         >
           <torusGeometry args={[r, 0.08, 16, 80]} />
-          <meshBasicMaterial
-            color={idx % 2 ? '#6ffff5' : '#ff49f2'}
-            transparent
-            opacity={0.22}
-          />
+          <meshBasicMaterial color={idx % 2 ? '#6ffff5' : '#ff49f2'} transparent opacity={0.22} />
         </mesh>
       ))}
 
       {/* Station interior modules */}
       {CONSOLE_POSITIONS.map((pos, idx) => (
-        <mesh
-          key={`void-console-${idx}`}
-          position={pos}
-          castShadow
-          receiveShadow
-        >
+        <mesh key={`void-console-${idx}`} position={pos} castShadow receiveShadow>
           <boxGeometry args={[2.8, 1.6, 1.4]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#5136a0' : '#2786b0'}
@@ -256,10 +226,7 @@ export function VoidStation() {
         </mesh>
       ))}
       {CONSOLE_SCREEN_POSITIONS.map((pos, idx) => (
-        <mesh
-          key={`void-console-screen-${idx}`}
-          position={pos}
-        >
+        <mesh key={`void-console-screen-${idx}`} position={pos}>
           <planeGeometry args={[1.8, 0.52]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#89c8ff' : '#8fffa5'}
@@ -271,10 +238,7 @@ export function VoidStation() {
         </mesh>
       ))}
       {CONSOLE_ORB_POSITIONS.map((pos, idx) => (
-        <mesh
-          key={`void-console-orb-${idx}`}
-          position={pos}
-        >
+        <mesh key={`void-console-orb-${idx}`} position={pos}>
           <sphereGeometry args={[0.14, 12, 12]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#ff72d5' : '#74f4ff'}
@@ -314,11 +278,7 @@ export function VoidStation() {
 
       {/* Conduit lines and floating shards */}
       {CONDUIT_X_POSITIONS.map((x, idx) => (
-        <mesh
-          key={`conduit-${x}`}
-          position={[x, 0.06, -6.5]}
-          rotation={[-Math.PI / 2, 0, 0]}
-        >
+        <mesh key={`conduit-${x}`} position={[x, 0.06, -6.5]} rotation={[-Math.PI / 2, 0, 0]}>
           <torusGeometry args={[0.75, 0.04, 10, 28]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#7c8dff' : '#64ffd5'}
@@ -382,20 +342,16 @@ export function VoidStation() {
         />
       )}
 
-      {flags.bassist_clue_matze &&
-        flags.bassist_clue_ghost &&
-        !flags.bassist_contacted && (
-          <Interactable
-            position={[-12, 4, 12]}
-            emoji="👻"
-            name="Schwebender Bassist"
-            onInteract={() => {
-              useStore
-                .getState()
-                .setDialogue(buildVoidBassistEncounterDialogue());
-            }}
-          />
-        )}
+      {flags.bassist_clue_matze && flags.bassist_clue_ghost && !flags.bassist_contacted && (
+        <Interactable
+          position={[-12, 4, 12]}
+          emoji="👻"
+          name="Schwebender Bassist"
+          onInteract={() => {
+            useStore.getState().setDialogue(buildVoidBassistEncounterDialogue());
+          }}
+        />
+      )}
 
       {/* Marius' Ego (Floating interaction) */}
       {!flags.egoContained && (
@@ -417,9 +373,7 @@ export function VoidStation() {
           emoji="🌑"
           name="Dunkle Materie"
           onInteract={() => {
-            useStore
-              .getState()
-              .setDialogue(buildVoidDarkMatterPickupDialogue());
+            useStore.getState().setDialogue(buildVoidDarkMatterPickupDialogue());
           }}
         />
       )}
@@ -452,7 +406,9 @@ export function VoidStation() {
         emoji="🔙"
         name="Zurück zum Backstage"
         onInteract={() => {
-          useStore.getState().setDialogue('Die Koordinaten sind fixiert. Rückkehr in die bekannte Realität.');
+          useStore
+            .getState()
+            .setDialogue('Die Koordinaten sind fixiert. Rückkehr in die bekannte Realität.');
           if (exitTimeoutRef.current !== null) {
             window.clearTimeout(exitTimeoutRef.current);
           }
@@ -471,9 +427,7 @@ export function VoidStation() {
         emoji="🖥️"
         name="Diplomaten-Interface"
         onInteract={() => {
-          useStore
-            .getState()
-            .setDialogue(buildVoidDiplomatenInterfaceDialogue());
+          useStore.getState().setDialogue(buildVoidDiplomatenInterfaceDialogue());
         }}
       />
 

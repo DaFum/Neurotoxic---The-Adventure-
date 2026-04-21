@@ -16,7 +16,7 @@ describe('buildTourbusMatzeDialogue', () => {
   it('avoids early return when bandMood < 20 but cable is fixed (and not in inventory)', () => {
     setupTestState({
       bandMood: 10,
-      flags: { ...useStore.getState().flags, cableFixed: true }
+      flags: { ...useStore.getState().flags, cableFixed: true },
     });
     const dialogue = buildTourbusMatzeDialogue();
     expect(getDialogueText(dialogue)).not.toContain('Dieses kaputte Kabel ist das Ende der Band');
@@ -29,24 +29,34 @@ describe('buildTourbusMatzeDialogue', () => {
     expect(getDialogueText(dialogue)).toContain('Hast du Angst vor Salzgitter?');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(5);
-    expect(options.some(o => o.includes('[Visionary]'))).toBe(true);
-    expect(options.some(o => o.includes('[Technical 5]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Visionary]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Technical 5]'))).toBe(true);
   });
 
   it('shows sabotage options when sabotage is discovered but matze has not confessed', () => {
-    setupTestState({ flags: { ...useStore.getState().flags, tourbus_sabotage_discovered: true, marius_tourbus_doubt: true } });
+    setupTestState({
+      flags: {
+        ...useStore.getState().flags,
+        tourbus_sabotage_discovered: true,
+        marius_tourbus_doubt: true,
+      },
+    });
     const dialogue = buildTourbusMatzeDialogue();
-    expect(getDialogueText(dialogue)).toContain('Das zerschnittene Kabel... okay, ich geb\'s ja zu.');
+    expect(getDialogueText(dialogue)).toContain(
+      "Das zerschnittene Kabel... okay, ich geb's ja zu.",
+    );
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(3);
-    expect(options.some(o => o.includes('[Social 5]'))).toBe(true);
-    expect(options.some(o => o.includes('[Brutalist]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Social 5]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Brutalist]'))).toBe(true);
   });
 
   it('prompts to search for tape when mood is ok and sabotage not yet discovered', () => {
     setupTestState({ bandMood: 50 });
     const dialogue = buildTourbusMatzeDialogue();
-    expect(getDialogueText(dialogue)).toContain('Geht schon. Aber mein Kabel ist im Eimer. Hast du Klebeband?');
+    expect(getDialogueText(dialogue)).toContain(
+      'Geht schon. Aber mein Kabel ist im Eimer. Hast du Klebeband?',
+    );
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(3);
     expect(options).toContain('Ich suche danach.');

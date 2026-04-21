@@ -19,7 +19,7 @@ Beim Hinzufügen oder Ändern eines Builders, der Dialogtext, Quest-Trigger, Ite
 - **Dateinamen:** Eine Datei pro NPC oder Objektgruppe (z. B. `matze.ts`, `lars.ts`).
 - **Funktionsnamen:** Die Factory-Funktionen sollten aussagekräftig und generisch benannt sein: `build[Scene][Npc]Dialogue`.
   - Beispiel: `buildProberaumMatzeDialogue()`
-- **Zustand lesen:** Die Builder sind reine Funktionen, sie dürfen nicht auf Variablen aus React-Hooks (wie `useStore(state => state.flags)`) im Render-Cycle zugreifen. Stattdessen müssen sie den **aktuellen** Zustand über `game()` (oder `useStore.getState()`) frisch abrufen, um *Stale Closures* zu vermeiden.
+- **Zustand lesen:** Die Builder sind reine Funktionen, sie dürfen nicht auf Variablen aus React-Hooks (wie `useStore(state => state.flags)`) im Render-Cycle zugreifen. Stattdessen müssen sie den **aktuellen** Zustand über `game()` (oder `useStore.getState()`) frisch abrufen, um _Stale Closures_ zu vermeiden.
 
 ## Shared Helpers (`src/dialogues/shared/helpers.ts`)
 
@@ -40,6 +40,7 @@ Wir nutzen minimale Helfer-Funktionen, um den Code lesbar zu halten, **ohne** ei
 ## Testing
 
 Dialog-Builder können sehr einfach direkt getestet werden (z. B. in `matze.test.ts`).
+
 - Setze den Store-Status (`useStore.setState({ flags: { ... }, inventory: [...] })`).
 - Rufe den Builder auf.
 - Validiere den Output (`expect(dialogue.text).toContain(...)` oder `expect(dialogue.options).toHaveLength(...)`).

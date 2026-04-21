@@ -15,13 +15,50 @@ export function MainMenu() {
   const [showSavePrompt, setShowSavePrompt] = useState(false);
 
   const traits: { id: Trait; desc: string; skills: { name: keyof Skills; val: number }[] }[] = [
-    { id: 'Visionary', desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.', skills: [{ name: 'chaos', val: 5 }] },
-    { id: 'Technician', desc: 'Meister der Maschinen. Boni auf technische Reparaturen.', skills: [{ name: 'technical', val: 5 }] },
-    { id: 'Brutalist', desc: 'Liebt die rohe Gewalt. Erhöht Band-Mood durch Aggression.', skills: [{ name: 'chaos', val: 3 }, { name: 'technical', val: 2 }] },
-    { id: 'Diplomat', desc: 'Beruhigt erhitzte Gemüter. Boni auf soziale Interaktionen.', skills: [{ name: 'social', val: 5 }] },
-    { id: 'Mystic', desc: 'Hat einen Draht zum Übernatürlichen. Spürt verborgene Frequenzen.', skills: [{ name: 'chaos', val: 2 }, { name: 'social', val: 3 }] },
-    { id: 'Performer', desc: 'Die Bühne ist sein Zuhause. Boni auf charismatische Handlungen.', skills: [{ name: 'social', val: 5 }] },
-    { id: 'Cynic', desc: 'Glaubt an nichts, hinterfragt alles. Erkennt Illusionen sofort.', skills: [{ name: 'technical', val: 2 }, { name: 'chaos', val: 3 }] },
+    {
+      id: 'Visionary',
+      desc: 'Sieht Muster im Lärm. Schaltet tiefere Lore-Optionen frei.',
+      skills: [{ name: 'chaos', val: 5 }],
+    },
+    {
+      id: 'Technician',
+      desc: 'Meister der Maschinen. Boni auf technische Reparaturen.',
+      skills: [{ name: 'technical', val: 5 }],
+    },
+    {
+      id: 'Brutalist',
+      desc: 'Liebt die rohe Gewalt. Erhöht Band-Mood durch Aggression.',
+      skills: [
+        { name: 'chaos', val: 3 },
+        { name: 'technical', val: 2 },
+      ],
+    },
+    {
+      id: 'Diplomat',
+      desc: 'Beruhigt erhitzte Gemüter. Boni auf soziale Interaktionen.',
+      skills: [{ name: 'social', val: 5 }],
+    },
+    {
+      id: 'Mystic',
+      desc: 'Hat einen Draht zum Übernatürlichen. Spürt verborgene Frequenzen.',
+      skills: [
+        { name: 'chaos', val: 2 },
+        { name: 'social', val: 3 },
+      ],
+    },
+    {
+      id: 'Performer',
+      desc: 'Die Bühne ist sein Zuhause. Boni auf charismatische Handlungen.',
+      skills: [{ name: 'social', val: 5 }],
+    },
+    {
+      id: 'Cynic',
+      desc: 'Glaubt an nichts, hinterfragt alles. Erkennt Illusionen sofort.',
+      skills: [
+        { name: 'technical', val: 2 },
+        { name: 'chaos', val: 3 },
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -56,7 +93,7 @@ export function MainMenu() {
         <motion.div
           initial={{ scale: 2, y: -100, opacity: 0, skewX: -10 }}
           animate={{ scale: 1, y: 0, opacity: 1, skewX: -10 }}
-          transition={{ duration: 0.8, ease: "circOut" }}
+          transition={{ duration: 0.8, ease: 'circOut' }}
           className="mb-2"
         >
           <h1 className="text-[15vw] leading-[0.8] text-toxic drop-shadow-[0_0_30px_rgba(173,255,47,0.4)]">
@@ -84,15 +121,20 @@ export function MainMenu() {
           className="max-w-xl text-center mb-16 px-6"
         >
           <p className="text-sm font-mono text-zinc-400 leading-relaxed uppercase tracking-wider">
-            System_Role: <span className="text-toxic">Band_Manager</span><br/>
-            Objective: <span className="text-zinc-200">Navigate the industrial wasteland. Repair the sonic weaponry. Ensure the ritual completion at Salzgitter.</span>
+            System_Role: <span className="text-toxic">Band_Manager</span>
+            <br />
+            Objective:{' '}
+            <span className="text-zinc-200">
+              Navigate the industrial wasteland. Repair the sonic weaponry. Ensure the ritual
+              completion at Salzgitter.
+            </span>
           </p>
         </motion.div>
 
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1, type: "spring" }}
+          transition={{ delay: 1, type: 'spring' }}
           onClick={() => {
             if (hasSavedGame) {
               setShowSavePrompt(true);
@@ -122,7 +164,10 @@ export function MainMenu() {
               animate={{ scale: 1, y: 0 }}
               className="max-w-2xl w-full bg-zinc-950 p-8 brutal-border-toxic"
             >
-              <h3 id="save-detected-title" className="text-3xl text-toxic font-black uppercase tracking-widest mb-5 border-b border-toxic/20 pb-4">
+              <h3
+                id="save-detected-title"
+                className="text-3xl text-toxic font-black uppercase tracking-widest mb-5 border-b border-toxic/20 pb-4"
+              >
                 Save_Detected
               </h3>
               <p className="text-xs font-mono text-zinc-300 leading-relaxed uppercase tracking-wider mb-6">
@@ -191,7 +236,10 @@ export function MainMenu() {
               animate={{ scale: 1, y: 0 }}
               className="max-w-4xl w-full bg-zinc-950 p-10 brutal-border-toxic"
             >
-              <h3 id="select-trait-title" className="text-4xl text-toxic font-black uppercase tracking-widest mb-8 border-b border-toxic/20 pb-4">
+              <h3
+                id="select-trait-title"
+                className="text-4xl text-toxic font-black uppercase tracking-widest mb-8 border-b border-toxic/20 pb-4"
+              >
                 Select_Professional_Trait
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -200,7 +248,7 @@ export function MainMenu() {
                     key={t.id}
                     onClick={() => {
                       setTrait(t.id);
-                      t.skills.forEach(s => useStore.getState().increaseSkill(s.name, s.val));
+                      t.skills.forEach((s) => useStore.getState().increaseSkill(s.name, s.val));
                       audio.startMusic();
                       setSelectingTrait(false);
                       setScene('proberaum');
@@ -230,11 +278,13 @@ export function MainMenu() {
 
       {/* Corner Meta Info */}
       <div className="absolute bottom-8 left-8 text-[10px] font-mono text-zinc-600 uppercase tracking-widest">
-        Build_v2.6.0_Stable<br/>
+        Build_v2.6.0_Stable
+        <br />
         Auth: oossiioo@gmail.com
       </div>
       <div className="absolute bottom-8 right-8 text-[10px] font-mono text-zinc-600 uppercase tracking-widest text-right">
-        Terminal_Active<br/>
+        Terminal_Active
+        <br />
         Waiting_For_Input...
       </div>
     </motion.div>

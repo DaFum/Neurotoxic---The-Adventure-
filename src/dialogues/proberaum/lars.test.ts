@@ -40,8 +40,8 @@ describe('buildProberaumLarsDialogue', () => {
     expect(dialogue.text).toContain('Geiler Beat, oder?');
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(3);
-    expect(options.some(o => o.includes('[Performer]'))).toBe(true);
-    expect(options.some(o => o.includes('[Technical 3]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Performer]'))).toBe(true);
+    expect(options.some((o) => o.includes('[Technical 3]'))).toBe(true);
     expect(options).toContain('Weiter so.');
   });
 
@@ -88,7 +88,9 @@ describe('buildProberaumLarsDialogue', () => {
     useStore.getState().addToInventory('Bier');
 
     const dialogue = buildProberaumLarsDialogue();
-    expect(dialogue.text).toContain('Der Pakt steht. Wir sind das Skelett der Welt. Und... ist das ein kühles Blondes?');
+    expect(dialogue.text).toContain(
+      'Der Pakt steht. Wir sind das Skelett der Welt. Und... ist das ein kühles Blondes?',
+    );
     const options = getOptionTexts(dialogue);
     expect(options).toHaveLength(2);
     expect(options).toContain('Hier, lass es dir schmecken.');

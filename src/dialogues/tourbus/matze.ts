@@ -11,9 +11,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
     !flags.cableFixed &&
     !flags.tourbus_sabotage_discovered
   ) {
-    return say(
-      'Matze: "Lass mich in Ruhe. Dieses kaputte Kabel ist das Ende der Band."'
-    );
+    return say('Matze: "Lass mich in Ruhe. Dieses kaputte Kabel ist das Ende der Band."');
   }
 
   if (
@@ -30,14 +28,14 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen." (Kabel übergeben)'
+              'Matze: "Deine Visionen... sie geben mir Kraft. Wir werden siegen." (Kabel übergeben)',
             );
             currentStore.increaseBandMood(15, 'id_99fa66c6');
             currentStore.completeQuestWithFlag(
               'cable',
               'cableFixed',
               true,
-              'Repariere Matzes Kabel mit Klebeband und defektem Kabel'
+              'Repariere Matzes Kabel mit Klebeband und defektem Kabel',
             );
           },
         },
@@ -48,7 +46,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält." (Kabel übergeben)'
+              'Matze: "Die Akustik? Beruhigend, dass jemand den Überblick behält." (Kabel übergeben)',
             );
             currentStore.increaseBandMood(20, 'id_cb57edaa');
             currentStore.increaseSkill('technical', 3);
@@ -56,7 +54,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
               'cable',
               'cableFixed',
               true,
-              'Repariere Matzes Kabel mit Klebeband und defektem Kabel'
+              'Repariere Matzes Kabel mit Klebeband und defektem Kabel',
             );
           },
         },
@@ -67,7 +65,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Matze: "Zusammen... ja. Wir sind eine verdammte Einheit." (Kabel übergeben)'
+              'Matze: "Zusammen... ja. Wir sind eine verdammte Einheit." (Kabel übergeben)',
             );
             currentStore.increaseBandMood(15, 'id_53d710dc');
             currentStore.increaseSkill('social', 3);
@@ -75,7 +73,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
               'cable',
               'cableFixed',
               true,
-              'Repariere Matzes Kabel mit Klebeband und defektem Kabel'
+              'Repariere Matzes Kabel mit Klebeband und defektem Kabel',
             );
           },
         },
@@ -84,14 +82,12 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           consumeItems: ['Repariertes Kabel'],
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Gut. Angst hält uns wach." (Kabel übergeben)'
-            );
+            currentStore.setDialogue('Matze: "Gut. Angst hält uns wach." (Kabel übergeben)');
             currentStore.completeQuestWithFlag(
               'cable',
               'cableFixed',
               true,
-              'Repariere Matzes Kabel mit Klebeband und defektem Kabel'
+              'Repariere Matzes Kabel mit Klebeband und defektem Kabel',
             );
           },
         },
@@ -102,13 +98,13 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
             const currentStore = game();
             currentStore.increaseBandMood(10, 'id_9cf52b53');
             currentStore.setDialogue(
-              'Matze: "Das ist die richtige Einstellung!" (Kabel übergeben)'
+              'Matze: "Das ist die richtige Einstellung!" (Kabel übergeben)',
             );
             currentStore.completeQuestWithFlag(
               'cable',
               'cableFixed',
               true,
-              'Repariere Matzes Kabel mit Klebeband und defektem Kabel'
+              'Repariere Matzes Kabel mit Klebeband und defektem Kabel',
             );
           },
         },
@@ -127,13 +123,13 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Matze: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..."'
+              'Matze: "Oh Gott... ich war es! Ich hab das Kabel durchtrennt! Ich hatte solche Angst vor dem Gig in Salzgitter..."',
             );
             currentStore.completeQuestWithFlag(
               'tourbus_saboteur',
               'tourbus_matze_confession',
               true,
-              'Finde heraus, wer das Kabel sabotiert hat'
+              'Finde heraus, wer das Kabel sabotiert hat',
             );
             currentStore.increaseBandMood(10, 'id_788b2926');
             currentStore.increaseSkill('social', 3);
@@ -144,30 +140,29 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           requiredTrait: 'Brutalist',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Matze schaut ertappt weg und schweigt schuldbewusst.'
-            );
+            currentStore.setDialogue('Matze schaut ertappt weg und schweigt schuldbewusst.');
             currentStore.increaseBandMood(-5, 'id_9d560307');
           },
         },
-        ...(!flags.matzeCynicOneShot && trait === 'Cynic' ? [
-          {
-            text: 'Nur jemand aus der Band hätte ein Motiv dafür. [Cynic]',
-            requiredTrait: 'Cynic' as const,
-            action: () => {
-              const currentStore = game();
-              currentStore.setFlag('matzeCynicOneShot', true);
-              currentStore.setDialogue(
-                'Matze: "Wie kommst du denn darauf?! Du kannst uns doch nicht einfach verdächtigen..."'
-              );
-              currentStore.increaseSkill('chaos', 2);
-            }
-          }
-        ] : []),
+        ...(!flags.matzeCynicOneShot && trait === 'Cynic'
+          ? [
+              {
+                text: 'Nur jemand aus der Band hätte ein Motiv dafür. [Cynic]',
+                requiredTrait: 'Cynic' as const,
+                action: () => {
+                  const currentStore = game();
+                  currentStore.setFlag('matzeCynicOneShot', true);
+                  currentStore.setDialogue(
+                    'Matze: "Wie kommst du denn darauf?! Du kannst uns doch nicht einfach verdächtigen..."',
+                  );
+                  currentStore.increaseSkill('chaos', 2);
+                },
+              },
+            ]
+          : []),
         {
           text: 'Wir finden den Schuldigen.',
-          action: () =>
-            game().setDialogue('Matze: "Ja... genau. Wir suchen weiter."'),
+          action: () => game().setDialogue('Matze: "Ja... genau. Wir suchen weiter."'),
         },
       ],
     };
@@ -176,11 +171,11 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
   if (bandMood < 30) {
     if (flags.cableFixed) {
       return say(
-        'Matze: "Alter, ich hab so schlechte Laune. Aber wenigstens funktioniert das Kabel wieder."'
+        'Matze: "Alter, ich hab so schlechte Laune. Aber wenigstens funktioniert das Kabel wieder."',
       );
     }
     return say(
-      'Matze: "Alter, ich hab so schlechte Laune. Die Tour fängt ja super an... und mein Kabel ist auch noch im Eimer."'
+      'Matze: "Alter, ich hab so schlechte Laune. Die Tour fängt ja super an... und mein Kabel ist auch noch im Eimer."',
     );
   } else {
     if (flags.cableFixed) {
@@ -193,12 +188,10 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           text: 'Ich suche danach.',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Beeil dich, ohne Kabel kein Metal."'
-            );
+            currentStore.setDialogue('Matze: "Beeil dich, ohne Kabel kein Metal."');
             currentStore.addQuest(
               'cable',
-              'Repariere Matzes Kabel mit Klebeband und defektem Kabel'
+              'Repariere Matzes Kabel mit Klebeband und defektem Kabel',
             );
           },
         },
@@ -208,13 +201,13 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           action: () => {
             const currentStore = game();
             currentStore.setDialogue(
-              'Matze: "Was?! Wer würde uns so sabotieren?!" Er sieht sehr geschockt aus.'
+              'Matze: "Was?! Wer würde uns so sabotieren?!" Er sieht sehr geschockt aus.',
             );
             currentStore.startQuestWithFlag(
               'tourbus_saboteur',
               'Finde heraus, wer das Kabel sabotiert hat',
               'tourbus_sabotage_discovered',
-              true
+              true,
             );
             currentStore.discoverLore('tourbus_saboteur');
             currentStore.increaseBandMood(20, 'id_4be83c44');
@@ -225,9 +218,7 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
           text: 'Vielleicht ist es Schicksal.',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Schicksal? Das ist Sabotage! Such das Tape!"'
-            );
+            currentStore.setDialogue('Matze: "Schicksal? Das ist Sabotage! Such das Tape!"');
             currentStore.increaseBandMood(-5, 'id_83dd2627');
           },
         },

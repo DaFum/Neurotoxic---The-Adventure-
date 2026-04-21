@@ -31,7 +31,7 @@ describe('useStore', () => {
         const result = migrateLegacyQuests(original);
         expect(result).toHaveLength(1);
         expect(result[0]).toEqual({ id: 'cable', status: expected, text: 'find it' });
-      }
+      },
     );
 
     it('should not mutate original quest objects when merging', () => {
@@ -109,7 +109,9 @@ describe('useStore', () => {
 
       // Discover it
       state.discoverLore('frequenz_1982_decoded');
-      const discoveredEntry = useStore.getState().loreEntries.find((e) => e.id === 'frequenz_1982_decoded');
+      const discoveredEntry = useStore
+        .getState()
+        .loreEntries.find((e) => e.id === 'frequenz_1982_decoded');
       expect(discoveredEntry?.discovered).toBe(true);
     });
   });
@@ -164,11 +166,11 @@ describe('useStore', () => {
       const uniqueFlags = new Set(flagKeys);
       expect(flagKeys.length).toBe(uniqueFlags.size);
 
-      const loreIds = state.loreEntries.map(e => e.id);
+      const loreIds = state.loreEntries.map((e) => e.id);
       const uniqueLoreIds = new Set(loreIds);
       expect(loreIds.length).toBe(uniqueLoreIds.size);
 
-      const questIds = state.quests.map(q => q.id);
+      const questIds = state.quests.map((q) => q.id);
       const uniqueQuestIds = new Set(questIds);
       expect(questIds.length).toBe(uniqueQuestIds.size);
     });
@@ -179,12 +181,12 @@ describe('useStore', () => {
       useStore.setState({ inventory: ['Bier', 'Bier', 'Bier'] });
 
       let currentState = useStore.getState();
-      expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(3);
+      expect(currentState.inventory.filter((i) => i === 'Bier').length).toBe(3);
 
       currentState.removeFromInventory('Bier');
       currentState = useStore.getState();
 
-      expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(2);
+      expect(currentState.inventory.filter((i) => i === 'Bier').length).toBe(2);
     });
 
     it('addToInventory should return false when pickup limit is reached', () => {
@@ -195,7 +197,7 @@ describe('useStore', () => {
       expect(state.addToInventory('Bier')).toBe(false);
 
       const currentState = useStore.getState();
-      expect(currentState.inventory.filter(i => i === 'Bier').length).toBe(2);
+      expect(currentState.inventory.filter((i) => i === 'Bier').length).toBe(2);
     });
   });
 
@@ -210,7 +212,8 @@ describe('useStore', () => {
     });
 
     it('should still allow repeated negative mood deltas', () => {
-      const triggerSameSourceLoss = () => useStore.getState().increaseBandMood(-5, 'test_source_loss');
+      const triggerSameSourceLoss = () =>
+        useStore.getState().increaseBandMood(-5, 'test_source_loss');
 
       triggerSameSourceLoss();
       triggerSameSourceLoss();
@@ -253,7 +256,7 @@ describe('useStore', () => {
 
       const currentState = useStore.getState();
       expect(currentState.flags.mariusCalmed).toBe(true);
-      const quest = currentState.quests.find(q => q.id === 'test_quest');
+      const quest = currentState.quests.find((q) => q.id === 'test_quest');
       expect(quest).toBeDefined();
       expect(quest?.status).toBe('active');
       expect(quest?.text).toBe('Test description');
@@ -265,12 +268,12 @@ describe('useStore', () => {
       state.failQuest('test_quest_2');
 
       state = useStore.getState();
-      expect(state.quests.find(q => q.id === 'test_quest_2')?.status).toBe('failed');
+      expect(state.quests.find((q) => q.id === 'test_quest_2')?.status).toBe('failed');
 
       state.startQuestWithFlag('test_quest_2', 'New text', 'mariusCalmed');
 
       state = useStore.getState();
-      const quest = state.quests.find(q => q.id === 'test_quest_2');
+      const quest = state.quests.find((q) => q.id === 'test_quest_2');
       expect(quest?.status).toBe('active');
       expect(quest?.text).toBe('New text');
     });
@@ -281,12 +284,12 @@ describe('useStore', () => {
       state.completeQuest('test_quest_4');
 
       state = useStore.getState();
-      expect(state.quests.find(q => q.id === 'test_quest_4')?.status).toBe('completed');
+      expect(state.quests.find((q) => q.id === 'test_quest_4')?.status).toBe('completed');
 
       state.startQuestWithFlag('test_quest_4', 'New text', 'mariusCalmed');
 
       state = useStore.getState();
-      const quest = state.quests.find(q => q.id === 'test_quest_4');
+      const quest = state.quests.find((q) => q.id === 'test_quest_4');
       expect(state.flags.mariusCalmed).toBe(true);
       expect(quest?.status).toBe('completed');
       expect(quest?.text).toBe('New text');
@@ -300,7 +303,7 @@ describe('useStore', () => {
 
       state = useStore.getState();
       expect(state.flags.mariusCalmed).toBe(true);
-      expect(state.quests.find(q => q.id === 'test_quest_3')?.status).toBe('completed');
+      expect(state.quests.find((q) => q.id === 'test_quest_3')?.status).toBe('completed');
     });
 
     it('completeQuestWithFlag should log a warning if quest is missing and no text is provided, but still set the flag', () => {
@@ -308,7 +311,9 @@ describe('useStore', () => {
       expect(state.flags.mariusCalmed).toBe(false);
 
       state.completeQuestWithFlag('missing_quest', 'mariusCalmed');
-      expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest');
+      expect(warnSpy).toHaveBeenCalledWith(
+        'Attempted to complete unregistered quest: missing_quest',
+      );
 
       state = useStore.getState();
       expect(state.flags.mariusCalmed).toBe(true);
@@ -323,7 +328,7 @@ describe('useStore', () => {
       state = useStore.getState();
       expect(state.flags.mariusCalmed).toBe(true);
       expect(state.quests.length).toBe(initialQuestsLength + 1);
-      const quest = state.quests.find(q => q.id === 'missing_quest_with_text');
+      const quest = state.quests.find((q) => q.id === 'missing_quest_with_text');
       expect(quest).toBeDefined();
       expect(quest?.status).toBe('completed');
       expect(quest?.text).toBe('Backfill text');
@@ -334,7 +339,9 @@ describe('useStore', () => {
       const state = useStore.getState();
 
       state.completeQuest('missing_quest_2');
-      expect(warnSpy).toHaveBeenCalledWith('Attempted to complete unregistered quest: missing_quest_2');
+      expect(warnSpy).toHaveBeenCalledWith(
+        'Attempted to complete unregistered quest: missing_quest_2',
+      );
     });
 
     it('failQuest should log a warning if quest is missing and no text is provided', () => {

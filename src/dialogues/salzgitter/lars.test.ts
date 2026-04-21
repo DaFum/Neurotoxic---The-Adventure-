@@ -20,9 +20,7 @@ describe('buildSalzgitterLarsDialogue', () => {
     expect(dialogue.text).toContain('im Backstage gebremst');
 
     // Find and execute the paced option action
-    const pacedOption = dialogue.options?.find(
-      (o) => o.text === 'Halte den Puls.'
-    );
+    const pacedOption = dialogue.options?.find((o) => o.text === 'Halte den Puls.');
     if (!pacedOption) throw new Error('Expected "Halte den Puls." option in lars dialogue');
     executeDialogueOption(pacedOption);
 

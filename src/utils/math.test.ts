@@ -24,7 +24,7 @@ describe('secureRandom', () => {
 
   it('returns a value strictly less than 1 when rng generates max uint32', () => {
     global.crypto.getRandomValues = vi.fn().mockImplementation((arr: Uint32Array) => {
-      arr[0] = 0xFFFFFFFF;
+      arr[0] = 0xffffffff;
       return arr;
     });
     const val = secureRandom();
@@ -36,7 +36,7 @@ describe('secureRandom', () => {
 describe('clampPlayerPosition', () => {
   const bounds: { x: [number, number]; z: [number, number] } = {
     x: [-10, 10],
-    z: [-5, 5]
+    z: [-5, 5],
   };
 
   it('leaves position unchanged when within bounds', () => {

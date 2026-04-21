@@ -5,7 +5,7 @@
  * - Added Geister-Drink item combination.
  * - Added Rostiges Plektrum item.
  * - Added 'Technician' trait-exclusive interaction for broken amplifier.
- * 
+ *
  * #2: NEXT STEPS & IDEAS
  * - Expand questlines with branching outcomes.
  * - Refine NPC dialogue and lore.
@@ -21,7 +21,7 @@ import {
   buildTourbusAmpDialogue,
   buildTourbusHiddenStashDialogue,
   buildTourbusGhostDialogue,
-  buildTourbusBandMeetingDialogue
+  buildTourbusBandMeetingDialogue,
 } from '../../dialogues/tourbus';
 import { Sparkles, Float } from '@react-three/drei';
 import { SceneLabel } from './SceneLabel';
@@ -53,20 +53,38 @@ const SEAT_HEADREST_POSITIONS: ReadonlyArray<[number, number, number]> = [
   [4.4, 1.75, 2.06],
 ];
 const SEAT_LEG_POSITIONS: ReadonlyArray<[number, number, number]> = [
-  [-4.78, -0.06, 2.2], [-3.22, -0.06, 2.2], [-4.78, -0.06, 3.38], [-3.22, -0.06, 3.38],
-  [-1.98, -0.06, 2.2], [-0.42, -0.06, 2.2], [-1.98, -0.06, 3.38], [-0.42, -0.06, 3.38],
-  [0.82, -0.06, 2.2], [2.38, -0.06, 2.2], [0.82, -0.06, 3.38], [2.38, -0.06, 3.38],
-  [3.62, -0.06, 2.2], [5.18, -0.06, 2.2], [3.62, -0.06, 3.38], [5.18, -0.06, 3.38],
+  [-4.78, -0.06, 2.2],
+  [-3.22, -0.06, 2.2],
+  [-4.78, -0.06, 3.38],
+  [-3.22, -0.06, 3.38],
+  [-1.98, -0.06, 2.2],
+  [-0.42, -0.06, 2.2],
+  [-1.98, -0.06, 3.38],
+  [-0.42, -0.06, 3.38],
+  [0.82, -0.06, 2.2],
+  [2.38, -0.06, 2.2],
+  [0.82, -0.06, 3.38],
+  [2.38, -0.06, 3.38],
+  [3.62, -0.06, 2.2],
+  [5.18, -0.06, 2.2],
+  [3.62, -0.06, 3.38],
+  [5.18, -0.06, 3.38],
 ];
 const DASH_SCREEN_X_POSITIONS: ReadonlyArray<number> = [-0.9, 0, 0.9];
 const DASH_KNOB_X_POSITIONS: ReadonlyArray<number> = [-1.2, -0.4, 0.4, 1.2];
 const BUS_SHELF_X_POSITIONS: ReadonlyArray<number> = [-5.2, -4.2, 4.2, 5.2];
 const LUGGAGE_RACK_Z_POSITIONS: ReadonlyArray<number> = [-3.4, -1.2, 1.2, 3.4];
 const SIDE_CASE_POSITIONS: ReadonlyArray<[number, number, number]> = [
-  [-5.1, 0.55, -1.6], [5.1, 0.55, -1.6], [-5.1, 0.55, 1.2], [5.1, 0.55, 1.2],
+  [-5.1, 0.55, -1.6],
+  [5.1, 0.55, -1.6],
+  [-5.1, 0.55, 1.2],
+  [5.1, 0.55, 1.2],
 ];
 const SIDE_CASE_LATCH_POSITIONS: ReadonlyArray<[number, number, number]> = [
-  [-5.08, 1.08, -1.6], [5.08, 1.08, -1.6], [-5.08, 1.08, 1.2], [5.08, 1.08, 1.2],
+  [-5.08, 1.08, -1.6],
+  [5.08, 1.08, -1.6],
+  [-5.08, 1.08, 1.2],
+  [5.08, 1.08, 1.2],
 ];
 const GRAB_HANDLE_X_POSITIONS: ReadonlyArray<number> = [-4.8, -2.4, 0, 2.4, 4.8];
 const STRAP_X_POSITIONS: ReadonlyArray<number> = [-3.6, -1.2, 1.2, 3.6];
@@ -77,27 +95,31 @@ const STRAP_X_POSITIONS: ReadonlyArray<number> = [-3.6, -1.2, 1.2, 3.6];
  */
 export function TourBus() {
   const setDialogue = useStore((state) => state.setDialogue);
-  const flags = useStore(useShallow((state) => ({
-    tourbusBandMeeting: state.flags.tourbusBandMeeting,
-    tourbus_sabotage_discovered: state.flags.tourbus_sabotage_discovered,
-    tourbusAmpTechnician: state.flags.tourbusAmpTechnician,
-    tourbusCoffeeCollected: state.flags.tourbusCoffeeCollected,
-    tourbusEnergyDrinkCollected: state.flags.tourbusEnergyDrinkCollected,
-    tourbusBeerCollected: state.flags.tourbusBeerCollected,
-    rostigesPlektrumCollected: state.flags.rostigesPlektrumCollected
-  })));
+  const flags = useStore(
+    useShallow((state) => ({
+      tourbusBandMeeting: state.flags.tourbusBandMeeting,
+      tourbus_sabotage_discovered: state.flags.tourbus_sabotage_discovered,
+      tourbusAmpTechnician: state.flags.tourbusAmpTechnician,
+      tourbusCoffeeCollected: state.flags.tourbusCoffeeCollected,
+      tourbusEnergyDrinkCollected: state.flags.tourbusEnergyDrinkCollected,
+      tourbusBeerCollected: state.flags.tourbusBeerCollected,
+      rostigesPlektrumCollected: state.flags.rostigesPlektrumCollected,
+    })),
+  );
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
   const canPickupItem = useStore((state) => state.canPickupItem);
-  const inventoryIncludes = useStore(useShallow((state) => ({
-    Klebeband: !!state.inventoryCounts['Klebeband'],
-    'Repariertes Kabel': !!state.inventoryCounts['Repariertes Kabel'],
-    'Defektes Kabel': !!state.inventoryCounts['Defektes Kabel'],
-    Kaffee: !!state.inventoryCounts['Kaffee'],
-    Energiedrink: !!state.inventoryCounts['Energiedrink'],
-    Bier: !!state.inventoryCounts['Bier'],
-    Batterie: !!state.inventoryCounts['Batterie']
-  })));
+  const inventoryIncludes = useStore(
+    useShallow((state) => ({
+      Klebeband: !!state.inventoryCounts['Klebeband'],
+      'Repariertes Kabel': !!state.inventoryCounts['Repariertes Kabel'],
+      'Defektes Kabel': !!state.inventoryCounts['Defektes Kabel'],
+      Kaffee: !!state.inventoryCounts['Kaffee'],
+      Energiedrink: !!state.inventoryCounts['Energiedrink'],
+      Bier: !!state.inventoryCounts['Bier'],
+      Batterie: !!state.inventoryCounts['Batterie'],
+    })),
+  );
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const exitTimeoutRef = useRef<number | null>(null);
 
@@ -118,38 +140,84 @@ export function TourBus() {
       {/* Bus Interior Walls */}
       <mesh position={[0, 2, -5]}>
         <boxGeometry args={[12, 5, 0.5]} />
-        <meshStandardMaterial color="#232a33" emissive="#111820" emissiveIntensity={0.22} metalness={0.35} roughness={0.72} />
+        <meshStandardMaterial
+          color="#232a33"
+          emissive="#111820"
+          emissiveIntensity={0.22}
+          metalness={0.35}
+          roughness={0.72}
+        />
       </mesh>
       <mesh position={[-6, 2, 0]} rotation={[0, Math.PI / 2, 0]}>
         <boxGeometry args={[10, 5, 0.5]} />
-        <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
+        <meshStandardMaterial
+          color="#1e252e"
+          emissive="#121921"
+          emissiveIntensity={0.2}
+          metalness={0.32}
+          roughness={0.74}
+        />
       </mesh>
       <mesh position={[6, 2, 0]} rotation={[0, Math.PI / 2, 0]}>
         <boxGeometry args={[10, 5, 0.5]} />
-        <meshStandardMaterial color="#1e252e" emissive="#121921" emissiveIntensity={0.2} metalness={0.32} roughness={0.74} />
+        <meshStandardMaterial
+          color="#1e252e"
+          emissive="#121921"
+          emissiveIntensity={0.2}
+          metalness={0.32}
+          roughness={0.74}
+        />
       </mesh>
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[12, 10]} />
-          <meshStandardMaterial color="#1a1d24" emissive="#0b0f16" emissiveIntensity={0.25} metalness={0.28} roughness={0.82} />
+          <meshStandardMaterial
+            color="#1a1d24"
+            emissive="#0b0f16"
+            emissiveIntensity={0.25}
+            metalness={0.28}
+            roughness={0.82}
+          />
         </mesh>
       </RigidBody>
       <mesh position={[0, 4.3, 0]}>
         <boxGeometry args={[12, 0.3, 10]} />
-        <meshStandardMaterial color="#2f3741" emissive="#151b22" emissiveIntensity={0.18} metalness={0.42} roughness={0.62} />
+        <meshStandardMaterial
+          color="#2f3741"
+          emissive="#151b22"
+          emissiveIntensity={0.18}
+          metalness={0.42}
+          roughness={0.62}
+        />
       </mesh>
 
       {/* Window strips */}
       {WINDOW_Z_POSITIONS.map((z) => (
         <mesh key={`win-left-${z}`} position={[-5.74, 2.45, z]} rotation={[0, Math.PI / 2, 0]}>
           <planeGeometry args={[1.65, 1.1]} />
-          <meshStandardMaterial color="#7fb7ff" emissive="#2d5f9d" emissiveIntensity={0.28} metalness={0.2} roughness={0.35} transparent opacity={0.72} />
+          <meshStandardMaterial
+            color="#7fb7ff"
+            emissive="#2d5f9d"
+            emissiveIntensity={0.28}
+            metalness={0.2}
+            roughness={0.35}
+            transparent
+            opacity={0.72}
+          />
         </mesh>
       ))}
       {WINDOW_Z_POSITIONS.map((z) => (
         <mesh key={`win-right-${z}`} position={[5.74, 2.45, z]} rotation={[0, -Math.PI / 2, 0]}>
           <planeGeometry args={[1.65, 1.1]} />
-          <meshStandardMaterial color="#7fb7ff" emissive="#2d5f9d" emissiveIntensity={0.28} metalness={0.2} roughness={0.35} transparent opacity={0.72} />
+          <meshStandardMaterial
+            color="#7fb7ff"
+            emissive="#2d5f9d"
+            emissiveIntensity={0.28}
+            metalness={0.2}
+            roughness={0.35}
+            transparent
+            opacity={0.72}
+          />
         </mesh>
       ))}
 
@@ -174,7 +242,12 @@ export function TourBus() {
       {/* Floor runner and side rails */}
       <mesh position={[0, -0.03, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[2.2, 8.4]} />
-        <meshStandardMaterial color="#2e1b18" emissive="#1a0d0b" emissiveIntensity={0.22} roughness={0.92} />
+        <meshStandardMaterial
+          color="#2e1b18"
+          emissive="#1a0d0b"
+          emissiveIntensity={0.22}
+          roughness={0.92}
+        />
       </mesh>
       <mesh position={[-1.16, -0.015, 0.4]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[0.08, 8.4]} />
@@ -189,19 +262,37 @@ export function TourBus() {
       {SEAT_BLOCK_POSITIONS.map((pos, idx) => (
         <mesh key={`seat-${idx}`} position={pos} castShadow receiveShadow>
           <boxGeometry args={[2, 1, 1.8]} />
-          <meshStandardMaterial color={idx % 2 === 0 ? '#d36a3e' : '#3b8cc7'} emissive={idx % 2 === 0 ? '#7c2f1b' : '#1f4f78'} emissiveIntensity={0.4} metalness={0.15} roughness={0.76} />
+          <meshStandardMaterial
+            color={idx % 2 === 0 ? '#d36a3e' : '#3b8cc7'}
+            emissive={idx % 2 === 0 ? '#7c2f1b' : '#1f4f78'}
+            emissiveIntensity={0.4}
+            metalness={0.15}
+            roughness={0.76}
+          />
         </mesh>
       ))}
       {SEAT_BACK_POSITIONS.map((pos, idx) => (
         <mesh key={`seat-back-${idx}`} position={pos} castShadow receiveShadow>
           <boxGeometry args={[1.95, 1.1, 0.32]} />
-          <meshStandardMaterial color={idx % 2 === 0 ? '#c65b34' : '#3380b5'} emissive={idx % 2 === 0 ? '#702914' : '#1b4465'} emissiveIntensity={0.38} metalness={0.18} roughness={0.7} />
+          <meshStandardMaterial
+            color={idx % 2 === 0 ? '#c65b34' : '#3380b5'}
+            emissive={idx % 2 === 0 ? '#702914' : '#1b4465'}
+            emissiveIntensity={0.38}
+            metalness={0.18}
+            roughness={0.7}
+          />
         </mesh>
       ))}
       {SEAT_HEADREST_POSITIONS.map((pos, idx) => (
         <mesh key={`seat-headrest-${idx}`} position={pos} castShadow receiveShadow>
           <boxGeometry args={[1.2, 0.38, 0.26]} />
-          <meshStandardMaterial color={idx % 2 === 0 ? '#f69b6f' : '#77baf1'} emissive={idx % 2 === 0 ? '#7d3a22' : '#2f6294'} emissiveIntensity={0.35} metalness={0.12} roughness={0.65} />
+          <meshStandardMaterial
+            color={idx % 2 === 0 ? '#f69b6f' : '#77baf1'}
+            emissive={idx % 2 === 0 ? '#7d3a22' : '#2f6294'}
+            emissiveIntensity={0.35}
+            metalness={0.12}
+            roughness={0.65}
+          />
         </mesh>
       ))}
       {SEAT_LEG_POSITIONS.map((pos, idx) => (
@@ -214,7 +305,13 @@ export function TourBus() {
       {/* Driver cockpit + storage */}
       <mesh position={[0, 1.1, -4.4]} castShadow receiveShadow>
         <boxGeometry args={[3.6, 1.1, 0.55]} />
-        <meshStandardMaterial color="#29313a" emissive="#18222d" emissiveIntensity={0.3} metalness={0.55} roughness={0.5} />
+        <meshStandardMaterial
+          color="#29313a"
+          emissive="#18222d"
+          emissiveIntensity={0.3}
+          metalness={0.55}
+          roughness={0.5}
+        />
       </mesh>
       <mesh position={[-1.2, 1.35, -4.05]} rotation={[0.2, 0, 0]} castShadow receiveShadow>
         <torusGeometry args={[0.34, 0.06, 12, 24]} />
@@ -222,12 +319,24 @@ export function TourBus() {
       </mesh>
       <mesh position={[0, 1.62, -4.1]} castShadow receiveShadow>
         <boxGeometry args={[3, 0.42, 0.22]} />
-        <meshStandardMaterial color="#1f2935" emissive="#0f1d2b" emissiveIntensity={0.35} metalness={0.6} roughness={0.38} />
+        <meshStandardMaterial
+          color="#1f2935"
+          emissive="#0f1d2b"
+          emissiveIntensity={0.35}
+          metalness={0.6}
+          roughness={0.38}
+        />
       </mesh>
       {DASH_SCREEN_X_POSITIONS.map((x, idx) => (
         <mesh key={`dash-screen-${idx}`} position={[x, 1.67, -3.95]}>
           <planeGeometry args={[0.68, 0.22]} />
-          <meshStandardMaterial color={idx === 1 ? '#9bff6d' : '#6ad3ff'} emissive={idx === 1 ? '#9bff6d' : '#6ad3ff'} emissiveIntensity={0.85} metalness={0.55} roughness={0.2} />
+          <meshStandardMaterial
+            color={idx === 1 ? '#9bff6d' : '#6ad3ff'}
+            emissive={idx === 1 ? '#9bff6d' : '#6ad3ff'}
+            emissiveIntensity={0.85}
+            metalness={0.55}
+            roughness={0.2}
+          />
         </mesh>
       ))}
       {DASH_KNOB_X_POSITIONS.map((x, idx) => (
@@ -239,27 +348,62 @@ export function TourBus() {
       {BUS_SHELF_X_POSITIONS.map((x) => (
         <mesh key={`bus-shelf-${x}`} position={[x, 2.8, 0.4]} castShadow receiveShadow>
           <boxGeometry args={[0.9, 0.5, 1.6]} />
-          <meshStandardMaterial color="#3a2f24" emissive="#241910" emissiveIntensity={0.25} roughness={0.75} />
+          <meshStandardMaterial
+            color="#3a2f24"
+            emissive="#241910"
+            emissiveIntensity={0.25}
+            roughness={0.75}
+          />
         </mesh>
       ))}
 
       {/* Overhead luggage rails and side cases */}
       {LUGGAGE_RACK_Z_POSITIONS.map((z) => (
-        <mesh key={`rack-left-${z}`} position={[-5.35, 3.35, z]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+        <mesh
+          key={`rack-left-${z}`}
+          position={[-5.35, 3.35, z]}
+          rotation={[0, Math.PI / 2, 0]}
+          castShadow
+          receiveShadow
+        >
           <boxGeometry args={[1.25, 0.2, 0.85]} />
-          <meshStandardMaterial color="#303947" emissive="#1a2330" emissiveIntensity={0.24} metalness={0.5} roughness={0.5} />
+          <meshStandardMaterial
+            color="#303947"
+            emissive="#1a2330"
+            emissiveIntensity={0.24}
+            metalness={0.5}
+            roughness={0.5}
+          />
         </mesh>
       ))}
       {LUGGAGE_RACK_Z_POSITIONS.map((z) => (
-        <mesh key={`rack-right-${z}`} position={[5.35, 3.35, z]} rotation={[0, -Math.PI / 2, 0]} castShadow receiveShadow>
+        <mesh
+          key={`rack-right-${z}`}
+          position={[5.35, 3.35, z]}
+          rotation={[0, -Math.PI / 2, 0]}
+          castShadow
+          receiveShadow
+        >
           <boxGeometry args={[1.25, 0.2, 0.85]} />
-          <meshStandardMaterial color="#303947" emissive="#1a2330" emissiveIntensity={0.24} metalness={0.5} roughness={0.5} />
+          <meshStandardMaterial
+            color="#303947"
+            emissive="#1a2330"
+            emissiveIntensity={0.24}
+            metalness={0.5}
+            roughness={0.5}
+          />
         </mesh>
       ))}
       {SIDE_CASE_POSITIONS.map((pos, idx) => (
         <mesh key={`side-case-${idx}`} position={pos} castShadow receiveShadow>
           <boxGeometry args={[0.7, 0.9, 1.1]} />
-          <meshStandardMaterial color={idx % 2 === 0 ? '#3a2230' : '#223a34'} emissive={idx % 2 === 0 ? '#23121c' : '#14251f'} emissiveIntensity={0.28} metalness={0.42} roughness={0.56} />
+          <meshStandardMaterial
+            color={idx % 2 === 0 ? '#3a2230' : '#223a34'}
+            emissive={idx % 2 === 0 ? '#23121c' : '#14251f'}
+            emissiveIntensity={0.28}
+            metalness={0.42}
+            roughness={0.56}
+          />
         </mesh>
       ))}
       {SIDE_CASE_LATCH_POSITIONS.map((pos, idx) => (
@@ -314,7 +458,6 @@ export function TourBus() {
         }}
       />
 
-
       {/* Band Meeting Interactable */}
       {!flags.tourbusBandMeeting && flags.tourbus_sabotage_discovered && (
         <Interactable
@@ -340,29 +483,37 @@ export function TourBus() {
       )}
 
       {/* Bus Items */}
-      {canPickupItem('Klebeband') && !inventoryIncludes['Klebeband'] && !inventoryIncludes['Repariertes Kabel'] && (
-        <Interactable
-          position={[-5, 0.5, 2]}
-          emoji="🩹"
-          name="Klebeband"
-          onInteract={() => {
-            addToInventory('Klebeband');
-            setDialogue('Industrie-Klebeband. Hält alles zusammen: Kabel, Amps und die bröckelnde Psyche der Bandmitglieder.');
-          }}
-        />
-      )}
+      {canPickupItem('Klebeband') &&
+        !inventoryIncludes['Klebeband'] &&
+        !inventoryIncludes['Repariertes Kabel'] && (
+          <Interactable
+            position={[-5, 0.5, 2]}
+            emoji="🩹"
+            name="Klebeband"
+            onInteract={() => {
+              addToInventory('Klebeband');
+              setDialogue(
+                'Industrie-Klebeband. Hält alles zusammen: Kabel, Amps und die bröckelnde Psyche der Bandmitglieder.',
+              );
+            }}
+          />
+        )}
 
-      {canPickupItem('Defektes Kabel') && !inventoryIncludes['Defektes Kabel'] && !inventoryIncludes['Repariertes Kabel'] && (
-        <Interactable
-          position={[5, 0.5, 2]}
-          emoji="🔌"
-          name="Defektes Kabel"
-          onInteract={() => {
-            addToInventory('Defektes Kabel');
-            setDialogue('Ein defektes Gitarrenkabel. Es hat schon mehr Rückkopplungen gesehen als ein durchschnittlicher Fabrikarbeiter.');
-          }}
-        />
-      )}
+      {canPickupItem('Defektes Kabel') &&
+        !inventoryIncludes['Defektes Kabel'] &&
+        !inventoryIncludes['Repariertes Kabel'] && (
+          <Interactable
+            position={[5, 0.5, 2]}
+            emoji="🔌"
+            name="Defektes Kabel"
+            onInteract={() => {
+              addToInventory('Defektes Kabel');
+              setDialogue(
+                'Ein defektes Gitarrenkabel. Es hat schon mehr Rückkopplungen gesehen als ein durchschnittlicher Fabrikarbeiter.',
+              );
+            }}
+          />
+        )}
 
       {!flags.tourbusCoffeeCollected && canPickupItem('Kaffee') && !inventoryIncludes['Kaffee'] && (
         <Interactable
@@ -372,23 +523,29 @@ export function TourBus() {
           onInteract={() => {
             addToInventory('Kaffee');
             setFlag('tourbusCoffeeCollected', true);
-            setDialogue('Ein Becher schwarzer Kaffee. So schwarz wie die Seele eines Drummers nach einem 4-Stunden-Gig.');
+            setDialogue(
+              'Ein Becher schwarzer Kaffee. So schwarz wie die Seele eines Drummers nach einem 4-Stunden-Gig.',
+            );
           }}
         />
       )}
 
-      {!flags.tourbusEnergyDrinkCollected && canPickupItem('Energiedrink') && !inventoryIncludes['Energiedrink'] && (
-        <Interactable
-          position={[-1, 0.5, -3]}
-          emoji="🥤"
-          name="Energiedrink"
-          onInteract={() => {
-            addToInventory('Energiedrink');
-            setFlag('tourbusEnergyDrinkCollected', true);
-            setDialogue('Ein "Liquid Thunder" Energiedrink. Enthält genug Taurin, um ein kleines Kraftwerk zu betreiben.');
-          }}
-        />
-      )}
+      {!flags.tourbusEnergyDrinkCollected &&
+        canPickupItem('Energiedrink') &&
+        !inventoryIncludes['Energiedrink'] && (
+          <Interactable
+            position={[-1, 0.5, -3]}
+            emoji="🥤"
+            name="Energiedrink"
+            onInteract={() => {
+              addToInventory('Energiedrink');
+              setFlag('tourbusEnergyDrinkCollected', true);
+              setDialogue(
+                'Ein "Liquid Thunder" Energiedrink. Enthält genug Taurin, um ein kleines Kraftwerk zu betreiben.',
+              );
+            }}
+          />
+        )}
 
       {!flags.tourbusBeerCollected && canPickupItem('Bier') && !inventoryIncludes['Bier'] && (
         <Interactable
@@ -398,7 +555,9 @@ export function TourBus() {
           onInteract={() => {
             addToInventory('Bier');
             setFlag('tourbusBeerCollected', true);
-            setDialogue('Ein kühles Bier aus dem Bus-Kühlschrank. Das offizielle Schmiermittel für den Industrial-Motor.');
+            setDialogue(
+              'Ein kühles Bier aus dem Bus-Kühlschrank. Das offizielle Schmiermittel für den Industrial-Motor.',
+            );
           }}
         />
       )}
@@ -409,7 +568,9 @@ export function TourBus() {
         emoji="📓"
         name="Vergessenes Notizbuch"
         onInteract={() => {
-          setDialogue('Ein abgegriffenes Notizbuch mit dem Logo von NEUROTOXIC. Seite 42: "Der Sound muss weh tun. Wenn es nicht weh tut, ist es nur Musik. Wir brauchen mehr Feedback." Seite 43: "Marius hat sein Ego im Kühlschrank vergessen. Wieder einmal."');
+          setDialogue(
+            'Ein abgegriffenes Notizbuch mit dem Logo von NEUROTOXIC. Seite 42: "Der Sound muss weh tun. Wenn es nicht weh tut, ist es nur Musik. Wir brauchen mehr Feedback." Seite 43: "Marius hat sein Ego im Kühlschrank vergessen. Wieder einmal."',
+          );
           increaseBandMood(5, 'id_1f0c8904');
         }}
       />
@@ -423,7 +584,9 @@ export function TourBus() {
           onInteract={() => {
             addToInventory('Rostiges Plektrum');
             setFlag('rostigesPlektrumCollected', true);
-            setDialogue('Ein rostiges Plektrum. Es scheint aus einer Zeit zu stammen, in der Metal noch aus reinem Eisen geschmiedet wurde.');
+            setDialogue(
+              'Ein rostiges Plektrum. Es scheint aus einer Zeit zu stammen, in der Metal noch aus reinem Eisen geschmiedet wurde.',
+            );
           }}
         />
       )}
@@ -467,7 +630,10 @@ export function TourBus() {
         emoji="🚐"
         name="Zum Auftritt"
         onInteract={() => {
-          if (useStore.getState().hasItem('Repariertes Kabel') || useStore.getState().flags.cableFixed) {
+          if (
+            useStore.getState().hasItem('Repariertes Kabel') ||
+            useStore.getState().flags.cableFixed
+          ) {
             setDialogue('Auf gehts zum Gig! Nächster Halt: Backstage.');
             if (exitTimeoutRef.current !== null) {
               window.clearTimeout(exitTimeoutRef.current);
@@ -479,7 +645,9 @@ export function TourBus() {
               exitTimeoutRef.current = null;
             }, 1000);
           } else {
-            setDialogue('Wir können noch nicht los. Matze braucht erst ein funktionierendes Kabel.');
+            setDialogue(
+              'Wir können noch nicht los. Matze braucht erst ein funktionierendes Kabel.',
+            );
           }
         }}
       />

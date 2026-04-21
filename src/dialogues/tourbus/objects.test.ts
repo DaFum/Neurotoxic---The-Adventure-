@@ -6,11 +6,7 @@ import {
   buildTourbusGhostDialogue,
   buildTourbusBandMeetingDialogue,
 } from './objects';
-import {
-  setupTestState,
-  getOptionTexts,
-  getDialogueText,
-} from '../shared/test-helpers';
+import { setupTestState, getOptionTexts, getDialogueText } from '../shared/test-helpers';
 import { executeDialogueOption } from '../../dialogueEngine';
 
 describe('TourBus Objects Dialogues', () => {
@@ -29,9 +25,7 @@ describe('TourBus Objects Dialogues', () => {
     it('returns default clueless text when not Technician', () => {
       setupTestState({ trait: 'Brutalist' });
       const dialogue = buildTourbusAmpDialogue();
-      expect(getDialogueText(dialogue)).toContain(
-        'du hast keine Ahnung, wie man das repariert'
-      );
+      expect(getDialogueText(dialogue)).toContain('du hast keine Ahnung, wie man das repariert');
       expect(getOptionTexts(dialogue)).toHaveLength(0);
     });
   });
@@ -39,9 +33,7 @@ describe('TourBus Objects Dialogues', () => {
   describe('Verstecktes Fach', () => {
     it('shows stash interaction', () => {
       const dialogue = buildTourbusHiddenStashDialogue();
-      expect(getDialogueText(dialogue)).toContain(
-        'Ein kleines Geheimfach in der Wandverkleidung.'
-      );
+      expect(getDialogueText(dialogue)).toContain('Ein kleines Geheimfach in der Wandverkleidung.');
       const options = getOptionTexts(dialogue);
       expect(options).toHaveLength(2);
       expect(options).toContain('Notiz einstecken.');
@@ -58,9 +50,7 @@ describe('TourBus Objects Dialogues', () => {
     it('shows Geister-Drink interaction when player has it', () => {
       useStore.getState().addToInventory('Geister-Drink');
       const dialogue = buildTourbusGhostDialogue();
-      expect(getDialogueText(dialogue)).toContain(
-        'Ist das... der Geister-Drink?'
-      );
+      expect(getDialogueText(dialogue)).toContain('Ist das... der Geister-Drink?');
       const options = getOptionTexts(dialogue);
       expect(options).toHaveLength(1);
       expect(options).toContain('Prost!');
@@ -68,10 +58,7 @@ describe('TourBus Objects Dialogues', () => {
 
     it('does not complete ghost recipe when plan pickup limit is exhausted', () => {
       const store = useStore.getState();
-      store.addQuest(
-        'ghost_recipe',
-        'Mixe den Geister-Drink für den Geist des Roadies'
-      );
+      store.addQuest('ghost_recipe', 'Mixe den Geister-Drink für den Geist des Roadies');
       store.addToInventory('Geister-Drink');
       const moodBefore = store.bandMood;
       const socialBefore = store.skills.social;
@@ -113,9 +100,7 @@ describe('TourBus Objects Dialogues', () => {
       const dialogue = buildTourbusGhostDialogue();
       if (typeof dialogue === 'string')
         throw new Error('Expected dialogue object for bassist clue branch');
-      const mysticOption = dialogue.options?.find((o) =>
-        o.text.includes('[Mystic]')
-      );
+      const mysticOption = dialogue.options?.find((o) => o.text.includes('[Mystic]'));
       if (!mysticOption) throw new Error('Mystic option not found');
 
       executeDialogueOption(mysticOption);
@@ -139,9 +124,7 @@ describe('TourBus Objects Dialogues', () => {
 
       const dialogue = buildTourbusGhostDialogue();
 
-      expect(getDialogueText(dialogue)).not.toContain(
-        'Hast du den Geister-Drink schon gemixt?'
-      );
+      expect(getDialogueText(dialogue)).not.toContain('Hast du den Geister-Drink schon gemixt?');
     });
 
     it('applies forbidden riff mood bonus only once', () => {
@@ -153,7 +136,7 @@ describe('TourBus Objects Dialogues', () => {
         throw new Error('Expected dialogue object for forbidden riff branch');
       }
       const metalOption = firstDialogue.options?.find(
-        (o) => o.text === 'Für den Metal tue ich alles.'
+        (o) => o.text === 'Für den Metal tue ich alles.',
       );
       if (!metalOption) throw new Error('Metal option not found');
 
@@ -168,10 +151,9 @@ describe('TourBus Objects Dialogues', () => {
         throw new Error('Expected dialogue object for forbidden riff branch');
       }
       const metalOptionAgain = secondDialogue.options?.find(
-        (o) => o.text === 'Für den Metal tue ich alles.'
+        (o) => o.text === 'Für den Metal tue ich alles.',
       );
-      if (!metalOptionAgain)
-        throw new Error('Metal option not found on second pass');
+      if (!metalOptionAgain) throw new Error('Metal option not found on second pass');
 
       const moodBeforeSecond = useStore.getState().bandMood;
       executeDialogueOption(metalOptionAgain);
@@ -184,9 +166,7 @@ describe('TourBus Objects Dialogues', () => {
   describe('Band-Besprechung', () => {
     it('shows meeting options when not already done', () => {
       const dialogue = buildTourbusBandMeetingDialogue();
-      expect(getDialogueText(dialogue)).toContain(
-        'Zeit für eine kurze Band-Besprechung'
-      );
+      expect(getDialogueText(dialogue)).toContain('Zeit für eine kurze Band-Besprechung');
       const options = getOptionTexts(dialogue);
       expect(options).toHaveLength(4);
       expect(options.some((o) => o.includes('[Diplomat]'))).toBe(true);
@@ -198,9 +178,7 @@ describe('TourBus Objects Dialogues', () => {
         flags: { ...useStore.getState().flags, tourbusBandMeeting: true },
       });
       const dialogue = buildTourbusBandMeetingDialogue();
-      expect(getDialogueText(dialogue)).toContain(
-        'Die Bandbesprechung hat bereits stattgefunden.'
-      );
+      expect(getDialogueText(dialogue)).toContain('Die Bandbesprechung hat bereits stattgefunden.');
       expect(getOptionTexts(dialogue)).toHaveLength(0);
     });
   });

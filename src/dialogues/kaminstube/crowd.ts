@@ -17,7 +17,7 @@ export function buildKaminstubeCrowdDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Manager: "Tangermünde! Seid ihr bereit für den Lärm?!" Die Menge brüllt zurück. Sie gehören uns.'
+            'Manager: "Tangermünde! Seid ihr bereit für den Lärm?!" Die Menge brüllt zurück. Sie gehören uns.',
           );
           currentStore.setFlag('kaminstube_crowd_rallied', true);
           currentStore.increaseBandMood(20, 'id_4c8bd5d3');
@@ -30,7 +30,7 @@ export function buildKaminstubeCrowdDialogue(): Dialogue {
         action: () => {
           const currentStore = game();
           currentStore.setDialogue(
-            'Ein ohrenbetäubendes Fiepen zerschneidet die Stille. Die Cover-Band-Rufer verstummen in Schock. Der Rest der Halle rastet aus!'
+            'Ein ohrenbetäubendes Fiepen zerschneidet die Stille. Die Cover-Band-Rufer verstummen in Schock. Der Rest der Halle rastet aus!',
           );
           currentStore.setFlag('kaminstube_crowd_rallied', true);
           currentStore.increaseBandMood(25, 'id_20f0ddce');
@@ -41,7 +41,7 @@ export function buildKaminstubeCrowdDialogue(): Dialogue {
         text: 'Ignorieren und aufbauen.',
         action: () => {
           game().setDialogue(
-            'Du ignorierst die Zwischenrufe. Die Musik wird für sich selbst sprechen.'
+            'Du ignorierst die Zwischenrufe. Die Musik wird für sich selbst sprechen.',
           );
         },
       },

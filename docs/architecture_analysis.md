@@ -1,7 +1,5 @@
 ## Comprehensive Architecture Analysis
 
-
-
 ### **1. GAME.TSX - The Core Orchestrator**
 
 **Role in Architecture:**
@@ -281,6 +279,3 @@
 7. **Camera shake is temporal only:** Multiple shake sources don't combine spatially, only decay temporally. Last shake wins.
 
 8. **Inventory has no quantity tracking:** Items are stored as strings in array. Can't have "2x Rostiges Plektrum", only duplicates in array.
-
-
-

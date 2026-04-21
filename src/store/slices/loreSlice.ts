@@ -7,12 +7,7 @@ export interface LoreSlice {
   discoverLore: (id: string) => void;
 }
 
-export const createLoreSlice: StateCreator<
-  GameState,
-  [],
-  [],
-  LoreSlice
-> = (set) => ({
+export const createLoreSlice: StateCreator<GameState, [], [], LoreSlice> = (set) => ({
   loreEntries: initialState.loreEntries,
   discoverLore: (id) =>
     set((state) => {

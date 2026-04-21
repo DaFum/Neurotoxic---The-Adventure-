@@ -1,10 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { useStore } from '../../store';
 import { setupTestState } from '../shared/test-helpers';
-import {
-  buildKaminstubeAmpDialogue,
-  buildKaminstubeTubePickupDialogue,
-} from './amp';
+import { buildKaminstubeAmpDialogue, buildKaminstubeTubePickupDialogue } from './amp';
 
 describe('buildKaminstubeTubePickupDialogue', () => {
   beforeEach(() => setupTestState());
@@ -63,9 +60,7 @@ describe('buildKaminstubeAmpDialogue', () => {
     expect(dialogue.text).toContain('Amp funktioniert wieder');
     expect(stateAfter.inventory).not.toContain('Röhre');
     expect(stateAfter.flags.ampRepaired).toBe(true);
-    expect(stateAfter.quests.find((quest) => quest.id === 'amp')?.status).toBe(
-      'completed'
-    );
+    expect(stateAfter.quests.find((quest) => quest.id === 'amp')?.status).toBe('completed');
     expect(stateAfter.bandMood).toBe(moodBefore + 30);
   });
 });

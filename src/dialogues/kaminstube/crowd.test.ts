@@ -31,9 +31,7 @@ describe('buildKaminstubeCrowdDialogue', () => {
     const moodBefore = useStore.getState().bandMood;
 
     const dialogue = buildKaminstubeCrowdDialogue();
-    const option = dialogue.options?.find((entry) =>
-      entry.text.includes('[Social 5]')
-    );
+    const option = dialogue.options?.find((entry) => entry.text.includes('[Social 5]'));
 
     if (!option) {
       throw new Error('Expected social crowd option');
@@ -49,9 +47,7 @@ describe('buildKaminstubeCrowdDialogue', () => {
 
   it('keeps rally flag untouched in ignore branch', () => {
     const dialogue = buildKaminstubeCrowdDialogue();
-    const option = dialogue.options?.find(
-      (entry) => entry.text === 'Ignorieren und aufbauen.'
-    );
+    const option = dialogue.options?.find((entry) => entry.text === 'Ignorieren und aufbauen.');
 
     if (!option) {
       throw new Error('Expected ignore crowd option');
@@ -61,8 +57,6 @@ describe('buildKaminstubeCrowdDialogue', () => {
     const stateAfter = useStore.getState();
 
     expect(stateAfter.flags.kaminstube_crowd_rallied).toBe(false);
-    expect(stateAfter.dialogue?.text).toContain(
-      'Die Musik wird für sich selbst sprechen'
-    );
+    expect(stateAfter.dialogue?.text).toContain('Die Musik wird für sich selbst sprechen');
   });
 });

@@ -9,7 +9,7 @@ type RitualActionWrapper = (
   mood: number,
   skillName: 'chaos' | 'social' | 'technical' | null,
   skillIncrease: number,
-  dialogueText: string
+  dialogueText: string,
 ) => void;
 
 function hasCompletedFrequenz1982Quest(): boolean {
@@ -23,12 +23,12 @@ function completeFrequenz1982Quest(): void {
     FREQUENZ_1982_QUEST_ID,
     'frequenz1982_complete',
     true,
-    FREQUENZ_1982_QUEST_TEXT
+    FREQUENZ_1982_QUEST_TEXT,
   );
 }
 
 export function buildBackstageRitualCircleDialogue(
-  ritualActionWrapper: RitualActionWrapper
+  ritualActionWrapper: RitualActionWrapper,
 ): Dialogue {
   const store = game();
   const hasForbiddenRiff = store.hasItem('Verbotenes Riff');
@@ -47,7 +47,7 @@ export function buildBackstageRitualCircleDialogue(
               35,
               'chaos',
               5,
-              'Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.'
+              'Ihr haltet euch an den Händen und channelt die Frequenzen der Void Station. Ein kosmisches Summen erfüllt den Raum.',
             );
           },
         },
@@ -59,7 +59,7 @@ export function buildBackstageRitualCircleDialogue(
               30,
               'social',
               5,
-              'Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!'
+              'Ein lauter Schlachtruf, eine Pose für unsichtbare Kameras. Die Energie ist elektrisierend!',
             );
           },
         },
@@ -71,7 +71,7 @@ export function buildBackstageRitualCircleDialogue(
               25,
               'technical',
               5,
-              'Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.'
+              'Ihr atmet exakt auf 120 BPM und stimmt eure inneren Frequenzen auf 432 Hz ab. Perfekte Synchronisation.',
             );
           },
         },
@@ -82,7 +82,7 @@ export function buildBackstageRitualCircleDialogue(
               15,
               null,
               0,
-              'Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"'
+              'Ihr legt die Hände übereinander. "1, 2, 3... NEUROTOXIC!"',
             );
           },
         },
@@ -91,9 +91,7 @@ export function buildBackstageRitualCircleDialogue(
   }
 
   if (hasCompletedFrequenz1982Quest()) {
-    return say(
-      'Der Kreis leuchtet stetig im Takt von 1982. Die Realität hat hier einen Riss.'
-    );
+    return say('Der Kreis leuchtet stetig im Takt von 1982. Die Realität hat hier einen Riss.');
   }
 
   const hasFrequenzfragment = store.hasItem('Frequenzfragment');
@@ -108,7 +106,9 @@ export function buildBackstageRitualCircleDialogue(
           consumeItems: ['Resonanz-Kristall'],
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!');
+            currentStore.setDialogue(
+              'Du legst den Kristall in die Mitte. Ein dröhnender Bass geht durch den Raum. Du hast das Geheimnis der Gießerei entschlüsselt!',
+            );
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(50, 'id_228aba72');
@@ -120,7 +120,9 @@ export function buildBackstageRitualCircleDialogue(
           consumeItems: ['Resonanz-Kristall'],
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
+            currentStore.setDialogue(
+              'Du schleuderst den Kristall auf den Kreismittelpunkt. Er zersplittert in Scherben aus reiner Frequenz. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!',
+            );
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40, 'id_bddaff1d');
@@ -145,7 +147,9 @@ export function buildBackstageRitualCircleDialogue(
           consumeItems: ['Frequenzfragment'],
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!');
+            currentStore.setDialogue(
+              'Du drückst das rohe Fragment ins Zentrum und schlägst darauf ein. Funken fliegen, die Realität weint. Die Frequenz gehört jetzt NEUROTOXIC!',
+            );
             completeFrequenz1982Quest();
             currentStore.discoverLore('frequenz_1982_decoded');
             currentStore.increaseBandMood(40, 'id_f6b0931d');
@@ -171,7 +175,7 @@ export function buildBackstageRitualCircleDialogue(
             currentStore.removeFromInventory('Plasma-Zünder');
             currentStore.increaseBandMood(30, 'id_96fd9880');
             currentStore.setDialogue(
-              'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"'
+              'Du benutzt den Plasma-Zünder. Die Kerzen flammen in einem unnatürlichen Blau auf! Marius: "WOAH! Das ist die krasseste Pyro, die wir je hatten! Ich bin bereit!"',
             );
           },
         },
@@ -188,7 +192,9 @@ export function buildBackstageRitualCircleDialogue(
           flagToSet: { flag: 'backstageForbiddenRiffUsed', value: true },
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue('Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"');
+            currentStore.setDialogue(
+              'Der Ritual-Kreis beginnt schwarz zu leuchten, als du dich mit dem Verbotenen Riff näherst. Marius: "Spürst du das? Die Ahnen des Industrial Metal rufen uns!"',
+            );
             currentStore.increaseBandMood(15, 'id_aca64936');
           },
         },
@@ -197,12 +203,10 @@ export function buildBackstageRitualCircleDialogue(
   }
 
   if (store.flags.backstageRitualPerformed) {
-    return say(
-      'Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.'
-    );
+    return say('Die Kerzen brennen noch intensiver nach eurem Ritual. Ihr seid bereit.');
   }
 
   return say(
-    'Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.'
+    'Ein Kreis aus schwarzen Kerzen und zerbrochenen Plektren. Marius muss erst beruhigt werden, bevor ihr das Ritual abhalten könnt.',
   );
 }

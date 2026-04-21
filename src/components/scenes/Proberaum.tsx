@@ -62,7 +62,7 @@ const PEDALBOARD_POSITIONS: ReadonlyArray<[number, number, number]> = [
 ];
 const CABLE_REEL_X_POSITIONS: ReadonlyArray<number> = [-2.6, -1.6, -0.6, 0.4, 1.4, 2.4];
 const LAMP_X_POSITIONS: ReadonlyArray<number> = [-9, -3, 3, 9];
-const POSTER_LINE_DATA: ReadonlyArray<{ y: number, w: number, c: string }> = [
+const POSTER_LINE_DATA: ReadonlyArray<{ y: number; w: number; c: string }> = [
   { y: 0.95, w: 0.75, c: '#ef4444' },
   { y: 0.45, w: 1.2, c: '#d4d4d8' },
   { y: 0.0, w: 1.0, c: '#d4d4d8' },
@@ -74,34 +74,39 @@ const POSTER_LINE_DATA: ReadonlyArray<{ y: number, w: number, c: string }> = [
  * @returns The 3D group containing scene interactables, NPCs, and boundaries.
  */
 export function Proberaum() {
-  const flags = useStore(useShallow((state) => ({
-    feedbackMonitorQuestCompleted: state.flags.feedbackMonitorQuestCompleted,
-    waterCleaned: state.flags.waterCleaned,
-    posterLoreRead: state.flags.posterLoreRead,
-    frequenz1982_proberaum: state.flags.frequenz1982_proberaum,
-    gaveBeerToMarius: state.flags.gaveBeerToMarius,
-    forbiddenRiffFound: state.flags.forbiddenRiffFound
-  })));
+  const flags = useStore(
+    useShallow((state) => ({
+      feedbackMonitorQuestCompleted: state.flags.feedbackMonitorQuestCompleted,
+      waterCleaned: state.flags.waterCleaned,
+      posterLoreRead: state.flags.posterLoreRead,
+      frequenz1982_proberaum: state.flags.frequenz1982_proberaum,
+      gaveBeerToMarius: state.flags.gaveBeerToMarius,
+      forbiddenRiffFound: state.flags.forbiddenRiffFound,
+    })),
+  );
   const setFlag = useStore((state) => state.setFlag);
   const addToInventory = useStore((state) => state.addToInventory);
   const canPickupItem = useStore((state) => state.canPickupItem);
   const completeQuest = useStore((state) => state.completeQuest);
   const hasItem = useStore((state) => state.hasItem);
-  const inventoryIncludes = useStore(useShallow((state) => ({
-    Mop: !!state.inventoryCounts['Mop'],
-    Autoschlüssel: !!state.inventoryCounts['Autoschlüssel'],
-    Bier: !!state.inventoryCounts['Bier'],
-    Lötkolben: !!state.inventoryCounts['Lötkolben'],
-    Schrottmetall: !!state.inventoryCounts['Schrottmetall'],
-    Batterie: !!state.inventoryCounts['Batterie'],
-    'Quanten-Kabel': !!state.inventoryCounts['Quanten-Kabel']
-  })));
+  const inventoryIncludes = useStore(
+    useShallow((state) => ({
+      Mop: !!state.inventoryCounts['Mop'],
+      Autoschlüssel: !!state.inventoryCounts['Autoschlüssel'],
+      Bier: !!state.inventoryCounts['Bier'],
+      Lötkolben: !!state.inventoryCounts['Lötkolben'],
+      Schrottmetall: !!state.inventoryCounts['Schrottmetall'],
+      Batterie: !!state.inventoryCounts['Batterie'],
+      'Quanten-Kabel': !!state.inventoryCounts['Quanten-Kabel'],
+    })),
+  );
   const setDialogue = useStore((state) => state.setDialogue);
   const increaseBandMood = useStore((state) => state.increaseBandMood);
   const discoverLore = useStore((state) => state.discoverLore);
-  const feedbackMonitorQuestCompleted = useStore((state) =>
-    state.flags.feedbackMonitorQuestCompleted ||
-    state.quests.some((quest) => quest.id === 'feedback_monitor' && quest.status === 'completed')
+  const feedbackMonitorQuestCompleted = useStore(
+    (state) =>
+      state.flags.feedbackMonitorQuestCompleted ||
+      state.quests.some((quest) => quest.id === 'feedback_monitor' && quest.status === 'completed'),
   );
   const exitTimeoutRef = useRef<number | null>(null);
 
@@ -120,11 +125,7 @@ export function Proberaum() {
       <fog attach="fog" args={['#3a485a', 22, 90]} />
       <ambientLight intensity={1.05} />
       <hemisphereLight args={['#eef6ff', '#3e4a58', 0.9]} />
-      <directionalLight
-        position={[10, 10, 5]}
-        intensity={1.75}
-        color="#fff4e8"
-      />
+      <directionalLight position={[10, 10, 5]} intensity={1.75} color="#fff4e8" />
       <pointLight position={[-8, 5, -4]} intensity={3.1} color="#7cff6b" />
       <pointLight position={[8, 4, 2]} intensity={2.8} color="#3aa7ff" />
       <pointLight position={[0, 3.2, 5]} intensity={2.4} color="#ffffff" />
@@ -186,21 +187,13 @@ export function Proberaum() {
       {NEON_BAR_X_POSITIONS.map((x) => (
         <mesh key={`neon-${x}`} position={[x, 6.8, -1]} rotation={[0.12, 0, 0]}>
           <boxGeometry args={[2.8, 0.08, 0.08]} />
-          <meshStandardMaterial
-            color="#1dff8b"
-            emissive="#0eff6a"
-            emissiveIntensity={1.8}
-          />
+          <meshStandardMaterial color="#1dff8b" emissive="#0eff6a" emissiveIntensity={1.8} />
         </mesh>
       ))}
 
       {/* Industrial clutter */}
       {CRATE_DATA.map((crate, idx) => (
-        <group
-          key={`crate-${idx}`}
-          position={crate.pos}
-          rotation={[0, crate.rot, 0]}
-        >
+        <group key={`crate-${idx}`} position={crate.pos} rotation={[0, crate.rot, 0]}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.4, 1.2, 1.2]} />
             <meshStandardMaterial
@@ -224,11 +217,7 @@ export function Proberaum() {
           {CRATE_HANDLE_X_OFFSETS.map((x) => (
             <mesh key={`crate-handle-${idx}-${x}`} position={[x, 0, 0]}>
               <boxGeometry args={[0.08, 0.44, 0.72]} />
-              <meshStandardMaterial
-                color="#b8c3d1"
-                metalness={0.85}
-                roughness={0.22}
-              />
+              <meshStandardMaterial color="#b8c3d1" metalness={0.85} roughness={0.22} />
             </mesh>
           ))}
           {CRATE_WHEEL_X_OFFSETS.map((x) => (
@@ -239,11 +228,7 @@ export function Proberaum() {
               castShadow
             >
               <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
-              <meshStandardMaterial
-                color="#1b2129"
-                metalness={0.6}
-                roughness={0.45}
-              />
+              <meshStandardMaterial color="#1b2129" metalness={0.6} roughness={0.45} />
             </mesh>
           ))}
           {CRATE_WHEEL_X_OFFSETS.map((x) => (
@@ -254,11 +239,7 @@ export function Proberaum() {
               castShadow
             >
               <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
-              <meshStandardMaterial
-                color="#1b2129"
-                metalness={0.6}
-                roughness={0.45}
-              />
+              <meshStandardMaterial color="#1b2129" metalness={0.6} roughness={0.45} />
             </mesh>
           ))}
         </group>
@@ -266,10 +247,7 @@ export function Proberaum() {
 
       {/* Side utility racks */}
       {UTILITY_RACK_POSITIONS.map((pos, idx) => (
-        <group
-          key={`utility-rack-${idx}`}
-          position={pos}
-        >
+        <group key={`utility-rack-${idx}`} position={pos}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[0.9, 2.8, 2.4]} />
             <meshStandardMaterial
@@ -326,10 +304,7 @@ export function Proberaum() {
 
       {/* Rehearsal gear */}
       {AMP_STACK_POSITIONS.map((pos, idx) => (
-        <group
-          key={`amp-stack-${idx}`}
-          position={pos}
-        >
+        <group key={`amp-stack-${idx}`} position={pos}>
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.4, 0.9, 0.9]} />
             <meshStandardMaterial
@@ -364,11 +339,7 @@ export function Proberaum() {
       ))}
       <mesh position={[0, 0.22, -3.4]} castShadow receiveShadow>
         <cylinderGeometry args={[0.95, 0.95, 0.14, 20]} />
-        <meshStandardMaterial
-          color="#233338"
-          emissive="#163035"
-          emissiveIntensity={0.25}
-        />
+        <meshStandardMaterial color="#233338" emissive="#163035" emissiveIntensity={0.25} />
       </mesh>
       <mesh position={[0, 0.54, -3.42]} castShadow receiveShadow>
         <cylinderGeometry args={[0.56, 0.62, 0.52, 22]} />
@@ -402,19 +373,10 @@ export function Proberaum() {
       </mesh>
       <mesh position={[0.35, 0.95, -3.6]} rotation={[0, 0, 0.25]}>
         <cylinderGeometry args={[0.38, 0.38, 0.05, 18]} />
-        <meshStandardMaterial
-          color="#dbe5ef"
-          metalness={0.9}
-          roughness={0.14}
-        />
+        <meshStandardMaterial color="#dbe5ef" metalness={0.9} roughness={0.14} />
       </mesh>
       {MIC_STAND_X_POSITIONS.map((x) => (
-        <mesh
-          key={`mic-stand-${x}`}
-          position={[x, 0.72, -3.0]}
-          castShadow
-          receiveShadow
-        >
+        <mesh key={`mic-stand-${x}`} position={[x, 0.72, -3.0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.03, 0.05, 1.4, 10]} />
           <meshStandardMaterial
             color="#6bd4ff"
@@ -428,11 +390,7 @@ export function Proberaum() {
 
       {/* Pedalboards and cable reels */}
       {PEDALBOARD_POSITIONS.map((pos, idx) => (
-        <group
-          key={`pedalboard-${idx}`}
-          position={pos}
-          rotation={[-Math.PI / 2, 0, 0]}
-        >
+        <group key={`pedalboard-${idx}`} position={pos} rotation={[-Math.PI / 2, 0, 0]}>
           <mesh>
             <planeGeometry args={[0.95, 0.42]} />
             <meshStandardMaterial
@@ -477,11 +435,7 @@ export function Proberaum() {
         <group key={`lamp-${x}`} position={[x, 5.9, -1.8]}>
           <mesh castShadow>
             <cylinderGeometry args={[0.04, 0.04, 1.1, 8]} />
-            <meshStandardMaterial
-              color="#2f3b44"
-              metalness={0.7}
-              roughness={0.3}
-            />
+            <meshStandardMaterial color="#2f3b44" metalness={0.7} roughness={0.3} />
           </mesh>
           <mesh position={[0, -0.62, 0]} castShadow>
             <sphereGeometry args={[0.2, 12, 12]} />
@@ -514,11 +468,7 @@ export function Proberaum() {
 
       {/* Water Puddle */}
       {!flags.waterCleaned && (
-        <mesh
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, 0.01, 2]}
-          receiveShadow
-        >
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 2]} receiveShadow>
           <circleGeometry args={[3, 32]} />
           <meshStandardMaterial
             color="#00aaff"
@@ -538,14 +488,14 @@ export function Proberaum() {
         onInteract={() => {
           if (!flags.posterLoreRead) {
             setDialogue(
-              'Ein altes, zerrissenes Plakat von der "Machine Hell" Tour 1999. Es ist mit schwarzem Edding überkritzelt: "DER RHYTHMUS IST DER KÄFIG. DIE FREQUENZ IST DER SCHLÜSSEL." Manager: "Das war das Jahr, als Lars versuchte, ein Schlagzeug aus alten Ölfässern und einem Presslufthammer zu bauen. Die Nachbarn haben uns damals fast angezeigt, weil die Frequenzen die Fensterscheiben im ganzen Block zum Bersten brachten."'
+              'Ein altes, zerrissenes Plakat von der "Machine Hell" Tour 1999. Es ist mit schwarzem Edding überkritzelt: "DER RHYTHMUS IST DER KÄFIG. DIE FREQUENZ IST DER SCHLÜSSEL." Manager: "Das war das Jahr, als Lars versuchte, ein Schlagzeug aus alten Ölfässern und einem Presslufthammer zu bauen. Die Nachbarn haben uns damals fast angezeigt, weil die Frequenzen die Fensterscheiben im ganzen Block zum Bersten brachten."',
             );
             setFlag('posterLoreRead', true);
             discoverLore('poster_lore');
             increaseBandMood(5, 'id_94916227');
           } else {
             setDialogue(
-              'Das Plakat erinnert dich an die chaotischen Anfänge. Der Edding-Spruch scheint sich bei jedem Hinsehen leicht zu verändern.'
+              'Das Plakat erinnert dich an die chaotischen Anfänge. Der Edding-Spruch scheint sich bei jedem Hinsehen leicht zu verändern.',
             );
           }
         }}
@@ -603,44 +553,41 @@ export function Proberaum() {
           onInteract={() => {
             addToInventory('Mop');
             setDialogue(
-              'Der Wischmopp der Vorsehung. Er hat schon unzählige Bierpfützen und Tränen gescheiterter Bassisten aufgesaugt.'
+              'Der Wischmopp der Vorsehung. Er hat schon unzählige Bierpfützen und Tränen gescheiterter Bassisten aufgesaugt.',
             );
           }}
         />
       )}
 
-      {canPickupItem('Autoschlüssel') &&
-        !inventoryIncludes['Autoschlüssel'] && (
-          <Interactable
-            position={[-10, 0.5, -4]}
-            emoji="🔑"
-            name="Autoschlüssel"
-            scale={0.6}
-            onInteract={() => {
-              addToInventory('Autoschlüssel');
-              completeQuest('keys');
-              increaseBandMood(10, 'id_e2e4ecfc');
-              setDialogue(
-                'Die Schlüssel zum "Schwarzen Sarg", eurem treuen Tourbus. Er läuft mit Diesel und purer Verzweiflung.'
-              );
-            }}
-          />
-        )}
+      {canPickupItem('Autoschlüssel') && !inventoryIncludes['Autoschlüssel'] && (
+        <Interactable
+          position={[-10, 0.5, -4]}
+          emoji="🔑"
+          name="Autoschlüssel"
+          scale={0.6}
+          onInteract={() => {
+            addToInventory('Autoschlüssel');
+            completeQuest('keys');
+            increaseBandMood(10, 'id_e2e4ecfc');
+            setDialogue(
+              'Die Schlüssel zum "Schwarzen Sarg", eurem treuen Tourbus. Er läuft mit Diesel und purer Verzweiflung.',
+            );
+          }}
+        />
+      )}
 
-      {!flags.gaveBeerToMarius &&
-        canPickupItem('Bier') &&
-        !inventoryIncludes['Bier'] && (
-          <Interactable
-            position={[8, 0.5, -5]}
-            emoji="🍺"
-            name="Kühles Bier"
-            scale={0.6}
-            onInteract={() => {
-              addToInventory('Bier');
-              setDialogue('Ein kühles Bier für Marius!');
-            }}
-          />
-        )}
+      {!flags.gaveBeerToMarius && canPickupItem('Bier') && !inventoryIncludes['Bier'] && (
+        <Interactable
+          position={[8, 0.5, -5]}
+          emoji="🍺"
+          name="Kühles Bier"
+          scale={0.6}
+          onInteract={() => {
+            addToInventory('Bier');
+            setDialogue('Ein kühles Bier für Marius!');
+          }}
+        />
+      )}
 
       {/* The Puddle Interaction */}
       {!flags.waterCleaned && (
@@ -655,7 +602,7 @@ export function Proberaum() {
               store.completeQuestWithFlag('water', 'waterCleaned');
               store.increaseBandMood(20, 'id_baf22628');
               store.setDialogue(
-                'Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.'
+                'Du hast das Wasser aufgewischt! Es war kein normales Wasser, sondern das Kondensat von 40 Jahren Industrial-Geschichte.',
               );
             } else {
               store.setDialogue(buildProberaumPuddleDialogue());
@@ -663,7 +610,7 @@ export function Proberaum() {
                 'water',
                 'Wische die Wasserlache im Proberaum auf',
                 'waterCleaned',
-                false
+                false,
               );
             }
           }}
@@ -688,7 +635,7 @@ export function Proberaum() {
           scale={0.5}
           onInteract={() => {
             setDialogue(
-              'Du hast das Verbotene Riff gefunden. Es vibriert in einer Frequenz, die Hunde zum Weinen bringt.'
+              'Du hast das Verbotene Riff gefunden. Es vibriert in einer Frequenz, die Hunde zum Weinen bringt.',
             );
             addToInventory('Verbotenes Riff');
             setFlag('forbiddenRiffFound', true);
@@ -711,21 +658,18 @@ export function Proberaum() {
         />
       )}
 
-      {canPickupItem('Schrottmetall') &&
-        !inventoryIncludes['Schrottmetall'] && (
-          <Interactable
-            position={[10, 0.5, -2]}
-            emoji="🔩"
-            name="Schrottmetall"
-            scale={0.7}
-            onInteract={() => {
-              addToInventory('Schrottmetall');
-              setDialogue(
-                'Ein Stück verrostetes Schrottmetall. Riecht nach... Industrial.'
-              );
-            }}
-          />
-        )}
+      {canPickupItem('Schrottmetall') && !inventoryIncludes['Schrottmetall'] && (
+        <Interactable
+          position={[10, 0.5, -2]}
+          emoji="🔩"
+          name="Schrottmetall"
+          scale={0.7}
+          onInteract={() => {
+            addToInventory('Schrottmetall');
+            setDialogue('Ein Stück verrostetes Schrottmetall. Riecht nach... Industrial.');
+          }}
+        />
+      )}
 
       {canPickupItem('Batterie') && !inventoryIncludes['Batterie'] && (
         <Interactable
@@ -736,7 +680,7 @@ export function Proberaum() {
           onInteract={() => {
             addToInventory('Batterie');
             setDialogue(
-              'Eine fast leere Batterie. Sie summt leise in einer unheilvollen Frequenz.'
+              'Eine fast leere Batterie. Sie summt leise in einer unheilvollen Frequenz.',
             );
           }}
         />
@@ -753,7 +697,7 @@ export function Proberaum() {
             onInteract={() => {
               addToInventory('Quanten-Kabel');
               setDialogue(
-                'Du hast ein Quanten-Kabel gefunden. Es scheint in mehreren Dimensionen gleichzeitig zu existieren.'
+                'Du hast ein Quanten-Kabel gefunden. Es scheint in mehreren Dimensionen gleichzeitig zu existieren.',
               );
             }}
           />
@@ -799,7 +743,7 @@ export function Proberaum() {
                 if (store.scene === 'proberaum') {
                   store.addQuest(
                     'cable',
-                    'Repariere Matzes Kabel mit Klebeband und defektem Kabel'
+                    'Repariere Matzes Kabel mit Klebeband und defektem Kabel',
                   );
                   store.setScene('tourbus');
                 }
@@ -807,7 +751,7 @@ export function Proberaum() {
               }, 1000);
             } else {
               setDialogue(
-                'Wir können noch nicht losfahren. Wo sind die Autoschlüssel für den Van?'
+                'Wir können noch nicht losfahren. Wo sind die Autoschlüssel für den Van?',
               );
             }
           }}
@@ -817,22 +761,9 @@ export function Proberaum() {
       <SceneEnvironmentSetpieces variant="proberaum" />
 
       <Player bounds={{ x: [-14, 14], z: [-7, 7] }} />
-      <ContactShadows
-        position={[0, 0, 0]}
-        opacity={0.4}
-        scale={20}
-        blur={2}
-        far={10}
-      />
+      <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={20} blur={2} far={10} />
       {/* Dust Particles */}
-      <Sparkles
-        count={100}
-        scale={20}
-        size={1.5}
-        speed={0.5}
-        opacity={0.2}
-        color="#fff"
-      />
+      <Sparkles count={100} scale={20} size={1.5} speed={0.5} opacity={0.2} color="#fff" />
     </>
   );
 }
