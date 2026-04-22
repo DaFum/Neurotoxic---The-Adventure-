@@ -68,7 +68,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
     return say('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');
   }
 
-            if (store.hasItem('Industrie-Talisman') && !store.flags.wirtSecretItem) {
+              if (store.hasItem('Industrie-Talisman') && !store.flags.wirtSecretItem) {
     return {
       text: 'Wirt: "Das ist... der Talisman von 1982. Ich erkenne ihn sofort. Er war der Grund, warum wir die Gießerei schließen mussten. Hier, nimm das. Es gehört zum Set."',
       options: [
@@ -76,8 +76,8 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           text: 'Was ist das?',
           action: () => {
             const currentStore = game();
-            currentStore.setFlag('wirtSecretItem', true);
             if (currentStore.addToInventory('Altes Plektrum')) {
+              currentStore.setFlag('wirtSecretItem', true);
               currentStore.setDialogue(
                 'Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."',
               );
