@@ -352,7 +352,7 @@ export function UI() {
       <GlitchOverlay glitchIntensity={glitchIntensity} />
 
       <div
-        aria-hidden={!!dialogue}
+
         className={`absolute top-4 left-1/2 -translate-x-1/2 pointer-events-auto z-20 ${isCompactViewport ? 'w-[calc(100%-7rem)]' : 'w-[min(560px,calc(100%-9rem))]'}`}
       >
         <div className="bg-black/80 border border-toxic/30 px-3 py-2 backdrop-blur-sm">
@@ -380,7 +380,7 @@ export function UI() {
       {/* Top Bar */}
       {showHudPanels && isCompactViewport && (
         <div
-          inert={dialogue ? '' : undefined}
+          inert={dialogue ? true : undefined}
           className="absolute top-20 left-3 right-3 pointer-events-none z-20"
         >
           <div className="bg-black/90 border border-toxic/30 p-2 pointer-events-auto">
@@ -568,7 +568,7 @@ export function UI() {
       )}
 
       {!isCompactViewport && (
-        <div inert={dialogue ? '' : undefined} className="flex justify-between items-start">
+        <div inert={dialogue ? true : undefined} className="flex justify-between items-start">
           {showHudPanels && (
             <div className="flex flex-col gap-6">
               <div className="bg-black/90 p-5 brutal-border-toxic pointer-events-auto flex flex-col gap-3 animate-reveal">
@@ -796,7 +796,7 @@ export function UI() {
 
       {/* Controls Hint */}
       <div
-        aria-hidden={!!dialogue}
+
         className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none"
       >
         <span className="text-toxic font-bold">Joystick / WASD</span> = Bewegen

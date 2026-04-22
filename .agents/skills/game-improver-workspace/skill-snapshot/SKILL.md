@@ -149,13 +149,13 @@ Deliverables: draft summary, unified diff (patch), tests, verification steps
 
 1. Diagnose inventory/quest bug on branch:
 
-```
+```text
 /game-improver action=diagnoseInventoryQuestBug scope=workspace skillName=inventory-quest-diagnostics branch=fix-quest-inventory-bugs-3736012791563995728
 ```
 
-2. Draft audio ambient fix (ask before writing):
+1. Draft audio ambient fix (ask before writing):
 
-```
+```text
 /game-improver action=fixAudioAmbient target=src/audio.ts askConfirm=true
 ```
 

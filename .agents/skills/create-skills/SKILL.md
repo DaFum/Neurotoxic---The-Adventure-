@@ -58,7 +58,7 @@ Quality criteria / completion checks
 - `metadata` for non-standard fields like `scope` and `version`.
 - `description` includes trigger phrases (e.g., "Use when:") for discoverability.
 - Process lists steps, decision points, and explicit success criteria.
-- Examples: 3 runnable prompts with consistent parameter naming (camelCase by default).
+- Examples: 3–5 runnable example prompts with consistent parameter naming (camelCase by default).
 - Safety: draft is not written automatically unless confirmation disabled.
 - YAML: no tabs, quote values that include colons.
 
@@ -83,11 +83,11 @@ SKILL.md template (canonical)
 ```text
 ---
 name: {{skillName}}
-description: "Use when: concise trigger phrases that enable discovery"
+description: 'Use when: concise trigger phrases that enable discovery'
 user-invocable: true
 metadata:
   scope: {{user|workspace}}
-  version: "0.1.0"
+  version: '0.1.0'
 ---
 
 # Short summary

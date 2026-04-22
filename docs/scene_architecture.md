@@ -341,7 +341,7 @@ requiredSkill: { name: 'chaos', level: 10 }
 Incorrect pattern (will fail silently):
 
 ```typescript
-requiredSkill: 'chaos';
+requiredSkill: 'chaos',
 ```
 
 #### Critical Gotcha #7: Float Component Usage

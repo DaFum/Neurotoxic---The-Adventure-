@@ -72,7 +72,7 @@ describe('Salzgitter object dialogues', () => {
 
     const dialogue = buildSalzgitterFinaleDialogue();
 
-    expect(dialogue.text).toContain('Die Buhne schweigt'.replace('Buhne', 'Bühne'));
+    expect(dialogue.text).toContain('Die Bühne schweigt');
   });
 
   it('returns finalized text when final quest is already completed', () => {
@@ -88,6 +88,6 @@ describe('Salzgitter object dialogues', () => {
 
     const dialogue = buildSalzgitterFinaleDialogue();
 
-    expect(dialogue.text).toContain('Die Buhne schweigt'.replace('Buhne', 'Bühne'));
+    expect(dialogue.text).toContain('Die Bühne schweigt');
   });
 });
