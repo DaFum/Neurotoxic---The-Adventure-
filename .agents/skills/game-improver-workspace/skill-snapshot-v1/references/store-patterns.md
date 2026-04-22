@@ -162,3 +162,15 @@ To avoid stale state in callbacks:
 1. Use functional `set((state) => ...)` instead of `set({ key: state.key + 1 })`.
 2. Read current state via `useStore.getState().value` or selectors instead of relying on closed-over state variables.
 3. Be aware of rehydration timings (e.g., `onRehydrateStorage`) and use `partialize` to exclude volatile fields from persistence.
+
+
+## BandMood
+
+When modifying `bandMood`, always use the safe mutator pattern provided by `increaseBandMood` (with negative values) or ensure immutable updates like `set((s) => ({ ...s, bandMood: clamp(...) }))` instead of direct `set` calls to prevent bypassing constraints.
+
+## Stale Closure Pattern
+
+To avoid stale state in callbacks:
+1. Use functional `set((state) => ...)` instead of `set({ key: state.key + 1 })`.
+2. Read current state via `useStore.getState().value` or selectors instead of relying on closed-over state variables.
+3. Be aware of rehydration timings (e.g., `onRehydrateStorage`) and use `partialize` to exclude volatile fields from persistence.

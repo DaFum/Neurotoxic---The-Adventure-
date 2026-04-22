@@ -68,7 +68,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
     return say('Wirt: "Viel Erfolg beim Gig. Salzgitter wartet auf den Knall."');
   }
 
-        if (store.hasItem('Industrie-Talisman') && !store.flags.wirtSecretItem) {
+            if (store.hasItem('Industrie-Talisman') && !store.flags.wirtSecretItem) {
     return {
       text: 'Wirt: "Das ist... der Talisman von 1982. Ich erkenne ihn sofort. Er war der Grund, warum wir die Gießerei schließen mussten. Hier, nimm das. Es gehört zum Set."',
       options: [
@@ -83,7 +83,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
               );
               currentStore.increaseBandMood(20, 'id_7619882f');
             } else {
-              currentStore.setDialogue('Wirt: "Das Plektrum gehört dir. Komm wieder, wenn du Platz hast."');
+              currentStore.setDialogue('Wirt: "Dein Inventar ist voll. Komm wieder, wenn du Platz hast."');
             }
           },
         },
