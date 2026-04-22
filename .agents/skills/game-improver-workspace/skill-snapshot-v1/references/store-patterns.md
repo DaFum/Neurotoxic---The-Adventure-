@@ -61,8 +61,8 @@ Both `combineItems('Neues Teil A', 'Neues Teil B')` and the reverse will work. `
 
 Existing recipes (for reference):
 
-```
-'Defektes Kabel' + 'Klebeband' -> 'Repariertes Kabel' (sets flagToSet: 'kabel_repariert')
+```text
+'Defektes Kabel' + 'Klebeband' -> 'Repariertes Kabel' (sets flagToSet: 'cableFixed')
 'Setliste' + 'Stift' -> 'Signierte Setliste'
 'Energiedrink' + 'Kaffee' -> 'Turbo-Koffein'
 'Schrottmetall' + 'Lötkolben' -> 'Industrie-Talisman'
@@ -154,7 +154,7 @@ Never use `push()`, `splice()`, or direct mutation on state arrays.
 
 ## BandMood
 
-When modifying `bandMood`, always use the safe mutator pattern provided by `increaseBandMood` or `decreaseBandMood`, or ensure immutable updates like `set((s) => ({ ...s, bandMood: clamp(...) }))` instead of direct `set` calls to prevent bypassing constraints.
+When modifying `bandMood`, always use the safe mutator pattern provided by `increaseBandMood` (with negative values) or ensure immutable updates like `set((s) => ({ ...s, bandMood: clamp(...) }))` instead of direct `set` calls to prevent bypassing constraints.
 
 ## Stale Closure Pattern
 

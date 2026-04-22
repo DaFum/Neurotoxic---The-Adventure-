@@ -55,16 +55,10 @@
 **Learning:** To prevent severe performance bottlenecks in frequently instanced React Three Fiber components (like `Interactable.tsx`), avoid reactive Zustand subscriptions (`useStore(state => state.value)`) for state only needed inside `useFrame` or event handlers. Subscribing at the component level forces massive, unnecessary React re-renders across the entire 3D scene when global state (like `bandMood` or `isPaused`) changes.
 **Action:** Read the state imperatively using `useStore.getState().value` directly within the `useFrame` loop or the event handler callback to bypass the React rendering cycle entirely.
 
-**Learning:** Modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans.
-**Action:** Prefer `.findIndex()` lookup and targeted index modification when updating a single unique item in a state array.
-
 ## 2026-04-08 - Shared R3F Textures
 
 **Learning:** Instantiating identical `THREE.CanvasTexture` instances across multiple identical React Three Fiber components causes redundant memory allocation and GPU texture uploads.
 **Action:** Extract texture generation into module-level factory functions that use a reference-counted `Map` cache. This ensures multiple identical components share the same R3F texture object while still cleaning up memory when the last component unmounts.
-
-**Learning:** Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.
-**Action:** Replace `.find()` + `.map()` combinations with a single `.findIndex()` lookup, followed by a shallow array clone (`[...array]`) and direct index mutation (`newArray[index] = ...`).
 
 ## 2026-04-15 - Quest Lookup Cache Optimization
 
@@ -79,6 +73,7 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 
 **Learning:** Using `array.filter(condition).length` to count matching items in React components or frequent operations creates an unnecessary intermediate array just to calculate its size, generating garbage collection pressure.
 **Action:** Replace `.filter(condition).length` with a standard `for` loop that maintains a local counter, entirely eliminating the intermediate array allocation.
+
 ## 2026-04-14 - Zustand Array Mutation Optimization
 
 **Learning:** Modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans. Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.

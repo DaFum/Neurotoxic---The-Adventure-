@@ -45,15 +45,18 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           requiredTrait: 'Diplomat',
           action: () => {
             const currentStore = game();
+            currentStore.setFlag('bassist_clue_wirt', true);
+            currentStore.discoverLore('wirt_vergangenheit');
+
             if (currentStore.addToInventory('Turbo-Koffein')) {
               currentStore.setDialogue(
                 'Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."',
               );
-              currentStore.setFlag('bassist_clue_wirt', true);
-              currentStore.discoverLore('wirt_vergangenheit');
               currentStore.increaseBandMood(30, 'id_f3d9b24e');
             } else {
-              currentStore.setDialogue('Wirt: "Dein Inventar ist voll. Komm wieder, wenn du Platz hast."');
+              currentStore.setDialogue(
+                'Wirt: "Du hast ein weiches Herz für einen Manager. Tangermünde ist jetzt sicher. Du hast keinen Platz für meinen Koffeindrink, aber merke dir: Gehe zum Proberaum."'
+              );
             }
           },
         },
