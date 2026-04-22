@@ -76,14 +76,14 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           text: 'Was ist das?',
           action: () => {
             const currentStore = game();
+            currentStore.setFlag('wirtSecretItem', true);
             if (currentStore.addToInventory('Altes Plektrum')) {
               currentStore.setDialogue(
                 'Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."',
               );
-              currentStore.setFlag('wirtSecretItem', true);
               currentStore.increaseBandMood(20, 'id_7619882f');
             } else {
-              currentStore.setDialogue('Wirt: "Dein Inventar ist voll. Komm wieder, wenn du Platz hast."');
+              currentStore.setDialogue('Wirt: "Das Plektrum gehört dir. Komm wieder, wenn du Platz hast."');
             }
           },
         },

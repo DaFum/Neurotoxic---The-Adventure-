@@ -1,9 +1,7 @@
-import re
-
 with open('src/dialogues/kaminstube/wirtPrelude.ts', 'r') as f:
     text = f.read()
 
-# Update the koffein logic
+# Fix bassist_clue_wirt
 old_koffein = r"""            const currentStore = game();
             if (currentStore.addToInventory('Turbo-Koffein')) {
               currentStore.setDialogue(
@@ -19,23 +17,40 @@ old_koffein = r"""            const currentStore = game();
 new_koffein = r"""            const currentStore = game();
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_vergangenheit');
-
             if (currentStore.addToInventory('Turbo-Koffein')) {
               currentStore.setDialogue(
                 'Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."',
               );
               currentStore.increaseBandMood(30, 'id_f3d9b24e');
             } else {
-              currentStore.setDialogue(
-                'Wirt: "Du hast ein weiches Herz für einen Manager. Tangermünde ist jetzt sicher. Du hast keinen Platz für meinen Koffeindrink, aber merke dir: Gehe zum Proberaum."'
-              );
+              currentStore.setDialogue('Wirt: "Du hast ein weiches Herz für einen Manager. Tangermünde ist jetzt sicher. Du hast keinen Platz für meinen Koffeindrink, aber merke dir: Gehe zum Proberaum."');
             }"""
-
 text = text.replace(old_koffein, new_koffein)
 
-# Also fix the Altes Plektrum logic similarly if needed, but the prompt only explicitly asked about the Turbo-Koffein / clue lore logic:
-# "Around line 48-57: The code currently ties essential progression (setting flag 'bassist_clue_wirt' and discovering lore 'wirt_vergangenheit')..."
-# The prompt implies we only strictly need to move the essential progression flags. I will apply it just to the koffein part as requested.
+
+# Fix wirtSecretItem
+old_plektrum = r"""            const currentStore = game();
+            if (currentStore.addToInventory('Altes Plektrum')) {
+              currentStore.setDialogue(
+                'Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."',
+              );
+              currentStore.setFlag('wirtSecretItem', true);
+              currentStore.increaseBandMood(20, 'id_7619882f');
+            } else {
+              currentStore.setDialogue('Wirt: "Dein Inventar ist voll. Komm wieder, wenn du Platz hast."');
+            }"""
+
+new_plektrum = r"""            const currentStore = game();
+            currentStore.setFlag('wirtSecretItem', true);
+            if (currentStore.addToInventory('Altes Plektrum')) {
+              currentStore.setDialogue(
+                'Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."',
+              );
+              currentStore.increaseBandMood(20, 'id_7619882f');
+            } else {
+              currentStore.setDialogue('Wirt: "Das Plektrum gehört dir. Komm wieder, wenn du Platz hast."');
+            }"""
+text = text.replace(old_plektrum, new_plektrum)
 
 with open('src/dialogues/kaminstube/wirtPrelude.ts', 'w') as f:
     f.write(text)
