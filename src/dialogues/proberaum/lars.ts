@@ -1,75 +1,10 @@
 import { type Dialogue } from '../../store';
 import { game, say } from '../shared/helpers';
 
-export function buildProberaumLarsDialogue(): Dialogue {
-  const store = game();
-  const { flags, bandMood, hasItem } = store;
-
-  const hasBeer = hasItem('Bier');
-
-  if (flags.larsDrumPhilosophy && flags.larsRhythmPact) {
-    if (hasBeer && !flags.gaveBeerToLars) {
-      return {
-        text: 'Lars: "Der Pakt steht. Wir sind das Skelett der Welt. Und... ist das ein kühles Blondes?"',
-        options: [
-          {
-            text: 'Hier, lass es dir schmecken.',
-            action: () => {
-              const currentStore = game();
-              currentStore.setDialogue(
-                'Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"',
-              );
-              currentStore.removeFromInventory('Bier');
-              currentStore.setFlag('gaveBeerToLars', true);
-              currentStore.increaseBandMood(20, 'id_c76ea67f');
-            },
-          },
-          {
-            text: 'Das ist für jemand anderen.',
-            action: () =>
-              game().setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."'),
-          },
-        ],
-      };
-    }
-    return say('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
-  }
-
-  if (flags.larsDrumPhilosophy && !flags.larsRhythmPact) {
-    return {
-      text: 'Lars: "Du kennst jetzt meine Philosophie. Der Beat ist alles. Bist du bereit für den nächsten Schritt?"',
-      options: [
-        {
-          text: 'Lass uns einen Rhythmus-Pakt schließen.',
-          action: () => game().setDialogue(buildLarsRhythmusPaktDialogue()),
-        },
-        ...(hasBeer && !flags.gaveBeerToLars
-          ? [
-              {
-                text: 'Hier, lass dir dieses kühle Blonde schmecken.',
-                action: () => {
-                  const currentStore = game();
-                  currentStore.setDialogue(
-                    'Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"',
-                  );
-                  currentStore.removeFromInventory('Bier');
-                  currentStore.setFlag('gaveBeerToLars', true);
-                  currentStore.increaseBandMood(20, 'id_a734099e');
-                },
-              },
-            ]
-          : []),
-        {
-          text: 'Ein andermal.',
-          action: () => game().setDialogue('Lars: "Dann trommle ich eben alleine weiter."'),
-        },
-      ],
-    };
-  }
-
+function buildPostPactDialogue(hasBeer: boolean, flags: ReturnType<typeof game>['flags']): Dialogue {
   if (hasBeer && !flags.gaveBeerToLars) {
     return {
-      text: 'Lars: "Ist das... ein kühles Blondes? Gib her, ich sterbe vor Durst!"',
+      text: 'Lars: "Der Pakt steht. Wir sind das Skelett der Welt. Und... ist das ein kühles Blondes?"',
       options: [
         {
           text: 'Hier, lass es dir schmecken.',
@@ -80,28 +15,88 @@ export function buildProberaumLarsDialogue(): Dialogue {
             );
             currentStore.removeFromInventory('Bier');
             currentStore.setFlag('gaveBeerToLars', true);
-            currentStore.increaseBandMood(20, 'id_7d90b169');
+            currentStore.increaseBandMood(20, 'id_c76ea67f');
           },
         },
-        ...(!flags.larsDrumPhilosophy
-          ? [
-              {
-                text: 'Was ist deine Drum-Philosophie?',
-                action: () => game().setDialogue(buildLarsDrumPhilosophieDialogue()),
-              },
-            ]
-          : []),
         {
-          text: 'Das ist für Marius.',
+          text: 'Das ist für jemand anderen.',
           action: () =>
-            game().setDialogue(
-              'Lars: "Marius? Der hat doch schon genug Ego. Na gut, ich trommel weiter auf dem Trockenen."',
-            ),
+            game().setDialogue('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."'),
         },
       ],
     };
   }
+  return say('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
+}
 
+function buildPhilosophyStateDialogue(hasBeer: boolean, flags: ReturnType<typeof game>['flags']): Dialogue {
+  return {
+    text: 'Lars: "Du kennst jetzt meine Philosophie. Der Beat ist alles. Bist du bereit für den nächsten Schritt?"',
+    options: [
+      {
+        text: 'Lass uns einen Rhythmus-Pakt schließen.',
+        action: () => game().setDialogue(buildLarsRhythmusPaktDialogue()),
+      },
+      ...(hasBeer && !flags.gaveBeerToLars
+        ? [
+            {
+              text: 'Hier, lass dir dieses kühle Blonde schmecken.',
+              action: () => {
+                const currentStore = game();
+                currentStore.setDialogue(
+                  'Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"',
+                );
+                currentStore.removeFromInventory('Bier');
+                currentStore.setFlag('gaveBeerToLars', true);
+                currentStore.increaseBandMood(20, 'id_a734099e');
+              },
+            },
+          ]
+        : []),
+      {
+        text: 'Ein andermal.',
+        action: () => game().setDialogue('Lars: "Dann trommle ich eben alleine weiter."'),
+      },
+    ],
+  };
+}
+
+function buildBeerDiscoveryDialogue(flags: ReturnType<typeof game>['flags']): Dialogue {
+  return {
+    text: 'Lars: "Ist das... ein kühles Blondes? Gib her, ich sterbe vor Durst!"',
+    options: [
+      {
+        text: 'Hier, lass es dir schmecken.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Lars: "Du bist ein Lebensretter! Jetzt kann ich die Double-Bass-Drums durchtreten!"',
+          );
+          currentStore.removeFromInventory('Bier');
+          currentStore.setFlag('gaveBeerToLars', true);
+          currentStore.increaseBandMood(20, 'id_7d90b169');
+        },
+      },
+      ...(!flags.larsDrumPhilosophy
+        ? [
+            {
+              text: 'Was ist deine Drum-Philosophie?',
+              action: () => game().setDialogue(buildLarsDrumPhilosophieDialogue()),
+            },
+          ]
+        : []),
+      {
+        text: 'Das ist für Marius.',
+        action: () =>
+          game().setDialogue(
+            'Lars: "Marius? Der hat doch schon genug Ego. Na gut, ich trommel weiter auf dem Trockenen."',
+          ),
+      },
+    ],
+  };
+}
+
+function buildDefaultStateDialogue(flags: ReturnType<typeof game>['flags'], bandMood: number, hasItem: ReturnType<typeof game>['hasItem']): Dialogue {
   if (!hasItem('Mop')) {
     return say('Lars: "Ich hab hier irgendwo einen Wischmopp gesehen... Such mal danach!"');
   } else if (!flags.waterCleaned) {
@@ -160,6 +155,27 @@ export function buildProberaumLarsDialogue(): Dialogue {
       ],
     };
   }
+}
+
+export function buildProberaumLarsDialogue(): Dialogue {
+  const store = game();
+  const { flags, bandMood, hasItem } = store;
+
+  const hasBeer = hasItem('Bier');
+
+  if (flags.larsDrumPhilosophy && flags.larsRhythmPact) {
+    return buildPostPactDialogue(hasBeer, flags);
+  }
+
+  if (flags.larsDrumPhilosophy && !flags.larsRhythmPact) {
+    return buildPhilosophyStateDialogue(hasBeer, flags);
+  }
+
+  if (hasBeer && !flags.gaveBeerToLars) {
+    return buildBeerDiscoveryDialogue(flags);
+  }
+
+  return buildDefaultStateDialogue(flags, bandMood, hasItem);
 }
 
 export function buildLarsRhythmusPaktDialogue(): Dialogue {
