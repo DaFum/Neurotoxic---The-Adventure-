@@ -96,7 +96,7 @@ This skill produces a structured deliverable: a short diagnosis, a proposed patc
   3. Import and wire the scene in `src/components/Game.tsx` (scene switch + camera).
   4. Add ambient track handling in `src/audio.ts` inside the `startAmbient()` switch.
   5. Update `dialog_uebersicht.md` with dialogue trees, quest triggers, item interactions, and BandMood metrics.
-- Persistence: Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`. Do not persist `scene`, `playerPos`, `dialogue`, `isPaused`, or `cameraShake`.
+- Persistence: Only these fields persist to localStorage: `inventory`, `itemPickupCounts`, `flags`, `quests`, `bandMood`, `bandMoodGainClaims`, `loreEntries`, `trait`, `skills`. Do not persist `scene`, `playerPos`, `dialogue`, `isPaused`, or `cameraShake`.
 - Store behavior:
   - `setScene()` resets `playerPos` to `[0, 1, 0]` — ensure scenes support this spawn point.
   - `combineItems()` checks both permutations (A,B) and (B,A).
@@ -149,13 +149,13 @@ Deliverables: draft summary, unified diff (patch), tests, verification steps
 
 1. Diagnose inventory/quest bug on branch:
 
-```
+```text
 /game-improver action=diagnoseInventoryQuestBug scope=workspace skillName=inventory-quest-diagnostics branch=fix-quest-inventory-bugs-3736012791563995728
 ```
 
 2. Draft audio ambient fix (ask before writing):
 
-```
+```text
 /game-improver action=fixAudioAmbient target=src/audio.ts askConfirm=true
 ```
 

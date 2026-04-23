@@ -45,13 +45,19 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           requiredTrait: 'Diplomat',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."',
-            );
             currentStore.setFlag('bassist_clue_wirt', true);
             currentStore.discoverLore('wirt_vergangenheit');
-            currentStore.addToInventory('Turbo-Koffein');
-            currentStore.increaseBandMood(30, 'id_f3d9b24e');
+
+            if (currentStore.addToInventory('Turbo-Koffein')) {
+              currentStore.setDialogue(
+                'Wirt: "Du hast ein weiches Herz für einen Manager. Ich wollte nur, dass Tangermünde sicher bleibt. Hier, zur Wiedergutmachung..."',
+              );
+              currentStore.increaseBandMood(30, 'id_f3d9b24e');
+            } else {
+              currentStore.setDialogue(
+                'Wirt: "Du hast ein weiches Herz für einen Manager. Tangermünde ist jetzt sicher. Du hast keinen Platz für meinen Koffeindrink, aber merke dir: Gehe zum Proberaum."'
+              );
+            }
           },
         },
       ],
@@ -70,12 +76,15 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
           text: 'Was ist das?',
           action: () => {
             const currentStore = game();
-            currentStore.setDialogue(
-              'Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."',
-            );
-            currentStore.addToInventory('Altes Plektrum');
-            currentStore.setFlag('wirtSecretItem', true);
-            currentStore.increaseBandMood(20, 'id_7619882f');
+            if (currentStore.addToInventory('Altes Plektrum')) {
+              currentStore.setFlag('wirtSecretItem', true);
+              currentStore.setDialogue(
+                'Wirt: "Ein Altes Plektrum. Es ist aus dem Knochen einer verstummten Sirene geschnitzt. Es wird Matze helfen, das Verbotene Riff zu bändigen. Er wird es brauchen."',
+              );
+              currentStore.increaseBandMood(20, 'id_7619882f');
+            } else {
+              currentStore.setDialogue('Wirt: "Dein Inventar ist voll. Komm wieder, wenn du Platz hast."');
+            }
           },
         },
       ],

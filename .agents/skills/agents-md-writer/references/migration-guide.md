@@ -147,7 +147,7 @@ Keep CLAUDE.md, but make it thin — it imports AGENTS.md and adds only Claude-s
 
 ## Claude-Specific
 
-- Hooks: run `uv run ruff check --fix .` on PostFileWrite for \*.py files
+- Hooks: run `uv run ruff check --fix .` on PostFileWrite for *.py files
 - Auto-memory is enabled — don't repeat corrections, they're persisted
 ```
 

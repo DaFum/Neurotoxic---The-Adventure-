@@ -33,7 +33,7 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
 
   useEffect(() => {
     if (dialogue) {
-      if (!previouslyFocusedElementRef.current) {
+      if (previouslyFocusedElementRef.current === null) {
         previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
       }
       if (dialogueContainerRef.current) {

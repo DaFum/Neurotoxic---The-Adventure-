@@ -368,7 +368,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
     - Option (Skill: Chaos 5): "Die Wahrheit muss raus!" (+15 BandMood, +3 Chaos, Quest `wirt_legacy`, setzt `wirtLegacy1982`).
     - Option: "Lass gut sein." (Triggert die NPC-Antwort 'Wirt: "Besser ist das. Die Wände hier haben Ohren."', schließt den Dialog nicht)
     - Option: "Zurück." (Kehrt in das Legacy 1982 Submenü zurück, indem `buildLegacy1982Dialogue()` aufgerufen wird)
-  - _Item (Industrie-Talisman):_ Erhält "Altes Plektrum" (wichtig für Matze in Salzgitter) (+20 BandMood, Erhalt: Altes Plektrum).
+  - _Item (Industrie-Talisman):_ Erkennt Talisman (setzt `wirtSecretItem`).
+    - Bei Inventarplatz: (+20 BandMood, Erhalt: Altes Plektrum).
+    - Bei vollem Inventar: Fallback-Text "Dein Inventar ist voll. Komm wieder, wenn du Platz hast.".
   - _BandMood > 80:_ Erzählt Details über das Verschwinden des Managers 1982 (+10 BandMood).
   - _Standard:_ Erhalt: Bier, solange Pickup-Limit nicht erreicht ist; bei Limit verweigert der Wirt weiteres Freibier mit eigener Antwort.
 - **Ersatzröhre (Item):**
@@ -386,7 +388,9 @@ Diese Übersicht fasst alle Dialogbäume, Interaktionen, freischaltbaren Lore-Ei
   - _Wenn Bassist kontaktiert (Flag `bassist_contacted`) — läuft auch wenn `wirtSecretItem` bereits gesetzt:_
     - (Skill: Social 8): Zwingen (+20 BandMood, +5 Social, setzt `bassist_clue_wirt`, Lore: `wirt_confession`).
     - (Trait: Brutalist): Drohen (+15 BandMood, +5 Chaos, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
-    - (Trait: Diplomat): Verzeihen (+30 BandMood, setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`, Erhalt: Turbo-Koffein).
+    - (Trait: Diplomat): Verzeihen (setzt `bassist_clue_wirt`, Lore: `wirt_vergangenheit`).
+      - Bei Inventarplatz: (+30 BandMood, Erhalt: Turbo-Koffein).
+      - Bei vollem Inventar: Fallback-Text "Du hast ein weiches Herz für einen Manager. Tangermünde ist jetzt sicher. Du hast keinen Platz für meinen Koffeindrink, aber merke dir: Gehe zum Proberaum.".
 - **Matze:**
   - _Sabotage-Geständnis (Wenn Sabotage entdeckt & Amp repariert):_
     - (Trait: Diplomat): Vergeben (+30 BandMood, setzt `tourbus_matze_confession`, Quest-Abschluss: `tourbus_saboteur`).

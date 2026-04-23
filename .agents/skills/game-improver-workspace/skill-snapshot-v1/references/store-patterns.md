@@ -19,7 +19,7 @@ isPaused: boolean                      # Pause state (not persisted)
 cameraShake: number                    # Camera effect (not persisted)
 ```
 
-Persisted to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`
+Persisted to localStorage: `inventory`, `itemPickupCounts`, `flags`, `quests`, `bandMood`, `bandMoodGainClaims`, `loreEntries`, `trait`, `skills`
 
 ## Adding a New Mutator
 
@@ -54,19 +54,19 @@ Recipes live in the `RECIPES` array defined above `useStore`. `combineItems()` c
 
 ```ts
 // Add to RECIPES array
-{ item1: 'Neues Teil A', item2: 'Neues Teil B', result: 'Kombination' },
+{ ingredients: ['Neues Teil A', 'Neues Teil B'], result: 'Kombination' },
 ```
 
 Both `combineItems('Neues Teil A', 'Neues Teil B')` and the reverse will work. `combineItems` removes both inputs and adds the result — no separate `removeFromInventory()` needed for recipes.
 
 Existing recipes (for reference):
 
-```
-'Defektes Kabel' + 'Klebeband' -> 'Repariertes Kabel'
+```text
+'Defektes Kabel' + 'Klebeband' -> 'Repariertes Kabel' (sets flagToSet: 'cableFixed')
 'Setliste' + 'Stift' -> 'Signierte Setliste'
 'Energiedrink' + 'Kaffee' -> 'Turbo-Koffein'
-'Schrottmetall' + 'Lotkolben' -> 'Industrie-Talisman'
-'Batterie' + 'Lotkolben' -> 'Plasma-Zunder'
+'Schrottmetall' + 'Lötkolben' -> 'Industrie-Talisman'
+'Batterie' + 'Lötkolben' -> 'Plasma-Zünder'
 'Turbo-Koffein' + 'Rostiges Plektrum' -> 'Geister-Drink'
 'Splitter der Leere' + 'Altes Plektrum' -> 'Void-Plektrum'
 'Frequenzfragment' + 'Splitter der Leere' -> 'Resonanz-Kristall'
@@ -150,3 +150,15 @@ set((state) => ({
 ```
 
 Never use `push()`, `splice()`, or direct mutation on state arrays.
+
+
+## BandMood
+
+When modifying `bandMood`, always use the safe mutator pattern provided by `increaseBandMood` (with negative values) or ensure immutable updates like `set((s) => ({ ...s, bandMood: clamp(...) }))` instead of direct `set` calls to prevent bypassing constraints.
+
+## Stale Closure Pattern
+
+To avoid stale state in callbacks:
+1. Use functional `set((state) => ...)` instead of `set({ key: state.key + 1 })`.
+2. Read current state via `useStore.getState().value` or selectors instead of relying on closed-over state variables.
+3. Be aware of rehydration timings (e.g., `onRehydrateStorage`) and use `partialize` to exclude volatile fields from persistence.

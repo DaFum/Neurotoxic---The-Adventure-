@@ -19,7 +19,7 @@ isPaused: boolean                      # Pause state (not persisted)
 cameraShake: number                    # Camera effect (not persisted)
 ```
 
-Persisted to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`
+Persisted to localStorage: `inventory`, `itemPickupCounts`, `flags`, `quests`, `bandMood`, `bandMoodGainClaims`, `loreEntries`, `trait`, `skills`
 
 ## Adding a New Mutator
 

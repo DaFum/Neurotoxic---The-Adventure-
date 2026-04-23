@@ -2,7 +2,7 @@
 
 - Replaced the O(n) loop evaluating all interactable objects on every `e` key press with an active-set approach tracking only objects currently in range.
 - Used a `Set` (`activeSetRef`) to keep track of active objects. `Interactable` components maintain their own "in-range" state inside `useFrame` and update the active set whenever they enter or leave the interaction radius.
-- Reduced closest interactable search performance cost from ~9.68 µs to ~2.91 µs (a 3.3x speedup on a 1,000 element benchmark scenario).
+- Reduced closest interactable search performance cost from ~9.68 µs to ~2.91 µs (a 3.3x speedup on a 1,000-element benchmark scenario).
 
 ## 2024-03-28 - Object Creation in useFrame
 
@@ -11,17 +11,17 @@
 
 ## 2024-04-18 - Array Hydration Optimization
 
-**Learning:** Using `.map()` and creating intermediate `Set` or arrays inside performance critical loops or state hydration tasks (like loading save files with quests and lore) creates unnecessary allocations, garbage collection pressure, and iteration overhead.
+**Learning:** Using `.map()` and creating intermediate `Set` or arrays inside performance-critical loops or state hydration tasks (like loading save files with quests and lore) creates unnecessary allocations, garbage collection pressure, and iteration overhead.
 **Action:** Always prefer initializing a single statically sized `new Array(length)` followed by a direct indexing `for` loop over array mapping when transforming existing data lists to bypass iterative array pushing allocations.
 
 ## 2024-05-15 - Unconditional Zustand Updates in Animation Loops
 
-**Learning:** Calling Zustand `set` functions unconditionally within `useFrame` (like `setPlayerPos([x, y, z])`) forces the creation of new arrays every frame (60fps), causing Zustand to see the value as "changed" and needlessly evaluating all subscribers' selectors across the entire app.
+**Learning:** Calling Zustand `set` functions unconditionally within `useFrame` (like `setPlayerPos([x, y, z])`) forces the creation of new arrays every frame (60 fps), causing Zustand to see the value as "changed" and needlessly evaluating all subscribers' selectors across the entire app.
 **Action:** Always check if the value has actually changed before returning a new object or array in Zustand's `set` callback. Returning the current `state` object tells Zustand to abort the update and skip notifying subscribers.
 
 ## 2024-05-18 - Unconditional React State Updates in Animation Loops
 
-**Learning:** Calling React state setters (e.g., `setFacingRight(true)`) unconditionally inside high-frequency loops like `useFrame` forces React to trigger bailout mechanisms or re-renders at 60fps, even if the value hasn't logically changed.
+**Learning:** Calling React state setters (e.g., `setFacingRight(true)`) unconditionally inside high-frequency loops like `useFrame` forces React to trigger bailout mechanisms or re-renders at 60 fps, even if the value hasn't logically changed.
 **Action:** Always wrap `useState` setters in `useFrame` with strict equality checks (`if (newValue !== currentValue) setState(newValue)`) to prevent unnecessary reconciliation work and performance overhead.
 
 ## 2024-05-20 - Zustand useFrame Throttling
@@ -49,27 +49,16 @@
 **Learning:** Generating seeds or hashes from strings using `name.split('').reduce(...)` causes unnecessary Garbage Collection (GC) pressure by allocating an intermediate array of characters. Repository benchmarks indicate that a standard `for` loop with `charCodeAt(i)` is approximately 2.2x faster.
 **Action:** Prefer a standard `for` loop over string length when calculating hash values from strings to eliminate temporary allocations.
 
-- Discovered that modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans.
 
 ## 2026-04-12 - Imperative State Reads in R3F Components
 
 **Learning:** To prevent severe performance bottlenecks in frequently instanced React Three Fiber components (like `Interactable.tsx`), avoid reactive Zustand subscriptions (`useStore(state => state.value)`) for state only needed inside `useFrame` or event handlers. Subscribing at the component level forces massive, unnecessary React re-renders across the entire 3D scene when global state (like `bandMood` or `isPaused`) changes.
 **Action:** Read the state imperatively using `useStore.getState().value` directly within the `useFrame` loop or the event handler callback to bypass the React rendering cycle entirely.
 
-## 2026-04-11 - Zustand Array Mutation Optimization
-
-**Learning:** Modifying arrays inside Zustand stores (e.g., quests arrays) can be optimized by replacing `.find()`/`.some()` + `.map()` combinations with a single `.findIndex()` lookup and targeted index modification, saving repeated O(n) array scans.
-**Action:** Prefer `.findIndex()` lookup and targeted index modification when updating a single unique item in a state array.
-
 ## 2026-04-08 - Shared R3F Textures
 
 **Learning:** Instantiating identical `THREE.CanvasTexture` instances across multiple identical React Three Fiber components causes redundant memory allocation and GPU texture uploads.
-**Action:** Extract texture generation into module-level factory functions that use a reference-counted `Map` cache. This ensures multiple identical components share the exact same R3F texture object while still cleaning up memory when the last component unmounts.
-
-## 2026-04-14 - Zustand Array Mutation Optimization
-
-**Learning:** Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.
-**Action:** Replace `.find()` + `.map()` combinations with a single `.findIndex()` lookup, followed by a shallow array clone (`[...array]`) and direct index mutation (`newArray[index] = ...`).
+**Action:** Extract texture generation into module-level factory functions that use a reference-counted `Map` cache. This ensures multiple identical components share the same R3F texture object while still cleaning up memory when the last component unmounts.
 
 ## 2026-04-15 - Quest Lookup Cache Optimization
 
@@ -84,3 +73,11 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 
 **Learning:** Using `array.filter(condition).length` to count matching items in React components or frequent operations creates an unnecessary intermediate array just to calculate its size, generating garbage collection pressure.
 **Action:** Replace `.filter(condition).length` with a standard `for` loop that maintains a local counter, entirely eliminating the intermediate array allocation.
+
+
+
+
+## 2026-04-14 - Zustand Array Mutation Optimization
+
+**Learning:** Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.
+**Action:** Prefer `.findIndex()` lookup, followed by a shallow array clone (`[...array]`) and direct index mutation (`newArray[index] = ...`) when updating a single unique item in a state array.
