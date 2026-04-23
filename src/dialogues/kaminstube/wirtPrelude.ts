@@ -55,7 +55,7 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
               currentStore.increaseBandMood(30, 'id_f3d9b24e');
             } else {
               currentStore.setDialogue(
-                'Wirt: "Du hast ein weiches Herz für einen Manager. Tangermünde ist jetzt sicher. Du hast keinen Platz für meinen Koffeindrink, aber merke dir: Gehe zum Proberaum."'
+                'Wirt: "Du hast ein weiches Herz für einen Manager. Tangermünde ist jetzt sicher. Du hast keinen Platz für meinen Koffeindrink, aber merke dir: Gehe zum Proberaum."',
               );
             }
           },
@@ -83,7 +83,9 @@ export function buildKaminstubeWirtPreludeDialogue(): Dialogue | null {
               );
               currentStore.increaseBandMood(20, 'id_7619882f');
             } else {
-              currentStore.setDialogue('Wirt: "Dein Inventar ist voll. Komm wieder, wenn du Platz hast."');
+              currentStore.setDialogue(
+                'Wirt: "Dein Inventar ist voll. Komm wieder, wenn du Platz hast."',
+              );
             }
           },
         },

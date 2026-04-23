@@ -30,7 +30,7 @@ export default [
       'src/components/ui/GlitchOverlay.test.tsx',
       'src/dialogueEngine.test.ts',
       'src/store/initialState.ts',
-      'vitest.setup.ts'
+      'vitest.setup.ts',
     ],
     rules: {
       'react-hooks/exhaustive-deps': 'off',

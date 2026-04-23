@@ -95,88 +95,74 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
   };
 }
 
-export function buildSalzgitterFanDialogue(): Dialogue {
-  const store = game();
-  const hasSignedSetlist = store.hasItem('Signierte Setliste');
-  const hasTalisman = store.hasItem('Industrie-Talisman');
+function buildTalismanDialogue(): Dialogue {
+  return {
+    text: 'Fan: "Ist das... ein echter Industrie-Talisman?! Den hab ich nur in den Legenden von 1982 gesehen!"',
+    options: [
+      {
+        text: 'Ein Geschenk für dich.',
+        consumeItems: ['Industrie-Talisman'],
+        action: () => {
+          game().setDialogue(
+            'Fan: "Ich werde ihn in Ehren halten! Du bist der beste Manager der Welt! Ich spüre die pure Kraft des Stahls!"',
+          );
+          game().increaseBandMood(40, 'id_a2f911b1');
+        },
+      },
+    ],
+  };
+}
 
-  if (store.flags.fanMovement) {
-    return say('Fan: "DIE BEWEGUNG IST GESTARTET! WIR SIND ALLE NEUROTOXIC!"');
-  }
+function buildSignedSetlistDialogue(): Dialogue {
+  return {
+    text: 'Fan: "OH MEIN GOTT! Eine signierte Setliste! Das ist der beste Tag meines Lebens! Darf ich dich umarmen?"',
+    options: [
+      {
+        text: 'Klar, komm her!',
+        consumeItems: ['Signierte Setliste'],
+        action: () => {
+          game().setDialogue('Fan: "Du riechst nach Erfolg und... altem Kaffee. Danke!"');
+          game().increaseBandMood(25, 'id_9b1e56fe');
+        },
+      },
+      {
+        text: 'Abstand halten, bitte.',
+        consumeItems: ['Signierte Setliste'],
+        action: () => {
+          game().setDialogue(
+            'Fan: "Verstehe. Die Aura eines Managers ist zu stark. Danke für die Liste!"',
+          );
+          game().increaseBandMood(15, 'id_dab52566');
+        },
+      },
+    ],
+  };
+}
 
-  if (hasTalisman) {
+function buildBackstageSpeechDialogue(store: ReturnType<typeof game>): Dialogue {
+  if (!store.flags.salzgitter_fan_speech_heard) {
     return {
-      text: 'Fan: "Ist das... ein echter Industrie-Talisman?! Den hab ich nur in den Legenden von 1982 gesehen!"',
+      text: 'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"',
       options: [
         {
-          text: 'Ein Geschenk für dich.',
-          consumeItems: ['Industrie-Talisman'],
+          text: '(Weiter)',
           action: () => {
-            game().setDialogue(
-              'Fan: "Ich werde ihn in Ehren halten! Du bist der beste Manager der Welt! Ich spüre die pure Kraft des Stahls!"',
-            );
-            game().increaseBandMood(40, 'id_a2f911b1');
+            const currentStore = game();
+            if (!currentStore.flags.salzgitter_fan_speech_heard) {
+              currentStore.setFlag('salzgitter_fan_speech_heard', true);
+              currentStore.increaseBandMood(5, 'id_55d47311');
+            }
           },
         },
       ],
     };
   }
+  return say(
+    'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"',
+  );
+}
 
-  if (hasSignedSetlist) {
-    return {
-      text: 'Fan: "OH MEIN GOTT! Eine signierte Setliste! Das ist der beste Tag meines Lebens! Darf ich dich umarmen?"',
-      options: [
-        {
-          text: 'Klar, komm her!',
-          consumeItems: ['Signierte Setliste'],
-          action: () => {
-            game().setDialogue('Fan: "Du riechst nach Erfolg und... altem Kaffee. Danke!"');
-            game().increaseBandMood(25, 'id_9b1e56fe');
-          },
-        },
-        {
-          text: 'Abstand halten, bitte.',
-          consumeItems: ['Signierte Setliste'],
-          action: () => {
-            game().setDialogue(
-              'Fan: "Verstehe. Die Aura eines Managers ist zu stark. Danke für die Liste!"',
-            );
-            game().increaseBandMood(15, 'id_dab52566');
-          },
-        },
-      ],
-    };
-  }
-
-  if (store.flags.backstage_performer_speech) {
-    if (!store.flags.salzgitter_fan_speech_heard) {
-      return {
-        text: 'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"',
-        options: [
-          {
-            text: '(Weiter)',
-            action: () => {
-              const currentStore = game();
-              if (!currentStore.flags.salzgitter_fan_speech_heard) {
-                currentStore.setFlag('salzgitter_fan_speech_heard', true);
-                currentStore.increaseBandMood(5, 'id_55d47311');
-              }
-            },
-          },
-        ],
-      };
-    }
-    return say(
-      'Fan: "DU! Du warst der, der den Backstage-Speech gegeben hat! Ich hab es durch die Wand gehört! Ihr seid Götter!"',
-    );
-  }
-
-  if (store.flags.kaminstube_crowd_rallied) {
-    return say(
-      'Fan: "Tangermünde spricht noch immer über euch! Ihr seid Legenden! Bitte macht ein Foto mit mir!"',
-    );
-  }
-
+function buildDefaultFanOptions(store: ReturnType<typeof game>): DialogueOption[] {
   const options: DialogueOption[] = [];
 
   options.push({
@@ -255,6 +241,38 @@ export function buildSalzgitterFanDialogue(): Dialogue {
       game().increaseBandMood(-2, 'id_a32c1d7c');
     },
   });
+
+  return options;
+}
+
+export function buildSalzgitterFanDialogue(): Dialogue {
+  const store = game();
+  const hasSignedSetlist = store.hasItem('Signierte Setliste');
+  const hasTalisman = store.hasItem('Industrie-Talisman');
+
+  if (store.flags.fanMovement) {
+    return say('Fan: "DIE BEWEGUNG IST GESTARTET! WIR SIND ALLE NEUROTOXIC!"');
+  }
+
+  if (hasTalisman) {
+    return buildTalismanDialogue();
+  }
+
+  if (hasSignedSetlist) {
+    return buildSignedSetlistDialogue();
+  }
+
+  if (store.flags.backstage_performer_speech) {
+    return buildBackstageSpeechDialogue(store);
+  }
+
+  if (store.flags.kaminstube_crowd_rallied) {
+    return say(
+      'Fan: "Tangermünde spricht noch immer über euch! Ihr seid Legenden! Bitte macht ein Foto mit mir!"',
+    );
+  }
+
+  const options = buildDefaultFanOptions(store);
 
   return {
     text: 'Fan: "Ich liebe NEUROTOXIC! Hast du vielleicht ein Autogramm für mich? Oder ein Plektrum?"',
