@@ -352,7 +352,6 @@ export function UI() {
       <GlitchOverlay glitchIntensity={glitchIntensity} />
 
       <div
-
         className={`absolute top-4 left-1/2 -translate-x-1/2 pointer-events-auto z-20 ${isCompactViewport ? 'w-[calc(100%-7rem)]' : 'w-[min(560px,calc(100%-9rem))]'}`}
       >
         <div className="bg-black/80 border border-toxic/30 px-3 py-2 backdrop-blur-sm">
@@ -795,10 +794,7 @@ export function UI() {
       )}
 
       {/* Controls Hint */}
-      <div
-
-        className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none"
-      >
+      <div className="absolute bottom-4 left-4 bg-black/50 text-white/70 px-3 py-2 rounded text-xs font-mono pointer-events-none select-none">
         <span className="text-toxic font-bold">Joystick / WASD</span> = Bewegen
         <br />
         <span className="text-toxic font-bold">Tippen / Klick / E</span> = Interagieren
