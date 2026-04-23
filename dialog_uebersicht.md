@@ -1,6 +1,6 @@
 # Neurotoxic – The Adventure: Komplette Dialog- und Interaktionsübersicht
 
-_Aktualisiert für Phase 1-7 Erweiterungen (Maschinen-Seele, Frequenz 1982, Bassist-Quest, etc.)_
+## Aktualisiert für Phase 1-7 Erweiterungen (Maschinen-Seele, Frequenz 1982, Bassist-Quest, etc.)
 
 _Update 30.03.2026 (Environment Pass): Alle Szenen-Modelle/Setpieces visuell erweitert (`SceneEnvironmentSetpieces.tsx`). Keine Änderungen an Dialogbäumen, Quest-Triggern, Flag-Namen, Item-Logik oder BandMood-Werten._
 _Update 30.03.2026 (Quest/Dialog Fixes): `final` wird im Finale zuerst als Quest angelegt und dann abgeschlossen; `amp` in der Kaminstube wird beim Reparieren fehlertolerant nachgetragen; `repair_amp` ist im Proberaum in einem linearen Run abschließbar (zusätzlicher Lötkolben-Pickup); fehlende Flags (`frequenzCalibrated`, `inschriftDecoded`, `magnetbandPlayed`, `showedRiffToMatze`, `talkingAmpRepaired`, `tankwartMysticDone`) sind nun im Store initialisiert._
