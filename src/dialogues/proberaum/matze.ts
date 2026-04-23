@@ -15,117 +15,137 @@ export function buildProberaumMatzeDialogue(): Dialogue {
   }
 
   if (hasTalisman) {
-    return {
-      text: 'Matze: "Ist das der Industrie-Talisman?! Ich spüre, wie die Saiten meiner Gitarre vor Ehrfurcht vibrieren. Du bist mehr als nur ein Manager."',
-      options: [
-        {
-          text: 'Es ist für die Band.',
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Wir werden die Welt mit diesem Ding verändern. Danke, Boss. Der Sound wird legendär."',
-            );
-            currentStore.increaseBandMood(30, 'id_18af0178');
-            currentStore.setFlag('matzeDeepTalk', true);
-          },
-        },
-        {
-          text: 'Behalte es für dich.',
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Verstehe. Ein Geheimnis zwischen uns und dem Stahl. Ich mag das. Lass uns die Bühne abreißen."',
-            );
-            currentStore.increaseBandMood(15, 'id_fe0c518a');
-            currentStore.setFlag('matzeDeepTalk', true);
-          },
-        },
-      ],
-    };
+    return buildMatzeTalismanDialogue();
   }
 
   if (hasForbiddenRiff && !flags.showedRiffToMatze) {
-    return {
-      text: 'Matze: "Warte mal... was ist das für eine Aura? Hast du etwa das Verbotene Riff gefunden?!"',
-      options: [
-        {
-          text: 'Ja, es vibriert in meinem Rucksack.',
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "UNGLAUBLICH! Damit werden wir die Kaminstube in Schutt und Asche legen! Du bist der beste Manager aller Zeiten!"',
-            );
-            currentStore.setFlag('showedRiffToMatze', true);
-            currentStore.increaseBandMood(30, 'id_b5b88f73');
-          },
-        },
-        {
-          text: 'Nur ein altes Demo-Tape.',
-          action: () =>
-            game().setDialogue(
-              'Matze: "Hm, sah von hier aus mächtiger aus. Egal, lass uns weitermachen."',
-            ),
-        },
-      ],
-    };
+    return buildMatzeForbiddenRiffDialogue();
   }
 
   if (!flags.waterCleaned) {
-    return {
-      text:
-        bandMood > 60
-          ? 'Matze: "Hey Manager! Ich hab ein paar neue Riffs geschrieben! Kriegen wir das Wasser weg, damit ich sie dir zeigen kann?"'
-          : bandMood > 40
-            ? 'Matze: "Hey Manager! Der Raum ist zwar nass, aber ich bin heiß wie Frittenfett! Kriegen wir das Wasser weg?"'
-            : 'Matze: "Verdammt, der Proberaum ist geflutet! Wir müssen das Wasser wegkriegen, bevor die Amps kaputtgehen!"',
-      options: [
-        {
-          text: 'Ich kümmere mich darum.',
-          action: () =>
-            game().setDialogue('Matze: "Beeil dich, ich höre schon das Kurzschluss-Zischen!"'),
-        },
-        {
-          text: 'Vielleicht ist es ein Zeichen für ein neues Genre?',
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue(
-              'Matze: "Sub-Aquatic Industrial? Klingt teuer. Wisch einfach auf."',
-            );
-            currentStore.increaseBandMood(-5, 'id_43a4e8ae');
-          },
-        },
-      ],
-    };
+    return buildMatzeWaterDialogue(bandMood);
   }
 
   if (bandMood > 60 && !flags.matzeRiffWarning) {
-    return {
-      text: 'Matze: "Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?"',
-      options: [
-        {
-          text: 'Lass hören! [Chaos 5]',
-          requiredSkill: { name: 'chaos', level: 5 },
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue(
-              'Matze schlägt die Saiten an. Ein Riss in der Wand entsteht. "WHOOPS! Aber geil, oder?"',
-            );
-            currentStore.increaseBandMood(15, 'id_63f0878f');
-            currentStore.setFlag('matzeRiffWarning', true);
-          },
-        },
-        {
-          text: 'Heb es dir für Salzgitter auf.',
-          action: () => {
-            const currentStore = game();
-            currentStore.setDialogue('Matze: "Stimmt, die Wände hier halten das eh nicht aus."');
-            currentStore.setFlag('matzeRiffWarning', true);
-          },
-        },
-      ],
-    };
+    return buildMatzeRiffWarningDialogue();
   }
 
+  return buildMatzeDefaultDialogue(bandMood, flags);
+}
+
+function buildMatzeTalismanDialogue(): Dialogue {
+  return {
+    text: 'Matze: "Ist das der Industrie-Talisman?! Ich spüre, wie die Saiten meiner Gitarre vor Ehrfurcht vibrieren. Du bist mehr als nur ein Manager."',
+    options: [
+      {
+        text: 'Es ist für die Band.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Matze: "Wir werden die Welt mit diesem Ding verändern. Danke, Boss. Der Sound wird legendär."',
+          );
+          currentStore.increaseBandMood(30, 'id_18af0178');
+          currentStore.setFlag('matzeDeepTalk', true);
+        },
+      },
+      {
+        text: 'Behalte es für dich.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Matze: "Verstehe. Ein Geheimnis zwischen uns und dem Stahl. Ich mag das. Lass uns die Bühne abreißen."',
+          );
+          currentStore.increaseBandMood(15, 'id_fe0c518a');
+          currentStore.setFlag('matzeDeepTalk', true);
+        },
+      },
+    ],
+  };
+}
+
+function buildMatzeForbiddenRiffDialogue(): Dialogue {
+  return {
+    text: 'Matze: "Warte mal... was ist das für eine Aura? Hast du etwa das Verbotene Riff gefunden?!"',
+    options: [
+      {
+        text: 'Ja, es vibriert in meinem Rucksack.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Matze: "UNGLAUBLICH! Damit werden wir die Kaminstube in Schutt und Asche legen! Du bist der beste Manager aller Zeiten!"',
+          );
+          currentStore.setFlag('showedRiffToMatze', true);
+          currentStore.increaseBandMood(30, 'id_b5b88f73');
+        },
+      },
+      {
+        text: 'Nur ein altes Demo-Tape.',
+        action: () =>
+          game().setDialogue(
+            'Matze: "Hm, sah von hier aus mächtiger aus. Egal, lass uns weitermachen."',
+          ),
+      },
+    ],
+  };
+}
+
+function buildMatzeWaterDialogue(bandMood: number): Dialogue {
+  return {
+    text:
+      bandMood > 60
+        ? 'Matze: "Hey Manager! Ich hab ein paar neue Riffs geschrieben! Kriegen wir das Wasser weg, damit ich sie dir zeigen kann?"'
+        : bandMood > 40
+          ? 'Matze: "Hey Manager! Der Raum ist zwar nass, aber ich bin heiß wie Frittenfett! Kriegen wir das Wasser weg?"'
+          : 'Matze: "Verdammt, der Proberaum ist geflutet! Wir müssen das Wasser wegkriegen, bevor die Amps kaputtgehen!"',
+    options: [
+      {
+        text: 'Ich kümmere mich darum.',
+        action: () =>
+          game().setDialogue('Matze: "Beeil dich, ich höre schon das Kurzschluss-Zischen!"'),
+      },
+      {
+        text: 'Vielleicht ist es ein Zeichen für ein neues Genre?',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Matze: "Sub-Aquatic Industrial? Klingt teuer. Wisch einfach auf."',
+          );
+          currentStore.increaseBandMood(-5, 'id_43a4e8ae');
+        },
+      },
+    ],
+  };
+}
+
+function buildMatzeRiffWarningDialogue(): Dialogue {
+  return {
+    text: 'Matze: "Manager! Ich bin so hyped, ich zeig dir meinen neuen Power-Chord. Bereit?"',
+    options: [
+      {
+        text: 'Lass hören! [Chaos 5]',
+        requiredSkill: { name: 'chaos', level: 5 },
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue(
+            'Matze schlägt die Saiten an. Ein Riss in der Wand entsteht. "WHOOPS! Aber geil, oder?"',
+          );
+          currentStore.increaseBandMood(15, 'id_63f0878f');
+          currentStore.setFlag('matzeRiffWarning', true);
+        },
+      },
+      {
+        text: 'Heb es dir für Salzgitter auf.',
+        action: () => {
+          const currentStore = game();
+          currentStore.setDialogue('Matze: "Stimmt, die Wände hier halten das eh nicht aus."');
+          currentStore.setFlag('matzeRiffWarning', true);
+        },
+      },
+    ],
+  };
+}
+
+function buildMatzeDefaultDialogue(bandMood: number, flags: Record<string, boolean>): Dialogue {
   const moodText =
     bandMood > 70
       ? 'Matze: "Alter, ich fühl mich wie ein junger Gott! Lass uns Tangermünde zeigen, was Lärm wirklich bedeutet!"'
