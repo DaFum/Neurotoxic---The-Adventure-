@@ -93,6 +93,43 @@ function getConfidentMariusDialogue(store: GameState): Dialogue | null {
   if (!store.flags.mariusConfidenceBoost) return null;
 
   const options: DialogueOption[] = [
+    ...when(!store.flags.salzgitter_marius_greeted, {
+      text: 'Gut, dass du bereit bist.',
+      action: () => {
+        const currentStore = game();
+        currentStore.setFlag('salzgitter_marius_greeted', true);
+        currentStore.increaseBandMood(15, 'id_8ded0f13');
+        currentStore.setDialogue('Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"');
+      },
+    }),
+    ...when(store.flags.egoContained && store.flags.bassist_contacted, {
+      text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
+      requiredSkill: { name: 'social' as const, level: 12 },
+      action: () => {
+        const currentStore = game();
+        currentStore.setDialogue(
+          'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"',
+        );
+        currentStore.setFlag('salzgitter_true_ending', true);
+        currentStore.increaseBandMood(50, 'id_cf381586');
+      },
+    }),
+    ...when(
+      store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed,
+      {
+        text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
+        requiredTrait: 'Performer',
+        action: () => {
+          const currentStore = game();
+          currentStore.setFlag('salzgitter_marius_performer_claimed', true);
+          currentStore.setDialogue(
+            'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"',
+          );
+          currentStore.increaseBandMood(30, 'id_e74c6cca');
+          currentStore.increaseSkill('social', 5);
+        },
+      },
+    ),
     ...when(!store.flags.salzgitter_marius_chaos_claimed, {
       text: 'Kanalisiere den Zorn. [Chaos 10]',
       requiredSkill: { name: 'chaos' as const, level: 10 },
@@ -126,49 +163,6 @@ function getConfidentMariusDialogue(store: GameState): Dialogue | null {
       },
     },
   ];
-
-  if (store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed) {
-    options.unshift({
-      text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
-      requiredTrait: 'Performer',
-      action: () => {
-        const currentStore = game();
-        currentStore.setFlag('salzgitter_marius_performer_claimed', true);
-        currentStore.setDialogue(
-          'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"',
-        );
-        currentStore.increaseBandMood(30, 'id_e74c6cca');
-        currentStore.increaseSkill('social', 5);
-      },
-    });
-  }
-
-  if (store.flags.egoContained && store.flags.bassist_contacted) {
-    options.unshift({
-      text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
-      requiredSkill: { name: 'social', level: 12 },
-      action: () => {
-        const currentStore = game();
-        currentStore.setDialogue(
-          'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"',
-        );
-        currentStore.setFlag('salzgitter_true_ending', true);
-        currentStore.increaseBandMood(50, 'id_cf381586');
-      },
-    });
-  }
-
-  if (!store.flags.salzgitter_marius_greeted) {
-    options.unshift({
-      text: 'Gut, dass du bereit bist.',
-      action: () => {
-        const currentStore = game();
-        currentStore.setFlag('salzgitter_marius_greeted', true);
-        currentStore.increaseBandMood(15, 'id_8ded0f13');
-        currentStore.setDialogue('Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"');
-      },
-    });
-  }
 
   return {
     text: 'Marius: "Manager, danke für den Zuspruch im Backstage. Ich fühle mich unbesiegbar. Die Fans werden meine Stimme noch in 100 Jahren hören!"',

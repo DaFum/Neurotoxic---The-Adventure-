@@ -1,4 +1,4 @@
-import { type Dialogue, type DialogueOption } from '../../store';
+import { type Dialogue, type DialogueOption, type GameState, type Trait, type Skills } from '../../store';
 import { game, when, say } from '../shared/helpers';
 
 export function buildProberaumMariusDialogue(): Dialogue {
@@ -13,10 +13,10 @@ export function buildProberaumMariusDialogue(): Dialogue {
 }
 
 function getPreBeerDialogue(
-  flags: Record<string, boolean>,
+  flags: GameState['flags'],
   hasItem: (item: string) => boolean,
-  trait: string,
-  skills: { social: number, chaos: number }
+  trait: Trait,
+  skills: Pick<Skills, 'social'>
 ): Dialogue {
   return {
     text: 'Marius: "Ohne ein kühles Bier kann ich nicht singen. Besorg mir eins!"',
@@ -81,9 +81,9 @@ function getPreBeerDialogue(
 }
 
 function getPostBeerDialogue(
-  flags: Record<string, boolean>,
+  flags: GameState['flags'],
   bandMood: number,
-  trait: string
+  trait: Trait
 ): Dialogue {
   const moodText =
     bandMood > 80

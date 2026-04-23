@@ -1,4 +1,4 @@
-import { type Dialogue, type DialogueOption } from '../../store';
+import { type Dialogue, type DialogueOption, type GameState } from '../../store';
 import { game, when, say } from '../shared/helpers';
 
 export function buildProberaumMatzeDialogue(): Dialogue {
@@ -145,7 +145,7 @@ function buildMatzeRiffWarningDialogue(): Dialogue {
   };
 }
 
-function buildMatzeDefaultDialogue(bandMood: number, flags: Record<string, boolean>): Dialogue {
+function buildMatzeDefaultDialogue(bandMood: number, flags: GameState['flags']): Dialogue {
   const moodText =
     bandMood > 70
       ? 'Matze: "Alter, ich fühl mich wie ein junger Gott! Lass uns Tangermünde zeigen, was Lärm wirklich bedeutet!"'
