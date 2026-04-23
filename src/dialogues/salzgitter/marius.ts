@@ -1,12 +1,34 @@
-import { type Dialogue, type DialogueOption } from '../../store';
-import { game, say } from '../shared/helpers';
+import { type Dialogue, type DialogueOption, type GameState } from '../../store';
+import { game, say, when } from '../shared/helpers';
 
 export function buildSalzgitterMariusDialogue(): Dialogue {
   const store = game();
   const bandMood = store.bandMood;
-  const trait = store.trait;
 
-  if (trait === 'Performer' && !store.flags.salzgitter_performer_talked) {
+  const performerOpener = getPerformerOpenerDialogue(store);
+  if (performerOpener) return performerOpener;
+
+  const bandUnited = getBandUnitedDialogue(store);
+  if (bandUnited) return bandUnited;
+
+  const confident = getConfidentMariusDialogue(store);
+  if (confident) return confident;
+
+  if (bandMood > 90) {
+    return say(
+      'Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"',
+    );
+  }
+
+  if (bandMood > 50) {
+    return say('Marius: "Danke, dass du uns als Manager hierher gebracht hast! NEUROTOXIC RULES!"');
+  }
+
+  return say('Marius: "Ich bin nervös, aber wir ziehen das durch. Für den Metal!"');
+}
+
+function getPerformerOpenerDialogue(store: GameState): Dialogue | null {
+  if (store.trait === 'Performer' && !store.flags.salzgitter_performer_talked) {
     return {
       text: 'Marius: "Manager, schau dir diese Menge an! Sie warten nur darauf, dass ich sie mit meiner Stimme in Ekstase versetze. Hast du ein paar Tipps für den perfekten Auftritt?"',
       options: [
@@ -25,7 +47,10 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
       ],
     };
   }
+  return null;
+}
 
+function getBandUnitedDialogue(store: GameState): Dialogue | null {
   if (
     store.flags.mariusEgoStrategy &&
     store.flags.mariusConfidenceBoost &&
@@ -61,112 +86,92 @@ export function buildSalzgitterMariusDialogue(): Dialogue {
       ],
     };
   }
+  return null;
+}
 
-  if (store.flags.mariusConfidenceBoost) {
-    const options: DialogueOption[] = [
-      ...(!store.flags.salzgitter_marius_chaos_claimed
-        ? [
-            {
-              text: 'Kanalisiere den Zorn. [Chaos 10]',
-              requiredSkill: { name: 'chaos' as const, level: 10 },
-              action: () => {
-                const currentStore = game();
-                currentStore.setFlag('salzgitter_marius_chaos_claimed', true);
-                currentStore.setDialogue(
-                  'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"',
-                );
-                currentStore.increaseBandMood(40, 'id_f382013b');
-                currentStore.increaseSkill('chaos', 5);
-              },
-            },
-          ]
-        : []),
-      ...(!store.flags.salzgitter_marius_social_claimed
-        ? [
-            {
-              text: 'Beruhige die Menge. [Social 10]',
-              requiredSkill: { name: 'social' as const, level: 10 },
-              action: () => {
-                const currentStore = game();
-                currentStore.setFlag('salzgitter_marius_social_claimed', true);
-                currentStore.setDialogue(
-                  'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."',
-                );
-                currentStore.increaseBandMood(30, 'id_536e150a');
-                currentStore.increaseSkill('social', 5);
-              },
-            },
-          ]
-        : []),
-      {
-        text: 'Lass es raus!',
-        action: () => {
-          game().setDialogue('Marius: "AAAAAAHHHHHHHH!!!!"');
-        },
+function getConfidentMariusDialogue(store: GameState): Dialogue | null {
+  if (!store.flags.mariusConfidenceBoost) return null;
+
+  const options: DialogueOption[] = [
+    ...when(!store.flags.salzgitter_marius_chaos_claimed, {
+      text: 'Kanalisiere den Zorn. [Chaos 10]',
+      requiredSkill: { name: 'chaos' as const, level: 10 },
+      action: () => {
+        const currentStore = game();
+        currentStore.setFlag('salzgitter_marius_chaos_claimed', true);
+        currentStore.setDialogue(
+          'Marius: "MEINE STIMME WIRD DEN STAHL ZUM SCHMELZEN BRINGEN! ICH BIN DER STURM!"',
+        );
+        currentStore.increaseBandMood(40, 'id_f382013b');
+        currentStore.increaseSkill('chaos', 5);
       },
-    ];
+    }),
+    ...when(!store.flags.salzgitter_marius_social_claimed, {
+      text: 'Beruhige die Menge. [Social 10]',
+      requiredSkill: { name: 'social' as const, level: 10 },
+      action: () => {
+        const currentStore = game();
+        currentStore.setFlag('salzgitter_marius_social_claimed', true);
+        currentStore.setDialogue(
+          'Marius: "Sie werden uns aus der Hand fressen. Ich habe die absolute Kontrolle über ihre Seelen."',
+        );
+        currentStore.increaseBandMood(30, 'id_536e150a');
+        currentStore.increaseSkill('social', 5);
+      },
+    }),
+    {
+      text: 'Lass es raus!',
+      action: () => {
+        game().setDialogue('Marius: "AAAAAAHHHHHHHH!!!!"');
+      },
+    },
+  ];
 
-    if (
-      store.flags.backstage_performer_speech &&
-      !store.flags.salzgitter_marius_performer_claimed
-    ) {
-      options.unshift({
-        text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
-        requiredTrait: 'Performer',
-        action: () => {
-          const currentStore = game();
-          currentStore.setFlag('salzgitter_marius_performer_claimed', true);
-          currentStore.setDialogue(
-            'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"',
-          );
-          currentStore.increaseBandMood(30, 'id_e74c6cca');
-          currentStore.increaseSkill('social', 5);
-        },
-      });
-    }
-
-    if (store.flags.egoContained && store.flags.bassist_contacted) {
-      options.unshift({
-        text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
-        requiredSkill: { name: 'social', level: 12 },
-        action: () => {
-          const currentStore = game();
-          currentStore.setDialogue(
-            'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"',
-          );
-          currentStore.setFlag('salzgitter_true_ending', true);
-          currentStore.increaseBandMood(50, 'id_cf381586');
-        },
-      });
-    }
-
-    if (!store.flags.salzgitter_marius_greeted) {
-      options.unshift({
-        text: 'Gut, dass du bereit bist.',
-        action: () => {
-          const currentStore = game();
-          currentStore.setFlag('salzgitter_marius_greeted', true);
-          currentStore.increaseBandMood(15, 'id_8ded0f13');
-          currentStore.setDialogue('Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"');
-        },
-      });
-    }
-
-    return {
-      text: 'Marius: "Manager, danke für den Zuspruch im Backstage. Ich fühle mich unbesiegbar. Die Fans werden meine Stimme noch in 100 Jahren hören!"',
-      options,
-    };
+  if (store.flags.backstage_performer_speech && !store.flags.salzgitter_marius_performer_claimed) {
+    options.unshift({
+      text: 'Du hast die erste Reihe. Jetzt nimm sie alle. [Performer]',
+      requiredTrait: 'Performer',
+      action: () => {
+        const currentStore = game();
+        currentStore.setFlag('salzgitter_marius_performer_claimed', true);
+        currentStore.setDialogue(
+          'Marius: "Ja. Jeder Einzelne hier wird mich spüren. Sie werden meine Frequenz atmen!"',
+        );
+        currentStore.increaseBandMood(30, 'id_e74c6cca');
+        currentStore.increaseSkill('social', 5);
+      },
+    });
   }
 
-  if (bandMood > 90) {
-    return say(
-      'Marius: "Ich bin kein Mensch mehr... ich bin reiner Schall! DANKE FÜR ALLES, MANAGER!"',
-    );
+  if (store.flags.egoContained && store.flags.bassist_contacted) {
+    options.unshift({
+      text: 'Marius, der Bassist ist bei uns. Sing für ihn. [Social 12]',
+      requiredSkill: { name: 'social', level: 12 },
+      action: () => {
+        const currentStore = game();
+        currentStore.setDialogue(
+          'Marius: "Ich spüre es. Eine tiefe, vibrierende Kraft. Ich singe nicht mehr für mich. Ich singe für die Ewigkeit!"',
+        );
+        currentStore.setFlag('salzgitter_true_ending', true);
+        currentStore.increaseBandMood(50, 'id_cf381586');
+      },
+    });
   }
 
-  if (bandMood > 50) {
-    return say('Marius: "Danke, dass du uns als Manager hierher gebracht hast! NEUROTOXIC RULES!"');
+  if (!store.flags.salzgitter_marius_greeted) {
+    options.unshift({
+      text: 'Gut, dass du bereit bist.',
+      action: () => {
+        const currentStore = game();
+        currentStore.setFlag('salzgitter_marius_greeted', true);
+        currentStore.increaseBandMood(15, 'id_8ded0f13');
+        currentStore.setDialogue('Marius: "Gut, dass du da bist, Manager. Jetzt geht es los!"');
+      },
+    });
   }
 
-  return say('Marius: "Ich bin nervös, aber wir ziehen das durch. Für den Metal!"');
+  return {
+    text: 'Marius: "Manager, danke für den Zuspruch im Backstage. Ich fühle mich unbesiegbar. Die Fans werden meine Stimme noch in 100 Jahren hören!"',
+    options,
+  };
 }
