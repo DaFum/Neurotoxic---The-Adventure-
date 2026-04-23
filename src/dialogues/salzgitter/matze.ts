@@ -208,7 +208,6 @@ function getAskedAbout1982Dialogue(store: ReturnType<typeof game>): Dialogue | n
 
 export function buildSalzgitterMatzeDialogue(): Dialogue {
   const store = game();
-  const bandMood = store.bandMood;
 
   if (store.hasItem('Verbotenes Riff')) {
     return getForbiddenRiffDialogue(store);
@@ -223,6 +222,7 @@ export function buildSalzgitterMatzeDialogue(): Dialogue {
   const asked1982Dialogue = getAskedAbout1982Dialogue(store);
   if (asked1982Dialogue) return asked1982Dialogue;
 
+  const bandMood = store.bandMood;
   if (bandMood > 80) {
     return say('Matze: "Ich hab noch nie so eine Energie gespürt! Salzgitter wird brennen!"');
   }

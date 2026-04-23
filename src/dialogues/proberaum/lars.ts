@@ -1,7 +1,7 @@
-import { type Dialogue } from '../../store';
+import { type Dialogue, type GameState } from '../../store';
 import { game, say } from '../shared/helpers';
 
-function buildPostPactDialogue(hasBeer: boolean, flags: ReturnType<typeof game>['flags']): Dialogue {
+function buildPostPactDialogue(hasBeer: boolean, flags: GameState['flags']): Dialogue {
   if (hasBeer && !flags.gaveBeerToLars) {
     return {
       text: 'Lars: "Der Pakt steht. Wir sind das Skelett der Welt. Und... ist das ein kühles Blondes?"',
@@ -29,7 +29,7 @@ function buildPostPactDialogue(hasBeer: boolean, flags: ReturnType<typeof game>[
   return say('Lars: "Der Pakt steht. Wir sind das Skelett der Welt."');
 }
 
-function buildPhilosophyStateDialogue(hasBeer: boolean, flags: ReturnType<typeof game>['flags']): Dialogue {
+function buildPhilosophyStateDialogue(hasBeer: boolean, flags: GameState['flags']): Dialogue {
   return {
     text: 'Lars: "Du kennst jetzt meine Philosophie. Der Beat ist alles. Bist du bereit für den nächsten Schritt?"',
     options: [
@@ -61,7 +61,7 @@ function buildPhilosophyStateDialogue(hasBeer: boolean, flags: ReturnType<typeof
   };
 }
 
-function buildBeerDiscoveryDialogue(flags: ReturnType<typeof game>['flags']): Dialogue {
+function buildBeerDiscoveryDialogue(flags: GameState['flags']): Dialogue {
   return {
     text: 'Lars: "Ist das... ein kühles Blondes? Gib her, ich sterbe vor Durst!"',
     options: [
@@ -96,7 +96,7 @@ function buildBeerDiscoveryDialogue(flags: ReturnType<typeof game>['flags']): Di
   };
 }
 
-function buildDefaultStateDialogue(flags: ReturnType<typeof game>['flags'], bandMood: number, hasItem: ReturnType<typeof game>['hasItem']): Dialogue {
+function buildDefaultStateDialogue(flags: GameState['flags'], bandMood: number, hasItem: GameState['hasItem']): Dialogue {
   if (!hasItem('Mop')) {
     return say('Lars: "Ich hab hier irgendwo einen Wischmopp gesehen... Such mal danach!"');
   } else if (!flags.waterCleaned) {
