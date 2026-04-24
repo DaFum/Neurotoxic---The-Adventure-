@@ -1,4 +1,10 @@
-import { type Dialogue, type DialogueOption, type GameState, type Trait, type Skills } from '../../store';
+import {
+  type Dialogue,
+  type DialogueOption,
+  type GameState,
+  type Trait,
+  type Skills,
+} from '../../store';
 import { game, when, say } from '../shared/helpers';
 
 export function buildProberaumMariusDialogue(): Dialogue {
@@ -16,7 +22,7 @@ function getPreBeerDialogue(
   flags: GameState['flags'],
   hasItem: (item: string) => boolean,
   trait: Trait,
-  skills: Pick<Skills, 'social'>
+  skills: Pick<Skills, 'social'>,
 ): Dialogue {
   return {
     text: 'Marius: "Ohne ein kühles Bier kann ich nicht singen. Besorg mir eins!"',
@@ -36,17 +42,13 @@ function getPreBeerDialogue(
       {
         text: 'Ich beeile mich.',
         action: () =>
-          game().setDialogue(
-            'Marius: "Gut. Meine Stimmbänder fühlen sich an wie Schleifpapier."',
-          ),
+          game().setDialogue('Marius: "Gut. Meine Stimmbänder fühlen sich an wie Schleifpapier."'),
       },
       {
         text: 'Trink doch Wasser.',
         action: () => {
           const currentStore = game();
-          currentStore.setDialogue(
-            'Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"',
-          );
+          currentStore.setDialogue('Marius: "Wasser? Bist du wahnsinnig? Ich bin kein Goldfisch!"');
           currentStore.increaseBandMood(-5, 'id_e769cd73');
         },
       },
@@ -80,11 +82,7 @@ function getPreBeerDialogue(
   };
 }
 
-function getPostBeerDialogue(
-  flags: GameState['flags'],
-  bandMood: number,
-  trait: Trait
-): Dialogue {
+function getPostBeerDialogue(flags: GameState['flags'], bandMood: number, trait: Trait): Dialogue {
   const moodText =
     bandMood > 80
       ? 'Marius: "Ich fühle die Energie! Wir werden die Welt in Schutt und Asche legen!"'

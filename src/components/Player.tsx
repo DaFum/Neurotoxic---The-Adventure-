@@ -11,7 +11,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useKeyboardControls, Sparkles } from '@react-three/drei';
 import { RigidBody, RapierRigidBody, CuboidCollider } from '@react-three/rapier';
@@ -52,13 +52,14 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     new THREE.Vector3(initialPos[0], initialPos[1], initialPos[2]),
   ).current;
   const facingRight = useRef(true);
-  const [isMoving, setIsMoving] = useState(false);
+  const isMovingRef = useRef(false);
   const footstepTimer = useRef(0);
 
   const speed = 5;
   const spriteRef = useRef<THREE.Sprite>(null);
   const labelSpriteRef = useRef<THREE.Sprite>(null);
   const ringRef = useRef<THREE.Mesh>(null);
+  const particlesRef = useRef<THREE.Group>(null);
   const playerTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const labelTextureRef = useRef<THREE.CanvasTexture | null>(null);
 
@@ -247,7 +248,11 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
     // ⚡ Bolt Optimization: Use lengthSq() with an epsilon to avoid expensive Math.sqrt() and handle input jitter
     const moving = velocity.lengthSq() > 0.0001;
-    if (moving !== isMoving) setIsMoving(moving);
+    isMovingRef.current = moving;
+
+    if (particlesRef.current) {
+      particlesRef.current.visible = moving;
+    }
 
     if (moving) {
       velocity.normalize().multiplyScalar(speed);
@@ -353,9 +358,9 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
       <CuboidCollider args={[0.75, 1, 0.5]} />
       <group ref={modelRef}>
         {/* Dust particles when moving */}
-        {isMoving && (
+        <group ref={particlesRef} visible={false}>
           <Sparkles count={20} scale={2} size={2} speed={0.5} color="#adff2f" opacity={0.5} />
-        )}
+        </group>
 
         <mesh position={[0, -0.72, 0]} rotation={[-Math.PI / 2, 0, 0]} ref={ringRef}>
           <torusGeometry args={[0.85, 0.07, 12, 36]} />

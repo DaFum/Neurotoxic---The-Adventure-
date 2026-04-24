@@ -96,7 +96,11 @@ function buildBeerDiscoveryDialogue(flags: GameState['flags']): Dialogue {
   };
 }
 
-function buildDefaultStateDialogue(flags: GameState['flags'], bandMood: number, hasItem: GameState['hasItem']): Dialogue {
+function buildDefaultStateDialogue(
+  flags: GameState['flags'],
+  bandMood: number,
+  hasItem: GameState['hasItem'],
+): Dialogue {
   if (!hasItem('Mop')) {
     return say('Lars: "Ich hab hier irgendwo einen Wischmopp gesehen... Such mal danach!"');
   } else if (!flags.waterCleaned) {
