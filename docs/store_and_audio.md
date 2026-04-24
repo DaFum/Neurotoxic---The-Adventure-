@@ -78,9 +78,9 @@
 
 Only these fields are persisted:
 
-```
+```text
 
-inventory, flags, quests, bandMood, loreEntries, trait, skills
+inventory, flags, quests, bandMood, loreEntries, trait, skills, itemPickupCounts, bandMoodGainClaims
 
 ```
 
@@ -113,7 +113,7 @@ The migration routines (legacy quest migration, feedback monitor flag consolidat
 
 **AudioEngine Class (Singleton Pattern):**
 
-```
+```text
 
 export const audio = new AudioEngine();
 
@@ -188,7 +188,7 @@ export const audio = new AudioEngine();
 
 ### 4. NON-OBVIOUS PATTERNS, CONVENTIONS, GOTCHAS
 
-**A. Item Combination System**
+#### A. Item Combination System
 
 - `combineItems()` checks BOTH orders: (A,B) OR (B,A) for flexibility
 
@@ -198,7 +198,7 @@ export const audio = new AudioEngine();
 
 - Plays pickup sound on successful combination
 
-**B. Dialogue System**
+#### B. Dialogue System
 
 - Can pass string or full Dialogue object to `setDialogue()`
 
@@ -208,14 +208,14 @@ export const audio = new AudioEngine();
 
 - Options can chain to next dialogue OR close on select OR trigger actions
 
-**C. Quest Deduplication**
+#### C. Quest Deduplication
 
 - `addQuest()` filters out old quest with same ID before adding
   - Line 257: `...state.quests.filter(q => q.id !== id), { id, text, completed: false }`
 
 - This allows replacing quest text without duplicates
 
-**D. Lore Discovery Guard**
+#### D. Lore Discovery Guard
 
 - `discoverLore()` explicitly checks if already discovered (line 268)
 
@@ -223,7 +223,7 @@ export const audio = new AudioEngine();
 
 - Used by both flags and direct lore discovery
 
-**E. Scene Transitions**
+#### E. Scene Transitions
 
 - `setScene()` ALWAYS resets playerPos to [0, 1, 0]
 
@@ -231,7 +231,7 @@ export const audio = new AudioEngine();
 
 - Scenes must be ready to receive player at this position
 
-**F. Audio Context Lifecycle**
+#### F. Audio Context Lifecycle
 
 - AudioContext can be "suspended" on some browsers - `init()` handles resume
 
@@ -239,7 +239,7 @@ export const audio = new AudioEngine();
 
 - Intervals checked for `this.ctx.state !== 'running'` to handle suspensions gracefully
 
-**G. Persistence Merge Strategy**
+#### G. Persistence Merge Strategy
 
 - Uses `partialize` to select fields (don't persist dialogue/isPaused)
 
@@ -249,7 +249,7 @@ export const audio = new AudioEngine();
 
 - This pattern supports adding new quests/lore without breaking saves
 
-**H. Trait Selection Initialization**
+#### H. Trait Selection Initialization
 
 - Traits assigned BEFORE scene transition (Game.tsx line 160)
 
@@ -259,7 +259,7 @@ export const audio = new AudioEngine();
 
 - Order matters: trait → skills → music → scene
 
-**I. Pause Behavior**
+#### I. Pause Behavior
 
 - Escape key toggles pause, but only if NOT on menu (Game.tsx line 60)
 
@@ -267,7 +267,7 @@ export const audio = new AudioEngine();
 
 - Ambient continues playing during pause (no audio pause logic)
 
-**J. Store Comments Document History**
+#### J. Store Comments Document History
 
 - File has `#1 UPDATES`, `#2 NEXT STEPS`, `#3 ERRORS & SOLUTIONS` sections
 
@@ -344,7 +344,7 @@ export const audio = new AudioEngine();
 
 **Critical State Flow:**
 
-```
+```text
 
 localStorage → zustand hydrate → merge + migration
 
@@ -360,7 +360,7 @@ Game mounts → scene is forced to menu during merge
 
 ---
 
-### KEY ARCHITECTURAL INSIGHTS FOR AGENTS:
+### KEY ARCHITECTURAL INSIGHTS FOR AGENTS
 
 1. **Persistence is smart**: New quests/lore added in code won't overwrite player progress due to merge function
 
