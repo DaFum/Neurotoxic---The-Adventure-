@@ -7,8 +7,8 @@ Wir freuen uns über Beiträge zu **NEUROTOXIC: Grind The Void**! Bitte folge di
 1. **Repository klonen**
 
    ```bash
-   git clone <repository-url>
-   cd neurotoxic-the-adventure
+   git clone https://github.com/DaFum/Neurotoxic---The-Adventure-
+   cd Neurotoxic---The-Adventure-
    ```
 
 1. **Abhängigkeiten installieren**

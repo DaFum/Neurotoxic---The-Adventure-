@@ -28,8 +28,8 @@ Voraussetzung: [Node.js](https://nodejs.org/) (v18+)
 
 ```bash
 # Repository klonen und Abhängigkeiten installieren
-git clone <repository-url>
-cd neurotoxic-the-adventure
+git clone https://github.com/DaFum/Neurotoxic---The-Adventure-
+cd Neurotoxic---The-Adventure-
 pnpm install
 
 # Entwicklungsserver starten

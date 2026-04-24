@@ -78,9 +78,9 @@
 
 Only these fields are persisted:
 
-```typescript
+```text
 
-inventory, flags, quests, bandMood, loreEntries, trait, skills
+inventory, flags, quests, bandMood, loreEntries, trait, skills, itemPickupCounts, bandMoodGainClaims
 
 ```
 
@@ -113,7 +113,7 @@ The migration routines (legacy quest migration, feedback monitor flag consolidat
 
 **AudioEngine Class (Singleton Pattern):**
 
-```typescript
+```text
 
 export const audio = new AudioEngine();
 
@@ -344,7 +344,7 @@ export const audio = new AudioEngine();
 
 **Critical State Flow:**
 
-```typescript
+```text
 
 localStorage → zustand hydrate → merge + migration
 
