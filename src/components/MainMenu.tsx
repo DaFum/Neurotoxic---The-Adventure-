@@ -75,6 +75,26 @@ export function MainMenu() {
     }
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (showSavePrompt) {
+          setShowSavePrompt(false);
+        } else if (selectingTrait) {
+          setSelectingTrait(false);
+        }
+      }
+    };
+
+    if (showSavePrompt || selectingTrait) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showSavePrompt, selectingTrait]);
+
   return (
     <motion.div
       key="menu"
