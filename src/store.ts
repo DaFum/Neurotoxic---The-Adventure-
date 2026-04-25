@@ -13,8 +13,23 @@ export * from './store/initialState';
 
 export const STORAGE_KEY = 'neurotoxic-game-storage';
 
+/**
+ * Sanitizes a record by creating a null-prototype object and copying only
+ * safe, own properties. This prevents prototype pollution from malicious
+ * localStorage payloads.
+ */
+export const sanitizeRecord = <T extends Record<string, unknown>>(raw: T): T => {
+  const sanitized = Object.create(null);
+  for (const [key, value] of Object.entries(raw)) {
+    if (key !== '__proto__' && key !== 'constructor' && key !== 'prototype') {
+      sanitized[key] = value;
+    }
+  }
+  return sanitized;
+};
+
 export const migrateFlags = (rawFlags: Record<string, boolean>): Record<string, boolean> => {
-  const flags = { ...rawFlags };
+  const flags = sanitizeRecord(rawFlags);
   if ('ampFixed' in flags) {
     if (flags.ampFixed && !flags.ampRepaired) {
       flags.ampRepaired = true;
@@ -109,7 +124,7 @@ export const useStore = create<GameState>()(
           : [];
         const rawPersistedFlags =
           typedPersistedState.flags !== null && typeof typedPersistedState.flags === 'object'
-            ? (typedPersistedState.flags as Record<string, boolean>)
+            ? sanitizeRecord(typedPersistedState.flags as Record<string, boolean>)
             : {};
 
         const persistedFlags = migrateFlags(rawPersistedFlags);
@@ -211,6 +226,9 @@ export const useStore = create<GameState>()(
         for (const [item, value] of Object.entries(persistedPickupCounts)) {
           if (
             typeof item === 'string' &&
+            item !== '__proto__' &&
+            item !== 'constructor' &&
+            item !== 'prototype' &&
             typeof value === 'number' &&
             Number.isFinite(value) &&
             value >= 0
@@ -239,7 +257,9 @@ export const useStore = create<GameState>()(
           },
           ...(typedPersistedState.bandMoodGainClaims !== null &&
             typeof typedPersistedState.bandMoodGainClaims === 'object' && {
-              bandMoodGainClaims: typedPersistedState.bandMoodGainClaims as Record<string, boolean>,
+              bandMoodGainClaims: sanitizeRecord(
+                typedPersistedState.bandMoodGainClaims as Record<string, boolean>,
+              ),
             }),
           ...(typeof typedPersistedState.bandMood === 'number' && {
             bandMood: typedPersistedState.bandMood,
@@ -248,7 +268,9 @@ export const useStore = create<GameState>()(
             typedPersistedState.trait === null) && { trait: typedPersistedState.trait }),
           ...(typedPersistedState.skills !== null &&
             typeof typedPersistedState.skills === 'object' && {
-              skills: typedPersistedState.skills as Skills,
+              skills: sanitizeRecord(
+                typedPersistedState.skills as unknown as Record<string, unknown>,
+              ) as unknown as Skills,
             }),
         };
       },
