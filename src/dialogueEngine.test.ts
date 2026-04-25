@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useStore, DialogueOption } from './store';
-import { canSelectOption, executeDialogueOption } from './dialogueEngine';
+import { canSelectOption, executeDialogueOption, getCachedQuest } from './dialogueEngine';
 
 describe('dialogueEngine', () => {
   beforeEach(() => {
@@ -132,6 +132,44 @@ describe('dialogueEngine', () => {
       expect(() => executeDialogueOption(option)).toThrow(
         'executeDialogueOption: option.nextDialogue and option.action are mutually exclusive. This conflicting pattern is deprecated and no longer allowed.',
       );
+    });
+  });
+
+  describe('getCachedQuest', () => {
+    it('should return undefined for non-existent quest', () => {
+      expect(getCachedQuest('non_existent')).toBeUndefined();
+    });
+
+    it('should return quest when it exists in store', () => {
+      useStore.getState().addQuest('test_quest', 'Test Quest');
+      const quest = getCachedQuest('test_quest');
+      expect(quest).toBeDefined();
+      expect(quest?.id).toBe('test_quest');
+      expect(quest?.text).toBe('Test Quest');
+      expect(quest?.status).toBe('active');
+    });
+
+    it('should synchronize when quest is added', () => {
+      expect(getCachedQuest('new_quest')).toBeUndefined();
+      useStore.getState().addQuest('new_quest', 'New Quest');
+      expect(getCachedQuest('new_quest')).toBeDefined();
+      expect(getCachedQuest('new_quest')?.text).toBe('New Quest');
+    });
+
+    it('should synchronize when quest status changes', () => {
+      useStore.getState().addQuest('update_quest', 'Update Quest');
+      expect(getCachedQuest('update_quest')?.status).toBe('active');
+
+      useStore.getState().completeQuest('update_quest');
+      expect(getCachedQuest('update_quest')?.status).toBe('completed');
+    });
+
+    it('should synchronize after store reset', () => {
+      useStore.getState().addQuest('reset_quest', 'Reset Quest');
+      expect(getCachedQuest('reset_quest')).toBeDefined();
+
+      useStore.getState().resetGame();
+      expect(getCachedQuest('reset_quest')).toBeUndefined();
     });
   });
 });
