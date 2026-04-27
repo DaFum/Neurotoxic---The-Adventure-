@@ -28,6 +28,7 @@ Flag names are immutable after first use — changing or removing a flag from th
 ## Gotchas
 
 - `bandMoodGainClaims` deduplicates positive BandMood increases — passing the same `sourceId` twice prevents farming infinite mood points. Pass a unique, stable ID for each dialogue reward.
+- Dynamic quests restored from persisted saves should be constrained (maximum count plus ID/text length caps), otherwise tampered localStorage can force expensive journal rendering on every reload.
 - `itemPickupCounts` enforces per-item limits (defined in `ITEM_PICKUP_LIMITS`). Always check the boolean return value of `addToInventory()` before granting rewards.
 - `ITEM_PICKUP_LIMITS` has global defaults (1 per item) and exceptions for specific items (Bier: 2, Lötkolben: 3, Schrottmetall: 2, Frequenzfragment: 2, Dunkle Materie: Infinity).
 - `RECIPES` in `initialState.ts` automatically handles both orderings (A, B) and (B, A) — simply add new recipes to the array.

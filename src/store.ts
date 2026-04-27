@@ -73,6 +73,10 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
   return updatedQuests;
 };
 
+const MAX_PERSISTED_DYNAMIC_QUESTS = 200;
+const MAX_PERSISTED_QUEST_ID_LENGTH = 80;
+const MAX_PERSISTED_QUEST_TEXT_LENGTH = 300;
+
 export const useStore = create<GameState>()(
   persist(
     (...a) => ({
@@ -161,11 +165,16 @@ export const useStore = create<GameState>()(
 
         const dynamicQuests: Quest[] = [];
         for (const pq of persistedQuestsMap.values()) {
+          if (dynamicQuests.length >= MAX_PERSISTED_DYNAMIC_QUESTS) break;
           if (pq !== null && typeof pq === 'object') {
             const p = pq as Record<string, unknown>;
             if (
               typeof p.id === 'string' &&
               typeof p.text === 'string' &&
+              p.id.length > 0 &&
+              p.id.length <= MAX_PERSISTED_QUEST_ID_LENGTH &&
+              p.text.length > 0 &&
+              p.text.length <= MAX_PERSISTED_QUEST_TEXT_LENGTH &&
               !currentQuestIds.has(p.id)
             ) {
               dynamicQuests.push({
