@@ -365,9 +365,16 @@ export function UI() {
       </div>
 
       <button
-        disabled={!!dialogue}
-        onClick={() => setShowHudPanels((prev) => !prev)}
-        className="absolute top-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        aria-disabled={!!dialogue}
+        onClick={() => {
+          if (dialogue) return;
+          setShowHudPanels((prev) => !prev);
+        }}
+        className={`absolute top-4 right-4 bg-black/70 border border-zinc-700 px-3 h-11 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors pointer-events-auto z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black text-zinc-400 ${
+          dialogue
+            ? 'opacity-50 cursor-not-allowed grayscale'
+            : 'hover:border-toxic hover:text-toxic'
+        }`}
         aria-label="Toggle HUD panels"
         title="Toggle HUD (H)"
         aria-pressed={showHudPanels}
@@ -806,9 +813,16 @@ export function UI() {
 
       {/* Touch-accessible Pause Button */}
       <button
-        disabled={!!dialogue}
-        onClick={() => setPaused(!isPaused)}
-        className="absolute bottom-4 right-4 bg-black/70 border border-zinc-700 hover:border-toxic text-zinc-400 hover:text-toxic w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        aria-disabled={!!dialogue}
+        onClick={() => {
+          if (dialogue) return;
+          setPaused(!isPaused);
+        }}
+        className={`absolute bottom-4 right-4 bg-black/70 border border-zinc-700 text-zinc-400 w-11 h-11 flex items-center justify-center text-lg font-black transition-colors pointer-events-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+          dialogue
+            ? 'opacity-50 cursor-not-allowed grayscale'
+            : 'hover:border-toxic hover:text-toxic'
+        }`}
         aria-label="Toggle pause menu"
         title="Pause Game (ESC)"
         aria-pressed={isPaused}
