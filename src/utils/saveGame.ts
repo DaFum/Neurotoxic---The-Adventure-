@@ -1,3 +1,32 @@
+function isQuestCompleted(q: unknown): boolean {
+  if (typeof q === 'object' && q !== null) {
+    const quest = q as { status?: unknown; completed?: unknown };
+    return quest.status === 'completed' || quest.completed === true;
+  }
+  return false;
+}
+
+function isLoreEntryDiscovered(e: unknown): boolean {
+  if (typeof e === 'object' && e !== null) {
+    return (e as { discovered?: unknown }).discovered === true;
+  }
+  return false;
+}
+
+function hasAnySkillProgress(skills: unknown): boolean {
+  if (typeof skills !== 'object' || skills === null) return false;
+  const s = skills as Record<string, unknown>;
+  return (
+    (typeof s.technical === 'number' && s.technical > 0) ||
+    (typeof s.social === 'number' && s.social > 0) ||
+    (typeof s.chaos === 'number' && s.chaos > 0)
+  );
+}
+
+function hasBandMoodProgress(bandMood: unknown): boolean {
+  return typeof bandMood === 'number' && bandMood !== 20;
+}
+
 export function checkHasSavedGame(raw: string | null): boolean {
   if (!raw) return false;
 
@@ -16,42 +45,21 @@ export function checkHasSavedGame(raw: string | null): boolean {
     const hasInventory = Array.isArray(savedRecord.inventory) && savedRecord.inventory.length > 0;
 
     const hasCompletedQuest =
-      Array.isArray(savedRecord.quests) &&
-      savedRecord.quests.some((q: unknown) => {
-        if (typeof q === 'object' && q !== null) {
-          const quest = q as { status?: unknown; completed?: unknown };
-          return quest.status === 'completed' || quest.completed === true;
-        }
-        return false;
-      });
+      Array.isArray(savedRecord.quests) && savedRecord.quests.some(isQuestCompleted);
 
     const hasLoreProgress =
-      Array.isArray(savedRecord.loreEntries) &&
-      savedRecord.loreEntries.some((e: unknown) => {
-        if (typeof e === 'object' && e !== null) {
-          return (e as { discovered?: unknown }).discovered === true;
-        }
-        return false;
-      });
+      Array.isArray(savedRecord.loreEntries) && savedRecord.loreEntries.some(isLoreEntryDiscovered);
 
-    const skills =
-      typeof savedRecord.skills === 'object' && savedRecord.skills !== null
-        ? (savedRecord.skills as Record<string, unknown>)
-        : undefined;
-
-    const hasSkillProgress =
-      (typeof skills?.technical === 'number' && skills.technical > 0) ||
-      (typeof skills?.social === 'number' && skills.social > 0) ||
-      (typeof skills?.chaos === 'number' && skills.chaos > 0);
-
-    const hasMoodOrSkillProgress =
-      (savedRecord.bandMood !== undefined &&
-        typeof savedRecord.bandMood === 'number' &&
-        savedRecord.bandMood !== 20) ||
-      hasSkillProgress;
+    const hasSkillProgress = hasAnySkillProgress(savedRecord.skills);
+    const hasMoodProgress = hasBandMoodProgress(savedRecord.bandMood);
 
     return Boolean(
-      hasTrait || hasInventory || hasCompletedQuest || hasLoreProgress || hasMoodOrSkillProgress,
+      hasTrait ||
+        hasInventory ||
+        hasCompletedQuest ||
+        hasLoreProgress ||
+        hasSkillProgress ||
+        hasMoodProgress,
     );
   } catch (e) {
     console.warn('Failed to parse save game:', e);
