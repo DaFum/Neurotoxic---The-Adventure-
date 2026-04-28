@@ -69,7 +69,8 @@ export function Game() {
             >
               <VirtualJoystick />
               <Canvas
-                shadows
+                dpr={[1, 1.5]}
+                gl={{ powerPreference: 'high-performance' }}
                 camera={{ position: [0, 5, 10], fov: 50 }}
                 onCreated={({ gl }) => {
                   gl.toneMappingExposure = 1.7;

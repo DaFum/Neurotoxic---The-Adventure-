@@ -19,7 +19,7 @@ import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows } from '@react-three/drei';
-import { RigidBody } from '@react-three/rapier';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import {
   buildSalzgitterBassistDialogue,
@@ -182,14 +182,14 @@ export function Salzgitter() {
       </RigidBody>
 
       {/* Invisible Walls for bounds */}
-      <RigidBody type="fixed" position={[-20, 10, 0]}>
-        <boxGeometry args={[1, 20, 20]} />
+      <RigidBody type="fixed" position={[-20, 10, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 10.0, 10.0]} />
       </RigidBody>
-      <RigidBody type="fixed" position={[20, 10, 0]}>
-        <boxGeometry args={[1, 20, 20]} />
+      <RigidBody type="fixed" position={[20, 10, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 10.0, 10.0]} />
       </RigidBody>
-      <RigidBody type="fixed" position={[0, 10, 10]}>
-        <boxGeometry args={[40, 20, 1]} />
+      <RigidBody type="fixed" position={[0, 10, 10]} colliders={false}>
+        <CuboidCollider args={[20.0, 10.0, 0.5]} />
       </RigidBody>
 
       {/* Stage trusses */}
