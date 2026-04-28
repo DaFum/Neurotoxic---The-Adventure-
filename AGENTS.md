@@ -21,3 +21,4 @@
 - Skill names are lowercase (`'technical'`, `'social'`, `'chaos'`); trait names are Title Case (`'Visionary'`, `'Technician'`, etc.) — mismatches silently fail.
 - `requiredSkill` must be an object `{ name: 'skill', level: N }` — passing a bare string silently fails.
 - Scene names are case-sensitive: `'void_station'` not `'voidStation'`.
+- When expanding persisted state from localStorage, treat it as attacker-controlled input: cap dynamic collection sizes (especially `quests`) and reject oversized IDs/text to avoid persistent UI slowdowns after reload.

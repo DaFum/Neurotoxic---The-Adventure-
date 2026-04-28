@@ -8,6 +8,7 @@
 - `combineItems()` checks both orderings (A,B) and (B,A) — add new recipes to the `RECIPES` array defined in store/initialState.ts
 - `discoverLore()` is idempotent — calling it twice on the same ID is safe
 - Persistence uses a custom merge in `onRehydrateStorage` that preserves player progress when new quests/lore are added to code. Adding new initial quests or loreEntries won't wipe saved data.
+- Persistence merge data comes from localStorage and must be bounded: validate dynamic quest shape and enforce limits on added quest count and text/ID length before merging.
 - Only these fields persist to localStorage: `inventory`, `flags`, `quests`, `bandMood`, `loreEntries`, `trait`, `skills`, `itemPickupCounts`, `bandMoodGainClaims`. `scene`, `playerPos`, `dialogue`, `isPaused`, and `cameraShake` are NOT persisted.
 
 ### Quest API
