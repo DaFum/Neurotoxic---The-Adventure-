@@ -54,11 +54,23 @@ const migrateLegacyFeedbackMonitorFlag = (flags: Record<Flag, boolean>): Record<
 };
 
 export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
-  const fixCableQuestIndex = quests.findIndex((q) => q.id === 'fix_cable');
+  let fixCableQuestIndex = -1;
+  let cableQuestIndex = -1;
+
+  const len = quests.length;
+  for (let i = 0; i < len; i++) {
+    const id = quests[i].id;
+    if (id === 'fix_cable' && fixCableQuestIndex === -1) {
+      fixCableQuestIndex = i;
+    } else if (id === 'cable' && cableQuestIndex === -1) {
+      cableQuestIndex = i;
+    }
+    if (fixCableQuestIndex !== -1 && cableQuestIndex !== -1) break;
+  }
+
   if (fixCableQuestIndex === -1) return quests;
 
   const fixCableQuest = quests[fixCableQuestIndex];
-  const cableQuestIndex = quests.findIndex((q) => q.id === 'cable');
 
   if (cableQuestIndex !== -1) {
     const cableQuest = quests[cableQuestIndex];
