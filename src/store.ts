@@ -101,6 +101,7 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
 };
 
 const MAX_PERSISTED_DYNAMIC_QUESTS = 200;
+const MAX_PERSISTED_INPUT_QUESTS = 1000;
 const MAX_PERSISTED_QUEST_ID_LENGTH = 80;
 const MAX_PERSISTED_QUEST_TEXT_LENGTH = 300;
 
@@ -133,7 +134,7 @@ export const useStore = create<GameState>()(
             : {};
 
         const persistedQuests = Array.isArray(typedPersistedState.quests)
-          ? typedPersistedState.quests
+          ? typedPersistedState.quests.slice(0, MAX_PERSISTED_INPUT_QUESTS)
           : [];
         const persistedLore = Array.isArray(typedPersistedState.loreEntries)
           ? typedPersistedState.loreEntries
