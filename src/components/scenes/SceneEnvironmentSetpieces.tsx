@@ -72,7 +72,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
         <group>
           {PROBERAUM_DUCT_X_POSITIONS.map((x) => (
             <group key={`proberaum-duct-${x}`} position={[x, 6.45, 1.6]}>
-              <mesh castShadow receiveShadow>
+              <mesh  >
                 <boxGeometry args={[2.9, 0.35, 1.1]} />
                 <meshStandardMaterial
                   color="#2a3340"
@@ -104,7 +104,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
           ))}
           {PROBERAUM_JUNCTION_POSITIONS.map((pos, idx) => (
             <group key={`proberaum-junction-${idx}`} position={pos}>
-              <mesh castShadow receiveShadow>
+              <mesh  >
                 <boxGeometry args={[0.55, 0.55, 0.55]} />
                 <meshStandardMaterial
                   color="#3f4f63"
@@ -126,7 +126,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
       return (
         <group>
           {TOURBUS_RIB_Z_POSITIONS.map((z) => (
-            <mesh key={`tourbus-rib-${z}`} position={[0, 3.85, z]} castShadow receiveShadow>
+            <mesh key={`tourbus-rib-${z}`} position={[0, 3.85, z]}  >
               <torusGeometry args={[5.45, 0.06, 10, 40, Math.PI]} />
               <meshStandardMaterial
                 color="#2d3746"
@@ -180,7 +180,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
     case 'backstage':
       return (
         <group>
-          <mesh position={[0, 7.25, 1.2]} castShadow receiveShadow>
+          <mesh position={[0, 7.25, 1.2]}  >
             <boxGeometry args={[24, 0.28, 2.2]} />
             <meshStandardMaterial
               color="#1e2532"
@@ -249,7 +249,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
           ))}
           {VOID_PYLON_POSITIONS.map((pos, idx) => (
             <group key={`void-pylon-${idx}`} position={pos}>
-              <mesh castShadow receiveShadow>
+              <mesh  >
                 <cylinderGeometry args={[0.32, 0.42, 2.2, 12]} />
                 <meshStandardMaterial
                   color="#2a2a47"
@@ -287,7 +287,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
       return (
         <group>
           {KAMINSTUBE_RAFTER_X_POSITIONS.map((x) => (
-            <mesh key={`kaminstube-rafter-${x}`} position={[x, 6.7, -0.5]} castShadow receiveShadow>
+            <mesh key={`kaminstube-rafter-${x}`} position={[x, 6.7, -0.5]}  >
               <boxGeometry args={[0.28, 0.28, 15.2]} />
               <meshStandardMaterial
                 color="#2d1f19"
@@ -299,7 +299,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
           ))}
           {KAMINSTUBE_BARREL_POSITIONS.map((pos, idx) => (
             <group key={`kaminstube-barrels-${idx}`} position={pos}>
-              <mesh castShadow receiveShadow>
+              <mesh  >
                 <cylinderGeometry args={[0.35, 0.38, 0.72, 16]} />
                 <meshStandardMaterial
                   color="#5d3927"
@@ -350,7 +350,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
         <group>
           {SALZGITTER_TOWER_POSITIONS.map((pos, idx) => (
             <group key={`salzgitter-tower-${idx}`} position={pos}>
-              <mesh castShadow receiveShadow>
+              <mesh  >
                 <boxGeometry args={[1.4, 6.2, 1.1]} />
                 <meshStandardMaterial
                   color="#202734"
@@ -372,7 +372,7 @@ export function SceneEnvironmentSetpieces({ variant }: SceneEnvironmentSetpieces
               ))}
             </group>
           ))}
-          <mesh position={[0, 7.3, -8.1]} castShadow receiveShadow>
+          <mesh position={[0, 7.3, -8.1]}  >
             <boxGeometry args={[22, 0.35, 0.35]} />
             <meshStandardMaterial
               color="#1e2430"

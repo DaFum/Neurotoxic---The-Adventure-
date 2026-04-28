@@ -19,7 +19,7 @@ import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
-import { RigidBody } from '@react-three/rapier';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
 import {
@@ -119,7 +119,7 @@ export function Kaminstube() {
 
       {/* Floor */}
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} >
           <planeGeometry args={[30, 15]} />
           <meshStandardMaterial
             color="#5a3f34"
@@ -133,7 +133,7 @@ export function Kaminstube() {
 
       {/* Stage */}
       <RigidBody type="fixed" position={[0, 0.5, -6]}>
-        <mesh receiveShadow>
+        <mesh >
           <boxGeometry args={[12, 1, 4]} />
           <meshStandardMaterial
             color="#1e232b"
@@ -147,7 +147,7 @@ export function Kaminstube() {
 
       {/* Walls */}
       <RigidBody type="fixed" position={[0, 5, -8]}>
-        <mesh receiveShadow>
+        <mesh >
           <planeGeometry args={[30, 10]} />
           <meshStandardMaterial
             color="#6e4f45"
@@ -160,14 +160,17 @@ export function Kaminstube() {
       </RigidBody>
 
       {/* Invisible Walls for bounds */}
-      <RigidBody type="fixed" position={[-15, 5, 0]}>
-        <boxGeometry args={[1, 10, 15]} />
+      <RigidBody type="fixed" position={[-15, 5, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 5, 7.5]} />
+
       </RigidBody>
-      <RigidBody type="fixed" position={[15, 5, 0]}>
-        <boxGeometry args={[1, 10, 15]} />
+      <RigidBody type="fixed" position={[15, 5, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 5, 7.5]} />
+
       </RigidBody>
-      <RigidBody type="fixed" position={[0, 5, 7.5]}>
-        <boxGeometry args={[30, 10, 1]} />
+      <RigidBody type="fixed" position={[0, 5, 7.5]} colliders={false}>
+        <CuboidCollider args={[15, 5, 0.5]} />
+
       </RigidBody>
 
       {/* Fireplace core */}
@@ -209,7 +212,7 @@ export function Kaminstube() {
       {/* Tables and stools */}
       {TABLE_POSITIONS.map((pos, idx) => (
         <group key={`table-${idx}`} position={pos}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <cylinderGeometry args={[0.8, 0.9, 0.15, 18]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#5f3a2f' : '#3f2f5f'}
@@ -217,12 +220,12 @@ export function Kaminstube() {
               emissiveIntensity={0.22}
             />
           </mesh>
-          <mesh position={[0, -0.45, 0]} castShadow receiveShadow>
+          <mesh position={[0, -0.45, 0]}  >
             <cylinderGeometry args={[0.12, 0.16, 0.9, 10]} />
             <meshStandardMaterial color="#241915" metalness={0.2} />
           </mesh>
           {STOOL_X_OFFSETS.map((x) => (
-            <mesh key={`stool-a-${x}`} position={[x, -0.55, 0.3]} castShadow receiveShadow>
+            <mesh key={`stool-a-${x}`} position={[x, -0.55, 0.3]}  >
               <cylinderGeometry args={[0.22, 0.26, 0.6, 10]} />
               <meshStandardMaterial
                 color="#3a2722"
@@ -233,7 +236,7 @@ export function Kaminstube() {
             </mesh>
           ))}
           {STOOL_X_OFFSETS.map((x) => (
-            <mesh key={`stool-b-${x}`} position={[x, -0.55, -0.3]} castShadow receiveShadow>
+            <mesh key={`stool-b-${x}`} position={[x, -0.55, -0.3]}  >
               <cylinderGeometry args={[0.22, 0.26, 0.6, 10]} />
               <meshStandardMaterial
                 color="#3a2722"
@@ -247,7 +250,7 @@ export function Kaminstube() {
       ))}
       {MUG_POSITIONS.map((pos, idx) => (
         <group key={`mug-${idx}`} position={pos}>
-          <mesh castShadow>
+          <mesh >
             <cylinderGeometry args={[0.13, 0.14, 0.22, 14]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#f2d28d' : '#9dc8ff'}
@@ -265,18 +268,18 @@ export function Kaminstube() {
 
       {/* Ceiling beams */}
       {CEILING_BEAM_X_POSITIONS.map((x) => (
-        <mesh key={`beam-${x}`} position={[x, 6.3, -0.5]} castShadow receiveShadow>
+        <mesh key={`beam-${x}`} position={[x, 6.3, -0.5]}  >
           <boxGeometry args={[0.35, 0.35, 15]} />
           <meshStandardMaterial color="#2b1d18" roughness={0.95} />
         </mesh>
       ))}
       {LAMP_X_POSITIONS.map((x) => (
         <group key={`lamp-${x}`} position={[x, 5.8, -0.8]}>
-          <mesh castShadow>
+          <mesh >
             <cylinderGeometry args={[0.05, 0.05, 1.1, 8]} />
             <meshStandardMaterial color="#33251d" metalness={0.6} roughness={0.35} />
           </mesh>
-          <mesh position={[0, -0.65, 0]} castShadow>
+          <mesh position={[0, -0.65, 0]} >
             <sphereGeometry args={[0.23, 14, 14]} />
             <meshStandardMaterial color="#ffc56f" emissive="#ffc56f" emissiveIntensity={1.2} />
           </mesh>
@@ -284,7 +287,7 @@ export function Kaminstube() {
       ))}
 
       {/* Bar counter + bottle shelves */}
-      <mesh position={[11.2, 1.05, -0.5]} castShadow receiveShadow>
+      <mesh position={[11.2, 1.05, -0.5]}  >
         <boxGeometry args={[2.1, 2.1, 8.8]} />
         <meshStandardMaterial
           color="#5a2f1f"
@@ -296,7 +299,7 @@ export function Kaminstube() {
       </mesh>
       {BAR_TAP_Z_POSITIONS.map((z, idx) => (
         <group key={`bar-tap-${idx}`} position={[10.34, 1.48, z]}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <cylinderGeometry args={[0.05, 0.05, 0.5, 10]} />
             <meshStandardMaterial color="#c3ccd6" metalness={0.9} roughness={0.2} />
           </mesh>
@@ -311,13 +314,13 @@ export function Kaminstube() {
         </group>
       ))}
       {SHELF_Y_POSITIONS.map((y, idx) => (
-        <mesh key={`shelf-${idx}`} position={[10.35, y, -0.5]} castShadow receiveShadow>
+        <mesh key={`shelf-${idx}`} position={[10.35, y, -0.5]}  >
           <boxGeometry args={[0.2, 0.08, 7.4]} />
           <meshStandardMaterial color="#714330" />
         </mesh>
       ))}
       {BOTTLE_Z_POSITIONS.map((z) => (
-        <mesh key={`bottle-${z}`} position={[10.15, 2.35, z]} castShadow>
+        <mesh key={`bottle-${z}`} position={[10.15, 2.35, z]} >
           <cylinderGeometry args={[0.12, 0.1, 0.45, 10]} />
           <meshStandardMaterial color="#6b8f7f" emissive="#223a31" emissiveIntensity={0.35} />
         </mesh>
@@ -337,7 +340,7 @@ export function Kaminstube() {
         </mesh>
       ))}
       {MONITOR_X_POSITIONS.map((x) => (
-        <mesh key={`monitor-${x}`} position={[x, 0.62, -4.65]} castShadow receiveShadow>
+        <mesh key={`monitor-${x}`} position={[x, 0.62, -4.65]}  >
           <boxGeometry args={[1.4, 0.8, 0.9]} />
           <meshStandardMaterial
             color="#1f2430"
@@ -351,7 +354,7 @@ export function Kaminstube() {
 
       {/* Stage drum kit and cable coils */}
       <group position={[0.2, 0.66, -5.55]}>
-        <mesh castShadow receiveShadow>
+        <mesh  >
           <cylinderGeometry args={[0.72, 0.75, 0.8, 22]} />
           <meshStandardMaterial
             color="#344863"
@@ -361,7 +364,7 @@ export function Kaminstube() {
             roughness={0.45}
           />
         </mesh>
-        <mesh position={[-0.95, 0.16, 0.2]} castShadow>
+        <mesh position={[-0.95, 0.16, 0.2]} >
           <cylinderGeometry args={[0.36, 0.38, 0.46, 18]} />
           <meshStandardMaterial
             color="#3f5877"
@@ -371,7 +374,7 @@ export function Kaminstube() {
             roughness={0.42}
           />
         </mesh>
-        <mesh position={[0.98, 0.18, 0.15]} castShadow>
+        <mesh position={[0.98, 0.18, 0.15]} >
           <cylinderGeometry args={[0.4, 0.42, 0.5, 18]} />
           <meshStandardMaterial
             color="#3f5877"
