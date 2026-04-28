@@ -19,7 +19,7 @@ import * as THREE from 'three';
 import { useStore } from '../store';
 import { audio } from '../audio';
 import { touchInput } from '../touchInput';
-import { clampPlayerPosition, secureRandom } from '../utils/math';
+import { clampPlayerPosition, visualRandom } from '../utils/math';
 import { createCanvasTexture } from '../utils/texture';
 
 interface PlayerProps {
@@ -303,9 +303,9 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
     // Override the shakeOffset vector instead of creating a new one
     if (currentCameraShake > 0) {
       shakeOffset.set(
-        (secureRandom() - 0.5) * currentCameraShake,
-        (secureRandom() - 0.5) * currentCameraShake,
-        (secureRandom() - 0.5) * currentCameraShake,
+        (visualRandom() - 0.5) * currentCameraShake,
+        (visualRandom() - 0.5) * currentCameraShake,
+        (visualRandom() - 0.5) * currentCameraShake,
       );
     } else {
       shakeOffset.set(0, 0, 0);
