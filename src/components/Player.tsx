@@ -372,7 +372,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
             roughness={0.22}
           />
         </mesh>
-        <mesh position={[0, -0.62, 0]} castShadow receiveShadow>
+        <mesh position={[0, -0.62, 0]}  >
           <cylinderGeometry args={[0.82, 0.95, 0.18, 22]} />
           <meshStandardMaterial
             color="#2e3a46"
@@ -382,7 +382,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
             roughness={0.45}
           />
         </mesh>
-        <mesh position={[0, -0.04, 0]} castShadow receiveShadow>
+        <mesh position={[0, -0.04, 0]}  >
           <cylinderGeometry args={[0.28, 0.34, 0.9, 16]} />
           <meshStandardMaterial
             color="#3d4958"
@@ -392,7 +392,7 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
             roughness={0.4}
           />
         </mesh>
-        <mesh position={[0, 0.55, 0]} castShadow>
+        <mesh position={[0, 0.55, 0]} >
           <sphereGeometry args={[0.24, 16, 16]} />
           <meshStandardMaterial
             color="#d7e6ff"
@@ -402,15 +402,15 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
             roughness={0.4}
           />
         </mesh>
-        <mesh position={[0.32, 0.02, 0]} castShadow receiveShadow>
+        <mesh position={[0.32, 0.02, 0]}  >
           <boxGeometry args={[0.12, 0.5, 0.2]} />
           <meshStandardMaterial color="#273140" metalness={0.55} roughness={0.45} />
         </mesh>
-        <mesh position={[-0.32, 0.02, 0]} castShadow receiveShadow>
+        <mesh position={[-0.32, 0.02, 0]}  >
           <boxGeometry args={[0.12, 0.5, 0.2]} />
           <meshStandardMaterial color="#273140" metalness={0.55} roughness={0.45} />
         </mesh>
-        <mesh position={[0, 0.02, -0.24]} castShadow receiveShadow>
+        <mesh position={[0, 0.02, -0.24]}  >
           <boxGeometry args={[0.34, 0.52, 0.2]} />
           <meshStandardMaterial
             color="#2a313c"

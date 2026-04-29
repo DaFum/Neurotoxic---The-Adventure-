@@ -141,7 +141,7 @@ export function Salzgitter() {
 
       {/* Floor */}
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} >
           <planeGeometry args={[40, 20]} />
           <meshStandardMaterial
             color="#35465a"
@@ -155,7 +155,7 @@ export function Salzgitter() {
 
       {/* Big Stage */}
       <RigidBody type="fixed" position={[0, 1, -8]}>
-        <mesh receiveShadow>
+        <mesh >
           <boxGeometry args={[20, 2, 6]} />
           <meshStandardMaterial
             color="#3f4b5e"
@@ -169,7 +169,7 @@ export function Salzgitter() {
 
       {/* Walls */}
       <RigidBody type="fixed" position={[0, 10, -11]}>
-        <mesh receiveShadow>
+        <mesh >
           <planeGeometry args={[40, 20]} />
           <meshStandardMaterial
             color="#0f151d"
@@ -195,16 +195,16 @@ export function Salzgitter() {
       {/* Stage trusses */}
       {TRUSS_X_POSITIONS.map((x) => (
         <group key={`truss-${x}`} position={[x, 3, -8.8]}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <boxGeometry args={[0.45, 6, 0.45]} />
             <meshStandardMaterial color="#1a1d23" metalness={0.8} roughness={0.35} />
           </mesh>
-          <mesh position={[0, 3.05, 0]} castShadow receiveShadow>
+          <mesh position={[0, 3.05, 0]}  >
             <boxGeometry args={[1.2, 0.25, 0.45]} />
             <meshStandardMaterial color="#1d2027" metalness={0.8} roughness={0.3} />
           </mesh>
           {TRUSS_NODE_Y_POSITIONS.map((y, idx) => (
-            <mesh key={`truss-node-${x}-${idx}`} position={[0, y, 0.26]} castShadow>
+            <mesh key={`truss-node-${x}-${idx}`} position={[0, y, 0.26]} >
               <sphereGeometry args={[0.08, 10, 10]} />
               <meshStandardMaterial
                 color={idx % 2 === 0 ? '#78f8ff' : '#ff6ed3'}
@@ -247,7 +247,7 @@ export function Salzgitter() {
       {/* Crowd barricades */}
       {BARRIER_X_POSITIONS.map((x) => (
         <group key={`barrier-${x}`} position={[x, 0.6, 1.8]}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <boxGeometry args={[1.8, 1.2, 0.18]} />
             <meshStandardMaterial color="#222831" metalness={0.7} roughness={0.45} />
           </mesh>
@@ -269,7 +269,7 @@ export function Salzgitter() {
       {/* Front runway rails */}
       {RUNWAY_RAIL_X_POSITIONS.map((x, idx) => (
         <group key={`rail-${x}`} position={[x, 0.9, 0.3]}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <boxGeometry args={[0.4, 1.8, 6.4]} />
             <meshStandardMaterial
               color="#273140"
@@ -301,7 +301,7 @@ export function Salzgitter() {
       {/* Stage interior details */}
       {SPEAKER_STACK_X_POSITIONS.map((x) => (
         <group key={`speaker-stack-${x}`} position={[x, 1.5, -6.9]}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <boxGeometry args={[2, 3, 1.2]} />
             <meshStandardMaterial
               color="#202733"
@@ -338,7 +338,7 @@ export function Salzgitter() {
         </group>
       ))}
       {ROAD_CASE_POSITIONS.map((pos, idx) => (
-        <mesh key={`road-case-${idx}`} position={pos} castShadow receiveShadow>
+        <mesh key={`road-case-${idx}`} position={pos}  >
           <boxGeometry args={[2.2, 1.3, 1.1]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#2b2140' : '#1f3140'}
@@ -363,7 +363,7 @@ export function Salzgitter() {
       ))}
 
       {/* Drum riser, stairs and mics */}
-      <mesh position={[0, 1.65, -8.4]} castShadow receiveShadow>
+      <mesh position={[0, 1.65, -8.4]}  >
         <cylinderGeometry args={[2.2, 2.4, 0.6, 30]} />
         <meshStandardMaterial
           color="#2a3341"
@@ -377,8 +377,8 @@ export function Salzgitter() {
         <mesh
           key={`stage-stair-${idx}`}
           position={[x, 0.32 + idx * 0.18, -5.95]}
-          castShadow
-          receiveShadow
+
+
         >
           <boxGeometry args={[1.5 - idx * 0.3, 0.16, 0.35]} />
           <meshStandardMaterial
@@ -392,11 +392,11 @@ export function Salzgitter() {
       ))}
       {MIC_X_POSITIONS.map((x) => (
         <group key={`mic-${x}`} position={[x, 1.05, -5.6]}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <cylinderGeometry args={[0.04, 0.05, 1.7, 10]} />
             <meshStandardMaterial color="#bcc7d5" metalness={0.9} roughness={0.2} />
           </mesh>
-          <mesh position={[0, 0.86, 0.12]} rotation={[0.45, 0, 0]} castShadow>
+          <mesh position={[0, 0.86, 0.12]} rotation={[0.45, 0, 0]} >
             <cylinderGeometry args={[0.05, 0.05, 0.34, 10]} />
             <meshStandardMaterial color="#d8e1eb" metalness={0.88} roughness={0.2} />
           </mesh>
