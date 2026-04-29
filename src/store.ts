@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { GameState, Quest, QuestStatus, Flag, Skills, LoreEntry } from './store/types';
+import { GameState, Quest, QuestStatus, Flag, Skills, LoreEntry, Trait } from './store/types';
 import { createCoreSlice } from './store/slices/coreSlice';
 import { createInventorySlice } from './store/slices/inventorySlice';
 import { createQuestSlice } from './store/slices/questSlice';
@@ -12,6 +12,25 @@ export * from './store/types';
 export * from './store/initialState';
 
 export const STORAGE_KEY = 'neurotoxic-game-storage';
+
+export const ALLOWED_TRAITS: Trait[] = [
+  'Visionary',
+  'Technician',
+  'Brutalist',
+  'Diplomat',
+  'Mystic',
+  'Performer',
+  'Cynic',
+];
+
+export const normalizeSkills = (raw: unknown, fallback: Skills): Skills => {
+  const rawObj = raw as Record<string, unknown> | null;
+  return {
+    technical: typeof rawObj?.technical === 'number' && Number.isFinite(rawObj.technical) ? rawObj.technical : fallback.technical,
+    social: typeof rawObj?.social === 'number' && Number.isFinite(rawObj.social) ? rawObj.social : fallback.social,
+    chaos: typeof rawObj?.chaos === 'number' && Number.isFinite(rawObj.chaos) ? rawObj.chaos : fallback.chaos,
+  };
+};
 
 /**
  * Sanitizes a record by creating a null-prototype object and copying only
@@ -144,7 +163,14 @@ export const useStore = create<GameState>()(
             ? sanitizeRecord(typedPersistedState.flags as Record<string, boolean>)
             : {};
 
-        const persistedFlags = migrateFlags(rawPersistedFlags);
+        const migratedFlags = migrateFlags(rawPersistedFlags);
+        const persistedFlags: Record<string, boolean> = Object.create(null);
+        for (const [key, value] of Object.entries(migratedFlags)) {
+          if (key in currentState.flags && typeof value === 'boolean') {
+            persistedFlags[key] = value;
+          }
+        }
+
         const persistedPickupCounts =
           typedPersistedState.itemPickupCounts !== null &&
           typeof typedPersistedState.itemPickupCounts === 'object'
@@ -284,15 +310,16 @@ export const useStore = create<GameState>()(
               ),
             }),
           ...(typeof typedPersistedState.bandMood === 'number' && {
-            bandMood: typedPersistedState.bandMood,
+            bandMood: Math.min(100, Math.max(0, typedPersistedState.bandMood)),
           }),
-          ...((typeof typedPersistedState.trait === 'string' ||
-            typedPersistedState.trait === null) && { trait: typedPersistedState.trait }),
+          ...((typeof typedPersistedState.trait === 'string' &&
+            ALLOWED_TRAITS.includes(typedPersistedState.trait as Trait)) && {
+            trait: typedPersistedState.trait as Trait
+          }),
+          ...(typedPersistedState.trait === null && { trait: null }),
           ...(typedPersistedState.skills !== null &&
             typeof typedPersistedState.skills === 'object' && {
-              skills: sanitizeRecord(
-                typedPersistedState.skills as unknown as Record<string, unknown>,
-              ) as unknown as Skills,
+              skills: normalizeSkills(typedPersistedState.skills, currentState.skills),
             }),
         };
       },
