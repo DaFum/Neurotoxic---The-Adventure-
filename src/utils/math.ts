@@ -9,6 +9,14 @@ export function secureRandom(): number {
   return _secureRandomBuffer[0] / (0xffffffff + 1);
 }
 
+/**
+ * Generates a fast random number for visual and audio effects where security is not required.
+ * Relies on Math.random() to avoid the overhead of crypto.getRandomValues().
+ */
+export function visualRandom(): number {
+  return Math.random();
+}
+
 export function clampPlayerPosition(
   pos: { x: number; z: number },
   bounds: { x: [number, number]; z: [number, number] },

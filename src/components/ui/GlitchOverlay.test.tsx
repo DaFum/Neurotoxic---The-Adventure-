@@ -13,7 +13,7 @@ vi.mock('motion/react', () => ({
 }));
 
 vi.mock('../../utils/math', () => ({
-  secureRandom: vi.fn().mockReturnValue(0.5),
+  visualRandom: vi.fn().mockReturnValue(0.5),
 }));
 
 describe('GlitchOverlay', () => {

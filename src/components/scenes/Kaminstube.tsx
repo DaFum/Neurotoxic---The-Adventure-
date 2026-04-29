@@ -161,16 +161,13 @@ export function Kaminstube() {
 
       {/* Invisible Walls for bounds */}
       <RigidBody type="fixed" position={[-15, 5, 0]} colliders={false}>
-        <CuboidCollider args={[0.5, 5, 7.5]} />
-
+        <CuboidCollider args={[0.5, 5.0, 7.5]} />
       </RigidBody>
       <RigidBody type="fixed" position={[15, 5, 0]} colliders={false}>
-        <CuboidCollider args={[0.5, 5, 7.5]} />
-
+        <CuboidCollider args={[0.5, 5.0, 7.5]} />
       </RigidBody>
       <RigidBody type="fixed" position={[0, 5, 7.5]} colliders={false}>
-        <CuboidCollider args={[15, 5, 0.5]} />
-
+        <CuboidCollider args={[15.0, 5.0, 0.5]} />
       </RigidBody>
 
       {/* Fireplace core */}

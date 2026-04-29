@@ -1,5 +1,13 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { clampPlayerPosition, secureRandom } from './math';
+import { clampPlayerPosition, secureRandom, visualRandom } from './math';
+
+describe('visualRandom', () => {
+  it('returns a number between 0 and 1', () => {
+    const val = visualRandom();
+    expect(val).toBeGreaterThanOrEqual(0);
+    expect(val).toBeLessThan(1);
+  });
+});
 
 describe('secureRandom', () => {
   const originalGetRandomValues = global.crypto.getRandomValues;

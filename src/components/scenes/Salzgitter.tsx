@@ -183,16 +183,13 @@ export function Salzgitter() {
 
       {/* Invisible Walls for bounds */}
       <RigidBody type="fixed" position={[-20, 10, 0]} colliders={false}>
-        <CuboidCollider args={[0.5, 10, 10]} />
-
+        <CuboidCollider args={[0.5, 10.0, 10.0]} />
       </RigidBody>
       <RigidBody type="fixed" position={[20, 10, 0]} colliders={false}>
-        <CuboidCollider args={[0.5, 10, 10]} />
-
+        <CuboidCollider args={[0.5, 10.0, 10.0]} />
       </RigidBody>
       <RigidBody type="fixed" position={[0, 10, 10]} colliders={false}>
-        <CuboidCollider args={[20, 10, 0.5]} />
-
+        <CuboidCollider args={[20.0, 10.0, 0.5]} />
       </RigidBody>
 
       {/* Stage trusses */}
