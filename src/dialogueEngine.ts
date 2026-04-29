@@ -7,7 +7,8 @@ const cachedQuestsMap = new Map<string, Quest>();
 function updateQuestsCache(quests: Quest[]) {
   cachedQuestsMap.clear();
   for (let i = 0; i < quests.length; i++) {
-    cachedQuestsMap.set(quests[i].id, quests[i]);
+    const q = quests[i];
+    if (q) cachedQuestsMap.set(q.id, q);
   }
 }
 
@@ -29,7 +30,7 @@ useStore.subscribe((state, prevState) => {
  * array or quest objects in place, or this cache can become stale.
  */
 export function getCachedQuest(id: string): Quest | undefined {
-  return cachedQuestsMap.get(id);
+  return cachedQuestsMap.get(id) as Quest | undefined;
 }
 
 function hasRequiredItems(
@@ -43,7 +44,7 @@ function hasRequiredItems(
   if (option.requiredItems) {
     for (let i = 0; i < option.requiredItems.length; i++) {
       const item = option.requiredItems[i];
-      neededCounts[item] = (neededCounts[item] || 0) + 1;
+      if (item !== undefined) neededCounts[item] = (neededCounts[item] || 0) + 1;
     }
   }
 
@@ -51,16 +52,19 @@ function hasRequiredItems(
     const consumeTallies: Record<string, number> = Object.create(null);
     for (let i = 0; i < option.consumeItems.length; i++) {
       const item = option.consumeItems[i];
-      const c = (consumeTallies[item] || 0) + 1;
+      if (item !== undefined) {
+        const c = (consumeTallies[item] || 0) + 1;
       consumeTallies[item] = c;
       if (c > (neededCounts[item] || 0)) {
         neededCounts[item] = c;
+      }
       }
     }
   }
 
   for (const item in neededCounts) {
-    if ((inventoryCounts[item] || 0) < neededCounts[item]) return false;
+    const needed = neededCounts[item];
+    if (needed !== undefined && (inventoryCounts[item] || 0) < needed) return false;
   }
 
   return true;

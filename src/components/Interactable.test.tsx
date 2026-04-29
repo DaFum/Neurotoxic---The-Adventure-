@@ -91,8 +91,8 @@ describe('Interactable', () => {
     );
 
     expect(mockRegister).toHaveBeenCalledTimes(2);
-    const firstRegisteredId = mockRegister.mock.calls[0][0];
-    const secondRegisteredId = mockRegister.mock.calls[1][0];
+    const firstRegisteredId = mockRegister.mock.calls[0]?.[0];
+    const secondRegisteredId = mockRegister.mock.calls[1]?.[0];
 
     expect(firstRegisteredId).toMatch(/^interactable-/);
     expect(secondRegisteredId).toMatch(/^interactable-/);

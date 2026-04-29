@@ -10,7 +10,7 @@
  * #3: ERRORS & SOLUTIONS
  * - No major errors found.
  */
-import React, { useEffect, useMemo, useRef, useId, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useId } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
@@ -52,7 +52,7 @@ const DEFAULT_APPEARANCE = Object.freeze({});
 const textureCache = new Map<string, { texture: THREE.CanvasTexture; refCount: number }>();
 
 function getCachedTexture(key: string, createCanvas: () => HTMLCanvasElement): THREE.CanvasTexture {
-  let entry = textureCache.get(key);
+  const entry = textureCache.get(key);
   if (entry) {
     entry.refCount++;
     return entry.texture;
