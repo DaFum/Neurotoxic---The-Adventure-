@@ -166,7 +166,7 @@ export const useStore = create<GameState>()(
         const migratedFlags = migrateFlags(rawPersistedFlags);
         const persistedFlags: Record<string, boolean> = Object.create(null);
         for (const [key, value] of Object.entries(migratedFlags)) {
-          if (key in currentState.flags && typeof value === 'boolean') {
+          if (Object.hasOwn(currentState.flags, key) && typeof value === 'boolean') {
             persistedFlags[key] = value;
           }
         }
@@ -309,7 +309,8 @@ export const useStore = create<GameState>()(
                 typedPersistedState.bandMoodGainClaims as Record<string, boolean>,
               ),
             }),
-          ...(typeof typedPersistedState.bandMood === 'number' && {
+          ...(typeof typedPersistedState.bandMood === 'number' &&
+            Number.isFinite(typedPersistedState.bandMood) && {
             bandMood: Math.min(100, Math.max(0, typedPersistedState.bandMood)),
           }),
           ...((typeof typedPersistedState.trait === 'string' &&
