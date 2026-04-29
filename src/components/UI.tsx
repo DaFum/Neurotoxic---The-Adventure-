@@ -18,19 +18,14 @@
  * #3: ERRORS & SOLUTIONS
  * - Error: removeFromInventory not found in TourBus.tsx. Solution: Destructured removeFromInventory from useStore.
  */
-import { type QuestStatus, type Quest, useStore } from '../store';
-import { canSelectOption, executeDialogueOption } from '../dialogueEngine';
+
+import { type Quest, type QuestStatus, useStore } from '../store';
 import {
   Backpack,
-  X,
-  RotateCcw,
-  Play,
-  LogOut,
   CheckCircle2,
   Heart,
   Plus,
   Activity,
-  BookOpen,
   Eye,
   EyeOff,
   Pause,
@@ -150,15 +145,16 @@ export function UI() {
 
     for (let i = 0; i < quests.length; i++) {
       const quest = quests[i];
-      if (quest.status === 'active') {
-        count++;
+      if (quest && quest.status === 'active') {
+        count = (count || 0) + 1;
+        count = (count || 0) + 1;
       }
 
-      const orderValue = QUEST_STATUS_ORDER[quest.status];
-      if (orderValue !== undefined && orderValue >= 0 && orderValue < NUM_BUCKETS) {
-        buckets[orderValue].push(quest);
+      const orderValue = quest ? QUEST_STATUS_ORDER[quest.status] : undefined;
+      if (quest && orderValue !== undefined && orderValue >= 0 && orderValue < NUM_BUCKETS) {
+        buckets[orderValue]?.push(quest);
       } else {
-        console.warn(`Unknown or out-of-bounds quest status order for status: ${quest.status}`);
+        if (quest) console.warn(`Unknown or out-of-bounds quest status order for status: ${quest.status}`);
       }
     }
 
@@ -166,10 +162,14 @@ export function UI() {
     const result: Quest[] = [];
     for (let i = 0; i < NUM_BUCKETS; i++) {
       const bucket = buckets[i];
+
+
+      if (!bucket) continue;
       for (let j = 0; j < bucket.length; j++) {
         const quest = bucket[j];
+        if (!quest) continue;
         if (quest.status === 'completed' && !shouldShowCompletedQuests) continue;
-        result.push(quest);
+        result.push(quest as Quest);
       }
     }
 
@@ -180,6 +180,8 @@ export function UI() {
     let totalCount = 0;
     for (const item in inventoryCounts) {
       const count = inventoryCounts[item];
+      if (count === undefined) continue;
+      if (count === undefined) continue;
       stacks.push({ item, count });
       totalCount += count;
     }
@@ -204,8 +206,8 @@ export function UI() {
   const discoveredLoreCount = useMemo(() => {
     let count = 0;
     for (let i = 0; i < loreEntries.length; i++) {
-      if (loreEntries[i].discovered) {
-        count++;
+      if (loreEntries[i]?.discovered) {
+        count = (count || 0) + 1;
       }
     }
     return count;
@@ -301,7 +303,10 @@ export function UI() {
 
   if (scene === 'menu') return null;
 
-  const toggleItemSelection = (item: string, availableCount: number) => {
+  const toggleItemSelection = (item: string, availableCount: number | undefined) => {
+    if (availableCount === undefined) return;
+    if (availableCount === undefined) return;
+    if (availableCount === undefined) return;
     setSelectedItems((prev) => {
       let selectedCount = 0;
       for (let i = 0; i < prev.length; i++) {
@@ -329,9 +334,12 @@ export function UI() {
   };
 
   const handleCombine = () => {
+    if (!selectedItems) return;
+    if (!selectedItems) return;
     if (selectedItems.length !== 2) return;
 
     const [item1, item2] = selectedItems;
+    if (!item1 || !item2) return;
     const success = combineItems(item1, item2);
 
     if (success) {
@@ -474,7 +482,7 @@ export function UI() {
                   <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-2">
                       {inventoryStacks.map(({ item, count }) => {
-                        const selectedCount = selectedItemCounts.get(item) ?? 0;
+                        const selectedCount = selectedItemCounts?.get(item) ?? 0;
                         return (
                           <motion.button
                             whileTap={{ scale: 0.96 }}
@@ -704,7 +712,7 @@ export function UI() {
                   <div className="flex flex-col gap-3 w-full">
                     <div className="grid grid-cols-2 gap-2">
                       {inventoryStacks.map(({ item, count }) => {
-                        const selectedCount = selectedItemCounts.get(item) ?? 0;
+                        const selectedCount = selectedItemCounts?.get(item) ?? 0;
                         return (
                           <motion.button
                             whileHover={{ scale: 1.06 }}

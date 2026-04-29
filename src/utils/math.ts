@@ -6,7 +6,7 @@ const _secureRandomBuffer = new Uint32Array(1);
  */
 export function secureRandom(): number {
   crypto.getRandomValues(_secureRandomBuffer);
-  return _secureRandomBuffer[0] / (0xffffffff + 1);
+  return (_secureRandomBuffer[0] ?? 0) / (0xffffffff + 1);
 }
 
 export function clampPlayerPosition(

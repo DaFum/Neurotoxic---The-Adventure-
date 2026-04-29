@@ -8,7 +8,7 @@ import * as THREE from 'three';
 export function createCanvasTexture(
   canvas: HTMLCanvasElement | OffscreenCanvas,
 ): THREE.CanvasTexture {
-  const texture = new THREE.CanvasTexture(canvas);
+  const texture = new THREE.CanvasTexture(canvas as HTMLCanvasElement);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
   return texture;

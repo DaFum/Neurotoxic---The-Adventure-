@@ -1,4 +1,4 @@
-import { Scene, Trait, Skills, QuestStatus, Quest, LoreEntry, Flag } from './types';
+import { Scene, Trait, QuestStatus } from './types';
 
 export const initialState = {
   scene: 'menu' as Scene,

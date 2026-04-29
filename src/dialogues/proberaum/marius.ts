@@ -21,7 +21,7 @@ export function buildProberaumMariusDialogue(): Dialogue {
 function getPreBeerDialogue(
   flags: GameState['flags'],
   hasItem: (item: string) => boolean,
-  trait: Trait,
+  trait: Trait | null,
   skills: Pick<Skills, 'social'>,
 ): Dialogue {
   return {
@@ -82,7 +82,7 @@ function getPreBeerDialogue(
   };
 }
 
-function getPostBeerDialogue(flags: GameState['flags'], bandMood: number, trait: Trait): Dialogue {
+function getPostBeerDialogue(flags: GameState['flags'], bandMood: number, trait: Trait | null): Dialogue {
   const moodText =
     bandMood > 80
       ? 'Marius: "Ich fühle die Energie! Wir werden die Welt in Schutt und Asche legen!"'

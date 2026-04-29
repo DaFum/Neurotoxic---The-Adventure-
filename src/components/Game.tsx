@@ -37,7 +37,6 @@ import { MainMenu } from './MainMenu';
 export function Game() {
   const scene = useStore((state) => state.scene);
   const isPaused = useStore((state) => state.isPaused);
-  const setPaused = useStore((state) => state.setPaused);
 
   useEffect(() => {
     if (scene !== 'menu' && isAmbientScene(scene)) {

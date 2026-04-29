@@ -51,7 +51,8 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
     }
   }, [dialogue]);
 
-  const executeOption = (option: DialogueOption) => {
+  const executeOption = (option: DialogueOption | undefined) => {
+    if (!option) return;
     const currentDialogue = dialogue;
     isResolvingRef.current = true;
     setIsResolving(true);
@@ -140,20 +141,20 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
 
         if (focusableElements.length === 0) return;
 
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
+        const firstElement = focusableElements[0] as HTMLElement | undefined;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement | undefined;
 
         if (e.shiftKey) {
           if (
             document.activeElement === firstElement ||
             document.activeElement === dialogueContainerRef.current
           ) {
-            lastElement.focus();
+            lastElement?.focus();
             e.preventDefault();
           }
         } else {
           if (document.activeElement === lastElement) {
-            firstElement.focus();
+            firstElement?.focus();
             e.preventDefault();
           }
         }
@@ -181,7 +182,7 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
         const numKey = parseInt(e.key, 10);
         if (numKey >= 1 && numKey <= dialogue.options.length) {
           const option = dialogue.options[numKey - 1];
-          if (canSelectOption(option)) {
+          if (option && canSelectOption(option)) {
             e.preventDefault();
             executeOption(option);
           }

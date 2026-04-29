@@ -16,63 +16,63 @@ export const createQuestSlice: StateCreator<GameState, [], [], QuestSlice> = (se
   quests: initialState.quests,
   addQuest: (id, text) =>
     set((state) => {
-      const index = state.quests.findIndex((q) => q.id === id);
+      const index = state.quests.findIndex((q) => q && q.id === id);
       if (index !== -1) {
-        if (state.quests[index].text === text) return state;
+        if (state.quests[index]?.text === text) return state;
         const newQuests = [...state.quests];
-        newQuests[index] = { ...newQuests[index], text };
+        newQuests[index] = { ...newQuests[index], text } as Quest;
         return { quests: newQuests };
       }
       return {
-        quests: [...state.quests, { id, text, status: 'active' as QuestStatus }],
+        quests: [...state.quests, { id, text, status: 'active' as QuestStatus } as Quest],
       };
     }),
   completeQuest: (id, text) =>
     set((state) => {
-      const index = state.quests.findIndex((q) => q.id === id);
+      const index = state.quests.findIndex((q) => q && q.id === id);
       if (index === -1) {
         if (text) {
           return {
-            quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }],
+            quests: [...state.quests, { id, text, status: 'completed' as QuestStatus } as Quest],
           };
         }
         console.warn(`Attempted to complete unregistered quest: ${id}`);
         return state;
       }
-      if (state.quests[index].status === 'completed') return state;
+      if (state.quests[index]?.status === 'completed') return state;
       const newQuests = [...state.quests];
-      newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus };
+      newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus } as Quest;
       return { quests: newQuests };
     }),
   failQuest: (id, text) =>
     set((state) => {
-      const index = state.quests.findIndex((q) => q.id === id);
+      const index = state.quests.findIndex((q) => q && q.id === id);
       if (index === -1) {
         if (text) {
           return {
-            quests: [...state.quests, { id, text, status: 'failed' as QuestStatus }],
+            quests: [...state.quests, { id, text, status: 'failed' as QuestStatus } as Quest],
           };
         }
         console.warn(`Attempted to fail unregistered quest: ${id}`);
         return state;
       }
-      if (state.quests[index].status === 'failed') return state;
+      if (state.quests[index]?.status === 'failed') return state;
       const newQuests = [...state.quests];
-      newQuests[index] = { ...newQuests[index], status: 'failed' as QuestStatus };
+      newQuests[index] = { ...newQuests[index], status: 'failed' as QuestStatus } as Quest;
       return { quests: newQuests };
     }),
   startQuestWithFlag: (id, text, flag, flagValue = true) =>
     set((state) => {
-      const index = state.quests.findIndex((q) => q.id === id);
+      const index = state.quests.findIndex((q) => q && q.id === id);
       if (index !== -1) {
         const quest = state.quests[index];
-        const nextStatus = (quest.status === 'completed' ? 'completed' : 'active') as QuestStatus;
-        const questChanged = quest.text !== text || quest.status !== nextStatus;
+        const nextStatus = (quest?.status === 'completed' ? 'completed' : 'active') as QuestStatus;
+        const questChanged = quest?.text !== text || quest?.status !== nextStatus;
         const flagChanged = state.flags[flag] !== flagValue;
         if (!questChanged && !flagChanged) return state;
 
         const newQuests = questChanged ? [...state.quests] : state.quests;
-        if (questChanged) newQuests[index] = { ...quest, text, status: nextStatus };
+        if (questChanged && quest) newQuests[index] = { ...quest, text, status: nextStatus } as Quest;
 
         return {
           ...(questChanged && { quests: newQuests }),
@@ -80,17 +80,17 @@ export const createQuestSlice: StateCreator<GameState, [], [], QuestSlice> = (se
         };
       }
       return {
-        quests: [...state.quests, { id, text, status: 'active' as QuestStatus }],
+        quests: [...state.quests, { id, text, status: 'active' as QuestStatus } as Quest],
         flags: { ...state.flags, [flag]: flagValue },
       };
     }),
   completeQuestWithFlag: (id, flag, flagValue = true, text) =>
     set((state) => {
-      const index = state.quests.findIndex((q) => q.id === id);
+      const index = state.quests.findIndex((q) => q && q.id === id);
       if (index === -1) {
         if (text) {
           return {
-            quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }],
+            quests: [...state.quests, { id, text, status: 'completed' as QuestStatus } as Quest],
             flags: { ...state.flags, [flag]: flagValue },
           };
         }
@@ -100,12 +100,12 @@ export const createQuestSlice: StateCreator<GameState, [], [], QuestSlice> = (se
           : state;
       }
       const quest = state.quests[index];
-      const statusChanged = quest.status !== 'completed';
+      const statusChanged = quest?.status !== 'completed';
       const flagChanged = state.flags[flag] !== flagValue;
       if (!statusChanged && !flagChanged) return state;
 
       const newQuests = statusChanged ? [...state.quests] : state.quests;
-      if (statusChanged) newQuests[index] = { ...quest, status: 'completed' as QuestStatus };
+      if (statusChanged && quest) newQuests[index] = { ...quest, status: 'completed' as QuestStatus } as Quest;
 
       return {
         ...(statusChanged && { quests: newQuests }),
@@ -114,17 +114,17 @@ export const createQuestSlice: StateCreator<GameState, [], [], QuestSlice> = (se
     }),
   startAndFinishQuest: (id, text) =>
     set((state) => {
-      const index = state.quests.findIndex((q) => q.id === id);
+      const index = state.quests.findIndex((q) => q && q.id === id);
       if (index !== -1) {
-        if (state.quests[index].status === 'active') {
+        if (state.quests[index]?.status === 'active') {
           const newQuests = [...state.quests];
-          newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus };
+          newQuests[index] = { ...newQuests[index], status: 'completed' as QuestStatus } as Quest;
           return { quests: newQuests };
         }
         return state;
       }
       return {
-        quests: [...state.quests, { id, text, status: 'completed' as QuestStatus }],
+        quests: [...state.quests, { id, text, status: 'completed' as QuestStatus } as Quest],
       };
     }),
 });

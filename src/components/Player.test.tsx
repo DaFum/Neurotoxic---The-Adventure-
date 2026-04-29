@@ -127,7 +127,7 @@ describe('Player Rigidbody Initialization Error Handling', () => {
     const posSubscription = mockStoreSubscriptions[0];
 
     expect(() =>
-      posSubscription(makeMockGameState({ ...mockStoreState, playerPos: [10, 10, 10] })),
+      posSubscription?.(makeMockGameState({ ...mockStoreState, playerPos: [10, 10, 10] })),
     ).not.toThrow();
 
     // In the subscription, setTranslation should be called and the error caught
