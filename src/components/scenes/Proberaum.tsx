@@ -26,7 +26,7 @@ import {
   buildProberaumMonitorDialogue,
 } from '../../dialogues/proberaum';
 import { ContactShadows, Sparkles } from '@react-three/drei';
-import { RigidBody } from '@react-three/rapier';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -173,14 +173,14 @@ export function Proberaum() {
       ))}
 
       {/* Invisible Walls for bounds */}
-      <RigidBody type="fixed" position={[-15, 5, 0]}>
-        <boxGeometry args={[1, 10, 15]} />
+      <RigidBody type="fixed" position={[-15, 5, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 5.0, 7.5]} />
       </RigidBody>
-      <RigidBody type="fixed" position={[15, 5, 0]}>
-        <boxGeometry args={[1, 10, 15]} />
+      <RigidBody type="fixed" position={[15, 5, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 5.0, 7.5]} />
       </RigidBody>
-      <RigidBody type="fixed" position={[0, 5, 7.5]}>
-        <boxGeometry args={[30, 10, 1]} />
+      <RigidBody type="fixed" position={[0, 5, 7.5]} colliders={false}>
+        <CuboidCollider args={[15.0, 5.0, 0.5]} />
       </RigidBody>
 
       {/* Overhead neon bars */}

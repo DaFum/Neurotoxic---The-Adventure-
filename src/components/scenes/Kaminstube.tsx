@@ -19,7 +19,7 @@ import { useStore } from '../../store';
 import { Interactable } from '../Interactable';
 import { Player } from '../Player';
 import { ContactShadows, Sparkles } from '@react-three/drei';
-import { RigidBody } from '@react-three/rapier';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { SceneEnvironmentSetpieces } from './SceneEnvironmentSetpieces';
 import { useShallow } from 'zustand/react/shallow';
 import {
@@ -160,14 +160,14 @@ export function Kaminstube() {
       </RigidBody>
 
       {/* Invisible Walls for bounds */}
-      <RigidBody type="fixed" position={[-15, 5, 0]}>
-        <boxGeometry args={[1, 10, 15]} />
+      <RigidBody type="fixed" position={[-15, 5, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 5.0, 7.5]} />
       </RigidBody>
-      <RigidBody type="fixed" position={[15, 5, 0]}>
-        <boxGeometry args={[1, 10, 15]} />
+      <RigidBody type="fixed" position={[15, 5, 0]} colliders={false}>
+        <CuboidCollider args={[0.5, 5.0, 7.5]} />
       </RigidBody>
-      <RigidBody type="fixed" position={[0, 5, 7.5]}>
-        <boxGeometry args={[30, 10, 1]} />
+      <RigidBody type="fixed" position={[0, 5, 7.5]} colliders={false}>
+        <CuboidCollider args={[15.0, 5.0, 0.5]} />
       </RigidBody>
 
       {/* Fireplace core */}
