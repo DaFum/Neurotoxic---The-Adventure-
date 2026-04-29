@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { secureRandom } from '../../utils/math';
+import { visualRandom } from '../../utils/math';
 
 interface GlitchOverlayProps {
   glitchIntensity: number;
@@ -42,7 +42,7 @@ export function GlitchOverlay({ glitchIntensity }: GlitchOverlayProps) {
           transition={{
             duration: 0.1,
             repeat: Infinity,
-            repeatDelay: secureRandom() * 2,
+            repeatDelay: visualRandom() * 2,
           }}
           className="absolute inset-0 bg-cyan-500/5 mix-blend-screen"
         />

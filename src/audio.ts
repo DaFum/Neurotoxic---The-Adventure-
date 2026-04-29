@@ -6,6 +6,7 @@ export type AmbientScene =
   | 'kaminstube'
   | 'salzgitter';
 
+import { visualRandom } from './utils/math';
 
 export const isAmbientScene = (scene: string): scene is AmbientScene => {
   return ['proberaum', 'tourbus', 'backstage', 'void_station', 'kaminstube', 'salzgitter'].includes(
@@ -113,7 +114,7 @@ class AudioEngine {
   playFootstep() {
     this.init();
     // Low noise burst for footstep
-    this.playTone(60 + Math.random() * 20, 'sine', 0.05, 0.02);
+    this.playTone(60 + visualRandom() * 20, 'sine', 0.05, 0.02);
   }
 
   /**
@@ -131,7 +132,7 @@ class AudioEngine {
    */
   playTypewriter() {
     this.init();
-    this.playTone(600 + Math.random() * 200, 'sine', 0.02, 0.02);
+    this.playTone(600 + visualRandom() * 200, 'sine', 0.02, 0.02);
   }
 
   /**
@@ -150,17 +151,17 @@ class AudioEngine {
 
         if (type === 'proberaum') {
           // Muffled thumping
-          this.playTone(40 + Math.random() * 10, 'sine', 0.5, 0.02);
+          this.playTone(40 + visualRandom() * 10, 'sine', 0.5, 0.02);
         } else if (type === 'tourbus') {
           // Engine hum
           this.playTone(50, 'sine', 1.0, 0.01);
         } else if (type === 'backstage') {
           // Muffled crowd chatter
-          this.playTone(200 + Math.random() * 50, 'sine', 0.1, 0.005);
+          this.playTone(200 + visualRandom() * 50, 'sine', 0.1, 0.005);
         } else if (type === 'void_station') {
           // Cosmic glitches
-          this.playTone(800 + Math.random() * 2000, 'sawtooth', 0.05, 0.005);
-          this.playTone(20 + Math.random() * 30, 'square', 0.2, 0.05);
+          this.playTone(800 + visualRandom() * 2000, 'sawtooth', 0.05, 0.005);
+          this.playTone(20 + visualRandom() * 30, 'square', 0.2, 0.05);
         } else if (type === 'kaminstube') {
           // Fire crackling (noise bursts)
           try {
@@ -169,7 +170,7 @@ class AudioEngine {
             const filter = this.ctx.createBiquadFilter();
 
             filter.type = 'bandpass';
-            filter.frequency.value = 1000 + Math.random() * 2000;
+            filter.frequency.value = 1000 + visualRandom() * 2000;
             filter.Q.value = 10;
 
             osc.type = 'sawtooth';
@@ -190,7 +191,7 @@ class AudioEngine {
         } else if (type === 'salzgitter') {
           // Distant city hum
           this.playTone(60, 'sine', 1.0, 0.01);
-          if (Math.random() > 0.9) this.playTone(200 + Math.random() * 100, 'sine', 2.0, 0.005);
+          if (visualRandom() > 0.9) this.playTone(200 + visualRandom() * 100, 'sine', 2.0, 0.005);
         }
       },
       type === 'kaminstube' ? 100 : 1000,
