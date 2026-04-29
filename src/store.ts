@@ -10,6 +10,7 @@ import { createLoreSlice } from './store/slices/loreSlice';
 
 export * from './store/types';
 export * from './store/initialState';
+import { KNOWN_ITEMS_SET } from './store/initialState';
 
 export const STORAGE_KEY = 'neurotoxic-game-storage';
 
@@ -104,6 +105,7 @@ const MAX_PERSISTED_DYNAMIC_QUESTS = 200;
 const MAX_PERSISTED_INPUT_QUESTS = 1000;
 const MAX_PERSISTED_QUEST_ID_LENGTH = 80;
 const MAX_PERSISTED_QUEST_TEXT_LENGTH = 300;
+const MAX_PERSISTED_INVENTORY_LENGTH = 1000;
 
 export const useStore = create<GameState>()(
   persist(
@@ -151,7 +153,7 @@ export const useStore = create<GameState>()(
             ? (typedPersistedState.itemPickupCounts as Record<string, number>)
             : {};
         const persistedInventory = Array.isArray(typedPersistedState.inventory)
-          ? typedPersistedState.inventory
+          ? typedPersistedState.inventory.slice(0, MAX_PERSISTED_INVENTORY_LENGTH)
           : [];
 
         const normalizeQuestStatus = (status: unknown, completed: unknown): QuestStatus => {
@@ -238,7 +240,7 @@ export const useStore = create<GameState>()(
         const inventoryCounts: Record<string, number> = Object.create(null);
         for (let i = 0; i < persistedInventory.length; i++) {
           const item = persistedInventory[i];
-          if (typeof item === 'string') {
+          if (typeof item === 'string' && KNOWN_ITEMS_SET.has(item)) {
             sanitizedInventory.push(item);
             inventoryCounts[item] = (inventoryCounts[item] ?? 0) + 1;
           }

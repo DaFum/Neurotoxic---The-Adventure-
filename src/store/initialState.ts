@@ -376,3 +376,40 @@ export const ITEM_PICKUP_LIMITS: Record<string, number> = {
 };
 
 export const getItemPickupLimit = (item: string) => ITEM_PICKUP_LIMITS[item] ?? 1;
+
+export const KNOWN_ITEMS = [
+  'Altes Plektrum',
+  'Autoschlüssel',
+  'Bassist-Saite',
+  'Batterie',
+  'Bier',
+  'Defektes Kabel',
+  'Dunkle Materie',
+  'Energiedrink',
+  'Frequenzfragment',
+  'Geheime Notiz',
+  'Geister-Drink',
+  'Industrie-Talisman',
+  'Kaffee',
+  'Klebeband',
+  'Lötkolben',
+  'Marius Ego',
+  'Mop',
+  'Plasma-Zünder',
+  'Quanten-Kabel',
+  'Repariertes Kabel',
+  'Resonanz-Kristall',
+  'Rostiges Plektrum',
+  'Röhre',
+  'Schrottmetall',
+  'Setliste',
+  'Signierte Setliste',
+  'Splitter der Leere',
+  'Stift',
+  'Turbo-Koffein',
+  'Verbotenes Riff',
+  'Verstärker-Schaltplan',
+  'Void-Plektrum',
+];
+
+export const KNOWN_ITEMS_SET = new Set(KNOWN_ITEMS);
