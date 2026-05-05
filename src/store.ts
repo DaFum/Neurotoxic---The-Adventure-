@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { GameState, Quest, QuestStatus, Flag, Skills, LoreEntry } from './store/types';
+import { GameState, Quest, QuestStatus, Flag, Skills, LoreEntry, Trait } from './store/types';
 import { createCoreSlice } from './store/slices/coreSlice';
 import { createInventorySlice } from './store/slices/inventorySlice';
 import { createQuestSlice } from './store/slices/questSlice';
@@ -10,8 +10,28 @@ import { createLoreSlice } from './store/slices/loreSlice';
 
 export * from './store/types';
 export * from './store/initialState';
+import { KNOWN_ITEMS_SET } from './store/initialState';
 
 export const STORAGE_KEY = 'neurotoxic-game-storage';
+
+export const ALLOWED_TRAITS: Trait[] = [
+  'Visionary',
+  'Technician',
+  'Brutalist',
+  'Diplomat',
+  'Mystic',
+  'Performer',
+  'Cynic',
+];
+
+export const normalizeSkills = (raw: unknown, fallback: Skills): Skills => {
+  const rawObj = raw as Record<string, unknown> | null;
+  return {
+    technical: typeof rawObj?.technical === 'number' && Number.isFinite(rawObj.technical) ? rawObj.technical : fallback.technical,
+    social: typeof rawObj?.social === 'number' && Number.isFinite(rawObj.social) ? rawObj.social : fallback.social,
+    chaos: typeof rawObj?.chaos === 'number' && Number.isFinite(rawObj.chaos) ? rawObj.chaos : fallback.chaos,
+  };
+};
 
 /**
  * Sanitizes a record by creating a null-prototype object and copying only
@@ -106,6 +126,7 @@ const MAX_PERSISTED_DYNAMIC_QUESTS = 200;
 const MAX_PERSISTED_INPUT_QUESTS = 1000;
 const MAX_PERSISTED_QUEST_ID_LENGTH = 80;
 const MAX_PERSISTED_QUEST_TEXT_LENGTH = 300;
+const MAX_PERSISTED_INVENTORY_LENGTH = 1000;
 
 export const useStore = create<GameState>()(
   persist(
@@ -146,14 +167,21 @@ export const useStore = create<GameState>()(
             ? sanitizeRecord(typedPersistedState.flags as Record<string, boolean>)
             : {};
 
-        const persistedFlags = migrateFlags(rawPersistedFlags);
+        const migratedFlags = migrateFlags(rawPersistedFlags);
+        const persistedFlags: Record<string, boolean> = Object.create(null);
+        for (const [key, value] of Object.entries(migratedFlags)) {
+          if (Object.hasOwn(currentState.flags, key) && typeof value === 'boolean') {
+            persistedFlags[key] = value;
+          }
+        }
+
         const persistedPickupCounts =
           typedPersistedState.itemPickupCounts !== null &&
           typeof typedPersistedState.itemPickupCounts === 'object'
             ? (typedPersistedState.itemPickupCounts as Record<string, number>)
             : {};
         const persistedInventory = Array.isArray(typedPersistedState.inventory)
-          ? typedPersistedState.inventory
+          ? typedPersistedState.inventory.slice(0, MAX_PERSISTED_INVENTORY_LENGTH)
           : [];
 
         const normalizeQuestStatus = (status: unknown, completed: unknown): QuestStatus => {
@@ -243,7 +271,7 @@ export const useStore = create<GameState>()(
         const inventoryCounts: Record<string, number> = Object.create(null);
         for (let i = 0; i < persistedInventory.length; i++) {
           const item = persistedInventory[i];
-          if (typeof item === 'string') {
+          if (typeof item === 'string' && KNOWN_ITEMS_SET.has(item)) {
             sanitizedInventory.push(item);
             inventoryCounts[item] = (inventoryCounts[item] ?? 0) + 1;
           }
@@ -288,16 +316,18 @@ export const useStore = create<GameState>()(
                 typedPersistedState.bandMoodGainClaims as Record<string, boolean>,
               ),
             }),
-          ...(typeof typedPersistedState.bandMood === 'number' && {
-            bandMood: typedPersistedState.bandMood,
+          ...(typeof typedPersistedState.bandMood === 'number' &&
+            Number.isFinite(typedPersistedState.bandMood) && {
+            bandMood: Math.min(100, Math.max(0, typedPersistedState.bandMood)),
           }),
-          ...((typeof typedPersistedState.trait === 'string' ||
-            typedPersistedState.trait === null) && { trait: typedPersistedState.trait }),
+          ...((typeof typedPersistedState.trait === 'string' &&
+            ALLOWED_TRAITS.includes(typedPersistedState.trait as Trait)) && {
+            trait: typedPersistedState.trait as Trait
+          }),
+          ...(typedPersistedState.trait === null && { trait: null }),
           ...(typedPersistedState.skills !== null &&
             typeof typedPersistedState.skills === 'object' && {
-              skills: sanitizeRecord(
-                typedPersistedState.skills as unknown as Record<string, unknown>,
-              ) as unknown as Skills,
+              skills: normalizeSkills(typedPersistedState.skills, currentState.skills),
             }),
         };
       },

@@ -10,6 +10,12 @@ export function createCanvasTexture(
 ): THREE.CanvasTexture {
   const texture = new THREE.CanvasTexture(canvas as HTMLCanvasElement);
   texture.colorSpace = THREE.SRGBColorSpace;
+  texture.generateMipmaps = false;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
   texture.needsUpdate = true;
+  texture.generateMipmaps = false;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
   return texture;
 }

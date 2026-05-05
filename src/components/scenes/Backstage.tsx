@@ -175,7 +175,7 @@ export function Backstage() {
 
       {/* Floor */}
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
-        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh  rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[30, 20]} />
           <meshStandardMaterial
             color="#3e4a58"
@@ -281,7 +281,7 @@ export function Backstage() {
 
       {/* Backstage interior props */}
       {FLIGHTCASE_X_POSITIONS.map((x) => (
-        <mesh key={`flightcase-${x}`} position={[x, 0.55, -2.2]} castShadow receiveShadow>
+        <mesh key={`flightcase-${x}`} position={[x, 0.55, -2.2]}  >
           <boxGeometry args={[1.6, 1.1, 1]} />
           <meshStandardMaterial
             color="#2a3440"
@@ -338,7 +338,7 @@ export function Backstage() {
       </mesh>
       {/* Racks */}
       {RACK_X_POSITIONS.map((x) => (
-        <mesh key={`rack-${x}`} position={[x, 1.6, 6.8]} castShadow receiveShadow>
+        <mesh key={`rack-${x}`} position={[x, 1.6, 6.8]}  >
           <boxGeometry args={[2.2, 3.2, 0.7]} />
           <meshStandardMaterial
             color="#28303a"
@@ -372,7 +372,7 @@ export function Backstage() {
         </group>
       ))}
       {STACK_X_POSITIONS.map((x) => (
-        <mesh key={`stack-${x}`} position={[x, 1.7, -7.3]} castShadow receiveShadow>
+        <mesh key={`stack-${x}`} position={[x, 1.7, -7.3]}  >
           <boxGeometry args={[2.4, 3.4, 1.4]} />
           <meshStandardMaterial
             color="#3a2a1c"
@@ -384,7 +384,7 @@ export function Backstage() {
         </mesh>
       ))}
       {SOFA_POSITIONS.map((pos, idx) => (
-        <mesh key={`sofa-${idx}`} position={pos} castShadow receiveShadow>
+        <mesh key={`sofa-${idx}`} position={pos}  >
           <boxGeometry args={[1.8, 1.1, 2.2]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#2a3a52' : '#4b2936'}
@@ -402,7 +402,7 @@ export function Backstage() {
           position={pos}
           rotation={[0, idx === 0 ? Math.PI / 2 : -Math.PI / 2, 0]}
         >
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <boxGeometry args={[3.2, 0.16, 1.1]} />
             <meshStandardMaterial
               color="#6f4c36"
@@ -412,7 +412,7 @@ export function Backstage() {
             />
           </mesh>
           {DESK_LEG_X_POSITIONS.map((x) => (
-            <mesh key={`desk-leg-${idx}-${x}`} position={[x, -0.48, 0.4]} castShadow receiveShadow>
+            <mesh key={`desk-leg-${idx}-${x}`} position={[x, -0.48, 0.4]}  >
               <boxGeometry args={[0.16, 1, 0.16]} />
               <meshStandardMaterial color="#b7c1cf" metalness={0.86} roughness={0.22} />
             </mesh>
@@ -421,15 +421,15 @@ export function Backstage() {
             <mesh
               key={`desk-leg-back-${idx}-${x}`}
               position={[x, -0.48, -0.4]}
-              castShadow
-              receiveShadow
+
+
             >
               <boxGeometry args={[0.16, 1, 0.16]} />
               <meshStandardMaterial color="#b7c1cf" metalness={0.86} roughness={0.22} />
             </mesh>
           ))}
           {DESK_ITEM_X_POSITIONS.map((x, n) => (
-            <mesh key={`desk-item-${idx}-${n}`} position={[x, 0.15, 0]} castShadow>
+            <mesh key={`desk-item-${idx}-${n}`} position={[x, 0.15, 0]} >
               <boxGeometry args={[0.22, 0.08, 0.12]} />
               <meshStandardMaterial
                 color={n % 2 === 0 ? '#ff79d3' : '#72d8ff'}
@@ -444,7 +444,7 @@ export function Backstage() {
       ))}
       {AMP_RACK_POSITIONS.map((pos, idx) => (
         <group key={`amp-rack-${idx}`} position={pos}>
-          <mesh castShadow receiveShadow>
+          <mesh  >
             <boxGeometry args={[1.2, 1.4, 0.9]} />
             <meshStandardMaterial
               color="#314257"

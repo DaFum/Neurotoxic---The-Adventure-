@@ -143,7 +143,7 @@ export function VoidStation() {
 
       {/* Surreal Floor */}
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
-        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh  rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[50, 50]} />
           <MeshDistortMaterial color="#34255a" speed={2} distort={0.4} radius={1} />
         </mesh>
@@ -214,7 +214,7 @@ export function VoidStation() {
 
       {/* Station interior modules */}
       {CONSOLE_POSITIONS.map((pos, idx) => (
-        <mesh key={`void-console-${idx}`} position={pos} castShadow receiveShadow>
+        <mesh key={`void-console-${idx}`} position={pos}  >
           <boxGeometry args={[2.8, 1.6, 1.4]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#5136a0' : '#2786b0'}

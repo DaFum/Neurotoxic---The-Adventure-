@@ -47,15 +47,20 @@ vi.mock('../audio', () => ({
 // Mock THREE to avoid issues with CanvasTexture and other things
 const mockDispose = vi.fn();
 let canvasTextureCtorCount = 0;
+export const createdTextures: any[] = [];
 vi.mock('three', async () => {
   const actual = await vi.importActual<typeof import('three')>('three');
   return {
     ...actual,
     CanvasTexture: class {
-      needsUpdate = false;
+      version = 0;
+      set needsUpdate(value: boolean) {
+        if (value) this.version++;
+      }
       dispose = mockDispose;
       constructor() {
         canvasTextureCtorCount++;
+        createdTextures.push(this);
       }
     },
   };
@@ -69,6 +74,7 @@ describe('Interactable', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     canvasTextureCtorCount = 0;
+    createdTextures.length = 0;
     (useKeyboardInteraction as any).mockReturnValue({
       register: mockRegister,
       unregister: mockUnregister,
@@ -116,6 +122,7 @@ describe('Interactable', () => {
 
     // Initial render creates the textures (one for emoji, two for in/out range labels per unique identity)
     expect(canvasTextureCtorCount).toBe(3);
+    createdTextures.forEach(t => expect(t.version).toBeGreaterThan(0));
     expect(mockDispose).not.toHaveBeenCalled();
 
     // Rerender with only one interactable

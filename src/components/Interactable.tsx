@@ -414,7 +414,7 @@ export const Interactable = React.memo(function Interactable({
     <RigidBody type="fixed" position={position} colliders={false}>
       <CuboidCollider args={[0.75 * scale, 1 * scale, 0.5 * scale]} />
       <group ref={ref}>
-        <mesh position={[0, -0.68 * scale, 0]} castShadow receiveShadow>
+        <mesh position={[0, -0.68 * scale, 0]}  >
           <cylinderGeometry args={[0.78 * scale, 0.92 * scale, 0.24 * scale, 24]} />
           <meshStandardMaterial
             color={palette.base}
@@ -444,7 +444,7 @@ export const Interactable = React.memo(function Interactable({
             roughness={0.5}
           />
         </mesh>
-        <mesh ref={coreRef} position={[0, 0.26 * scale, 0]} castShadow>
+        <mesh ref={coreRef} position={[0, 0.26 * scale, 0]} >
           <octahedronGeometry args={[0.26 * scale, 0]} />
           <meshStandardMaterial
             color={palette.trim}
@@ -456,7 +456,7 @@ export const Interactable = React.memo(function Interactable({
         </mesh>
         {isBandMember && (
           <group>
-            <mesh position={[0, -0.08 * scale, -0.05 * scale]} castShadow receiveShadow>
+            <mesh position={[0, -0.08 * scale, -0.05 * scale]}  >
               <cylinderGeometry args={[0.2 * scale, 0.25 * scale, 0.55 * scale, 12]} />
               <meshStandardMaterial
                 color="#39465c"
@@ -466,7 +466,7 @@ export const Interactable = React.memo(function Interactable({
                 roughness={0.45}
               />
             </mesh>
-            <mesh position={[0, 0.28 * scale, -0.05 * scale]} castShadow>
+            <mesh position={[0, 0.28 * scale, -0.05 * scale]} >
               <sphereGeometry args={[0.16 * scale, 14, 14]} />
               <meshStandardMaterial
                 color="#e3edf9"
