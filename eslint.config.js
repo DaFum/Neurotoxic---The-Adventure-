@@ -21,15 +21,11 @@ export default [
   eslintConfigPrettier,
   {
     files: [
-      'src/components/Game.tsx',
       'src/components/Interactable.test.tsx',
-      'src/components/Interactable.tsx',
       'src/components/Player.test.tsx',
-      'src/components/UI.tsx',
       'src/components/ui/DialogueBox.test.tsx',
       'src/components/ui/GlitchOverlay.test.tsx',
       'src/dialogueEngine.test.ts',
-      'src/store/initialState.ts',
       'vitest.setup.ts',
     ],
     rules: {

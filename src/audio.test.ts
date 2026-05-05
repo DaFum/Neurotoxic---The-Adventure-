@@ -147,8 +147,8 @@ describe('AudioEngine', () => {
       expect(ctx.createOscillator).toHaveBeenCalled();
       expect(ctx.createGain).toHaveBeenCalled();
 
-      const osc = ctx.createOscillator.mock.results[0].value;
-      const gain = ctx.createGain.mock.results[0].value;
+      const osc = ctx.createOscillator.mock.results[0]?.value;
+      const gain = ctx.createGain.mock.results[0]?.value;
 
       expect(osc.type).toBe('sine');
       expect(osc.frequency.setValueAtTime).toHaveBeenCalledWith(440, 0);

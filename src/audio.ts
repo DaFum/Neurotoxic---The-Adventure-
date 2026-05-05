@@ -233,7 +233,7 @@ class AudioEngine {
       if (!this.ctx || this.ctx.state !== 'running') return;
 
       // Play bass note
-      const freq = bassline[step % bassline.length];
+      const freq = bassline[step % bassline.length] as number;
       this.playTone(freq, 'sawtooth', 0.2, 0.15);
 
       // Play kick drum (low sine sweep)
@@ -242,9 +242,9 @@ class AudioEngine {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.frequency.setValueAtTime(150, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+          osc.frequency.exponentialRampToValueAtTime(0.01, (this.ctx?.currentTime ?? 0) + 0.1);
           gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.01, (this.ctx?.currentTime ?? 0) + 0.1);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
           osc.start();

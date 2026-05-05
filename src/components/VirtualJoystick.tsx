@@ -42,6 +42,7 @@ function useJoystickControls(visible: boolean) {
     }
 
     function onDown(e: PointerEvent) {
+      if (!el) return;
       if (activePid.current !== null) return;
       e.preventDefault();
       el.setPointerCapture(e.pointerId);
@@ -53,6 +54,7 @@ function useJoystickControls(visible: boolean) {
     }
 
     function onMove(e: PointerEvent) {
+      if (!el) return;
       if (e.pointerId !== activePid.current) return;
       e.preventDefault();
       update(e.clientX, e.clientY);

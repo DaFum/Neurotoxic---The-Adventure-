@@ -79,7 +79,7 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
 
   const len = quests.length;
   for (let i = 0; i < len; i++) {
-    const id = quests[i].id;
+    const id = quests[i]?.id;
     if (id === 'fix_cable' && fixCableQuestIndex === -1) {
       fixCableQuestIndex = i;
     } else if (id === 'cable' && cableQuestIndex === -1) {
@@ -91,9 +91,11 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
   if (fixCableQuestIndex === -1) return quests;
 
   const fixCableQuest = quests[fixCableQuestIndex];
+  if (!fixCableQuest) return quests;
 
   if (cableQuestIndex !== -1) {
     const cableQuest = quests[cableQuestIndex];
+    if (!cableQuest) return quests;
     const statusPriority: Record<QuestStatus, number> = { completed: 3, active: 2, failed: 1 };
     const mergedStatus =
       statusPriority[fixCableQuest.status] > statusPriority[cableQuest.status]
@@ -105,10 +107,10 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
     const updatedQuests: Quest[] = [];
     for (let i = 0; i < len; i++) {
       const q = quests[i];
-      if (q.id !== 'fix_cable') {
+      if (q && q.id !== 'fix_cable') {
         // Only spread (creating a new object) if the status actually changes, preserving object identity otherwise
         updatedQuests.push(
-          q.id === 'cable' && q.status !== mergedStatus ? { ...q, status: mergedStatus } : q,
+          q.id === 'cable' && q.status !== mergedStatus ? ({ ...q, status: mergedStatus } as Quest) : q,
         );
       }
     }
@@ -116,7 +118,7 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
   }
 
   const updatedQuests = [...quests];
-  updatedQuests[fixCableQuestIndex] = { ...fixCableQuest, id: 'cable' };
+  updatedQuests[fixCableQuestIndex] = { ...fixCableQuest, id: 'cable' } as Quest;
   return updatedQuests;
 };
 
@@ -194,17 +196,15 @@ export const useStore = create<GameState>()(
           }
         }
 
-        // ⚡ Bolt Optimization: Use a standard for loop to pre-allocate merged array
-        // instead of mapping. Also optimize Set creation for currentQuestIds to avoid
-        // temporary arrays created by `.map()`.
-        const mergedQuests = new Array<Quest>(currentState.quests.length);
+        const mergedQuests: Quest[] = [];
         const currentQuestIds = new Set<string>();
         for (let i = 0; i < currentState.quests.length; i++) {
           const q = currentState.quests[i];
+          if (!q) continue;
           currentQuestIds.add(q.id);
           const persistedQuest = persistedQuestsMap.get(q.id);
           if (!persistedQuest) {
-            mergedQuests[i] = q;
+            mergedQuests.push(q);
           } else {
             const pq = persistedQuest as unknown as {
               id: string;
@@ -212,10 +212,10 @@ export const useStore = create<GameState>()(
               status?: unknown;
               completed?: unknown;
             };
-            mergedQuests[i] = {
+            mergedQuests.push({
               ...q,
               status: normalizeQuestStatus(pq.status, pq.completed),
-            };
+            } as Quest);
           }
         }
 
@@ -251,15 +251,16 @@ export const useStore = create<GameState>()(
           }
         }
 
-        const mergedLoreEntries: LoreEntry[] = new Array<LoreEntry>(
-          currentState.loreEntries.length,
-        );
+        const mergedLoreEntries: LoreEntry[] = [];
         for (let i = 0; i < currentState.loreEntries.length; i++) {
           const e = currentState.loreEntries[i];
+          if (!e) continue;
           const persistedEntry = persistedLoreMap.get(e.id);
-          mergedLoreEntries[i] = persistedEntry
-            ? { ...e, discovered: persistedEntry.discovered === true }
-            : e;
+          mergedLoreEntries.push(
+            persistedEntry
+              ? ({ ...e, discovered: persistedEntry.discovered === true } as LoreEntry)
+              : e,
+          );
         }
 
         const sanitizedInventory: string[] = [];
@@ -339,9 +340,9 @@ export const useStore = create<GameState>()(
                 let migratedLore = false;
 
                 const migrateEntry = (id: string) => {
-                  const idx = newEntries.findIndex((e) => e.id === id);
-                  if (idx !== -1 && !newEntries[idx].discovered) {
-                    newEntries[idx] = { ...newEntries[idx], discovered: true };
+                  const idx = newEntries.findIndex((e) => e && e.id === id);
+                  if (idx !== -1 && !newEntries[idx]?.discovered) {
+                    newEntries[idx] = { ...newEntries[idx], discovered: true } as LoreEntry;
                     migratedLore = true;
                   }
                 };
