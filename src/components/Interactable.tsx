@@ -16,6 +16,7 @@ import type { ThreeEvent } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useStore } from '../store';
+import { livePlayerPos } from '../playerState';
 import { audio } from '../audio';
 import { useKeyboardInteraction } from './KeyboardInteractionManager';
 import { createCanvasTexture } from '../utils/texture';
@@ -190,10 +191,9 @@ export const Interactable = React.memo(function Interactable({
 
   // Initialize accurately to prevent one frame flicker
   const initialDistSq = useMemo(() => {
-    const { playerPos } = useStore.getState();
-    const dx = playerPos[0] - position[0];
-    const dy = playerPos[1] - position[1];
-    const dz = playerPos[2] - position[2];
+    const dx = livePlayerPos[0] - position[0];
+    const dy = livePlayerPos[1] - position[1];
+    const dz = livePlayerPos[2] - position[2];
     return dx * dx + dy * dy + dz * dz;
   }, [position]);
 
@@ -303,13 +303,13 @@ export const Interactable = React.memo(function Interactable({
   }, [register, unregister, setActive]);
 
   useFrame((_state, delta) => {
-    const { isPaused, bandMood, playerPos } = useStore.getState();
+    const { isPaused, bandMood } = useStore.getState();
     if (isPaused) return;
 
-    // ⚡ Bolt Optimization: Use scalar math to avoid object allocation and method call overhead
-    const dx = playerPos[0] - position[0];
-    const dy = playerPos[1] - position[1];
-    const dz = playerPos[2] - position[2];
+    // ⚡ Read from module-level ref updated once per frame by Player — avoids N store reads per frame
+    const dx = livePlayerPos[0] - position[0];
+    const dy = livePlayerPos[1] - position[1];
+    const dz = livePlayerPos[2] - position[2];
     const distSq = dx * dx + dy * dy + dz * dz;
 
     const inRangeNow = distSq < 16.0; // 4.0 squared

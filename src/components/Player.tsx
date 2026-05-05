@@ -17,6 +17,7 @@ import { useKeyboardControls, Sparkles } from '@react-three/drei';
 import { RigidBody, RapierRigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useStore } from '../store';
+import { livePlayerPos } from '../playerState';
 import { audio } from '../audio';
 import { touchInput } from '../touchInput';
 import { clampPlayerPosition, visualRandom } from '../utils/math';
@@ -274,6 +275,12 @@ export function Player({ bounds = { x: [-10, 10], z: [-5, 5] } }: PlayerProps) {
 
     // Manual bounds clamping
     const { clampedX, clampedZ } = clampPlayerPosition(pos, bounds);
+
+    // Publish exact physics position once per frame so Interactables can read it
+    // without each calling useStore.getState() individually.
+    livePlayerPos[0] = clampedX;
+    livePlayerPos[1] = pos.y;
+    livePlayerPos[2] = clampedZ;
     if (clampedX !== pos.x || clampedZ !== pos.z) {
       bodyRef.current.setTranslation({ x: clampedX, y: pos.y, z: clampedZ }, true);
     }
