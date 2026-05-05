@@ -196,10 +196,7 @@ export const useStore = create<GameState>()(
           }
         }
 
-        // ⚡ Bolt Optimization: Use a standard for loop to pre-allocate merged array
-        // instead of mapping. Also optimize Set creation for currentQuestIds to avoid
-        // temporary arrays created by `.map()`.
-        const mergedQuests = new Array<Quest>(currentState.quests.length);
+        const mergedQuests: Quest[] = [];
         const currentQuestIds = new Set<string>();
         for (let i = 0; i < currentState.quests.length; i++) {
           const q = currentState.quests[i];
@@ -207,7 +204,7 @@ export const useStore = create<GameState>()(
           currentQuestIds.add(q.id);
           const persistedQuest = persistedQuestsMap.get(q.id);
           if (!persistedQuest) {
-            mergedQuests[i] = q;
+            mergedQuests.push(q);
           } else {
             const pq = persistedQuest as unknown as {
               id: string;
@@ -215,10 +212,10 @@ export const useStore = create<GameState>()(
               status?: unknown;
               completed?: unknown;
             };
-            mergedQuests[i] = {
+            mergedQuests.push({
               ...q,
               status: normalizeQuestStatus(pq.status, pq.completed),
-            } as Quest;
+            } as Quest);
           }
         }
 
@@ -254,16 +251,16 @@ export const useStore = create<GameState>()(
           }
         }
 
-        const mergedLoreEntries: LoreEntry[] = new Array<LoreEntry>(
-          currentState.loreEntries.length,
-        );
+        const mergedLoreEntries: LoreEntry[] = [];
         for (let i = 0; i < currentState.loreEntries.length; i++) {
           const e = currentState.loreEntries[i];
           if (!e) continue;
           const persistedEntry = persistedLoreMap.get(e.id);
-          mergedLoreEntries[i] = persistedEntry
-            ? ({ ...e, discovered: persistedEntry.discovered === true } as LoreEntry)
-            : e;
+          mergedLoreEntries.push(
+            persistedEntry
+              ? ({ ...e, discovered: persistedEntry.discovered === true } as LoreEntry)
+              : e,
+          );
         }
 
         const sanitizedInventory: string[] = [];

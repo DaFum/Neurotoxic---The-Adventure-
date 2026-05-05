@@ -30,7 +30,7 @@ useStore.subscribe((state, prevState) => {
  * array or quest objects in place, or this cache can become stale.
  */
 export function getCachedQuest(id: string): Quest | undefined {
-  return cachedQuestsMap.get(id) as Quest | undefined;
+  return cachedQuestsMap.get(id);
 }
 
 function hasRequiredItems(
@@ -54,10 +54,10 @@ function hasRequiredItems(
       const item = option.consumeItems[i];
       if (item !== undefined) {
         const c = (consumeTallies[item] || 0) + 1;
-      consumeTallies[item] = c;
-      if (c > (neededCounts[item] || 0)) {
-        neededCounts[item] = c;
-      }
+        consumeTallies[item] = c;
+        if (c > (neededCounts[item] || 0)) {
+          neededCounts[item] = c;
+        }
       }
     }
   }
