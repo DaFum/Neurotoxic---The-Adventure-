@@ -260,7 +260,6 @@ export const useStore = create<GameState>()(
         for (let i = 0; i < currentState.loreEntries.length; i++) {
           const e = currentState.loreEntries[i];
           if (!e) continue;
-          if (!e) continue;
           const persistedEntry = persistedLoreMap.get(e.id);
           mergedLoreEntries[i] = persistedEntry
             ? ({ ...e, discovered: persistedEntry.discovered === true } as LoreEntry)

@@ -146,8 +146,7 @@ export function UI() {
     for (let i = 0; i < quests.length; i++) {
       const quest = quests[i];
       if (quest && quest.status === 'active') {
-        count = (count || 0) + 1;
-        count = (count || 0) + 1;
+        count++;
       }
 
       const orderValue = quest ? QUEST_STATUS_ORDER[quest.status] : undefined;
@@ -162,8 +161,6 @@ export function UI() {
     const result: Quest[] = [];
     for (let i = 0; i < NUM_BUCKETS; i++) {
       const bucket = buckets[i];
-
-
       if (!bucket) continue;
       for (let j = 0; j < bucket.length; j++) {
         const quest = bucket[j];
@@ -180,7 +177,6 @@ export function UI() {
     let totalCount = 0;
     for (const item in inventoryCounts) {
       const count = inventoryCounts[item];
-      if (count === undefined) continue;
       if (count === undefined) continue;
       stacks.push({ item, count });
       totalCount += count;
@@ -207,7 +203,7 @@ export function UI() {
     let count = 0;
     for (let i = 0; i < loreEntries.length; i++) {
       if (loreEntries[i]?.discovered) {
-        count = (count || 0) + 1;
+        count++;
       }
     }
     return count;
@@ -305,8 +301,6 @@ export function UI() {
 
   const toggleItemSelection = (item: string, availableCount: number | undefined) => {
     if (availableCount === undefined) return;
-    if (availableCount === undefined) return;
-    if (availableCount === undefined) return;
     setSelectedItems((prev) => {
       let selectedCount = 0;
       for (let i = 0; i < prev.length; i++) {
@@ -334,8 +328,6 @@ export function UI() {
   };
 
   const handleCombine = () => {
-    if (!selectedItems) return;
-    if (!selectedItems) return;
     if (selectedItems.length !== 2) return;
 
     const [item1, item2] = selectedItems;
@@ -482,7 +474,7 @@ export function UI() {
                   <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-2">
                       {inventoryStacks.map(({ item, count }) => {
-                        const selectedCount = selectedItemCounts?.get(item) ?? 0;
+                        const selectedCount = selectedItemCounts.get(item) ?? 0;
                         return (
                           <motion.button
                             whileTap={{ scale: 0.96 }}
@@ -712,7 +704,7 @@ export function UI() {
                   <div className="flex flex-col gap-3 w-full">
                     <div className="grid grid-cols-2 gap-2">
                       {inventoryStacks.map(({ item, count }) => {
-                        const selectedCount = selectedItemCounts?.get(item) ?? 0;
+                        const selectedCount = selectedItemCounts.get(item) ?? 0;
                         return (
                           <motion.button
                             whileHover={{ scale: 1.06 }}

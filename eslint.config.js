@@ -20,7 +20,7 @@ export default [
   },
   eslintConfigPrettier,
   {
-        files: [
+    files: [
       'src/components/Interactable.test.tsx',
       'src/components/Player.test.tsx',
       'src/components/ui/DialogueBox.test.tsx',
