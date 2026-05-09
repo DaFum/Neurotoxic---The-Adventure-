@@ -66,8 +66,8 @@ describe('DialogueBox', () => {
     expect(dialogElement.hasAttribute('aria-atomic')).toBe(false);
   });
 
-  it('keeps sr-only element empty until typing completes, then populates it', () => {
-    const mockDialogue = { text: 'Test message', urgency: 3 }; // urgency 3 -> 50ms delay
+  it('populates sr-only element immediately with full text', () => {
+    const mockDialogue = { text: 'Test message', urgency: 3 };
 
     const { container } = render(
       <DialogueBox
@@ -77,28 +77,8 @@ describe('DialogueBox', () => {
       />,
     );
 
-    // The sr-only div has aria-live="polite"
-    // Using container.querySelector because it's a hidden element and screen.getByText might fail before it has text
     const liveRegion = container.querySelector('.sr-only');
     expect(liveRegion).not.toBeNull();
-
-    // Initially empty
-    expect(liveRegion?.textContent).toBe('');
-
-    // Advance time partially (not enough to finish typing)
-    act(() => {
-      vi.advanceTimersByTime(200);
-    });
-
-    // Still empty while typing
-    expect(liveRegion?.textContent).toBe('');
-
-    // Advance enough to finish (12 chars * 50ms = 600ms)
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
-
-    // Now populated with full text
     expect(liveRegion?.textContent).toBe('Test message');
   });
 });

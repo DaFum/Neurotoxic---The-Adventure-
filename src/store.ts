@@ -27,9 +27,18 @@ export const ALLOWED_TRAITS: Trait[] = [
 export const normalizeSkills = (raw: unknown, fallback: Skills): Skills => {
   const rawObj = raw as Record<string, unknown> | null;
   return {
-    technical: typeof rawObj?.technical === 'number' && Number.isFinite(rawObj.technical) ? rawObj.technical : fallback.technical,
-    social: typeof rawObj?.social === 'number' && Number.isFinite(rawObj.social) ? rawObj.social : fallback.social,
-    chaos: typeof rawObj?.chaos === 'number' && Number.isFinite(rawObj.chaos) ? rawObj.chaos : fallback.chaos,
+    technical:
+      typeof rawObj?.technical === 'number' && Number.isFinite(rawObj.technical)
+        ? rawObj.technical
+        : fallback.technical,
+    social:
+      typeof rawObj?.social === 'number' && Number.isFinite(rawObj.social)
+        ? rawObj.social
+        : fallback.social,
+    chaos:
+      typeof rawObj?.chaos === 'number' && Number.isFinite(rawObj.chaos)
+        ? rawObj.chaos
+        : fallback.chaos,
   };
 };
 
@@ -110,7 +119,9 @@ export const migrateLegacyQuests = (quests: Quest[]): Quest[] => {
       if (q && q.id !== 'fix_cable') {
         // Only spread (creating a new object) if the status actually changes, preserving object identity otherwise
         updatedQuests.push(
-          q.id === 'cable' && q.status !== mergedStatus ? ({ ...q, status: mergedStatus } as Quest) : q,
+          q.id === 'cable' && q.status !== mergedStatus
+            ? ({ ...q, status: mergedStatus } as Quest)
+            : q,
         );
       }
     }
@@ -314,12 +325,12 @@ export const useStore = create<GameState>()(
             }),
           ...(typeof typedPersistedState.bandMood === 'number' &&
             Number.isFinite(typedPersistedState.bandMood) && {
-            bandMood: Math.min(100, Math.max(0, typedPersistedState.bandMood)),
-          }),
-          ...((typeof typedPersistedState.trait === 'string' &&
-            ALLOWED_TRAITS.includes(typedPersistedState.trait as Trait)) && {
-            trait: typedPersistedState.trait as Trait
-          }),
+              bandMood: Math.min(100, Math.max(0, typedPersistedState.bandMood)),
+            }),
+          ...(typeof typedPersistedState.trait === 'string' &&
+            ALLOWED_TRAITS.includes(typedPersistedState.trait as Trait) && {
+              trait: typedPersistedState.trait as Trait,
+            }),
           ...(typedPersistedState.trait === null && { trait: null }),
           ...(typedPersistedState.skills !== null &&
             typeof typedPersistedState.skills === 'object' && {

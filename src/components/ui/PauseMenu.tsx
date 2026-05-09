@@ -81,7 +81,9 @@ export function PauseMenu({
       if (focusableElements.length === 0) return;
 
       const firstElement = focusableElements[0] as HTMLElement | undefined;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement | undefined;
+      const lastElement = focusableElements[focusableElements.length - 1] as
+        | HTMLElement
+        | undefined;
 
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {

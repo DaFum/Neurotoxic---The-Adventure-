@@ -260,7 +260,7 @@ export function TourBus() {
 
       {/* Seat blocks */}
       {SEAT_BLOCK_POSITIONS.map((pos, idx) => (
-        <mesh key={`seat-${idx}`} position={pos}  >
+        <mesh key={`seat-${idx}`} position={pos}>
           <boxGeometry args={[2, 1, 1.8]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#d36a3e' : '#3b8cc7'}
@@ -272,7 +272,7 @@ export function TourBus() {
         </mesh>
       ))}
       {SEAT_BACK_POSITIONS.map((pos, idx) => (
-        <mesh key={`seat-back-${idx}`} position={pos}  >
+        <mesh key={`seat-back-${idx}`} position={pos}>
           <boxGeometry args={[1.95, 1.1, 0.32]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#c65b34' : '#3380b5'}
@@ -284,7 +284,7 @@ export function TourBus() {
         </mesh>
       ))}
       {SEAT_HEADREST_POSITIONS.map((pos, idx) => (
-        <mesh key={`seat-headrest-${idx}`} position={pos}  >
+        <mesh key={`seat-headrest-${idx}`} position={pos}>
           <boxGeometry args={[1.2, 0.38, 0.26]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#f69b6f' : '#77baf1'}
@@ -296,14 +296,14 @@ export function TourBus() {
         </mesh>
       ))}
       {SEAT_LEG_POSITIONS.map((pos, idx) => (
-        <mesh key={`seat-leg-${idx}`} position={pos}  >
+        <mesh key={`seat-leg-${idx}`} position={pos}>
           <cylinderGeometry args={[0.06, 0.08, 0.35, 10]} />
           <meshStandardMaterial color="#aeb7c1" metalness={0.82} roughness={0.25} />
         </mesh>
       ))}
 
       {/* Driver cockpit + storage */}
-      <mesh position={[0, 1.1, -4.4]}  >
+      <mesh position={[0, 1.1, -4.4]}>
         <boxGeometry args={[3.6, 1.1, 0.55]} />
         <meshStandardMaterial
           color="#29313a"
@@ -313,11 +313,11 @@ export function TourBus() {
           roughness={0.5}
         />
       </mesh>
-      <mesh position={[-1.2, 1.35, -4.05]} rotation={[0.2, 0, 0]}  >
+      <mesh position={[-1.2, 1.35, -4.05]} rotation={[0.2, 0, 0]}>
         <torusGeometry args={[0.34, 0.06, 12, 24]} />
         <meshStandardMaterial color="#23272d" metalness={0.85} roughness={0.25} />
       </mesh>
-      <mesh position={[0, 1.62, -4.1]}  >
+      <mesh position={[0, 1.62, -4.1]}>
         <boxGeometry args={[3, 0.42, 0.22]} />
         <meshStandardMaterial
           color="#1f2935"
@@ -340,13 +340,13 @@ export function TourBus() {
         </mesh>
       ))}
       {DASH_KNOB_X_POSITIONS.map((x, idx) => (
-        <mesh key={`dash-knob-${idx}`} position={[x, 1.42, -3.86]} >
+        <mesh key={`dash-knob-${idx}`} position={[x, 1.42, -3.86]}>
           <cylinderGeometry args={[0.05, 0.05, 0.06, 10]} />
           <meshStandardMaterial color="#dde4ee" metalness={0.9} roughness={0.2} />
         </mesh>
       ))}
       {BUS_SHELF_X_POSITIONS.map((x) => (
-        <mesh key={`bus-shelf-${x}`} position={[x, 2.8, 0.4]}  >
+        <mesh key={`bus-shelf-${x}`} position={[x, 2.8, 0.4]}>
           <boxGeometry args={[0.9, 0.5, 1.6]} />
           <meshStandardMaterial
             color="#3a2f24"
@@ -359,13 +359,7 @@ export function TourBus() {
 
       {/* Overhead luggage rails and side cases */}
       {LUGGAGE_RACK_Z_POSITIONS.map((z) => (
-        <mesh
-          key={`rack-left-${z}`}
-          position={[-5.35, 3.35, z]}
-          rotation={[0, Math.PI / 2, 0]}
-
-
-        >
+        <mesh key={`rack-left-${z}`} position={[-5.35, 3.35, z]} rotation={[0, Math.PI / 2, 0]}>
           <boxGeometry args={[1.25, 0.2, 0.85]} />
           <meshStandardMaterial
             color="#303947"
@@ -377,13 +371,7 @@ export function TourBus() {
         </mesh>
       ))}
       {LUGGAGE_RACK_Z_POSITIONS.map((z) => (
-        <mesh
-          key={`rack-right-${z}`}
-          position={[5.35, 3.35, z]}
-          rotation={[0, -Math.PI / 2, 0]}
-
-
-        >
+        <mesh key={`rack-right-${z}`} position={[5.35, 3.35, z]} rotation={[0, -Math.PI / 2, 0]}>
           <boxGeometry args={[1.25, 0.2, 0.85]} />
           <meshStandardMaterial
             color="#303947"
@@ -395,7 +383,7 @@ export function TourBus() {
         </mesh>
       ))}
       {SIDE_CASE_POSITIONS.map((pos, idx) => (
-        <mesh key={`side-case-${idx}`} position={pos}  >
+        <mesh key={`side-case-${idx}`} position={pos}>
           <boxGeometry args={[0.7, 0.9, 1.1]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#3a2230' : '#223a34'}
@@ -415,7 +403,7 @@ export function TourBus() {
 
       {/* Grab handles and hanging straps */}
       {GRAB_HANDLE_X_POSITIONS.map((x) => (
-        <mesh key={`grab-${x}`} position={[x, 4.12, -0.36]} >
+        <mesh key={`grab-${x}`} position={[x, 4.12, -0.36]}>
           <torusGeometry args={[0.16, 0.03, 10, 20]} />
           <meshStandardMaterial color="#dbe3ed" metalness={0.86} roughness={0.24} />
         </mesh>

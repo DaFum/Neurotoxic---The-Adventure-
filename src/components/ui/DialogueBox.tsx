@@ -142,7 +142,9 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
         if (focusableElements.length === 0) return;
 
         const firstElement = focusableElements[0] as HTMLElement | undefined;
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement | undefined;
+        const lastElement = focusableElements[focusableElements.length - 1] as
+          | HTMLElement
+          | undefined;
 
         if (e.shiftKey) {
           if (
@@ -196,9 +198,6 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
 
   return (
     <>
-      <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {dialogue && displayedText.length >= dialogue.text.length ? dialogue.text : ''}
-      </div>
       <AnimatePresence>
         {dialogue && (
           <div
@@ -242,13 +241,23 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
                     <button
                       onClick={() => setDialogue(null)}
                       aria-label="Close transmission"
-                      title="Close transmission"
+                      title="Close transmission (ESC)"
                       className="text-toxic hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic"
                     >
                       <X size={16} />
                     </button>
                   </div>
-                  <p className="text-xl font-bold leading-tight text-zinc-100 italic">
+
+                  {/* Screen-reader only full text, announced immediately */}
+                  <div className="sr-only" aria-live="polite">
+                    {dialogue?.text}
+                  </div>
+
+                  {/* Visually hidden from screen readers to avoid reading character-by-character */}
+                  <p
+                    className="text-xl font-bold leading-tight text-zinc-100 italic"
+                    aria-hidden="true"
+                  >
                     {displayedText}
                     <span className="inline-block w-2 h-5 bg-toxic ml-1 animate-pulse" />
                   </p>

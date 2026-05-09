@@ -72,7 +72,8 @@ export const createQuestSlice: StateCreator<GameState, [], [], QuestSlice> = (se
         if (!questChanged && !flagChanged) return state;
 
         const newQuests = questChanged ? [...state.quests] : state.quests;
-        if (questChanged && quest) newQuests[index] = { ...quest, text, status: nextStatus } as Quest;
+        if (questChanged && quest)
+          newQuests[index] = { ...quest, text, status: nextStatus } as Quest;
 
         return {
           ...(questChanged && { quests: newQuests }),
@@ -105,7 +106,8 @@ export const createQuestSlice: StateCreator<GameState, [], [], QuestSlice> = (se
       if (!statusChanged && !flagChanged) return state;
 
       const newQuests = statusChanged ? [...state.quests] : state.quests;
-      if (statusChanged && quest) newQuests[index] = { ...quest, status: 'completed' as QuestStatus } as Quest;
+      if (statusChanged && quest)
+        newQuests[index] = { ...quest, status: 'completed' as QuestStatus } as Quest;
 
       return {
         ...(statusChanged && { quests: newQuests }),

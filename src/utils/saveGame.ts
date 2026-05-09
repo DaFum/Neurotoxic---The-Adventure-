@@ -55,11 +55,11 @@ export function checkHasSavedGame(raw: string | null): boolean {
 
     return Boolean(
       hasTrait ||
-        hasInventory ||
-        hasCompletedQuest ||
-        hasLoreProgress ||
-        hasSkillProgress ||
-        hasMoodProgress,
+      hasInventory ||
+      hasCompletedQuest ||
+      hasLoreProgress ||
+      hasSkillProgress ||
+      hasMoodProgress,
     );
   } catch (e) {
     console.warn('Failed to parse save game:', e);
