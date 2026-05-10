@@ -197,7 +197,7 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
   return (
     <>
       <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {dialogue && displayedText.length >= dialogue.text.length ? dialogue.text : ''}
+        {dialogue ? dialogue.text : ''}
       </div>
       <AnimatePresence>
         {dialogue && (
@@ -248,7 +248,7 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
                       <X size={16} />
                     </button>
                   </div>
-                  <p className="text-xl font-bold leading-tight text-zinc-100 italic">
+                  <p aria-hidden="true" className="text-xl font-bold leading-tight text-zinc-100 italic">
                     {displayedText}
                     <span className="inline-block w-2 h-5 bg-toxic ml-1 animate-pulse" />
                   </p>

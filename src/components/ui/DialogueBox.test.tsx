@@ -66,7 +66,7 @@ describe('DialogueBox', () => {
     expect(dialogElement.hasAttribute('aria-atomic')).toBe(false);
   });
 
-  it('keeps sr-only element empty until typing completes, then populates it', () => {
+  it('populates sr-only element immediately with full text', () => {
     const mockDialogue = { text: 'Test message', urgency: 3 }; // urgency 3 -> 50ms delay
 
     const { container } = render(
@@ -82,23 +82,7 @@ describe('DialogueBox', () => {
     const liveRegion = container.querySelector('.sr-only');
     expect(liveRegion).not.toBeNull();
 
-    // Initially empty
-    expect(liveRegion?.textContent).toBe('');
-
-    // Advance time partially (not enough to finish typing)
-    act(() => {
-      vi.advanceTimersByTime(200);
-    });
-
-    // Still empty while typing
-    expect(liveRegion?.textContent).toBe('');
-
-    // Advance enough to finish (12 chars * 50ms = 600ms)
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
-
-    // Now populated with full text
+    // Populated immediately with full text so screen reader can read it whole
     expect(liveRegion?.textContent).toBe('Test message');
   });
 });
