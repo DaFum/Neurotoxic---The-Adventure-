@@ -122,7 +122,7 @@ describe('Interactable', () => {
 
     // Initial render creates the textures (one for emoji, two for in/out range labels per unique identity)
     expect(canvasTextureCtorCount).toBe(3);
-    createdTextures.forEach(t => expect(t.version).toBeGreaterThan(0));
+    createdTextures.forEach((t) => expect(t.version).toBeGreaterThan(0));
     expect(mockDispose).not.toHaveBeenCalled();
 
     // Rerender with only one interactable

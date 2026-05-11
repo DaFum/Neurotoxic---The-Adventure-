@@ -20,16 +20,7 @@
  */
 
 import { type Quest, type QuestStatus, useStore } from '../store';
-import {
-  Backpack,
-  CheckCircle2,
-  Heart,
-  Plus,
-  Activity,
-  Eye,
-  EyeOff,
-  Pause,
-} from 'lucide-react';
+import { Backpack, CheckCircle2, Heart, Plus, Activity, Eye, EyeOff, Pause } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'motion/react';
 import { GlitchOverlay } from './ui/GlitchOverlay';
@@ -153,7 +144,8 @@ export function UI() {
       if (quest && orderValue !== undefined && orderValue >= 0 && orderValue < NUM_BUCKETS) {
         buckets[orderValue]?.push(quest);
       } else {
-        if (quest) console.warn(`Unknown or out-of-bounds quest status order for status: ${quest.status}`);
+        if (quest)
+          console.warn(`Unknown or out-of-bounds quest status order for status: ${quest.status}`);
       }
     }
 

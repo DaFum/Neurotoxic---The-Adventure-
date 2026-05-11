@@ -133,7 +133,7 @@ export function Proberaum() {
 
       {/* Floor */}
       <RigidBody type="fixed" position={[0, -0.1, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} >
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[30, 15]} />
           <meshStandardMaterial
             color="#4a5968"
@@ -147,7 +147,7 @@ export function Proberaum() {
 
       {/* Walls */}
       <RigidBody type="fixed" position={[0, 5, -7.5]}>
-        <mesh >
+        <mesh>
           <planeGeometry args={[30, 10]} />
           <meshStandardMaterial
             color="#556474"
@@ -194,7 +194,7 @@ export function Proberaum() {
       {/* Industrial clutter */}
       {CRATE_DATA.map((crate, idx) => (
         <group key={`crate-${idx}`} position={crate.pos} rotation={[0, crate.rot, 0]}>
-          <mesh  >
+          <mesh>
             <boxGeometry args={[1.4, 1.2, 1.2]} />
             <meshStandardMaterial
               color="#4b4037"
@@ -204,7 +204,7 @@ export function Proberaum() {
               roughness={0.72}
             />
           </mesh>
-          <mesh position={[0, 0.55, 0]} >
+          <mesh position={[0, 0.55, 0]}>
             <boxGeometry args={[1.18, 0.08, 1]} />
             <meshStandardMaterial
               color="#9f8a6f"
@@ -225,7 +225,6 @@ export function Proberaum() {
               key={`crate-wheel-l-${idx}-${x}`}
               position={[x, -0.62, -0.46]}
               rotation={[Math.PI / 2, 0, 0]}
-
             >
               <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
               <meshStandardMaterial color="#1b2129" metalness={0.6} roughness={0.45} />
@@ -236,7 +235,6 @@ export function Proberaum() {
               key={`crate-wheel-r-${idx}-${x}`}
               position={[x, -0.62, 0.46]}
               rotation={[Math.PI / 2, 0, 0]}
-
             >
               <cylinderGeometry args={[0.09, 0.09, 0.08, 12]} />
               <meshStandardMaterial color="#1b2129" metalness={0.6} roughness={0.45} />
@@ -248,7 +246,7 @@ export function Proberaum() {
       {/* Side utility racks */}
       {UTILITY_RACK_POSITIONS.map((pos, idx) => (
         <group key={`utility-rack-${idx}`} position={pos}>
-          <mesh  >
+          <mesh>
             <boxGeometry args={[0.9, 2.8, 2.4]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#41566d' : '#654a61'}
@@ -285,12 +283,7 @@ export function Proberaum() {
 
       {/* Cable trenches / floor strips */}
       {CABLE_TRENCH_Z_POSITIONS.map((z, idx) => (
-        <mesh
-          key={`strip-${z}`}
-          position={[0, 0.02, z]}
-          rotation={[-Math.PI / 2, 0, 0]}
-
-        >
+        <mesh key={`strip-${z}`} position={[0, 0.02, z]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[18, 0.28]} />
           <meshStandardMaterial
             color={idx % 2 === 0 ? '#2dffe7' : '#ff67c0'}
@@ -305,7 +298,7 @@ export function Proberaum() {
       {/* Rehearsal gear */}
       {AMP_STACK_POSITIONS.map((pos, idx) => (
         <group key={`amp-stack-${idx}`} position={pos}>
-          <mesh  >
+          <mesh>
             <boxGeometry args={[1.4, 0.9, 0.9]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#4f6c8a' : '#8a4f79'}
@@ -337,11 +330,11 @@ export function Proberaum() {
           </mesh>
         </group>
       ))}
-      <mesh position={[0, 0.22, -3.4]}  >
+      <mesh position={[0, 0.22, -3.4]}>
         <cylinderGeometry args={[0.95, 0.95, 0.14, 20]} />
         <meshStandardMaterial color="#233338" emissive="#163035" emissiveIntensity={0.25} />
       </mesh>
-      <mesh position={[0, 0.54, -3.42]}  >
+      <mesh position={[0, 0.54, -3.42]}>
         <cylinderGeometry args={[0.56, 0.62, 0.52, 22]} />
         <meshStandardMaterial
           color="#456585"
@@ -351,7 +344,7 @@ export function Proberaum() {
           roughness={0.36}
         />
       </mesh>
-      <mesh position={[-0.82, 0.56, -3.52]}  >
+      <mesh position={[-0.82, 0.56, -3.52]}>
         <cylinderGeometry args={[0.28, 0.32, 0.38, 18]} />
         <meshStandardMaterial
           color="#4d6f92"
@@ -361,7 +354,7 @@ export function Proberaum() {
           roughness={0.38}
         />
       </mesh>
-      <mesh position={[0.82, 0.56, -3.52]}  >
+      <mesh position={[0.82, 0.56, -3.52]}>
         <cylinderGeometry args={[0.28, 0.32, 0.38, 18]} />
         <meshStandardMaterial
           color="#4d6f92"
@@ -376,7 +369,7 @@ export function Proberaum() {
         <meshStandardMaterial color="#dbe5ef" metalness={0.9} roughness={0.14} />
       </mesh>
       {MIC_STAND_X_POSITIONS.map((x) => (
-        <mesh key={`mic-stand-${x}`} position={[x, 0.72, -3.0]}  >
+        <mesh key={`mic-stand-${x}`} position={[x, 0.72, -3.0]}>
           <cylinderGeometry args={[0.03, 0.05, 1.4, 10]} />
           <meshStandardMaterial
             color="#6bd4ff"
@@ -433,11 +426,11 @@ export function Proberaum() {
       {/* Overhead hanging lamps */}
       {LAMP_X_POSITIONS.map((x, idx) => (
         <group key={`lamp-${x}`} position={[x, 5.9, -1.8]}>
-          <mesh >
+          <mesh>
             <cylinderGeometry args={[0.04, 0.04, 1.1, 8]} />
             <meshStandardMaterial color="#2f3b44" metalness={0.7} roughness={0.3} />
           </mesh>
-          <mesh position={[0, -0.62, 0]} >
+          <mesh position={[0, -0.62, 0]}>
             <sphereGeometry args={[0.2, 12, 12]} />
             <meshStandardMaterial
               color={idx % 2 === 0 ? '#9bff74' : '#58b8ff'}
@@ -468,7 +461,7 @@ export function Proberaum() {
 
       {/* Water Puddle */}
       {!flags.waterCleaned && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 2]} >
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 2]}>
           <circleGeometry args={[3, 32]} />
           <meshStandardMaterial
             color="#00aaff"

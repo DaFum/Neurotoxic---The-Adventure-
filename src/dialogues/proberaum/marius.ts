@@ -82,7 +82,11 @@ function getPreBeerDialogue(
   };
 }
 
-function getPostBeerDialogue(flags: GameState['flags'], bandMood: number, trait: Trait | null): Dialogue {
+function getPostBeerDialogue(
+  flags: GameState['flags'],
+  bandMood: number,
+  trait: Trait | null,
+): Dialogue {
   const moodText =
     bandMood > 80
       ? 'Marius: "Ich fühle die Energie! Wir werden die Welt in Schutt und Asche legen!"'
