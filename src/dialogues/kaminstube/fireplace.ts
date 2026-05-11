@@ -1,5 +1,6 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game } from '../shared/helpers';
+import { getCachedQuest } from '../../dialogueEngine';
 
 const FORGOTTEN_LORE_QUEST_ID = 'forgotten_lore';
 const FORGOTTEN_LORE_QUEST_TEXT = 'Entschlüssele die vergessene Lore in der Kaminstube';
@@ -15,7 +16,7 @@ function completeForgottenLoreQuest(): void {
 
 export function buildKaminstubeFireplaceDialogue(): Dialogue {
   const store = game();
-  const loreQuest = store.quests.find((quest) => quest.id === FORGOTTEN_LORE_QUEST_ID);
+  const loreQuest = getCachedQuest(FORGOTTEN_LORE_QUEST_ID); // Bolt: O(1) cache lookup
   const loreQuestCompleted = loreQuest?.status === 'completed';
   const loreAlreadyResolved = loreQuestCompleted || store.flags.kaminFeuerPact;
   const options: DialogueOption[] = [];

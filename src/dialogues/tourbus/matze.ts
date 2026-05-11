@@ -1,5 +1,6 @@
 import { type Dialogue } from '../../store';
 import { game, say } from '../shared/helpers';
+import { getCachedQuest } from '../../dialogueEngine';
 
 export function buildTourbusMatzeDialogue(): Dialogue | string {
   const store = game();
@@ -16,7 +17,8 @@ export function buildTourbusMatzeDialogue(): Dialogue | string {
 
   if (
     hasItem('Repariertes Kabel') &&
-    !store.quests.find((q) => q.id === 'cable' && q.status === 'completed')
+    /*! Bolt: O(1) cache lookup instead of O(N) array scan */
+    !(getCachedQuest('cable')?.status === 'completed')
   ) {
     return {
       text: 'Matze: "Hast du Angst vor Salzgitter?"',

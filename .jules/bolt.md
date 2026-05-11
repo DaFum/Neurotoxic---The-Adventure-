@@ -77,3 +77,7 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 
 **Learning:** Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.
 **Action:** Prefer `.findIndex()` lookup, followed by a shallow array clone (`[...array]`) and direct index mutation (`newArray[index] = ...`) when updating a single unique item in a state array.
+## 2026-04-18 - Replacing O(N) Quest Array Finds with Cached Lookups
+
+**Learning:** During profiling of dialogue and UI renders, I noticed that evaluating conditional statements using `store.quests.find((q) => q.id === '...')` forces an (N)$ scan of the quests array. When multiple options in a single dialogue box evaluate this condition, the redundant linear scans create measurable CPU overhead, reducing render speed.
+**Action:** Use the pre-existing `getCachedQuest('...')` utility function from `src/dialogueEngine.ts` which maintains a derived `Map` cache synchronized with the Zustand store via `subscribe`. This guarantees (1)$ lookup times for quests and resolves the linear scanning overhead in frequent hot-paths.
