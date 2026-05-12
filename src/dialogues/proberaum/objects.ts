@@ -1,5 +1,6 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, say } from '../shared/helpers';
+import { getCachedQuest } from '../../dialogueEngine';
 
 export function buildProberaumWallCracksDialogue(): Dialogue {
   const store = game();
@@ -251,7 +252,7 @@ export function buildProberaumAmpDialogue(): Dialogue {
 export function buildProberaumDrumMachineDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
-  const drumMachineQuestStatus = store.quests.find((quest) => quest.id === 'drum_machine')?.status;
+  const drumMachineQuestStatus = getCachedQuest('drum_machine')?.status;
 
   const hasRiff = hasItem('Verbotenes Riff');
   const questCompleted = drumMachineQuestStatus === 'completed' || flags.drumMachineQuestCompleted;
@@ -358,9 +359,7 @@ export function buildProberaumDrumMachineDialogue(): Dialogue {
 export function buildProberaumMonitorDialogue(): Dialogue {
   const store = game();
   const { flags, hasItem } = store;
-  const feedbackMonitorQuestStatus = store.quests.find(
-    (quest) => quest.id === 'feedback_monitor',
-  )?.status;
+  const feedbackMonitorQuestStatus = getCachedQuest('feedback_monitor')?.status;
   const feedbackMonitorCompleted =
     feedbackMonitorQuestStatus === 'completed' || flags.feedbackMonitorQuestCompleted;
 

@@ -1,5 +1,6 @@
 import { type Dialogue } from '../../store';
 import { game, say } from '../shared/helpers';
+import { getCachedQuest } from '../../dialogueEngine';
 
 export function buildKaminstubeTubePickupDialogue(): Dialogue {
   const store = game();
@@ -19,7 +20,7 @@ export function buildKaminstubeAmpDialogue(): Dialogue {
     return say('Der Amp ist stumm. Eine Röhre scheint durchgebrannt zu sein.');
   }
 
-  if (!store.quests.find((quest) => quest.id === 'amp')) {
+  if (!getCachedQuest('amp')) {
     store.addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
   }
 

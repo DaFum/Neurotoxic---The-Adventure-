@@ -77,3 +77,8 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 
 **Learning:** Updating single items in Zustand store arrays using `.find()` followed by `.map()` is an anti-pattern. It forces two O(N) array scans and allocates a completely new array, generating unnecessary garbage collection pressure and reducing performance during state mutations.
 **Action:** Prefer `.findIndex()` lookup, followed by a shallow array clone (`[...array]`) and direct index mutation (`newArray[index] = ...`) when updating a single unique item in a state array.
+
+## 2026-04-18 - Replacing store.quests.find with getCachedQuest
+
+**Learning:** Despite quest arrays being relatively small, executing an O(N) `store.quests.find(...)` inside of heavily accessed hot-path functions like dialogue builders accumulates overhead and forces unnecessary array iteration allocations in JavaScript.
+**Action:** Always replace `store.quests.find(...)` lookups in logic connected to render or high-frequency game logic paths with the constant-time `getCachedQuest(...)` map lookup exported from `src/dialogueEngine.ts`.
