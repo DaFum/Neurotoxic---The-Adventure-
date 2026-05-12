@@ -1,5 +1,6 @@
 import { type Dialogue, type DialogueOption } from '../../store';
 import { game, say } from '../shared/helpers';
+import { getCachedQuest } from '../../dialogueEngine';
 
 export function buildSalzgitterBassistDialogue(): Dialogue {
   const store = game();
@@ -12,7 +13,8 @@ export function buildSalzgitterBassistDialogue(): Dialogue {
 
   if (
     store.flags.voidBassistSpoken &&
-    store.quests.find((q) => q.id === 'bassist_mystery' && q.status === 'completed') &&
+    /*! Bolt: O(1) cache lookup */
+    (getCachedQuest('bassist_mystery')?.status === 'completed') &&
     !store.hasItem('Bassist-Saite') &&
     !store.hasItem('Resonanz-Kristall')
   ) {
@@ -282,7 +284,8 @@ export function buildSalzgitterFanDialogue(): Dialogue {
 
 function executeFinaleEnding(currentStore: ReturnType<typeof game>): void {
   const frequenz1982Completed =
-    currentStore.quests.find((quest) => quest.id === 'frequenz_1982')?.status === 'completed' ||
+        /*! Bolt: O(1) cache lookup */
+    (getCachedQuest('frequenz_1982')?.status === 'completed') ||
     currentStore.flags.frequenz1982_complete;
 
   let endingsCount = 0;
@@ -364,7 +367,8 @@ function executeFinaleEnding(currentStore: ReturnType<typeof game>): void {
 export function buildSalzgitterFinaleDialogue(): Dialogue {
   const store = game();
   const finalQuestCompleted =
-    store.quests.find((quest) => quest.id === 'final')?.status === 'completed' ||
+        /*! Bolt: O(1) cache lookup */
+    (getCachedQuest('final')?.status === 'completed') ||
     store.flags.salzgitter_finalized;
 
   if (finalQuestCompleted) {
