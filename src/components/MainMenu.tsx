@@ -109,7 +109,10 @@ export function MainMenu() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-20 bg-toxic/20 -rotate-12" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center">
+      <div
+        className="relative z-10 flex flex-col items-center"
+        inert={showSavePrompt || selectingTrait ? true : undefined}
+      >
         <motion.div
           initial={{ scale: 2, y: -100, opacity: 0, skewX: -10 }}
           animate={{ scale: 1, y: 0, opacity: 1, skewX: -10 }}
@@ -195,6 +198,7 @@ export function MainMenu() {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
+                  autoFocus
                   onClick={() => {
                     setShowSavePrompt(false);
                     if (trait) {
@@ -263,9 +267,10 @@ export function MainMenu() {
                 Select_Professional_Trait
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {traits.map((t) => (
+                {traits.map((t, idx) => (
                   <button
                     key={t.id}
+                    autoFocus={idx === 0}
                     onClick={() => {
                       setTrait(t.id);
                       t.skills.forEach((s) => useStore.getState().increaseSkill(s.name, s.val));
