@@ -132,9 +132,7 @@ export function executeDialogueOption(option: DialogueOption): boolean {
 
   // 1. Consume items
   if (option.consumeItems) {
-    option.consumeItems.forEach((item) => {
-      useStore.getState().removeFromInventory(item);
-    });
+    useStore.getState().removeItemsFromInventory(option.consumeItems);
   }
 
   // 2. Apply declarative state effects BEFORE action runs

@@ -8,6 +8,7 @@ export interface InventorySlice {
   inventoryCounts: Record<string, number>;
   addToInventory: (item: string) => boolean;
   removeFromInventory: (item: string) => void;
+  removeItemsFromInventory: (items: string[]) => void;
   hasItem: (item: string) => boolean;
   canPickupItem: (item: string) => boolean;
   itemPickupCounts: Record<string, number>;
@@ -65,6 +66,35 @@ export const createInventorySlice: StateCreator<GameState, [], [], InventorySlic
       }
       console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
       return state;
+    });
+  },
+  removeItemsFromInventory: (items) => {
+    if (!items || items.length === 0) return;
+
+    set((state) => {
+      let changed = false;
+      const newInventory = [...state.inventory];
+      const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item === undefined) continue;
+
+        const index = newInventory.indexOf(item);
+        if (index !== -1) {
+          changed = true;
+          newInventory.splice(index, 1);
+          if (newCounts[item] > 1) {
+            newCounts[item]--;
+          } else {
+            delete newCounts[item];
+          }
+        } else {
+          console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
+        }
+      }
+
+      return changed ? { inventory: newInventory, inventoryCounts: newCounts } : state;
     });
   },
   hasItem: (item) => (get().inventoryCounts[item] ?? 0) > 0,
