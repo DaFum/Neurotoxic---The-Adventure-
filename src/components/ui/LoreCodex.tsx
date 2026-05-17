@@ -98,8 +98,8 @@ export function LoreCodex({
               ref={closeLoreBtnRef}
               onClick={() => setShowLoreCodex(false)}
               aria-label="Close lore codex"
-              title="Close lore codex"
-              className="p-2 border border-toxic/30 text-toxic hover:bg-toxic hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-toxic"
+              title="Close lore codex (ESC)"
+              className="p-2 border border-toxic/30 text-toxic hover:bg-toxic hover:text-black transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <X size={24} />
             </button>

@@ -1,8 +1,3 @@
-## 2025-02-18 - Typewriter text effects accessibility
-
-**Learning:** Character-by-character typewriter text effects are very difficult for screen readers to interpret correctly when wrapped in an `aria-live` region. They either read individual characters or remain silent until the typing completes.
-**Action:** Use an `aria-hidden=\"true\"` attribute on the visual typewriter element, and include a `.sr-only` container with `aria-live=\"polite\"` that holds the full text immediately, so screen readers can gracefully announce the full dialogue text.
-
-## 2026-05-13 - Focus Trapping in Conditionally Rendered React Modals
-**Learning:** When using conditional React rendering for modals (e.g., with `AnimatePresence`), background elements remain accessible to screen readers and keyboard focus. Using the HTML `inert` attribute on the background container combined with React's `autoFocus` on the primary modal action creates a perfect, zero-dependency focus trap that satisfies both keyboard users and screen readers.
-**Action:** Use `inert` on background content and `autoFocus` on primary modal actions to ensure modals are truly accessible without needing heavy third-party focus-trapping libraries.
+## 2025-03-05 - Disabled State Feedback and Focus Traps
+**Learning:** Tooltips on disabled elements (like `title` on an `aria-disabled` button) provide crucial context for *why* an element is locked, reducing player frustration during rigid game states (like forced dialogues). Additionally, when a custom element mimics an interactive element, utilizing `focus-visible` ensures consistent keyboard focus outlines without triggering intrusive styles for mouse users.
+**Action:** When adding or maintaining disabled states for UI components or locked dialogue options, always include an explanatory `title` or `aria-description`. Standardize custom focus states across the app to use `focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black` where applicable.

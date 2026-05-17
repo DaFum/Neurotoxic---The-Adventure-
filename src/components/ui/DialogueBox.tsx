@@ -292,6 +292,7 @@ export function DialogueBox({ dialogue, setDialogue, questDictionary }: Dialogue
                                   : undefined
                               }
                               aria-disabled={isLocked || isResolving}
+                              title={isLocked ? 'Requirements not met' : undefined}
                               onClick={() => {
                                 if (isLocked || isResolving || isResolvingRef.current) return;
                                 executeOption(option);

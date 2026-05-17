@@ -368,7 +368,7 @@ export function UI() {
             : 'hover:border-toxic hover:text-toxic'
         }`}
         aria-label="Toggle HUD panels"
-        title="Toggle HUD (H)"
+        title={dialogue ? 'Unavailable during transmission' : 'Toggle HUD (H)'}
         aria-pressed={showHudPanels}
       >
         {showHudPanels ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -494,6 +494,9 @@ export function UI() {
                       aria-disabled={selectedItems.length !== 2}
                       aria-describedby={
                         selectedItems.length !== 2 ? 'compact-merge-helper' : undefined
+                      }
+                      title={
+                        selectedItems.length !== 2 ? 'Select exactly two items to merge' : undefined
                       }
                       className={`w-full mt-1 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                         selectedItems.length === 2
@@ -726,6 +729,9 @@ export function UI() {
                       aria-describedby={
                         selectedItems.length !== 2 ? 'full-merge-helper' : undefined
                       }
+                      title={
+                        selectedItems.length !== 2 ? 'Select exactly two items to merge' : undefined
+                      }
                       className={`w-full mt-2 font-black py-2 text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                         selectedItems.length === 2
                           ? 'bg-toxic hover:bg-toxic/80 text-black active:scale-95'
@@ -816,7 +822,7 @@ export function UI() {
             : 'hover:border-toxic hover:text-toxic'
         }`}
         aria-label="Toggle pause menu"
-        title="Pause Game (ESC)"
+        title={dialogue ? 'Unavailable during transmission' : 'Pause Game (ESC)'}
         aria-pressed={isPaused}
         style={{ touchAction: 'none' }}
       >
