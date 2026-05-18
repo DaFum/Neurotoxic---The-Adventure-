@@ -368,7 +368,7 @@ export function UI() {
             : 'hover:border-toxic hover:text-toxic'
         }`}
         aria-label="Toggle HUD panels"
-        title="Toggle HUD (H)"
+        title={dialogue ? "HUD unavailable during dialogue" : "Toggle HUD (H)"}
         aria-pressed={showHudPanels}
       >
         {showHudPanels ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -816,7 +816,7 @@ export function UI() {
             : 'hover:border-toxic hover:text-toxic'
         }`}
         aria-label="Toggle pause menu"
-        title="Pause Game (ESC)"
+        title={dialogue ? "Pause unavailable during dialogue" : "Pause Game (ESC)"}
         aria-pressed={isPaused}
         style={{ touchAction: 'none' }}
       >
