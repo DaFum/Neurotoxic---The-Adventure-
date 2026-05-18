@@ -242,6 +242,7 @@ export interface Dialogue {
  * @property inventory - A list of item IDs currently held by the player.
  * @property addToInventory - Adds an item ID to the inventory. Returns whether the item was added.
  * @property removeFromInventory - Removes an item ID from the inventory.
+ * @property removeItemsFromInventory - Removes multiple item IDs from the inventory in a single batch update.
  * @property hasItem - Checks if the player has a specific item ID in their inventory.
  * @property combineItems - Attempts to combine two item IDs into a new item.
  * @property quests - A list of active, completed, and failed quests.
@@ -275,6 +276,7 @@ export interface GameState {
   inventoryCounts: Record<string, number>;
   addToInventory: (item: string) => boolean;
   removeFromInventory: (item: string) => void;
+  removeItemsFromInventory: (items: string[]) => void;
   hasItem: (item: string) => boolean;
   canPickupItem: (item: string) => boolean;
   itemPickupCounts: Record<string, number>;
