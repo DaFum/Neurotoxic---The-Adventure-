@@ -368,7 +368,7 @@ export function UI() {
             : 'hover:border-toxic hover:text-toxic'
         }`}
         aria-label="Toggle HUD panels"
-        title={dialogue ? "HUD unavailable during dialogue" : "Toggle HUD (H)"}
+        title={dialogue ? 'HUD unavailable during dialogue' : 'Toggle HUD (H)'}
         aria-pressed={showHudPanels}
       >
         {showHudPanels ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -424,7 +424,14 @@ export function UI() {
                   <span className="text-toxic font-bold">{sceneLabel}</span>
                   <span className="text-zinc-400">Mood {bandMood}%</span>
                 </div>
-                <div className="mt-2 h-1.5 bg-zinc-900 overflow-hidden flex gap-0.5">
+                <div
+                  className="mt-2 h-1.5 bg-zinc-900 overflow-hidden flex gap-0.5"
+                  role="progressbar"
+                  aria-valuenow={bandMood}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label="Band Vibe"
+                >
                   {METER_SEGMENTS.map((i) => (
                     <div
                       key={i}
@@ -467,17 +474,24 @@ export function UI() {
                     <div className="grid grid-cols-2 gap-2">
                       {inventoryStacks.map(({ item, count }) => {
                         const selectedCount = selectedItemCounts.get(item) ?? 0;
+                        const isDisabled = selectedItems.length >= 2 && selectedCount === 0;
                         return (
                           <motion.button
-                            whileTap={{ scale: 0.96 }}
+                            whileTap={isDisabled ? undefined : { scale: 0.96 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                             key={item}
-                            onClick={() => toggleItemSelection(item, count)}
+                            onClick={() => {
+                              if (isDisabled) return;
+                              toggleItemSelection(item, count);
+                            }}
                             aria-pressed={selectedCount > 0}
-                            className={`px-2 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic ${
+                            aria-disabled={isDisabled}
+                            className={`px-2 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
-                                : 'bg-zinc-900/50 border-zinc-700 text-zinc-400'
+                                : isDisabled
+                                  ? 'bg-zinc-900/20 border-zinc-800 text-zinc-600 opacity-50 cursor-not-allowed'
+                                  : 'bg-zinc-900/50 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-500'
                             }`}
                           >
                             {count > 1 ? `${item} x${count}` : item}
@@ -697,18 +711,25 @@ export function UI() {
                     <div className="grid grid-cols-2 gap-2">
                       {inventoryStacks.map(({ item, count }) => {
                         const selectedCount = selectedItemCounts.get(item) ?? 0;
+                        const isDisabled = selectedItems.length >= 2 && selectedCount === 0;
                         return (
                           <motion.button
-                            whileHover={{ scale: 1.06 }}
-                            whileTap={{ scale: 0.94 }}
+                            whileHover={isDisabled ? undefined : { scale: 1.06 }}
+                            whileTap={isDisabled ? undefined : { scale: 0.94 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                             key={item}
-                            onClick={() => toggleItemSelection(item, count)}
+                            onClick={() => {
+                              if (isDisabled) return;
+                              toggleItemSelection(item, count);
+                            }}
                             aria-pressed={selectedCount > 0}
-                            className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic ${
+                            aria-disabled={isDisabled}
+                            className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
-                                : 'bg-zinc-900/50 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-500'
+                                : isDisabled
+                                  ? 'bg-zinc-900/20 border-zinc-800 text-zinc-600 opacity-50 cursor-not-allowed'
+                                  : 'bg-zinc-900/50 border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:border-zinc-500'
                             }`}
                           >
                             {count > 1 ? `${item} x${count}` : item}
@@ -816,7 +837,7 @@ export function UI() {
             : 'hover:border-toxic hover:text-toxic'
         }`}
         aria-label="Toggle pause menu"
-        title={dialogue ? "Pause unavailable during dialogue" : "Pause Game (ESC)"}
+        title={dialogue ? 'Pause unavailable during dialogue' : 'Pause Game (ESC)'}
         aria-pressed={isPaused}
         style={{ touchAction: 'none' }}
       >
