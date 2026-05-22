@@ -125,6 +125,7 @@ export function PauseMenu({
 
         <button
           ref={initialFocusRef}
+          title="Resume session (ESC)"
           onClick={() => setPaused(false)}
           className="group flex items-center justify-center gap-3 bg-toxic hover:bg-white text-black font-black py-4 text-sm uppercase tracking-[0.2em] transition-all brutal-border-toxic hover:translate-x-[-2px] hover:translate-y-[-2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
@@ -156,6 +157,7 @@ export function PauseMenu({
               <button
                 ref={cancelButtonRef}
                 autoFocus
+                title="Cancel reboot (ESC)"
                 onClick={() => setShowRebootConfirm(false)}
                 className="flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2 text-[10px] uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
