@@ -20,7 +20,8 @@ export function buildKaminstubeAmpDialogue(): Dialogue {
     return say('Der Amp ist stumm. Eine Röhre scheint durchgebrannt zu sein.');
   }
 
-  if (!getCachedQuest('amp')) { // Bolt: O(1) cache lookup
+  if (!getCachedQuest('amp')) {
+    // Bolt: O(1) cache lookup
     store.addQuest('amp', 'Repariere Matzes Amp mit einer Ersatzröhre');
   }
 
