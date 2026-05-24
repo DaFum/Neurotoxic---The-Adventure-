@@ -486,6 +486,8 @@ export function UI() {
                             }}
                             aria-pressed={selectedCount > 0}
                             aria-disabled={isDisabled}
+                            aria-describedby={isDisabled ? 'compact-item-limit-helper' : undefined}
+                            title={isDisabled ? 'Selection limit reached (max 2 items)' : undefined}
                             className={`px-2 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
@@ -526,6 +528,9 @@ export function UI() {
                         Select exactly two items to merge
                       </div>
                     )}
+                    <div id="compact-item-limit-helper" className="sr-only">
+                      Selection limit reached (max 2 items). Deselect an item to select this one.
+                    </div>
                   </div>
                 )}
               </div>
@@ -724,6 +729,8 @@ export function UI() {
                             }}
                             aria-pressed={selectedCount > 0}
                             aria-disabled={isDisabled}
+                            aria-describedby={isDisabled ? 'full-item-limit-helper' : undefined}
+                            title={isDisabled ? 'Selection limit reached (max 2 items)' : undefined}
                             className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
@@ -764,6 +771,9 @@ export function UI() {
                         Select exactly two items to merge
                       </div>
                     )}
+                    <div id="full-item-limit-helper" className="sr-only">
+                      Selection limit reached (max 2 items). Deselect an item to select this one.
+                    </div>
                   </div>
                 )}
               </div>
