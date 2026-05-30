@@ -12,3 +12,7 @@
 
 **Learning:** When users reach the maximum allowed selection count (e.g. 2 items for combining), relying solely on an error message or generic helper text can be frustrating. Disabled unselected items (with `aria-disabled` and clear visual styling like `opacity-50`) immediately communicates that no more selections can be made, preventing the user from even trying an invalid interaction.
 **Action:** Always visually and functionally disable unselected interaction options when a max selection limit has been reached, instead of just displaying an error afterward.
+
+## 2025-02-18 - HUD Tablist Accessibility
+**Learning:** Re-implementing a custom UI tablist component that was previously just a group of disconnected buttons with `aria-pressed` significantly improves screen reader context. Using standard `role="tablist"`, `role="tab"`, and `role="tabpanel"`, along with replacing `aria-pressed` with `aria-selected` and providing correct `aria-controls` bindings, allows screen readers to natively understand and announce it as a single cohesive component (e.g. "Tab 1 of 3").
+**Action:** Always implement custom UI toggles that switch between views as standard ARIA tabbed interfaces, not just visual buttons with pressed states. Ensure full bindings using `role`, `aria-selected`, `aria-controls`, and `aria-labelledby`.
