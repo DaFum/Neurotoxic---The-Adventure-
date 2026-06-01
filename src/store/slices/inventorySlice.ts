@@ -73,23 +73,40 @@ export const createInventorySlice: StateCreator<GameState, [], [], InventorySlic
 
     set((state) => {
       let changed = false;
-      const newInventory = [...state.inventory];
-      const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
+      // ⚡ Bolt Optimization: Transitioned O(M * N) array scan with splice/indexOf
+      // to O(M + N) frequency map approach to prevent redundant shifts.
+      // Expected impact: Eliminates O(N^2) overhead during multiple item removals.
+      const removeCounts: Record<string, number> = Object.create(null);
 
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
+        if (item !== undefined) {
+          removeCounts[item] = (removeCounts[item] || 0) + 1;
+        }
+      }
+
+      const newInventory: string[] = [];
+      const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
+
+      for (let i = 0; i < state.inventory.length; i++) {
+        const item = state.inventory[i];
         if (item === undefined) continue;
 
-        const index = newInventory.indexOf(item);
-        if (index !== -1) {
+        if (removeCounts[item] && removeCounts[item] > 0) {
           changed = true;
-          newInventory.splice(index, 1);
+          removeCounts[item]--;
           if (newCounts[item] > 1) {
             newCounts[item]--;
           } else {
             delete newCounts[item];
           }
         } else {
+          newInventory.push(item);
+        }
+      }
+
+      for (const item in removeCounts) {
+        if (removeCounts[item] && removeCounts[item] > 0) {
           console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
         }
       }
