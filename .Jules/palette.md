@@ -12,3 +12,6 @@
 
 **Learning:** When users reach the maximum allowed selection count (e.g. 2 items for combining), relying solely on an error message or generic helper text can be frustrating. Disabled unselected items (with `aria-disabled` and clear visual styling like `opacity-50`) immediately communicates that no more selections can be made, preventing the user from even trying an invalid interaction.
 **Action:** Always visually and functionally disable unselected interaction options when a max selection limit has been reached, instead of just displaying an error afterward.
+## 2024-06-01 - ARIA Label Redundancy
+**Learning:** Adding `aria-label` to buttons that already have clear, visible text (even stylized text like `REBOOT_GAME`) completely overrides the visible text for screen readers and violates WCAG 2.5.3 (Label in Name).
+**Action:** Reserve `aria-label` primarily for icon-only buttons or elements where the visible text lacks sufficient context.
