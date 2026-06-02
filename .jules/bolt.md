@@ -82,3 +82,6 @@ To optimize repetitive O(N) array lookups (e.g., `quests`) inside frequently cal
 
 **Learning:** During profiling of dialogue and UI renders, I noticed that evaluating conditional statements using `store.quests.find((q) => q.id === '...')` forces an (N)$ scan of the quests array. When multiple options in a single dialogue box evaluate this condition, the redundant linear scans create measurable CPU overhead, reducing render speed.
 **Action:** Use the pre-existing `getCachedQuest('...')` utility function from `src/dialogueEngine.ts` which maintains a derived `Map` cache synchronized with the Zustand store via `subscribe`. This guarantees (1)$ lookup times for quests and resolves the linear scanning overhead in frequent hot-paths.
+## 2024-05-18 - Optimize removeItemsFromInventory
+**Learning:** The inventory state manipulation for removing multiple items used O(M*N) operations by doing `indexOf` and `splice` inside a loop over elements to be removed.
+**Action:** When performing bulk array element removals, construct a frequency map object (e.g. via `Object.create(null)`) of items to remove and apply a single `filter` pass to achieve an O(M+N) time complexity without redundant array shifts.

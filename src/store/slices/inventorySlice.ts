@@ -72,25 +72,38 @@ export const createInventorySlice: StateCreator<GameState, [], [], InventorySlic
     if (!items || items.length === 0) return;
 
     set((state) => {
-      let changed = false;
-      const newInventory = [...state.inventory];
-      const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
-
+      // ⚡ Bolt: Optimize multiple item removal from O(M*N) to O(M+N)
+      // Track removals with a frequency map and filter the array in a single pass
+      const removeCounts = Object.create(null);
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        if (item === undefined) continue;
+        if (item !== undefined) {
+          removeCounts[item] = (removeCounts[item] ?? 0) + 1;
+        }
+      }
 
-        const index = newInventory.indexOf(item);
-        if (index !== -1) {
+      let changed = false;
+      const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
+
+      const newInventory = state.inventory.filter((item) => {
+        if (removeCounts[item] > 0) {
+          removeCounts[item]--;
           changed = true;
-          newInventory.splice(index, 1);
           if (newCounts[item] > 1) {
             newCounts[item]--;
           } else {
             delete newCounts[item];
           }
-        } else {
+          return false;
+        }
+        return true;
+      });
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item !== undefined && removeCounts[item] > 0) {
           console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
+          removeCounts[item]--;
         }
       }
 
