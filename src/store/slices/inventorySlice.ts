@@ -73,17 +73,16 @@ export const createInventorySlice: StateCreator<GameState, [], [], InventorySlic
 
     set((state) => {
       let changed = false;
-      const newInventory = [...state.inventory];
+      const toRemoveCounts: Record<string, number> = Object.create(null);
       const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
 
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (item === undefined) continue;
 
-        const index = newInventory.indexOf(item);
-        if (index !== -1) {
+        if (newCounts[item] > 0) {
           changed = true;
-          newInventory.splice(index, 1);
+          toRemoveCounts[item] = (toRemoveCounts[item] ?? 0) + 1;
           if (newCounts[item] > 1) {
             newCounts[item]--;
           } else {
@@ -94,7 +93,19 @@ export const createInventorySlice: StateCreator<GameState, [], [], InventorySlic
         }
       }
 
-      return changed ? { inventory: newInventory, inventoryCounts: newCounts } : state;
+      if (!changed) return state;
+
+      const newInventory: string[] = [];
+      for (let i = 0; i < state.inventory.length; i++) {
+        const item = state.inventory[i];
+        if (toRemoveCounts[item] > 0) {
+          toRemoveCounts[item]--;
+        } else {
+          newInventory.push(item);
+        }
+      }
+
+      return { inventory: newInventory, inventoryCounts: newCounts };
     });
   },
   hasItem: (item) => (get().inventoryCounts[item] ?? 0) > 0,
