@@ -71,28 +71,36 @@ export const createInventorySlice: StateCreator<GameState, [], [], InventorySlic
   removeItemsFromInventory: (items) => {
     if (!items || items.length === 0) return;
 
+    const inventoryCounts = get().inventoryCounts;
+    let hasAnyToRemove = false;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item !== undefined && (inventoryCounts[item] ?? 0) > 0) {
+        hasAnyToRemove = true;
+        break;
+      }
+    }
+
+    if (!hasAnyToRemove) {
+      const uniqueFailedItems = new Set(items);
+      uniqueFailedItems.forEach((item) => {
+        if (item !== undefined) {
+          console.warn('Attempted to remove item from inventory that does not exist: ' + item);
+        }
+      });
+      return;
+    }
+
     set((state) => {
       // ⚡ Bolt Optimization: Transitioned O(M * N) array scan with splice/indexOf
       // to O(M + N) frequency map approach to prevent redundant shifts.
       // Expected impact: Eliminates O(N^2) overhead during multiple item removals.
       const removeCounts: Record<string, number> = Object.create(null);
-      let hasAnyToRemove = false;
-
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (item !== undefined) {
           removeCounts[item] = (removeCounts[item] || 0) + 1;
-          if ((state.inventoryCounts[item] ?? 0) > 0) {
-            hasAnyToRemove = true;
-          }
         }
-      }
-
-      if (!hasAnyToRemove) {
-        for (const item in removeCounts) {
-          console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
-        }
-        return state;
       }
 
       let changed = false;
