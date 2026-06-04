@@ -72,25 +72,38 @@ export const createInventorySlice: StateCreator<GameState, [], [], InventorySlic
     if (!items || items.length === 0) return;
 
     set((state) => {
-      let changed = false;
-      const newInventory = [...state.inventory];
-      const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
-
+      const itemsToRemove: Record<string, number> = Object.create(null);
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        if (item === undefined) continue;
+        if (item !== undefined) {
+          itemsToRemove[item] = (itemsToRemove[item] || 0) + 1;
+        }
+      }
 
-        const index = newInventory.indexOf(item);
-        if (index !== -1) {
+      const newInventory: string[] = [];
+      const newCounts = Object.assign(Object.create(null), state.inventoryCounts);
+      let changed = false;
+
+      for (let i = 0; i < state.inventory.length; i++) {
+        const item = state.inventory[i];
+        if (item !== undefined && (itemsToRemove[item] ?? 0) > 0) {
+          itemsToRemove[item] = (itemsToRemove[item] as number) - 1;
           changed = true;
-          newInventory.splice(index, 1);
           if (newCounts[item] > 1) {
             newCounts[item]--;
           } else {
             delete newCounts[item];
           }
-        } else {
+        } else if (item !== undefined) {
+          newInventory.push(item);
+        }
+      }
+
+      for (const item in itemsToRemove) {
+        let missing = itemsToRemove[item] ?? 0;
+        while (missing > 0) {
           console.warn(`Attempted to remove item from inventory that does not exist: ${item}`);
+          missing--;
         }
       }
 
