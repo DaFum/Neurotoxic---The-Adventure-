@@ -12,11 +12,13 @@
 
 **Learning:** When users reach the maximum allowed selection count (e.g. 2 items for combining), relying solely on an error message or generic helper text can be frustrating. Disabled unselected items (with `aria-disabled` and clear visual styling like `opacity-50`) immediately communicates that no more selections can be made, preventing the user from even trying an invalid interaction.
 **Action:** Always visually and functionally disable unselected interaction options when a max selection limit has been reached, instead of just displaying an error afterward.
-## 2024-06-01 - ARIA Label Redundancy
+
+## 2026-06-01 - ARIA Label Redundancy
+
 **Learning:** Adding `aria-label` to buttons that already have clear, visible text (even stylized text like `REBOOT_GAME`) completely overrides the visible text for screen readers and violates WCAG 2.5.3 (Label in Name).
 **Action:** Reserve `aria-label` primarily for icon-only buttons or elements where the visible text lacks sufficient context.
 
 ## 2025-02-19 - Accessible Tab Semantics for Custom UI Tabs
 
 **Learning:** When building custom tabbed interfaces (like the compact HUD), using standard `<button>` elements without ARIA tab roles leaves screen reader users without context about the relationship between the buttons and the content panels. They just seem like standalone toggle buttons.
-**Action:** Always wrap custom tabs in a `role="tablist"`, assign `role="tab"` with `aria-selected` to the buttons, and link them to `role="tabpanel"` containers using `aria-controls` and `aria-labelledby` to create a semantically linked, accessible tab structure.
+**Action:** Always wrap custom tabs in a `role="tablist"`, assign `role="tab"` with `aria-selected` to the buttons, and link them to `role="tabpanel"` containers using `aria-controls` and `aria-labelledby` to create a semantically linked, accessible tab structure. Furthermore, implement WAI-ARIA tab pattern keyboard interactions: tab buttons must use `tabIndex=0` for the active tab and `tabIndex=-1` for inactive tabs. Implement Left/Right (or Up/Down) arrow key handling on the container to move focus and change selection, support Home/End keys, and ensure the keydown handlers correctly update focus, `aria-selected`, `tabIndex`, and call `aria-controls`/`aria-labelledby` to switch associated content.
