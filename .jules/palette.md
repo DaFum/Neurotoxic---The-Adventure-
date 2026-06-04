@@ -38,3 +38,6 @@
 
 **Learning:** Using simple, plain text to indicate an empty state (e.g., "No assets detected") can be easily missed by users scanning the UI, and doesn't clearly guide them on what to do next.
 **Action:** Use visually distinct empty states with a faded icon, a clear title, and a helpful call-to-action (e.g., "Explore the area to find items.") to make empty states more recognizable and actionable.
+## 2024-05-24 - Screen Reader Discoverability on Disabled Lists
+**Learning:** Found that when `aria-disabled` is used on lists of components (e.g. inventory items) instead of `disabled` so that focus order is preserved, the screen reader doesn't naturally understand why the item is disabled even if generic help text exists somewhere on the page.
+**Action:** Always manually link contextual reasoning (like "Selection limit reached") directly to the `aria-disabled` list item using `aria-describedby` pointing to an `sr-only` element, and providing a `title` attribute as well for visual pointers.
