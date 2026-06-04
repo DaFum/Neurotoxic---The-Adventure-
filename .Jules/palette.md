@@ -15,3 +15,8 @@
 ## 2024-06-01 - ARIA Label Redundancy
 **Learning:** Adding `aria-label` to buttons that already have clear, visible text (even stylized text like `REBOOT_GAME`) completely overrides the visible text for screen readers and violates WCAG 2.5.3 (Label in Name).
 **Action:** Reserve `aria-label` primarily for icon-only buttons or elements where the visible text lacks sufficient context.
+
+## 2025-02-19 - Accessible Tab Semantics for Custom UI Tabs
+
+**Learning:** When building custom tabbed interfaces (like the compact HUD), using standard `<button>` elements without ARIA tab roles leaves screen reader users without context about the relationship between the buttons and the content panels. They just seem like standalone toggle buttons.
+**Action:** Always wrap custom tabs in a `role="tablist"`, assign `role="tab"` with `aria-selected` to the buttons, and link them to `role="tabpanel"` containers using `aria-controls` and `aria-labelledby` to create a semantically linked, accessible tab structure.

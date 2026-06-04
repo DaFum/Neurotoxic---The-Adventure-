@@ -382,10 +382,13 @@ export function UI() {
           className="absolute top-20 left-3 right-3 pointer-events-none z-20"
         >
           <div className="bg-black/90 border border-toxic/30 p-2 pointer-events-auto">
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2" role="tablist" aria-label="HUD Tabs">
               <button
+                id="tab-status"
+                role="tab"
+                aria-selected={compactHudTab === 'status'}
+                aria-controls="hud-panel-status"
                 onClick={() => setCompactHudTab('status')}
-                aria-pressed={compactHudTab === 'status'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'status'
                     ? 'border-toxic bg-toxic/20 text-toxic'
@@ -395,8 +398,11 @@ export function UI() {
                 Status
               </button>
               <button
+                id="tab-inventory"
+                role="tab"
+                aria-selected={compactHudTab === 'inventory'}
+                aria-controls="hud-panel-inventory"
                 onClick={() => setCompactHudTab('inventory')}
-                aria-pressed={compactHudTab === 'inventory'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'inventory'
                     ? 'border-toxic bg-toxic/20 text-toxic'
@@ -406,8 +412,11 @@ export function UI() {
                 Cargo
               </button>
               <button
+                id="tab-quests"
+                role="tab"
+                aria-selected={compactHudTab === 'quests'}
+                aria-controls="hud-panel-quests"
                 onClick={() => setCompactHudTab('quests')}
-                aria-pressed={compactHudTab === 'quests'}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'quests'
                     ? 'border-toxic bg-toxic/20 text-toxic'
@@ -419,7 +428,7 @@ export function UI() {
             </div>
 
             {compactHudTab === 'status' && (
-              <div className="mt-2 bg-black/80 border border-zinc-800 p-3">
+              <div id="hud-panel-status" role="tabpanel" aria-labelledby="tab-status" className="mt-2 bg-black/80 border border-zinc-800 p-3">
                 <div className="flex items-center justify-between text-[10px] font-mono uppercase">
                   <span className="text-toxic font-bold">{sceneLabel}</span>
                   <span className="text-zinc-400">Mood {bandMood}%</span>
@@ -456,6 +465,9 @@ export function UI() {
 
             {compactHudTab === 'inventory' && (
               <div
+                id="hud-panel-inventory"
+                role="tabpanel"
+                aria-labelledby="tab-inventory"
                 className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 tabIndex={0}
               >
@@ -486,6 +498,8 @@ export function UI() {
                             }}
                             aria-pressed={selectedCount > 0}
                             aria-disabled={isDisabled}
+                            aria-describedby={isDisabled ? 'compact-item-limit-helper' : undefined}
+                            title={isDisabled ? 'Selection limit reached (max 2 items)' : undefined}
                             className={`px-2 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
@@ -526,6 +540,9 @@ export function UI() {
                         Select exactly two items to merge
                       </div>
                     )}
+                    <div id="compact-item-limit-helper" className="sr-only">
+                      Selection limit reached (max 2 items). Deselect an item to select this one.
+                    </div>
                   </div>
                 )}
               </div>
@@ -533,6 +550,9 @@ export function UI() {
 
             {compactHudTab === 'quests' && (
               <div
+                id="hud-panel-quests"
+                role="tabpanel"
+                aria-labelledby="tab-quests"
                 className="mt-2 bg-black/80 border border-zinc-800 p-3 max-h-[34vh] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 tabIndex={0}
               >
@@ -724,6 +744,8 @@ export function UI() {
                             }}
                             aria-pressed={selectedCount > 0}
                             aria-disabled={isDisabled}
+                            aria-describedby={isDisabled ? 'full-item-limit-helper' : undefined}
+                            title={isDisabled ? 'Selection limit reached (max 2 items)' : undefined}
                             className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
@@ -764,6 +786,9 @@ export function UI() {
                         Select exactly two items to merge
                       </div>
                     )}
+                    <div id="full-item-limit-helper" className="sr-only">
+                      Selection limit reached (max 2 items). Deselect an item to select this one.
+                    </div>
                   </div>
                 )}
               </div>

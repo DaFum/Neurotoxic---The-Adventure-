@@ -125,6 +125,7 @@ export function PauseMenu({
 
         <button
           ref={initialFocusRef}
+          aria-label="Resume session"
           title="Resume session (ESC)"
           aria-label="Resume session"
           onClick={() => setPaused(false)}
@@ -145,6 +146,7 @@ export function PauseMenu({
             </p>
             <div className="grid grid-cols-2 gap-2">
               <button
+                aria-label="Confirm reboot system"
                 onClick={() => {
                   audio.stopAmbient();
                   resetGame();
@@ -158,6 +160,7 @@ export function PauseMenu({
               <button
                 ref={cancelButtonRef}
                 autoFocus
+                aria-label="Cancel reboot"
                 title="Cancel reboot (ESC)"
                 onClick={() => setShowRebootConfirm(false)}
                 className="flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2 text-[10px] uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
