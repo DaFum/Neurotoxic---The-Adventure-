@@ -165,6 +165,7 @@ export function MainMenu() {
             }
             setSelectingTrait(true);
           }}
+          aria-label="Initialize Tour"
           className="group relative px-12 py-6 bg-toxic hover:bg-white text-black font-black text-2xl uppercase tracking-[0.3em] transition-all brutal-border-toxic hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[8px_8px_0px_#adff2f] focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           Initialize_Tour
