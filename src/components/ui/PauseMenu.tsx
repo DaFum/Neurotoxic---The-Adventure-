@@ -125,9 +125,7 @@ export function PauseMenu({
 
         <button
           ref={initialFocusRef}
-          aria-label="Resume session"
           title="Resume session (ESC)"
-          aria-label="Resume session"
           onClick={() => setPaused(false)}
           className="group flex items-center justify-center gap-3 bg-toxic hover:bg-white text-black font-black py-4 text-sm uppercase tracking-[0.2em] transition-all brutal-border-toxic hover:translate-x-[-2px] hover:translate-y-[-2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
@@ -173,7 +171,6 @@ export function PauseMenu({
         ) : (
           <button
             ref={rebootButtonRef}
-            aria-label="Reboot game"
             onClick={() => setShowRebootConfirm(true)}
             className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
@@ -183,7 +180,6 @@ export function PauseMenu({
         )}
 
         <button
-          aria-label={`Lore codex ${discoveredLoreCount} of ${totalLoreCount}`}
           onClick={() => setShowLoreCodex(true)}
           className="flex items-center justify-center gap-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold py-4 text-xs uppercase tracking-widest transition-colors border border-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
@@ -192,7 +188,6 @@ export function PauseMenu({
         </button>
 
         <button
-          aria-label="Terminate process"
           onClick={() => {
             audio.stopAmbient();
             setScene('menu');

@@ -28,6 +28,10 @@ import { PauseMenu } from './ui/PauseMenu';
 import { LoreCodex } from './ui/LoreCodex';
 import { DialogueBox } from './ui/DialogueBox';
 
+const MAX_SELECTION_LIMIT = 2;
+const SELECTION_LIMIT_TITLE = `Selection limit reached (max ${MAX_SELECTION_LIMIT} items)`;
+const SELECTION_LIMIT_SR = `Selection limit reached (max ${MAX_SELECTION_LIMIT} items). Deselect an item to select this one.`;
+
 const QUEST_STATUS_ORDER: Record<QuestStatus, number> = {
   active: 0,
   failed: 1,
@@ -382,12 +386,41 @@ export function UI() {
           className="absolute top-20 left-3 right-3 pointer-events-none z-20"
         >
           <div className="bg-black/90 border border-toxic/30 p-2 pointer-events-auto">
-            <div className="grid grid-cols-3 gap-2" role="tablist" aria-label="HUD Tabs">
+            <div
+              className="grid grid-cols-3 gap-2"
+              role="tablist"
+              aria-label="HUD Tabs"
+              onKeyDown={(e) => {
+                const tabs = ['status', 'inventory', 'quests'] as const;
+                // Treat undefined (shouldn't happen per type, but to satisfy TypeScript) as 0
+                const currentIndex = Math.max(0, tabs.indexOf(compactHudTab as 'status' | 'inventory' | 'quests'));
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                  e.preventDefault();
+                  const nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+                  setCompactHudTab(tabs[nextIndex]!);
+                  document.getElementById(`tab-${tabs[nextIndex]}`)?.focus();
+                } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                  e.preventDefault();
+                  const nextIndex = (currentIndex + 1) % tabs.length;
+                  setCompactHudTab(tabs[nextIndex]!);
+                  document.getElementById(`tab-${tabs[nextIndex]}`)?.focus();
+                } else if (e.key === 'Home') {
+                  e.preventDefault();
+                  setCompactHudTab(tabs[0]!);
+                  document.getElementById(`tab-${tabs[0]}`)?.focus();
+                } else if (e.key === 'End') {
+                  e.preventDefault();
+                  setCompactHudTab(tabs[tabs.length - 1]!);
+                  document.getElementById(`tab-${tabs[tabs.length - 1]}`)?.focus();
+                }
+              }}
+            >
               <button
                 id="tab-status"
                 role="tab"
+                tabIndex={compactHudTab === 'status' ? 0 : -1}
                 aria-selected={compactHudTab === 'status'}
-                aria-controls="hud-panel-status"
+                aria-controls={compactHudTab === 'status' ? 'hud-panel-status' : undefined}
                 onClick={() => setCompactHudTab('status')}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'status'
@@ -400,8 +433,9 @@ export function UI() {
               <button
                 id="tab-inventory"
                 role="tab"
+                tabIndex={compactHudTab === 'inventory' ? 0 : -1}
                 aria-selected={compactHudTab === 'inventory'}
-                aria-controls="hud-panel-inventory"
+                aria-controls={compactHudTab === 'inventory' ? 'hud-panel-inventory' : undefined}
                 onClick={() => setCompactHudTab('inventory')}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'inventory'
@@ -414,8 +448,9 @@ export function UI() {
               <button
                 id="tab-quests"
                 role="tab"
+                tabIndex={compactHudTab === 'quests' ? 0 : -1}
                 aria-selected={compactHudTab === 'quests'}
-                aria-controls="hud-panel-quests"
+                aria-controls={compactHudTab === 'quests' ? 'hud-panel-quests' : undefined}
                 onClick={() => setCompactHudTab('quests')}
                 className={`h-8 text-[10px] font-black uppercase tracking-wider border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   compactHudTab === 'quests'
@@ -499,7 +534,7 @@ export function UI() {
                             aria-pressed={selectedCount > 0}
                             aria-disabled={isDisabled}
                             aria-describedby={isDisabled ? 'compact-item-limit-helper' : undefined}
-                            title={isDisabled ? 'Selection limit reached (max 2 items)' : undefined}
+                            title={isDisabled ? SELECTION_LIMIT_TITLE : undefined}
                             className={`px-2 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
@@ -541,7 +576,7 @@ export function UI() {
                       </div>
                     )}
                     <div id="compact-item-limit-helper" className="sr-only">
-                      Selection limit reached (max 2 items). Deselect an item to select this one.
+                      {SELECTION_LIMIT_SR}
                     </div>
                   </div>
                 )}
@@ -745,7 +780,7 @@ export function UI() {
                             aria-pressed={selectedCount > 0}
                             aria-disabled={isDisabled}
                             aria-describedby={isDisabled ? 'full-item-limit-helper' : undefined}
-                            title={isDisabled ? 'Selection limit reached (max 2 items)' : undefined}
+                            title={isDisabled ? SELECTION_LIMIT_TITLE : undefined}
                             className={`px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all border-l-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                               selectedCount > 0
                                 ? 'bg-toxic/10 border-toxic text-toxic shadow-[0_0_10px_rgba(173,255,47,0.2)]'
@@ -787,7 +822,7 @@ export function UI() {
                       </div>
                     )}
                     <div id="full-item-limit-helper" className="sr-only">
-                      Selection limit reached (max 2 items). Deselect an item to select this one.
+                      {SELECTION_LIMIT_SR}
                     </div>
                   </div>
                 )}
