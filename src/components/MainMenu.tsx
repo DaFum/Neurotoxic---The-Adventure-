@@ -236,7 +236,6 @@ export function MainMenu() {
                 </button>
               </div>
               <button
-                aria-label="Cancel save prompt"
                 title="Cancel (ESC)"
                 onClick={() => setShowSavePrompt(false)}
                 className="mt-6 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
@@ -291,7 +290,6 @@ export function MainMenu() {
                 ))}
               </div>
               <button
-                aria-label="Back to main terminal"
                 title="Back to main terminal (ESC)"
                 onClick={() => setSelectingTrait(false)}
                 className="mt-8 text-zinc-600 hover:text-toxic text-[10px] font-mono uppercase tracking-widest focus:outline-none focus-visible:ring-2 focus-visible:ring-toxic focus-visible:ring-offset-2 focus-visible:ring-offset-black"
